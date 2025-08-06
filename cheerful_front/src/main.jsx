@@ -15,12 +15,14 @@ const queryClient = new QueryClient({
 });
 
 createRoot(document.getElementById("root")).render(
-  <QueryClientProvider client={queryClient}>
-    <BrowserRouter>
-      <>
-        <Global styles={global} />
-        <App />
-      </>
-    </BrowserRouter>
-  </QueryClientProvider>
+  <>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <>
+          <Global styles={global} />
+          <App />
+        </>
+      </BrowserRouter>
+    </QueryClientProvider>
+  </>
 );
