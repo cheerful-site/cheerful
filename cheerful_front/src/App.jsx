@@ -1,14 +1,11 @@
-import Header from "./components/Header/Header";
-import MainLayout from "./components/Layout/MainLayout/MainLayout";
+import MainLayout from "./layout/MainLayout/MainLayout";
 import MainRoute from "./routers/MainRoute";
 
 function App() {
   return (
-    <>
-      <MainLayout>
-        <MainRoute />
-      </MainLayout>
-    </>
+    <MainLayout>
+      <MainRoute />
+    </MainLayout>
   );
 }
 
