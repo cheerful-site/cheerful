@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.korit.cheerful_back.domain.user.UserMapper">
+
+  <resultMap id="UserMap" type="com.korit.cheerful_back.domain.user.User">
+    <id property="userId" column="user_id" />
+    <result property="username" column="user_name" />
+    <result property="email" column="user_email" />
+    <result property="profileImgPath" column="user_profile_img_path" />
+    <result property="role" column="role" />
+    <result property="providerId" column="provider_id" />
+    <result property="provider" column="provider" />
+  </resultMap>
+
+  <insert id="insert">
+    insert into user_tb
+    values (default, #{username}, #{email}, #{profileImgPath}, #{role}, #{providerId}, #{provider})
+  </insert>
+
+  <select id="findById" resultMap="UserMap">
+    insert
+      ut.user_id,
+      ut.user_name,
+      ut.user_email,
+      ut.user_profile_img_path
+      ut.role,
+      ut.provider_id,
+      ut.provider
+    from
+      user_tb ut
+    where
+      ut.user_id = #{userId}
+  </select>
+
+  <select id="findByUserName" resultMap="UserMap">
+    insert
+      ut.user_id,
+      ut.user_name,
+      ut.user_email,
+      ut.user_profile_img_path
+      ut.role,
+      ut.provider_id,
+      ut.provider
+    from
+      user_tb ut
+    where
+      ut.user_name = #{username}
+  </select>
+
+</mapper>
