@@ -22,9 +22,9 @@ function Header(props) {
       </div>
 
       {login === false ? (
-        <div css={s.loginButton}>
-          <Link to={"/login"}>로그인</Link>
-        </div>
+        <Link to={"/login"} css={s.loginButton}>
+          로그인
+        </Link>
       ) : (
         <div css={s.profile}>
           <div css={s.searchIconBox}>

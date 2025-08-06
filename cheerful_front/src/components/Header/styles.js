@@ -4,11 +4,9 @@ export const layout = css`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  box-sizing: border-box;
   width: 100%;
   height: 8rem;
-  -webkit-box-shadow: 0 10px 6px -6px #777;
-  -moz-box-shadow: 0 10px 6px -6px #777;
-  box-shadow: 0 10px 6px -6px #77777740;
 `;
 
 export const headerLogo = css`
@@ -57,13 +55,9 @@ export const loginButton = css`
   height: 3.5rem;
   font-size: 1.4rem;
   background-color: #ffffff;
+  text-decoration: none;
   color: #ffc421;
   cursor: pointer;
-
-  & > a {
-    text-decoration: none;
-    color: #ffc421;
-  }
 `;
 
 export const profile = css`

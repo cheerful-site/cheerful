@@ -2,7 +2,7 @@
 import * as s from "./styles";
 import Footer from "../../components/Footer/Footer";
 import { FaGoogle } from "react-icons/fa";
-import { SiKakao, SiNaver } from "react-icons/si";
+import { SiNaver } from "react-icons/si";
 import { Link } from "react-router-dom";
 import { RiKakaoTalkFill } from "react-icons/ri";
 
