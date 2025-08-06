@@ -14,9 +14,21 @@
         <result property="isLike" column="is_like" />
         <result property="likeCount" column="like_count" />
         <result property="commentCount" column="comments_count" />
-        <association property="comm"
+        <association property="communityCategory" resultMap="CommunityCategoryMap" />
+        <association property="communityImgs" javaType="list" resultMap="CommunityImgMap" />
     </resultMap>
 
+    <resultMap id="CommunityCategoryMap" type="com.korit.cheerful_back.domain.communityCategory.CommunityCategory">
+        <id property="communityCategoryId" column="community_category_id" />
+        <result property="communityCategoryName" column="community_category_name" />
+    </resultMap>
+
+    <resultMap id="CommunityImgMap" type="com.korit.cheerful_back.domain.communityImg.CommunityImg">
+        <id property="communityImgId" column="community_img_id" />
+        <result property="communityId" column="community_id" />
+        <result property="seq" column="seq" />
+        <result property="imgPath" column="img_path" />
+    </resultMap>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="communityId">
         insert into community_tb
