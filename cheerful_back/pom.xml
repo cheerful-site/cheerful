@@ -99,7 +99,14 @@
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.openai</groupId>
+            <artifactId>openai-java</artifactId>
+            <version>0.10.0</version>
+        </dependency>
     </dependencies>
+
 
     <build>
         <plugins>
