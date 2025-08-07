@@ -10,7 +10,9 @@
     values (default, #{username}, #{email}, #{profileImgPath}, #{role}, #{provider}, #{providerId})
   </insert>
 
-  <delete id="deleteByUserIds"></delete>
+  <delete id="deleteByUserIds">
+
+  </delete>
 
   <select id="findById" resultType="com.korit.cheerful_back.domain.user.User">
     select
