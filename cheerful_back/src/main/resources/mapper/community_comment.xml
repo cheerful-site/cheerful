@@ -4,6 +4,97 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.korit.cheerful_back.domain.communityComment.CommunityCommentMapper">
+    <resultMap id="CommentMap" type="com.korit.cheerful_back.domain.communityComment.CommunityComment">
+        <id property="communityCommentId" column="community_comment_id" />
+        <result property="communityId" column="community_id" />
+        <result property="parentCommentId" column="parent_comment_id" />
+        <result property="parentUserId" column="parent_user_id" />
+        <result property="parentUsername" column="parent_user_name" />
+        <result property="userId" column="user_id" />
+        <result property="content" column="content" />
+        <result property="createdAt" column="created_at" />
+        <result property="level" column="level" />
+        <result property="path" column="path" />
+        <association property="user" resultMap="UserMap" />
+    </resultMap>
 
+    <resultMap id="UserMap" type="com.korit.cheerful_back.domain.user.User">
+        <id property="userId" column="user_id" />
+        <result property="username" column="user_name" />
+        <result property="profileImgPath" column="profile_img_path" />
+    </resultMap>
 
+    <insert id="insert">
+        insert into community_comment_tb
+        values (default, #{communityId}. #{parentCommentId}, #{parentUserId}, #{userId}, #{content}, now())
+    </insert>
+
+    <select id="findAllByCommunityId" resultType="com.korit.cheerful_back.domain.communityComment.CommunityComment">
+        with recursive comment_tb as (
+            select
+                community_comment_id,
+                community_id,
+                parent_comment_id,
+                parent_user_id,
+                user_id,
+                content,
+                created_at,
+                0 as `level`,
+                cast(lpad(community_comment_id, 5, '0') as char(1000)) as `path`
+            from
+                community_comment_tb
+            where
+                community_id = #{communityId}
+                and parent_comment_id is null
+
+        union all
+
+            select
+                cct.community_comment_id,
+                cct.community_id,
+                cct.parent_comment_id,
+                cct.parent_user_id,
+                cct.user_id,
+                cct.content,
+                cct.created_at,
+                ct.0 as `level`,
+                cast(concat(ct.path, ',', lpad(cct.community_comment_id, 5, '0') as char(1000)) as `path`
+            from
+                community_comment_tb cct
+                join comment_tb ct on(ct.community_comment_id = cct.parent_comment_id)
+            where
+                cct.community_id = #{communityId}
+        )
+        select
+            dense_rank() over(order by substr(ct.path, 1, 5)) as order_number,
+            ct.community_comment_id,
+            ct.community_id,
+            ct.parent_comment_id,
+            ct.parent_user_id,
+            put.username ad parent_username,
+            ct.user_id as ct_user_id,
+
+            ut.user_id,
+            ut.username,
+            ut.profile_img_path,
+
+            ct.content,
+            ct.created_at,
+            ct.`level`,
+            ct.`path
+        from
+            comment_tb ct
+            left outer join user_tb ut on(ut.user_id = ct.user_id)
+            left outer join user_tb put on(put.user_id = ct.parent_user_id)
+        order by
+            order_number desc,
+            `path`;
+    </select>
+
+    <select id="getCountByCommentId" resultType="java.lang.Integer">
+        select
+            count(*)
+        from community_comment_tb
+        where community_id = #{communityId}
+    </select>
 </mapper>
