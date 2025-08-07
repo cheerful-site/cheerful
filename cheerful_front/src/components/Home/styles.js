@@ -15,6 +15,7 @@ export const mainContents = css`
   align-items: center;
   padding-top: 7.6rem;
   width: 110rem;
+  height: 260rem;
   background-color: #ffffff;
   z-index: 0;
 `;
@@ -125,7 +126,167 @@ export const reviewContainer = css`
   background-color: #ffffff;
 
   & > span {
-    margin-top: 8rem;
+    margin-top: 6rem;
     font-size: 3.2rem;
   }
+`;
+
+export const foodReviewContainer = css`
+  display: grid;
+  grid-template-columns: repeat(2, 42rem);
+  grid-template-rows: repeat(2, 15rem);
+  justify-content: center;
+  align-content: center;
+  margin-top: 5rem;
+  gap: 2rem;
+  width: 84rem;
+  height: 30rem;
+`;
+
+export const foodReview = css`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0.5rem 3rem;
+  border: 0.2rem solid #22222230;
+  border-radius: 1.5rem;
+
+  & > span {
+    margin-bottom: 0.5rem;
+  }
+
+  & > span:nth-of-type(1) {
+    font-size: 1.6rem;
+    font-weight: 700;
+  }
+
+  & > span:nth-of-type(3) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  & > span:nth-of-type(4) {
+    text-align: end;
+  }
+`;
+
+export const foodImgContainer = css`
+  position: relative;
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20rem;
+  width: 94rem;
+  height: 28rem;
+
+  & > div {
+    display: flex;
+    flex-direction: column;
+    border-radius: 1.5rem;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
+      rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+    width: 25rem;
+    height: 28rem;
+
+    & > img {
+      width: 100%;
+      height: 18rem;
+    }
+  }
+
+  & > button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    border-radius: 50%;
+    width: 3rem;
+    height: 3rem;
+    color: #ffffff;
+    background-color: #ffc421;
+  }
+`;
+
+export const leftArrow = css`
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translate(-50%, -50%);
+`;
+
+export const rightArrow = css`
+  position: absolute;
+  right: -3%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+`;
+
+export const foodImgInfo = css`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  flex-grow: 1;
+  padding: 1rem 2rem;
+
+  & > span:first-of-type {
+    font-size: 1.6rem;
+    font-weight: 700;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  & > span:nth-of-type(2) {
+    font-size: 1.4rem;
+    font-weight: 400;
+    color: #22222260;
+  }
+
+  & > span:last-of-type {
+    text-align: end;
+    font-size: 1.2rem;
+    font-weight: 400;
+    color: #22222280;
+  }
+`;
+
+export const mapContainer = css`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10rem;
+`;
+
+export const mapCategory = css`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  & > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 0.2rem solid #f5f6f8;
+    border-radius: 1.5rem;
+    width: 11rem;
+    height: 4rem;
+
+    &:hover {
+      border: 0.2rem solid #ffc421;
+      color: #ffc421;
+    }
+  }
+
+  & > div:nth-of-type(2) {
+    margin: 0 10rem;
+  }
+`;
+
+export const googleMap = css`
+  width: 85rem;
+  height: 38rem;
+  margin-top: 5rem;
+  border-radius: 1.5rem;
+  background-color: #dbdbdb;
 `;

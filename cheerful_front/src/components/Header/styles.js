@@ -1,11 +1,10 @@
 import { css } from "@emotion/react";
 
 export const layout = css`
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 0.2rem solid #00000030;
-  box-sizing: border-box;
   box-shadow: rgba(50, 50, 93, 0.1) 0px 6px 12px -2px,
     rgba(0, 0, 0, 0.2) 0px 3px 7px -3px;
   width: 100%;

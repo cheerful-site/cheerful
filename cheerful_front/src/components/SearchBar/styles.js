@@ -17,7 +17,7 @@ export const searchBar = css`
     border-radius: 6.5rem;
     padding: 1.2rem 1.6rem 1.2rem 12rem;
     width: 60rem;
-    height: 4rem;
+    height: 3rem;
     outline: none;
     font-size: 2.5rem;
   }
