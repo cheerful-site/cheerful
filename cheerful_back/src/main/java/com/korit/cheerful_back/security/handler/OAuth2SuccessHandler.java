@@ -1,9 +1,7 @@
 package com.korit.cheerful_back.security.handler;
 
-import com.korit.cheerful_back.security.filter.JwtFilter;
 import com.korit.cheerful_back.security.jwt.JwtUtil;
 import com.korit.cheerful_back.security.model.PrincipalUser;
-import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
