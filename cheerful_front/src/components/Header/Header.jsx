@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 
 function Header(props) {
-  const [login, setLogin] = useState(false);
+  const [login, setLogin] = useState(true);
 
   return (
     <div css={s.layout}>
@@ -22,16 +22,22 @@ function Header(props) {
       </div>
 
       {login === false ? (
-        <div css={s.loginButton}>
-          <Link to={"/login"}>로그인</Link>
-        </div>
+        <Link to={"/auth/login"} css={s.loginButton}>
+          로그인
+        </Link>
       ) : (
         <div css={s.profile}>
           <div css={s.searchIconBox}>
-            <FaSearch css={s.searchIcon} />
+            <Link to={"/search"}>
+              <FaSearch css={s.searchIcon} />
+            </Link>
           </div>
-          <div css={s.profileImg}>
-            <img src="" alt="" />
+          <div css={s.profileImgBox}>
+            <img
+              src="../../logo/cheerful_noprofile.png"
+              alt=""
+              css={s.profileImg}
+            />
           </div>
           <div css={s.profileEdit}>
             <div>username</div>

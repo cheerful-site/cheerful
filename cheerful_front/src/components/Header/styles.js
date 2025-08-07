@@ -4,11 +4,13 @@ export const layout = css`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border-bottom: 0.2rem solid #00000030;
+  box-sizing: border-box;
+  box-shadow: rgba(50, 50, 93, 0.1) 0px 6px 12px -2px,
+    rgba(0, 0, 0, 0.2) 0px 3px 7px -3px;
   width: 100%;
   height: 8rem;
-  -webkit-box-shadow: 0 10px 6px -6px #777;
-  -moz-box-shadow: 0 10px 6px -6px #777;
-  box-shadow: 0 10px 6px -6px #77777740;
+  z-index: 99;
 `;
 
 export const headerLogo = css`
@@ -57,17 +59,12 @@ export const loginButton = css`
   height: 3.5rem;
   font-size: 1.4rem;
   background-color: #ffffff;
+  text-decoration: none;
   color: #ffc421;
   cursor: pointer;
-
-  & > a {
-    text-decoration: none;
-    color: #ffc421;
-  }
 `;
 
 export const profile = css`
-  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -86,8 +83,13 @@ export const searchIcon = css`
   color: #ffc421;
 `;
 
+export const profileImgBox = css`
+  margin: 0.5rem 0.5rem 0.5rem 2.5rem;
+  width: 3.4rem;
+  height: 3.4rem;
+`;
+
 export const profileImg = css`
-  margin-left: 3rem;
   border-radius: 50%;
   width: 3.4rem;
   height: 3.4rem;
