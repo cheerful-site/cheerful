@@ -1,4 +1,4 @@
-package com.korit.cheerful_back.dto;
+package com.korit.cheerful_back.dto.community;
 
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
