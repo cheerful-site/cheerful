@@ -34,4 +34,29 @@
         insert into community_tb
         values (default, #{communityCategoryId}, #{userId}, #{title}, #{content}, now())
     </insert>
+
+    <select id="findAllBySearchOption" resultMap="CommunityMap">
+        select
+            *
+        from
+            (select
+                dense_rank() over(order by ct.community_created_at desc, ct.community_id desc) as community_number,
+                ct.community_id,
+                ct.community_user_id as ct_user_id,
+
+        from
+            community_tb ct
+    </select>
+
+    <select id="findByFeedId"
+            resultType="com.korit.cheerful_back.domain.community.Community">
+        select
+            count(*)
+        from
+        where
+    </select>
+
+    <select id="getCountOfOptions" resultType="java.lang.Integer">
+
+    </select>
 </mapper>
