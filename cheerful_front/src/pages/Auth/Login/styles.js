@@ -59,7 +59,7 @@ export const googleLogin = css`
     background-color: #4285f4;
   }
 `;
-
+ 
 export const naverLogin = css`
   border: 0.2rem solid #34a853;
   margin-top: 2rem;

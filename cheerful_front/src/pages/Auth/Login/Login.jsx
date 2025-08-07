@@ -1,10 +1,10 @@
 /**@jsxImportSource @emotion/react */
 import * as s from "./styles";
-import Footer from "../../components/Footer/Footer";
 import { FaGoogle } from "react-icons/fa";
 import { SiNaver } from "react-icons/si";
 import { Link } from "react-router-dom";
 import { RiKakaoTalkFill } from "react-icons/ri";
+import Footer from "../../../components/Footer/Footer";
 
 function Login(props) {
   return (
