@@ -3,7 +3,7 @@ import { Routes } from "react-router-dom";
 import { Route } from "react-router-dom";
 import NotFound from "../pages/NotFound/NotFound";
 import OAuthLogin from "../pages/Auth/OAuthLogin/OAuthLogin";
-import Login from '../pages/Auth/Login/Login';
+import Login from "../pages/Auth/Login/Login";
 
 function AuthRoute(props) {
   return (
