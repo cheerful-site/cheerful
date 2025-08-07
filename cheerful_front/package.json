@@ -10,15 +10,17 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@emotion/css": "^11.13.5",
-    "@react-google-maps/api": "^2.20.7",
-    "@tanstack/react-query": "^5.84.0",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "zustand": "^5.0.7",
+    "@emotion/react": "^11.14.0",
     "@googlemaps/react-wrapper": "^1.2.0",
     "@react-google-maps/api": "^2.20.7",
-    "react-geolocated": "^4.3.0"
+    "@tanstack/react-query": "^5.84.0",
+    "axios": "^1.11.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-geolocated": "^4.3.0",
+    "react-icons": "^5.5.0",
+    "react-router-dom": "^7.7.1",
+    "zustand": "^5.0.7"
   },
   "devDependencies": {
     "@eslint/js": "^9.30.1",

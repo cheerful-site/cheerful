@@ -1,6 +1,5 @@
 package com.korit.cheerful_back.controller;
 
-import com.korit.cheerful_back.dto.response.ResponseDto;
 import com.korit.cheerful_back.service.UserService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +16,8 @@ public class UserController {
   private final UserService userService;
 
   @DeleteMapping("/users")
-  public ResponseEntity<ResponseDto<?>> deleteUserIds(@RequestParam List<Integer> userIds) {
+  public ResponseEntity<?> deleteUserIds(@RequestParam List<Integer> userIds) {
     userService.delete(userIds);
-    return ResponseEntity.ok(ResponseDto.success("회원 정보가 삭제되었습니다."));
+    return ResponseEntity.ok(null);
   }
 }
