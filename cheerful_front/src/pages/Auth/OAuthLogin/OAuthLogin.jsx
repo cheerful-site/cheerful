@@ -7,8 +7,6 @@ function OAuthLogin(props) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  console.log(searchParams);
-
   useEffect(() => {
     const accessToken = searchParams.get("accessToken");
     if (!!accessToken) {

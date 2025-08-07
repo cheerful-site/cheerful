@@ -2,13 +2,31 @@
 import { FaSearch } from "react-icons/fa";
 import * as s from "./styles";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import usePrincipalQuery from "../../queries/PrincipalQuery/usePrincipalQuery";
+import ReactModal from "react-modal";
 
 function Header(props) {
   const [login, setLogin] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const principalQuery = usePrincipalQuery();
-  console.log(principalQuery.data);
+  const user = principalQuery?.data?.data.body.user;
+  console.log(user);
+
+  useEffect(() => {
+    const token = localStorage.getItem("AccessToken");
+    if (!!token) {
+      setLogin(true);
+      return;
+    } else {
+      setLogin(false);
+      return;
+    }
+  }, [localStorage.getItem("AccessToken")]);
+
+  const handleProfileOnClick = () => {
+    setIsOpen((prev) => !prev);
+  };
 
   return (
     <div css={s.layout}>
@@ -38,14 +56,56 @@ function Header(props) {
             </Link>
           </div>
           <div css={s.profileImgBox}>
-            <img
-              src="../../logo/cheerful_noprofile.png"
-              alt=""
-              css={s.profileImg}
-            />
+            <img src={user?.profileImgPath} alt="" css={s.profileImg} />
           </div>
-          <div css={s.profileEdit}>
-            <div>username</div>
+          <div css={s.profileEdit} onClick={handleProfileOnClick}>
+            <div>{user?.username}</div>
+            {isOpen ? (
+              <ReactModal
+                style={{
+                  overlay: {
+                    backgroundColor: "#000000cc",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    zIndex: 100,
+                  },
+                  content: {
+                    position: "static",
+                    border: "none",
+                    padding: "0",
+                    overflow: "hidden",
+                  },
+                }}
+                isOpen={isOpen}>
+                <div css={s.modalContainer}>
+                  <div css={s.modalProfile}>
+                    <img src={user?.profileImgPath} alt="" />
+                    <span>{user?.username}</span>
+                  </div>
+
+                  <div css={s.modalButton}>
+                    <Link to={""}>글쓰기</Link>
+                    <Link to={""}>관리자 페이지</Link>
+                    <Link to={""}>로그아웃</Link>
+                  </div>
+
+                  <div css={s.horizon}></div>
+
+                  <div css={s.modalContent}>
+                    <div>
+                      내가 쓴 글<span>10개</span>
+                    </div>
+                    <div>
+                      내가 쓴 댓글
+                      <span>10개</span>
+                    </div>
+                  </div>
+                </div>
+              </ReactModal>
+            ) : (
+              <></>
+            )}
           </div>
         </div>
       )}

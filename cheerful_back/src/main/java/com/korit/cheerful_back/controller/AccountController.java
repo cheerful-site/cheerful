@@ -12,6 +12,7 @@ public class AccountController {
 
   @GetMapping("/account/principal")
   public ResponseEntity<ResponseDto<?>> principal(@AuthenticationPrincipal PrincipalUser principalUser) {
+    System.out.println(principalUser);
     return ResponseEntity.ok(ResponseDto.success(principalUser));
   }
 }
