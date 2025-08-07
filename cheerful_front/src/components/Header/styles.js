@@ -105,4 +105,35 @@ export const profileEdit = css`
   height: 3.5rem;
   background-color: #ffc421;
   color: #ffffff;
+  cursor: pointer;
 `;
+
+export const modalContainer = css`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 1.5rem;
+  width: 32rem;
+  height: 34rem;
+`;
+
+export const modalProfile = css`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  & > img {
+    border-radius: 50%;
+    width: 5.8rem;
+    height: 5.8rem;
+  }
+`;
+
+export const modalButton = css`
+  display: flex;
+  flex-direction: column;
+`;
+
+export const horizon = css``;
+
+export const modalContent = css``;
