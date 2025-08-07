@@ -1,9 +1,17 @@
 package com.korit.cheerful_back.domain.communityComment;
 
 import com.korit.cheerful_back.domain.user.User;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class CommunityComment {
     private Integer communityCommentId;
     private Integer communityId;
