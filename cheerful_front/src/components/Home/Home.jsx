@@ -135,7 +135,28 @@ function Home(props) {
             </div>
             <div css={s.googleMap}>
               <Wrapper apiKey={import.meta.env.VITE_REACT_APP_API_KEY}>
-                <GoogleMap center={center} zoom={15}></GoogleMap>
+                <GoogleMap
+                  mapContainerStyle={{
+                    width: "85rem",
+                    height: "38rem",
+                    borderRadius: "1.5rem",
+                    boxShadow:
+                      "rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px",
+                  }}
+                  center={center}
+                  zoom={15}>
+                  <MarkerF
+                    position={center}
+                    icon={{
+                      path: window.google.maps.SymbolPath.CIRCLE,
+                      fillColor: "#FF0000", // 원하는 컬러
+                      fillOpacity: 1,
+                      strokeWeight: 1,
+                      strokeColor: "#FFFFFF",
+                      scale: 8,
+                    }}
+                  />
+                </GoogleMap>
               </Wrapper>
             </div>
           </div>

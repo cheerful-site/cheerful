@@ -10,7 +10,9 @@ function Header(props) {
   return (
     <div css={s.layout}>
       <div>
-        <img css={s.headerLogo} src="../../logo/cheerful_header.png" alt="" />
+        <Link to={"/"}>
+          <img css={s.headerLogo} src="../../logo/cheerful_header.png" alt="" />
+        </Link>
       </div>
 
       <div css={s.category}>

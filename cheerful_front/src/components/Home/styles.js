@@ -274,7 +274,9 @@ export const mapCategory = css`
 
     &:hover {
       border: 0.2rem solid #ffc421;
+      transition: 0.2s ease-in-out;
       color: #ffc421;
+      cursor: pointer;
     }
   }
 
@@ -290,3 +292,4 @@ export const googleMap = css`
   border-radius: 1.5rem;
   background-color: #dbdbdb;
 `;
+
