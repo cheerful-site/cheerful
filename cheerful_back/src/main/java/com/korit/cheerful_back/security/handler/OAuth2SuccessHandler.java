@@ -24,6 +24,6 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
       Authentication authentication) throws IOException, ServletException {
     PrincipalUser principalUser = (PrincipalUser) authentication.getPrincipal();
     String accessToken = jwtUtil.generateAccessToken(principalUser.getUser());
-    response.sendRedirect("" + accessToken);
+    response.sendRedirect("http://localhost:5173/auth/oauth2/login?accessToken=" + accessToken);
   }
 }

@@ -30,8 +30,8 @@ public class JwtFilter implements Filter {
   public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse,
       FilterChain filterChain) throws IOException, ServletException {
     HttpServletRequest request = (HttpServletRequest) servletRequest;
-    boolean isOption = request.getMethod().equalsIgnoreCase("OPTION");
-    if (isOption) {
+    boolean isOptions = request.getMethod().equalsIgnoreCase("OPTIONS");
+    if (isOptions) {
       filterChain.doFilter(servletRequest, servletResponse);
       return;
     }
