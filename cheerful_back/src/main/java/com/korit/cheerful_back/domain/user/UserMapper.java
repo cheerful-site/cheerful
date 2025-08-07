@@ -8,6 +8,6 @@ import org.apache.ibatis.annotations.Param;
 public interface UserMapper {
   int insert(User user);
   User findById(@Param("userId") Integer userId);
-  User findByUserName(@Param("username") String username);
+  User findByProviderId(@Param("providerId") String providerId);
   int deleteByUserIds(List<Integer> userIds);
 }

@@ -58,7 +58,8 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
       throw new OAuth2AuthenticationException("지원하지 않는 소셜 로그인입니다: " + registrationId);
     }
 
-    User user = userMapper.findByUserName(email);
+    User user = userMapper.findByProviderId(providerId);
+//    System.out.println(user);
 
     // not null 추가
     if (user == null) {
