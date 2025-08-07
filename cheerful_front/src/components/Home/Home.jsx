@@ -144,19 +144,7 @@ function Home(props) {
                       "rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px",
                   }}
                   center={center}
-                  zoom={15}>
-                  <MarkerF
-                    position={center}
-                    icon={{
-                      path: window.google.maps.SymbolPath.CIRCLE,
-                      fillColor: "#FF0000", // 원하는 컬러
-                      fillOpacity: 1,
-                      strokeWeight: 1,
-                      strokeColor: "#FFFFFF",
-                      scale: 8,
-                    }}
-                  />
-                </GoogleMap>
+                  zoom={15}></GoogleMap>
               </Wrapper>
             </div>
           </div>

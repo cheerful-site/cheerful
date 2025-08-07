@@ -3,9 +3,12 @@ import { FaSearch } from "react-icons/fa";
 import * as s from "./styles";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import usePrincipalQuery from "../../queries/PrincipalQuery/usePrincipalQuery";
 
 function Header(props) {
-  const [login, setLogin] = useState(true);
+  const [login, setLogin] = useState(false);
+  const principalQuery = usePrincipalQuery();
+  console.log(principalQuery.data);
 
   return (
     <div css={s.layout}>
