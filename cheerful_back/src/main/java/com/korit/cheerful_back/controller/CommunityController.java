@@ -21,10 +21,10 @@ public class CommunityController {
         return ResponseEntity.ok(ResponseDto.success(null));
     }
 
-    @GetMapping("/{communityCategoryId}")
-    public ResponseEntity<?> getCommunity(@PathVariable Integer communityCategoryId) {
-        System.out.println(communityService.getCommunity(communityCategoryId));
-        return ResponseEntity.ok(ResponseDto.success(null));
+    @GetMapping("/{categoryId}")
+    public ResponseEntity<?> getCommunity(@PathVariable Integer categoryId) {
+        System.out.println(communityService.getCommunity(categoryId));
+        return ResponseEntity.ok(ResponseDto.success(communityService.getCommunity(categoryId)));
     }
 
     @GetMapping
