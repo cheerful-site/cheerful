@@ -1,7 +1,7 @@
 /**@jsxImportSource @emotion/react */
 import { FaSearch } from "react-icons/fa";
 import * as s from "./styles";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import usePrincipalQuery from "../../queries/PrincipalQuery/usePrincipalQuery";
 import ReactModal from "react-modal";
@@ -10,12 +10,11 @@ import { useQueryClient } from "@tanstack/react-query";
 function Header(props) {
   const [login, setLogin] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const location = useLocation();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const principalQuery = usePrincipalQuery();
   const user = principalQuery?.data?.data.body.user;
-  // console.log(user);
+  console.log(user);
 
   const MENU = [
     {
@@ -79,6 +78,7 @@ function Header(props) {
       <div css={s.category}>
         {MENU.map((menu) => (
           <Link
+            key={menu.id}
             css={s.checkedPath(location.pathname === menu.path)}
             to={menu.path}>
             {menu.title}
