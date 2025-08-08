@@ -4,6 +4,7 @@ import Footer from "../../components/Footer/Footer";
 import * as s from "./styles";
 import { useEffect } from "react";
 import useCommunityQuery from "../../queries/CommunityQuery/useCommunityQuery";
+import dogImage from "../../image/img_dog3.png";
 
 function Community(props) {
   const { category } = useParams();
@@ -17,6 +18,8 @@ function Community(props) {
     { id: 6, title: "실종 / 목격", category: 6 },
     { id: 7, title: "임보 / 입양", category: 7 },
   ];
+
+  const contents = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
   console.log(category);
 
@@ -46,7 +49,20 @@ function Community(props) {
 
       <div css={s.horizon}></div>
 
-      <div></div>
+      <div css={s.postContainer}>
+        {contents.map((post) => (
+          <div css={s.contentContainer}>
+            <img src={dogImage} alt="" />
+            <div css={s.postContent}>
+              <h3>Title</h3>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+              <h4>username</h4>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div>pagenation</div>
 
       <Footer />
     </div>
