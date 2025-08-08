@@ -80,6 +80,7 @@
         select
             ct.community_id,
             ct.community_user_id,
+            ct.community_category_id,
 
             ut.user_id,
             ut.user_name,
@@ -91,7 +92,7 @@
             cit.community_img_id,
             cit.community_id,
             cit.seq,
-            cit.`path`,
+            cit.`img_path`,
 
             ifnull(clt.community_like_id, 0) as is_like,
             ifnull(clc.like_count, 0) as like_count
@@ -100,9 +101,9 @@
             left outer join user_tb ut on(ut.user_id = ct.community_user_id)
             left outer join community_img_tb cit on(cit.community_id = ct.community_id)
             left outer join community_like_tb clt on(clt.community_id = ct.community_id and clt.user_id = #{userId})
-            left outer join (select community_id, count(*) as like_count from community_like_tb where community_id = #{communityId}) clc on(community_id = ct.community_id)
-        where
-            ct.community_id = #{communityId}
+            left outer join (select community_id, count(*) as like_count from community_like_tb where community_id = #{communityId}) clc on(clc.community_id = ct.community_id)
+        WHERE (#{categoryId} = 1 OR ct.community_category_id = #{categoryId})
+        ORDER BY ct.community_id DESC;
     </select>
 
     <select id="getCountOfOptions" resultType="java.lang.Integer">
