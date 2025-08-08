@@ -1,14 +1,17 @@
 /**@jsxImportSource @emotion/react */
 import { FaSearch } from "react-icons/fa";
 import * as s from "./styles";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import usePrincipalQuery from "../../queries/PrincipalQuery/usePrincipalQuery";
 import ReactModal from "react-modal";
+import { useQueryClient } from "@tanstack/react-query";
 
 function Header(props) {
   const [login, setLogin] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const principalQuery = usePrincipalQuery();
   const user = principalQuery?.data?.data.body.user;
   console.log(user);
@@ -26,6 +29,14 @@ function Header(props) {
 
   const handleProfileOnClick = () => {
     setIsOpen((prev) => !prev);
+  };
+
+  const handleLogoutOnClick = async () => {
+    localStorage.removeItem("AccessToken");
+    await queryClient.invalidateQueries({
+      queryKey: ["principal"],
+    });
+    navigate("/auth/login");
   };
 
   return (
@@ -86,18 +97,23 @@ function Header(props) {
 
                   <div css={s.modalButton}>
                     <Link to={""}>글쓰기</Link>
-                    <Link to={""}>관리자 페이지</Link>
-                    <Link to={""}>로그아웃</Link>
+                    {user?.role === "ROLE_ADMIN" ? (
+                      <Link to={""}>관리자 페이지</Link>
+                    ) : (
+                      <></>
+                    )}
+                    <div onClick={handleLogoutOnClick}>로그아웃</div>
                   </div>
 
                   <div css={s.horizon}></div>
 
                   <div css={s.modalContent}>
                     <div>
-                      내가 쓴 글<span>10개</span>
+                      <span>내가 쓴 글</span>
+                      <span>10개</span>
                     </div>
                     <div>
-                      내가 쓴 댓글
+                      <span>내가 쓴 댓글</span>
                       <span>10개</span>
                     </div>
                   </div>

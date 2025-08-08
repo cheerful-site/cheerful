@@ -111,6 +111,7 @@ export const profileEdit = css`
 export const modalContainer = css`
   display: flex;
   flex-direction: column;
+  justify-content: space-around;
   align-items: center;
   border-radius: 1.5rem;
   width: 32rem;
@@ -122,18 +123,60 @@ export const modalProfile = css`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin-top: 2rem;
+
   & > img {
     border-radius: 50%;
     width: 5.8rem;
     height: 5.8rem;
+  }
+
+  & > span {
+    margin-bottom: 1rem;
+    font-size: 1.8rem;
   }
 `;
 
 export const modalButton = css`
   display: flex;
   flex-direction: column;
+  gap: 1rem;
+
+  & > a,
+  div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 1rem;
+    width: 22rem;
+    height: 4rem;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #ffffff;
+    text-decoration: none;
+    background-color: #ffc421;
+    cursor: pointer;
+  }
 `;
 
-export const horizon = css``;
+export const horizon = css`
+  margin: 1rem 0;
+  width: 22rem;
+  border: 0.1rem solid #22222230;
+`;
 
-export const modalContent = css``;
+export const modalContent = css`
+  margin-bottom: 2rem;
+  width: 22rem;
+  font-size: 1.2rem;
+  color: #00000080;
+
+  & > div {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  & > div > span:nth-of-type(2) {
+    color: #000000;
+  }
+`;
