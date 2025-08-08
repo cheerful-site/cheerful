@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/community/")
+@RequestMapping("/community")
 @RequiredArgsConstructor
 public class CommunityController {
 
@@ -21,25 +21,27 @@ public class CommunityController {
         return ResponseEntity.ok(ResponseDto.success(null));
     }
 
-    @GetMapping("{communityId}")
-    public ResponseEntity<?> getCommunity(@PathVariable Integer communityId) {
-        System.out.println(communityService.getCommunity(communityId));
+    @GetMapping("/{communityCategoryId}")
+    public ResponseEntity<?> getCommunity(@PathVariable Integer communityCategoryId) {
+        System.out.println(communityService.getCommunity(communityCategoryId));
         return ResponseEntity.ok(ResponseDto.success(null));
     }
 
     @GetMapping
     public ResponseEntity<ResponseDto<?>> getCommunities(@PathVariable Integer page, @PathVariable Integer size) {
-        return ResponseEntity.ok(ResponseDto.success(null));
+        return ResponseEntity.ok(ResponseDto.success(communityService.getCommunityList(page, size)));
     }
 
 
     @PostMapping("/{communityId}/like")
     public ResponseEntity<ResponseDto<?>> getLike(@PathVariable Integer communityId) {
+        communityService.like(communityId);
         return ResponseEntity.ok(ResponseDto.success("좋아요"));
     }
 
     @DeleteMapping("/{communityId}/disLike")
     public ResponseEntity<ResponseDto<?>> getDisLike(@PathVariable Integer communityId) {
+        communityService.disLike(communityId);
         return ResponseEntity.ok(ResponseDto.success("좋아요 취소"));
     }
 
