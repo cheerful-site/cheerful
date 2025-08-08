@@ -1,6 +1,7 @@
 package com.korit.cheerful_back.service;
 
 import com.korit.cheerful_back.domain.community.Community;
+import com.korit.cheerful_back.domain.community.CommunityLikeMapper;
 import com.korit.cheerful_back.domain.community.CommunityMapper;
 import com.korit.cheerful_back.domain.community.CommunitySearchOption;
 import com.korit.cheerful_back.domain.communityImg.CommunityImg;
@@ -24,6 +25,7 @@ public class CommunityService {
     private final FileService fileService;
     private final PrincipalUtil principalUtil;
     private final CommunityImgMapper communityImgMapper;
+    private final CommunityLikeMapper communityLikeMapper;
 
     @Transactional(rollbackFor = Exception.class)
     public void register(CommunityRegisterReqDto dto) {
@@ -53,9 +55,9 @@ public class CommunityService {
         System.out.println(uploadFilepath);
     }
 
-    public Community getCommunity(Integer communityId) {
+    public Community getCommunity(Integer communityCategoryId) {
         Integer userId = principalUtil.getPrinciplaUser().getUser().getUserId();
-        return communityMapper.findByCommunityId(communityId, userId);
+        return communityMapper.findByCommunityId(communityCategoryId, userId);
     }
 
     public PaginationRespDto<Community> getCommunityList(Integer page, Integer size) {
@@ -78,4 +80,15 @@ public class CommunityService {
                 .size(size)
                 .build();
     }
+
+    public void like(Integer communityId) {
+        Integer userId = principalUtil.getPrinciplaUser().getUser().getUserId();
+        communityLikeMapper.insert(communityId, userId);
+    }
+
+    public void disLike(Integer communityId) {
+        Integer userId = principalUtil.getPrinciplaUser().getUser().getUserId();
+        communityLikeMapper.delete(communityId, userId);
+    }
+
 }
