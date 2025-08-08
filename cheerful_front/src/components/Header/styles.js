@@ -37,7 +37,6 @@ export const category = css`
 
   & > a {
     text-decoration: none;
-    color: #00000070;
     cursor: pointer;
 
     &:hover {
@@ -45,6 +44,11 @@ export const category = css`
       color: #000000;
     }
   }
+`;
+
+export const checkedPath = (checked) => css`
+  font-weight: ${checked ? "600" : "400"};
+  color: ${checked ? "#000000" : "#00000070"};
 `;
 
 export const loginButton = css`
