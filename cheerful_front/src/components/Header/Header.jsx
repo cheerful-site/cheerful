@@ -1,7 +1,7 @@
 /**@jsxImportSource @emotion/react */
 import { FaSearch } from "react-icons/fa";
 import * as s from "./styles";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import usePrincipalQuery from "../../queries/PrincipalQuery/usePrincipalQuery";
 import ReactModal from "react-modal";
@@ -10,11 +10,40 @@ import { useQueryClient } from "@tanstack/react-query";
 function Header(props) {
   const [login, setLogin] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const principalQuery = usePrincipalQuery();
   const user = principalQuery?.data?.data.body.user;
-  console.log(user);
+  // console.log(user);
+
+  const MENU = [
+    {
+      id: 1,
+      title: "HOME",
+      path: "/",
+    },
+    {
+      id: 2,
+      title: "Community",
+      path: "/community/1",
+    },
+    {
+      id: 3,
+      title: "Food",
+      path: "/food",
+    },
+    {
+      id: 4,
+      title: "Map",
+      path: "/map",
+    },
+    {
+      id: 5,
+      title: "Notice",
+      path: "/notice",
+    },
+  ];
 
   useEffect(() => {
     const token = localStorage.getItem("AccessToken");
@@ -48,11 +77,13 @@ function Header(props) {
       </div>
 
       <div css={s.category}>
-        <Link to={"/"}>HOME</Link>
-        <Link to={"/community"}>Community</Link>
-        <Link to={"/food"}>Food</Link>
-        <Link to={"/map"}>Map</Link>
-        <Link to={"/notice"}>Notice</Link>
+        {MENU.map((menu) => (
+          <Link
+            css={s.checkedPath(location.pathname === menu.path)}
+            to={menu.path}>
+            {menu.title}
+          </Link>
+        ))}
       </div>
 
       {login === false ? (

@@ -4,6 +4,7 @@ import Header from "../components/Header/Header";
 import Auth from "../pages/Auth/Auth/Auth";
 import Search from "../pages/Search/Search";
 import Home from "../pages/Home/Home";
+import Community from "../pages/Community/Community";
 
 function MainRoute(props) {
   return (
@@ -12,7 +13,7 @@ function MainRoute(props) {
       <Routes>
         <Route path="/auth/*" element={<Auth />} />
         <Route path="/search" element={<Search />} />
-        <Route path="/community" element={<></>} />
+        <Route path="/community/:category" element={<Community />} />
         <Route path="/food" element={<></>} />
         <Route path="/map" element={<></>} />
         <Route path="/notice" element={<></>} />
