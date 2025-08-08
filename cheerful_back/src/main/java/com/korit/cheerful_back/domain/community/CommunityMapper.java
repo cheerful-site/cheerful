@@ -8,6 +8,6 @@ import org.apache.ibatis.annotations.Param;
 public interface CommunityMapper {
     int insert(Community community);
     List<Community> findAllBySearchOption(CommunitySearchOption communitySearchOption);
-    Community findByCategoryId(@Param("categoryId") Integer categoryId, @Param("userId") Integer userId);
+    List<Community> findByCategoryId(@Param("categoryId") Integer categoryId, @Param("userId") Integer userId);
     int getCountOfOptions(CommunitySearchOption communitySearchOption);
 }
