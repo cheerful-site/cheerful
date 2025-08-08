@@ -50,4 +50,9 @@ public class CommunityService {
 
         System.out.println(uploadFilepath);
     }
+
+    public Community getCommunity(Integer communityId) {
+        Integer userId = principalUtil.getPrinciplaUser().getUser().getUserId();
+        return communityMapper.findByCommunityId(communityId, userId);
+    }
 }

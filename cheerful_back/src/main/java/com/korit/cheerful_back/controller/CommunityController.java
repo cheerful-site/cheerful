@@ -23,7 +23,8 @@ public class CommunityController {
 
     @GetMapping("{communityId}")
     public ResponseEntity<?> getCommunity(@PathVariable Integer communityId) {
-        return null;
+        System.out.println(communityService.getCommunity(communityId));
+        return ResponseEntity.ok(ResponseDto.success(null));
     }
 
     @GetMapping
