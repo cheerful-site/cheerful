@@ -7,14 +7,14 @@
 
     <insert id="insert">
         insert into community_img_tb
-        values (default, #{community_id}, #{seq}, #{img_path})
+        values (default, #{communityId}, #{seq}, #{imgPath})
     </insert>
 
     <insert id="insertMany">
         insert into community_img_tb
         values
         <foreach item="communityImg" collection="communityImgs" separator=",">
-            (default, #{communityImg.community_id}, #{communityImg.seq}, #{communityImg.img_path})
+            (default, #{communityImg.communityId}, #{communityImg.seq}, #{communityImg.imgPath})
         </foreach>
     </insert>
 </mapper>
