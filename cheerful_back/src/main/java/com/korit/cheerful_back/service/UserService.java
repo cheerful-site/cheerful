@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
   private final UserMapper userMapper;
 
-  // 관리자 권한
   @Transactional(rollbackFor = Exception.class)
   public void delete(List<Integer> userIds) {
     userMapper.deleteByUserIds(userIds);
