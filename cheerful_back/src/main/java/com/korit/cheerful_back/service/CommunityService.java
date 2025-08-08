@@ -45,7 +45,7 @@ public class CommunityService {
                         .communityId(community.getCommunityId())
                         .imgPath(path)
                         .build())
-                .collect(Collectors.toUnmodifiableList());
+                .collect(Collectors.toList());
         communityImgMapper.insertMany(communityImgs);
 
         System.out.println(uploadFilepath);

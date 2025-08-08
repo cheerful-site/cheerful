@@ -26,7 +26,7 @@ public class CommunityController {
         return null;
     }
 
-    @GetMapping("/community")
+    @GetMapping
     public ResponseEntity<ResponseDto<?>> getCommunities(@PathVariable Integer page, @PathVariable Integer size) {
         return ResponseEntity.ok(ResponseDto.success(null));
     }
@@ -42,12 +42,12 @@ public class CommunityController {
         return ResponseEntity.ok(ResponseDto.success("좋아요 취소"));
     }
 
-    @GetMapping("/community/{communityId}/comments")
+    @GetMapping("{communityId}/comments")
     public ResponseEntity<ResponseDto<?>> getComment(@PathVariable Integer communityId) {
         return ResponseEntity.ok(ResponseDto.success(null));
     }
 
-    @PostMapping("/community/{communityId}/comments")
+    @PostMapping("{communityId}/comments")
     public ResponseEntity<ResponseDto<?>> registerComment() {
         return ResponseEntity.ok(ResponseDto.success(null));
     }
