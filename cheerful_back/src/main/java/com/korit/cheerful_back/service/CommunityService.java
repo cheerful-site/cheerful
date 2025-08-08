@@ -38,6 +38,8 @@ public class CommunityService {
         Integer userId = principalUtil.getPrinciplaUser().getUser().getUserId();
         Community community = Community.builder()
                 .userId(userId)
+                .communityCategoryId(dto.getCommunityCategoryId())
+                .title(dto.getTitle())
                 .content(dto.getContent())
                 .build();
         communityMapper.insert(community);
@@ -55,7 +57,7 @@ public class CommunityService {
         System.out.println(uploadFilepath);
     }
 
-    public Community getCommunity(Integer categoryId) {
+    public List<Community> getCommunity(Integer categoryId) {
         Integer userId = principalUtil.getPrinciplaUser().getUser().getUserId();
         System.out.println(categoryId);
 //        System.out.println(userId);
