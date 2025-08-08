@@ -2,7 +2,7 @@
 import { FaSearch } from "react-icons/fa";
 import * as s from "./styles";
 
-function Search(props) {
+function SearchBar(props) {
   return (
     <div css={s.searchBar}>
       <FaSearch />
@@ -11,4 +11,4 @@ function Search(props) {
   );
 }
 
-export default Search;
+export default SearchBar;

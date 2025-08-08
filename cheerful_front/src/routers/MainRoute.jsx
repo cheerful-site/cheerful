@@ -1,9 +1,9 @@
 import { Route, Routes } from "react-router-dom";
-import Home from "../components/Home/Home";
 import NotFound from "../pages/NotFound/NotFound";
 import Header from "../components/Header/Header";
 import Auth from "../pages/Auth/Auth/Auth";
 import Search from "../pages/Search/Search";
+import Home from "../pages/Home/Home";
 
 function MainRoute(props) {
   return (
