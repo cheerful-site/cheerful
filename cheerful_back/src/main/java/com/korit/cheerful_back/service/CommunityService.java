@@ -8,6 +8,7 @@ import com.korit.cheerful_back.dto.community.CommunityRegisterReqDto;
 import com.korit.cheerful_back.security.model.PrincipalUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -22,10 +23,11 @@ public class CommunityService {
     private final PrincipalUtil principalUtil;
     private final CommunityImgMapper communityImgMapper;
 
+    @Transactional(rollbackFor = Exception.class)
     public void register(CommunityRegisterReqDto dto) {
         List<String> uploadFilepath = dto.getFiles()
                 .stream()
-                .map(file -> "/community/" + fileService.uploadFile(file, "/feed"))
+                .map(file -> "/community/" + fileService.uploadFile(file, "/community"))
                 .peek(newFileName -> System.out.println(newFileName))
                 .collect(Collectors.toList());
 
