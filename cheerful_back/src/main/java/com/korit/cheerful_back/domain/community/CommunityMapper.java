@@ -9,4 +9,5 @@ public interface CommunityMapper {
     int insert(Community community);
     List<Community> findAllBySearchOption(CommunitySearchOption communitySearchOption);
     Community findByCommunityId(@Param("communityId") Integer communityId, @Param("userId") Integer userId);
+    int getCountOfOptions(CommunitySearchOption communitySearchOption);
 }
