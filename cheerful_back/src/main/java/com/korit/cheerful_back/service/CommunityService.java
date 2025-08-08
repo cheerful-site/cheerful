@@ -55,9 +55,9 @@ public class CommunityService {
         System.out.println(uploadFilepath);
     }
 
-    public Community getCommunity(Integer communityCategoryId) {
+    public Community getCommunity(Integer categoryId) {
         Integer userId = principalUtil.getPrinciplaUser().getUser().getUserId();
-        return communityMapper.findByCommunityId(communityCategoryId, userId);
+        return communityMapper.findByCategoryId(categoryId, userId);
     }
 
     public PaginationRespDto<Community> getCommunityList(Integer page, Integer size) {

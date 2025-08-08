@@ -7,10 +7,10 @@
     <resultMap id="CommunityMap" type="com.korit.cheerful_back.domain.community.Community">
         <id property="communityId" column="community_id" />
         <result property="communityCategoryId" column="community_category_id" />
-        <result property="userId" column="community_user_id" />
+        <result property="userId" column="user_id" />
         <result property="title" column="community_title" />
         <result property="content" column="community_content" />
-        <result property="createdAt" column="community_created_at" />
+        <result property="createdAt" column="created_at" />
         <result property="isLike" column="is_like" />
         <result property="likeCount" column="like_count" />
         <result property="commentCount" column="comments_count" />
@@ -42,7 +42,7 @@
             (select
                 dense_rank() over(order by ct.community_created_at desc, ct.community_id desc) as community_number,
                 ct.community_id,
-                ct.community_user_id,
+                ct.user_id,
 
                 cut.user_id,
                 cut.user_name,
@@ -61,7 +61,7 @@
                 ifnull(cc.comments_count, 0) as comments_count
         from
             community_tb ct
-            left outer join user_tb cut on(cut.user_id = ct.community_user_id)
+            left outer join user_tb cut on(cut.user_id = ct.user_id)
             left outer join community_img_tb cit on(cit.community_img_id = ct.community_id)
             left outer join community_like_tb clt on(clt.community_id = ct.community_id and clt.user_id = #{userId})
             left outer join (select community_id, count(*) as like_count from community_like_tb group by community_id) clc on(clc.community_id = ct.community_id)
@@ -76,10 +76,10 @@
             community_number between #{startIndex} + 1 and #{endIndex}
     </select>
 
-    <select id="findByCommunityId" resultMap="CommunityMap">
+    <select id="findByCategoryId" resultMap="CommunityMap">
         select
             ct.community_id,
-            ct.community_user_id,
+            ct.user_id,
             ct.community_category_id,
 
             ut.user_id,
@@ -87,7 +87,7 @@
             ut.profile_img_path,
 
             ct.community_content,
-            ct.community_created_at,
+            ct.created_at,
 
             cit.community_img_id,
             cit.community_id,
@@ -98,11 +98,11 @@
             ifnull(clc.like_count, 0) as like_count
         from
             community_tb ct
-            left outer join user_tb ut on(ut.user_id = ct.community_user_id)
+            left outer join user_tb ut on(ut.user_id = ct.user_id)
             left outer join community_img_tb cit on(cit.community_id = ct.community_id)
             left outer join community_like_tb clt on(clt.community_id = ct.community_id and clt.user_id = #{userId})
             left outer join (select community_id, count(*) as like_count from community_like_tb where community_id = #{communityId}) clc on(clc.community_id = ct.community_id)
-        WHERE (#{categoryId} = 1 OR ct.community_category_id = #{categoryId})
+        WHERE (#{communityCategoryId} = 1 OR ct.community_category_id = #{communityCategoryId})
         ORDER BY ct.community_id DESC;
     </select>
 
@@ -112,6 +112,6 @@
         from
             community_tb ct
         where
-            ct.community_user_id = #{userId}
+            ct.user_id = #{userId}
     </select>
 </mapper>
