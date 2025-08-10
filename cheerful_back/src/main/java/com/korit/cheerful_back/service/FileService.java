@@ -16,6 +16,9 @@ public class FileService {
     @Value("${user.dir}")
     private String rootPath;
 
+    /*
+        파일 업로드 후 생성된 새 파일명을 반환 (DB에는 새 파일명만 저장하는 패턴)
+     */
     public String uploadFile(MultipartFile file, String dirPath) {
         String newFileName = generatedRandomFilename(file.getOriginalFilename());
         // 파일 업로드 경로 생성 -> rootPath - ${user.dir} -> 프로젝트 경로
@@ -37,14 +40,17 @@ public class FileService {
         StringBuilder newFileName = new StringBuilder();
         // 겹치지 않는 새로운 파일명 생성을 위해 랜덤 UUID 문자열 생성
         newFileName.append(UUID.randomUUID().toString().replaceAll("-", ""));
-        // UUID와 원본 파일명을 군부할 _(언더바) 추가
+        // UUID와 원본 파일명을 구분할 _(언더바) 추가
         newFileName.append("_");
-        // 마지막 원보 파일명 추가
+        // 마지막 원본 파일명 추가
         newFileName.append(originalFileName);
 
         return newFileName.toString();
     }
 
+    /*
+        업로드 디렉토리 없으면 생성
+     */
     private void mkdirs(String path) {
         // 해당 경로를 제어할 수 있는 File 객체 생성
         File file = new File(path);
@@ -54,6 +60,9 @@ public class FileService {
         }
     }
 
+    /*
+        업로드 파일 삭제 (기본 이미지 보호)
+     */
     public void deletedFile(String path) {
         if (path.substring(path.lastIndexOf("/")).contains("default")) {
             return;

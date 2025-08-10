@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class AccountController {
 
+  /*
+    현재 로그인한 사용자의 PrincipalUser 반환
+   */
   @GetMapping("/account/principal")
   public ResponseEntity<ResponseDto<?>> principal(@AuthenticationPrincipal PrincipalUser principalUser) {
     System.out.println(principalUser);

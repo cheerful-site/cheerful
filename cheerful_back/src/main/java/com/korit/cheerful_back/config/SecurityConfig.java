@@ -22,6 +22,9 @@ public class SecurityConfig {
   private final OAuth2UserService oAuth2UserService;
   private final OAuth2SuccessHandler oAuth2SuccessHandler;
 
+  /*
+    CORS 설정
+   */
   @Bean
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration corsConfiguration = new CorsConfiguration();
@@ -34,8 +37,14 @@ public class SecurityConfig {
     return source;
   }
 
+  /*
+    Spring Security HTTP 보안 설정
+    CSRF 비활성(Stateless API)
+    Stateless : 매 요청을 JWT 기반으로 인증
+   */
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    // CORS / CSRF / FORM 로그인 비활성화
     http.cors(Customizer.withDefaults());
     http.csrf(csrf -> csrf.disable());
     http.formLogin(formLogin -> formLogin.disable());
@@ -45,6 +54,7 @@ public class SecurityConfig {
     // Filter Setting
     http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
+    // 접근 제어 규칙
     http.authorizeHttpRequests(auth -> {
       auth.requestMatchers("/login/oauth2/**").permitAll();
       auth.requestMatchers("/oauth2/**").permitAll();
@@ -52,6 +62,7 @@ public class SecurityConfig {
       auth.anyRequest().authenticated();
     });
 
+    // 인증 실패(미인증 접근) 시 401 반환
     http.exceptionHandling(handling ->
         handling.authenticationEntryPoint((request, response, authException) -> {
               response.setStatus(401);
@@ -59,6 +70,7 @@ public class SecurityConfig {
         )
     );
 
+    // OAuth2 로그인 설정: 사용자 정보 로딩, 성공/실패 후처리
     http.oauth2Login(oauth2 -> oauth2
         .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))
         .successHandler(oAuth2SuccessHandler)

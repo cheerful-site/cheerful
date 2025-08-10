@@ -12,6 +12,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
+/*
+  Security 인증 주체(Principal)
+ */
 @Builder
 @Data
 public class PrincipalUser implements UserDetails, OAuth2User {

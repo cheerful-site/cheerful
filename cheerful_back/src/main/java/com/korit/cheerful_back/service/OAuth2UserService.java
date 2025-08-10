@@ -12,6 +12,11 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/*
+  OAuth2 로그인 시, 프로바이더에서 사용자 정보를 받아
+  -> 존재하지 않으면 신규 가입
+  -> 존재하면 기존 사용자 반환
+ */
 @Service
 @RequiredArgsConstructor
 public class OAuth2UserService extends DefaultOAuth2UserService {
@@ -58,9 +63,11 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
       throw new OAuth2AuthenticationException("지원하지 않는 소셜 로그인입니다: " + registrationId);
     }
 
+    // providerId 기준 식별
     User user = userMapper.findByProviderId(providerId);
 //    System.out.println(user);
 
+    // 신규 가입
     // not null 추가
     if (user == null) {
       user = User.builder()
