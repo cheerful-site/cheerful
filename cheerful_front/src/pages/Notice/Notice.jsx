@@ -2,6 +2,7 @@
 import { Link, useParams } from "react-router-dom";
 import Footer from "../../components/Footer/Footer";
 import * as s from "./styles";
+import CategoryComponent from "../../components/CategoryComponent/CategoryComponent";
 
 function Notice(props) {
   const { category } = useParams();
@@ -42,6 +43,15 @@ function Notice(props) {
       createdAt: "2025-08-08 09:58:31",
       category: 3,
     },
+    {
+      id: 5,
+      title: "데이터 추가 및 업데이트 안내 (2025-08-04)",
+      content:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ",
+      author: "admin",
+      createdAt: "2025-08-08 09:58:31",
+      category: 1,
+    },
   ];
 
   const noticeCategory = [
@@ -61,12 +71,12 @@ function Notice(props) {
 
       <div css={s.categoryList}>
         {noticeCategory.map((cate) => (
-          <Link
-            css={s.category(parseInt(category) === cate.category)}
+          <CategoryComponent
             key={cate.id}
-            to={`/notice/${cate.category}`}>
-            {cate.title}
-          </Link>
+            cate={cate}
+            category={category}
+            route={"notice"}
+          />
         ))}
       </div>
 

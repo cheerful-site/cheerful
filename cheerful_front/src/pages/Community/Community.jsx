@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import useCommunityQuery from "../../queries/CommunityQuery/useCommunityQuery";
 import dogImage from "../../image/img_dog3.png";
 import Post from "../../components/Post/Post";
+import CategoryComponent from "../../components/CategoryComponent/CategoryComponent";
 
 function Community(props) {
   const { category } = useParams();
@@ -86,12 +87,12 @@ function Community(props) {
 
       <div css={s.categoryList}>
         {communityCategory.map((cate) => (
-          <Link
-            css={s.category(parseInt(category) === cate.category)}
+          <CategoryComponent
             key={cate.id}
-            to={`/community/${cate.category}`}>
-            {cate.title}
-          </Link>
+            cate={cate}
+            category={category}
+            route={"community"}
+          />
         ))}
       </div>
 

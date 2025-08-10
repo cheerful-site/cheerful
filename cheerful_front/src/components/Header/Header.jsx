@@ -35,7 +35,7 @@ function Header(props) {
     {
       id: 4,
       title: "Map",
-      path: "/map",
+      path: "/map/1",
     },
     {
       id: 5,
