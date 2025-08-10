@@ -5,6 +5,7 @@ import * as s from "./styles";
 import { useEffect } from "react";
 import useCommunityQuery from "../../queries/CommunityQuery/useCommunityQuery";
 import dogImage from "../../image/img_dog3.png";
+import Post from "../../components/Post/Post";
 
 function Community(props) {
   const { category } = useParams();
@@ -19,9 +20,56 @@ function Community(props) {
     { id: 7, title: "임보 / 입양", category: 7 },
   ];
 
-  const contents = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-
-  console.log(category);
+  const contents = [
+    {
+      id: 1,
+      title: "첫번째 자유글",
+      content: "오늘 날씨가 참 좋네요.",
+      createdAt: "2025-08-08 09:58:31",
+    },
+    {
+      id: 2,
+      title: "개발 공부 근황",
+      content: "오늘 날씨가 참 좋네요.",
+      createdAt: "2025-08-08 09:58:31",
+    },
+    {
+      id: 3,
+      title: "우리집 강아지 자랑",
+      content: "오늘 날씨가 참 좋네요.",
+      createdAt: "2025-08-08 09:58:31",
+    },
+    {
+      id: 4,
+      title: "첫번째 자유글",
+      content: "오늘 날씨가 참 좋네요.",
+      createdAt: "2025-08-08 09:58:31",
+    },
+    {
+      id: 5,
+      title: "길고양이 급식소 운영",
+      content: "매주 주말마다 급식소 관리하고 있습니다.",
+      createdAt: "2025-08-08 09:58:31",
+    },
+    {
+      id: 6,
+      title: "실종: 시츄",
+      content: "8월 5일 오후 3시경, 서울 강남역 근처에서 잃어버렸습니다.",
+      createdAt: "2025-08-08 09:58:31",
+    },
+    {
+      id: 7,
+      title: "첫번째 자유글",
+      content: "오늘 날씨가 참 좋네요.",
+      createdAt: "2025-08-08 09:58:31",
+    },
+    {
+      id: 8,
+      title: "고양이 입양처 찾습니다",
+      content: "오늘 날씨가 참 좋네요.",
+      createdAt: "2025-08-08 09:58:31",
+    },
+  ];
 
   useEffect(() => {
     console.log(community.data);
@@ -50,15 +98,8 @@ function Community(props) {
       <div css={s.horizon}></div>
 
       <div css={s.postContainer}>
-        {contents.map((post) => (
-          <div css={s.contentContainer}>
-            <img src={dogImage} alt="" />
-            <div css={s.postContent}>
-              <h3>Title</h3>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
-              <h4>username</h4>
-            </div>
-          </div>
+        {contents.map((content) => (
+          <Post key={content.id} content={content} />
         ))}
       </div>
 

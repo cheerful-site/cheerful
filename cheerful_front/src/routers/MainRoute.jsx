@@ -7,6 +7,7 @@ import Home from "../pages/Home/Home";
 import Community from "../pages/Community/Community";
 import Food from "../pages/Food/Food";
 import MapPage from "../pages/Map/MapPage";
+import Notice from "../pages/Notice/Notice";
 
 function MainRoute(props) {
   return (
@@ -18,7 +19,7 @@ function MainRoute(props) {
         <Route path="/community/:category" element={<Community />} />
         <Route path="/food" element={<Food />} />
         <Route path="/map" element={<MapPage />} />
-        <Route path="/notice" element={<></>} />
+        <Route path="/notice/:category" element={<Notice />} />
         <Route path="/admin/*" element={<></>} />
         <Route path="/" element={<Home />} />
         <Route path="*" element={<NotFound />} />

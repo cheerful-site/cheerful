@@ -58,44 +58,9 @@ export const horizon = css`
 `;
 
 export const postContainer = css`
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(3, 1fr);
-  margin: 5rem 0;
-  width: 84rem;
-  gap: 4.5rem;
-`;
-
-export const contentContainer = css`
-  border-radius: 1.5rem;
-  margin: 2rem 0;
-  width: 100%;
-  height: 28rem;
-  background-color: #ffffff;
-
-  & > img {
-    border-top-left-radius: 1.5rem;
-    border-top-right-radius: 1.5rem;
-    width: 100%;
-    height: 18rem;
-  }
-`;
-
-export const postContent = css`
-  padding: 0 2rem;
-  & > h3 {
-    margin: 0;
-    font-size: 1.6rem;
-  }
-
-  & > p {
-    display: inline-block;
-    margin: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  & > h4 {
-    margin: 0;
-  }
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 4rem 0; 
 `;

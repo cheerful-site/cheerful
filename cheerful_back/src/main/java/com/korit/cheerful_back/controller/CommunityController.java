@@ -22,12 +22,14 @@ public class CommunityController {
     }
 
     @GetMapping("/{categoryId}")
+    // 카테고리 이동시 카테고리 가져오기
     public ResponseEntity<?> getCommunity(@PathVariable Integer categoryId) {
         System.out.println(communityService.getCommunity(categoryId));
         return ResponseEntity.ok(ResponseDto.success(communityService.getCommunity(categoryId)));
     }
 
     @GetMapping
+    //페이지네이션
     public ResponseEntity<ResponseDto<?>> getCommunities(@PathVariable Integer page, @PathVariable Integer size) {
         return ResponseEntity.ok(ResponseDto.success(communityService.getCommunityList(page, size)));
     }
