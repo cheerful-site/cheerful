@@ -13,6 +13,10 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+/*
+  JWT 생성/검증
+  만료 12시간
+ */
 @Component
 public class JwtUtil {
 
@@ -20,9 +24,13 @@ public class JwtUtil {
   private final Key KEY;
 
   public JwtUtil(@Value("${jwt.secret}") String secret) {
+    // base64 디코드로 HMAC 키 생성
     KEY = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
   }
 
+  /*
+    Access Token 생성
+   */
   public String generateAccessToken(User user) {
     return Jwts.builder()
         .subject("cheerful_access_token")
@@ -33,6 +41,9 @@ public class JwtUtil {
         .compact();
   }
 
+  /*
+    Bearer <token> 형태의 헤더 값을 순수 토큰으로 정제
+   */
   public String validateBearerToken(String token) {
     boolean isNull = token == null;
     if (isNull) {
@@ -48,6 +59,9 @@ public class JwtUtil {
     return token.substring(TOKEN_NAME.length());
   }
 
+  /*
+    JWS 파싱/검증 후 클레임 반환
+   */
   public Claims getClaims(String token) {
     try {
       return Jwts.parser().setSigningKey(KEY).build()

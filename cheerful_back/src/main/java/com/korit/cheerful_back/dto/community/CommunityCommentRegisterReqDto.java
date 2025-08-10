@@ -10,11 +10,12 @@ public class CommunityCommentRegisterReqDto {
     private Integer parentUserId;
     private String content;
 
-    public CommunityComment toEntity() {
+    public CommunityComment toEntity(Integer userId) {
         return CommunityComment.builder()
                 .communityId(communityId)
                 .parentCommentId(parentCommentId)
                 .parentUserId(parentUserId)
+                .userId(userId)
                 .content(content)
                 .build();
     }

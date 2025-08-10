@@ -11,6 +11,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
+/*
+  OAuth2 인증 성공 후 호출
+  로그인된 PrincipalUser로 Access Token 발급
+  프론트엔드로 토근 전달
+ */
 @Component
 @RequiredArgsConstructor
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {

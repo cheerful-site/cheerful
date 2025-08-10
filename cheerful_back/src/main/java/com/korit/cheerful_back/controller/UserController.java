@@ -16,6 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
   private final UserService userService;
 
+  /*
+    관리자 전용 사용자 관리 API
+    사용자 삭제
+
+   */
   @DeleteMapping("/users")
   public ResponseEntity<ResponseDto<?>> deleteUserIds(@RequestParam List<Integer> userIds) {
     userService.delete(userIds);
