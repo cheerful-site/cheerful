@@ -40,7 +40,7 @@ function Header(props) {
     {
       id: 5,
       title: "Notice",
-      path: "/notice",
+      path: "/notice/1",
     },
   ];
 
