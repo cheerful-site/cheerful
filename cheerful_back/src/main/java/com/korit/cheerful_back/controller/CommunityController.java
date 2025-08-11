@@ -42,7 +42,9 @@ public class CommunityController {
      */
     @GetMapping
     //페이지네이션
-    public ResponseEntity<ResponseDto<?>> getCommunities(@PathVariable Integer page, @PathVariable Integer size) {
+    public ResponseEntity<ResponseDto<?>> getCommunities(@RequestParam Integer page, @RequestParam Integer size) {
+        System.out.println(page);
+        System.out.println(size);
         return ResponseEntity.ok(ResponseDto.success(communityService.getCommunityList(page, size)));
     }
 
