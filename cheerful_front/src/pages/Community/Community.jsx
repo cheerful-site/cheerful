@@ -4,14 +4,17 @@ import Footer from "../../components/Footer/Footer";
 import * as s from "./styles";
 import { useEffect, useState } from "react";
 import useCommunityQuery from "../../queries/CommunityQuery/useCommunityQuery";
-import dogImage from "../../image/img_dog3.png";
 import Post from "../../components/Post/Post";
 import CategoryComponent from "../../components/CategoryComponent/CategoryComponent";
+import useCommunityListQuery from "../../queries/CommunityQuery/useCommunityListQuery";
 
 function Community(props) {
   const { category } = useParams();
   const community = useCommunityQuery(category);
+  const communityList = useCommunityListQuery(1, 10);
+
   const [communityContents, setCommunityContents] = useState([]);
+
   const communityCategory = [
     { id: 1, title: "전체", category: 1 },
     { id: 2, title: "자유게시판", category: 2 },
@@ -22,62 +25,13 @@ function Community(props) {
     { id: 7, title: "임보 / 입양", category: 7 },
   ];
 
-  const contents = [
-    {
-      id: 1,
-      title: "첫번째 자유글",
-      content: "오늘 날씨가 참 좋네요.",
-      createdAt: "2025-08-08 09:58:31",
-    },
-    {
-      id: 2,
-      title: "개발 공부 근황",
-      content: "오늘 날씨가 참 좋네요.",
-      createdAt: "2025-08-08 09:58:31",
-    },
-    {
-      id: 3,
-      title: "우리집 강아지 자랑",
-      content: "오늘 날씨가 참 좋네요.",
-      createdAt: "2025-08-08 09:58:31",
-    },
-    {
-      id: 4,
-      title: "첫번째 자유글",
-      content: "오늘 날씨가 참 좋네요.",
-      createdAt: "2025-08-08 09:58:31",
-    },
-    {
-      id: 5,
-      title: "길고양이 급식소 운영",
-      content: "매주 주말마다 급식소 관리하고 있습니다.",
-      createdAt: "2025-08-08 09:58:31",
-    },
-    {
-      id: 6,
-      title: "실종: 시츄",
-      content: "8월 5일 오후 3시경, 서울 강남역 근처에서 잃어버렸습니다.",
-      createdAt: "2025-08-08 09:58:31",
-    },
-    {
-      id: 7,
-      title: "첫번째 자유글",
-      content: "오늘 날씨가 참 좋네요.",
-      createdAt: "2025-08-08 09:58:31",
-    },
-    {
-      id: 8,
-      title: "고양이 입양처 찾습니다",
-      content: "오늘 날씨가 참 좋네요.",
-      createdAt: "2025-08-08 09:58:31",
-    },
-  ];
+  console.log(communityList?.data);
 
   useEffect(() => {
-    setCommunityContents(community?.data.data.body);
+    setCommunityContents(community?.data?.data.body);
   }, [category]);
 
-  console.log(communityContents);
+  console.log(communityList?.data);
 
   return (
     <div css={s.layout}>

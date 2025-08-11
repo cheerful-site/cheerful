@@ -40,13 +40,13 @@
             *
         from
             (select
-                dense_rank() over(order by ct.community_created_at desc, ct.community_id desc) as community_number,
+                dense_rank() over(order by ct.created_at desc, ct.community_id desc) as community_number,
                 ct.community_id,
-                ct.user_id,
+                ct.user_id as ct_user_id,
 
                 cut.user_id,
                 cut.user_name,
-                cut.user_profile_img_path,
+                cut.profile_img_path,
 
                 ct.community_content,
                 ct.created_at,
@@ -54,7 +54,7 @@
                 cit.community_img_id,
                 cit.community_id as cit_community_id,
                 cit.seq,
-                cit.`path`,
+                cit.`img_path`,
 
                 ifnull(clt.community_like_id, 0) as is_like,
                 ifnull(clc.like_count, 0) as like_count,
@@ -62,7 +62,7 @@
         from
             community_tb ct
             left outer join user_tb cut on(cut.user_id = ct.user_id)
-            left outer join community_img_tb cit on(cit.community_img_id = ct.community_id)
+            left outer join community_img_tb cit on(cit.community_id = ct.community_id)
             left outer join community_like_tb clt on(clt.community_id = ct.community_id and clt.user_id = #{userId})
             left outer join (select community_id, count(*) as like_count from community_like_tb group by community_id) clc on(clc.community_id = ct.community_id)
             left outer join (select community_id, count(*) as comments_count from community_comment_tb group by community_id) cc on(cc.community_id = ct.community_id)
@@ -93,7 +93,7 @@
             cit.community_img_id,
             cit.community_id,
             cit.seq,
-            cit.img_path,
+            cit.`img_path`,
 
             ifnull(clt.community_like_id, 0) as is_like,
             ifnull(clc.like_count, 0) as like_count,
