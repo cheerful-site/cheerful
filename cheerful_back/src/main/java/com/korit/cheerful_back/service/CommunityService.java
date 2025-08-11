@@ -100,6 +100,7 @@ public class CommunityService {
         return PaginationRespDto.<Community>builder()
                 .content(contests)
                 .totalElements(totalElements)
+                .totalPages(totalPages)
                 .isLast(isLast)
                 .page(page)
                 .size(size)
