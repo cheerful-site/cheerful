@@ -6,7 +6,7 @@ import { AiFillLike } from "react-icons/ai";
 function Post({ content }) {
   return (
     <div css={s.postLayout}>
-      <img css={s.postImg} src={noImage} alt="" />
+      <img css={s.postImg} src={content.communityImgs[0].imgPath} alt="" />
 
       <div css={s.postContainer}>
         <div css={s.postTitle}>{content.title}</div>
@@ -15,11 +15,12 @@ function Post({ content }) {
         </div>
         <div css={s.postLike}>
           <div>
-            <span>{content.id}</span>
-            <span>{content.createdAt}</span>
+            <span>{content.user}</span>
+            <span>{content.createdAt.slice(0, 10)}</span>
           </div>
           <div>
             <AiFillLike />
+            <span>{content.likeCount}</span>
           </div>
         </div>
       </div>
