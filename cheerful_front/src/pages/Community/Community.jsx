@@ -2,7 +2,7 @@
 import { Link, useParams } from "react-router-dom";
 import Footer from "../../components/Footer/Footer";
 import * as s from "./styles";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useCommunityQuery from "../../queries/CommunityQuery/useCommunityQuery";
 import dogImage from "../../image/img_dog3.png";
 import Post from "../../components/Post/Post";
@@ -11,6 +11,7 @@ import CategoryComponent from "../../components/CategoryComponent/CategoryCompon
 function Community(props) {
   const { category } = useParams();
   const community = useCommunityQuery(category);
+  const [communityContents, setCommunityContents] = useState([]);
   const communityCategory = [
     { id: 1, title: "전체", category: 1 },
     { id: 2, title: "자유게시판", category: 2 },
@@ -73,8 +74,10 @@ function Community(props) {
   ];
 
   useEffect(() => {
-    console.log(community.data);
+    setCommunityContents(community?.data.data.body);
   }, [category]);
+
+  console.log(communityContents);
 
   return (
     <div css={s.layout}>
@@ -99,8 +102,8 @@ function Community(props) {
       <div css={s.horizon}></div>
 
       <div css={s.postContainer}>
-        {contents.map((content) => (
-          <Post key={content.id} content={content} />
+        {communityContents?.map((content) => (
+          <Post key={content.communityId} content={content} />
         ))}
       </div>
 

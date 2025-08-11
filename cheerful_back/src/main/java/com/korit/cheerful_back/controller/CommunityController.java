@@ -33,7 +33,7 @@ public class CommunityController {
     @GetMapping("/{categoryId}")
     // 카테고리 이동시 카테고리 가져오기
     public ResponseEntity<ResponseDto<?>> getCommunity(@PathVariable Integer categoryId) {
-        System.out.println(communityService.getCommunity(categoryId));
+//        System.out.println(communityService.getCommunity(categoryId));
         return ResponseEntity.ok(ResponseDto.success(communityService.getCommunity(categoryId)));
     }
 
