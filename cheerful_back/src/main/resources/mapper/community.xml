@@ -61,7 +61,7 @@
                 ut.user_email,
                 ut.profile_img_path,
                 ut.role,
-                ut.provier,
+                ut.provider,
                 ut.provider_id,
 
                 ct.community_title,
@@ -104,7 +104,7 @@
             ut.user_email,
             ut.profile_img_path,
             ut.role,
-            ut.provier,
+            ut.provider,
             ut.provider_id,
 
             ct.community_title,
