@@ -5,7 +5,6 @@ import { AiFillLike } from "react-icons/ai";
 
 function Post({ content }) {
   // console.log(content);
-  console.log(content);
   return (
     <div css={s.postLayout}>
       <img

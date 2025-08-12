@@ -24,10 +24,13 @@ function Community(props) {
     { id: 6, title: "실종 / 목격", category: 6 },
     { id: 7, title: "임보 / 입양", category: 7 },
   ];
-  const rows = communityList.isFetched ? [] : communityList?.data?.body.content;
+
+  console.log(communityList?.data?.data.body);
+
+  const contents = communityList?.data?.data.body;
 
   useEffect(() => {
-    setCommunityContents(community?.data?.data.body);
+    setCommunityContents(contents?.content);
   }, [category]);
   return (
     <div css={s.layout}>
@@ -57,7 +60,7 @@ function Community(props) {
         ))}
       </div>
 
-      <div>pagenation</div>
+      <div>{contents?.page}</div>
 
       <Footer />
     </div>
