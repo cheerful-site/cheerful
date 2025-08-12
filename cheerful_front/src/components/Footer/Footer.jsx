@@ -1,9 +1,13 @@
 /**@jsxImportSource @emotion/react */
 import * as s from "./styles";
 import { FaFacebookF, FaInstagram, FaTwitter, FaYoutube } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Footer(props) {
+  const navigate = useNavigate();
+  const handleMoveAdminLoginOnClick = () => {
+    navigate("/admin/login");
+  };
   return (
     <div css={s.layout}>
       <div css={s.content}>
@@ -29,7 +33,11 @@ function Footer(props) {
         </Link>
       </div>
 
-      <div css={s.company}>CompanyName @ 2025. All rights reserved.</div>
+      <div css={s.company}>
+        CompanyName @{" "}
+        <div onDoubleClick={handleMoveAdminLoginOnClick}>2025.</div> All rights
+        reserved.
+      </div>
     </div>
   );
 }

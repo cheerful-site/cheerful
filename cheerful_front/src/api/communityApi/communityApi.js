@@ -8,10 +8,17 @@ export const reqCommunity = async (category) =>
   });
 
 export const reqCommunityList = async (page, size) => {
-  await api.get(`/community`, {
+  return await api.get(`/community`, {
     params: {
       page,
       size,
     },
   });
 };
+
+export const reqCommunityRegister = async (data) =>
+  await api.post(`/community`, data, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
