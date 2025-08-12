@@ -13,10 +13,9 @@ import lombok.NoArgsConstructor;
 public class Admin {
   public Integer adminId;
   public String adminName;
+  public String adminLoginName;
   @JsonIgnore
-  public String email;
+  public String password;
   public String profileImgPath;
   public String role;
-  public String providerId;
-  public String provider;
 }

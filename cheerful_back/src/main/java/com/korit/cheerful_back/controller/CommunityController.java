@@ -2,6 +2,7 @@ package com.korit.cheerful_back.controller;
 
 import com.korit.cheerful_back.dto.community.CommunityCommentRegisterReqDto;
 import com.korit.cheerful_back.dto.community.CommunityRegisterReqDto;
+import com.korit.cheerful_back.dto.community.CommunitySearchReqDto;
 import com.korit.cheerful_back.dto.response.ResponseDto;
 import com.korit.cheerful_back.service.CommunityService;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +23,8 @@ public class CommunityController {
      */
     @PostMapping
     public ResponseEntity<ResponseDto<?>> register(@ModelAttribute CommunityRegisterReqDto dto) {
-        System.out.println(dto);
-//        communityService.register(dto);
+//        System.out.println(dto);
+        communityService.register(dto);
         return ResponseEntity.ok(ResponseDto.success(null));
     }
 
@@ -43,10 +44,11 @@ public class CommunityController {
      */
     @GetMapping
     //페이지네이션
-    public ResponseEntity<ResponseDto<?>> getCommunities(@RequestParam Integer page, @RequestParam Integer size) {
-        System.out.println(page);
-        System.out.println(size);
+    public ResponseEntity<ResponseDto<?>> getCommunities(Integer page, Integer size) {
+//        System.out.println(page);
+//        System.out.println(size);
         System.out.println(communityService.getCommunityList(page, size));
+//        System.out.println(communityService.getCommunityList(dto));
         return ResponseEntity.ok(ResponseDto.success(communityService.getCommunityList(page, size)));
     }
 

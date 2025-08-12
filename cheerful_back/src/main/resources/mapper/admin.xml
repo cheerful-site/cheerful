@@ -5,11 +5,6 @@
 
 <mapper namespace="com.korit.cheerful_back.domain.admin.AdminMapper">
 
-  <insert id="insert" useGeneratedKeys="true" keyProperty="adminId">
-    insert into admin_tb
-    values (default, #{adminName}, #{email}, #{profileImgPath}, #{role}, #{provider}, #{providerId})
-  </insert>
-
   <select id="findById" resultType="com.korit.cheerful_back.domain.admin.Admin">
     select
       *
@@ -19,13 +14,13 @@
       admin_id = #{adminId}
   </select>
 
-  <select id="findByProviderId" resultType="com.korit.cheerful_back.domain.admin.Admin">
+  <select id="findByAdminLoginId" resultType="com.korit.cheerful_back.domain.admin.Admin">
     select
       *
     from
       admin_tb
     where
-      provider_id = #{providerId}
+      admin_login_id = #{adminLoginId}
   </select>
 
 </mapper>

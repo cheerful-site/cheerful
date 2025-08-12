@@ -10,4 +10,5 @@ public interface CommunityMapper {
     List<Community> findAllBySearchOption(CommunitySearchOption communitySearchOption);
     List<Community> findByCategoryId(@Param("categoryId") Integer categoryId, @Param("userId") Integer userId);
     int getCountOfOptions(CommunitySearchOption communitySearchOption);
+    List<Community> findAllOfOptions(CommunitySearchOption option);
 }
