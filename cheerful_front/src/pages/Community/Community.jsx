@@ -11,7 +11,7 @@ import useCommunityListQuery from "../../queries/CommunityQuery/useCommunityList
 function Community(props) {
   const { category } = useParams();
   const community = useCommunityQuery(category);
-  const communityList = useCommunityListQuery(1, 10);
+  const communityList = useCommunityListQuery(1, 10, category);
 
   const [communityContents, setCommunityContents] = useState([]);
 
@@ -32,6 +32,7 @@ function Community(props) {
   useEffect(() => {
     setCommunityContents(contents?.content);
   }, [category]);
+
   return (
     <div css={s.layout}>
       <div css={s.communityTitle}>

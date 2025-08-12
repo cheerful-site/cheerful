@@ -15,6 +15,10 @@ function AdminLogin(props) {
     }));
   };
 
+  const handleLoginOnClick = () => {
+    console.log(inputValue);
+  };
+
   return (
     <div css={s.layout}>
       <div css={s.adminLoginContainer}>
@@ -35,7 +39,7 @@ function AdminLogin(props) {
           placeholder="비밀번호"
           onChange={handleOnChange}
         />
-        <button>로그인</button>
+        <button onClick={handleLoginOnClick}>로그인</button>
       </div>
     </div>
   );
