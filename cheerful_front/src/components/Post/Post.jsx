@@ -4,9 +4,19 @@ import noImage from "../../icons/Frame2.png";
 import { AiFillLike } from "react-icons/ai";
 
 function Post({ content }) {
+  // console.log(content);
+  console.log(content);
   return (
     <div css={s.postLayout}>
-      <img css={s.postImg} src={content.communityImgs[0].imgPath} alt="" />
+      <img
+        css={s.postImg}
+        src={
+          content.communityImgs[0]?.imgPath
+            ? content.communityImgs[0].imgPath
+            : noImage
+        }
+        alt=""
+      />
 
       <div css={s.postContainer}>
         <div css={s.postTitle}>{content.title}</div>
@@ -15,7 +25,7 @@ function Post({ content }) {
         </div>
         <div css={s.postLike}>
           <div>
-            <span>{content.user}</span>
+            <span>{content.user.username}</span>
             <span>{content.createdAt.slice(0, 10)}</span>
           </div>
           <div>

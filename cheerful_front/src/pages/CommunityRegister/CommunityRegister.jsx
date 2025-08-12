@@ -26,7 +26,13 @@ function CommunityRegister(props) {
   };
 
   const handleRegisterOnClick = () => {
-    console.log(inputValue);
+    const reqData = {
+      communityCategoryId: inputValue.communityCategoryId,
+      title: inputValue.title,
+      content: inputValue.content,
+    };
+
+    reqCommunityRegister(reqData);
 
     // try {
     //   reqCommunityRegister(registerPost);

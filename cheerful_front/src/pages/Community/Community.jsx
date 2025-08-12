@@ -24,17 +24,11 @@ function Community(props) {
     { id: 6, title: "실종 / 목격", category: 6 },
     { id: 7, title: "임보 / 입양", category: 7 },
   ];
-
-  console.log(communityList.data);
-
   const rows = communityList.isFetched ? [] : communityList?.data?.body.content;
-
-  console.log(rows);
 
   useEffect(() => {
     setCommunityContents(community?.data?.data.body);
   }, [category]);
-
   return (
     <div css={s.layout}>
       <div css={s.communityTitle}>
