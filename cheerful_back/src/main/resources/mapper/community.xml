@@ -130,7 +130,7 @@
                 ct.community_category_id = #{categoryId}
             </if>
         </where>
-        order by ct.community_id desc, cit.seq;
+        order by ct.community_id desc, cit.seq desc;
     </select>
 
     <select id="getCountOfOptions" resultType="java.lang.Integer">
@@ -139,8 +139,8 @@
         from
             community_tb ct
             left outer join community_category_tb cct on(cct.community_category_id = ct.community_category_id)
-        where
-            ct.user_id = #{userId}
+<!--        where-->
+<!--            ct.user_id = #{userId}-->
     </select>
 
     <select id="findAllOfOptions" resultMap="CommunityMap">

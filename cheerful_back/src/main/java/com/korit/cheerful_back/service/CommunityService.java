@@ -106,13 +106,13 @@ public class CommunityService {
     public PaginationRespDto<?> getCommunityList(Integer page, Integer size) {
         CommunitySearchOption searchOption = CommunitySearchOption.builder()
                 .startIndex((page - 1) * size)
-//                .endIndex(size * page)
+                .endIndex(size * page)
                 .size(size)
 //                .userId(principalUtil.getPrincipalUser().getUser().getUserId())
                 .build();
 
         // 총 건수 / 총 페이지 / 마지막 여부 계산
-        List<Community> contests = communityMapper.findAllBySearchOption(searchOption);
+        List<Community> contests = communityMapper.findAllOfOptions(searchOption);
         Integer totalElements = communityMapper.getCountOfOptions(searchOption);
         Integer totalPages = (int) Math.ceil(totalElements.longValue() / size.doubleValue());
         Boolean isLast = page.equals(totalPages);
