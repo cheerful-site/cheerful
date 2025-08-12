@@ -11,7 +11,7 @@ function AdminLogin(props) {
   const handleOnChange = (e) => {
     setInputValue((prev) => ({
       ...prev,
-      [e.raget.name]: [e.target.value],
+      [e.target.name]: [e.target.value],
     }));
   };
 
