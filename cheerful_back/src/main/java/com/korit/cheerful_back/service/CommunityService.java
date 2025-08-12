@@ -75,7 +75,7 @@ public class CommunityService {
      */
     public List<Community> getCommunity(Integer categoryId) {
         Integer userId = principalUtil.getPrincipalUser().getUser().getUserId();
-        System.out.println(categoryId);
+//        System.out.println(categoryId);
 //        System.out.println(userId);
         return communityMapper.findByCategoryId(categoryId, userId);
     }

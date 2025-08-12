@@ -57,6 +57,7 @@ export const snsContainer = css`
 `;
 
 export const company = css`
+  display: flex;
   margin-bottom: 1rem;
   font-weight: 200;
 `;

@@ -22,7 +22,8 @@ public class CommunityController {
      */
     @PostMapping
     public ResponseEntity<ResponseDto<?>> register(@ModelAttribute CommunityRegisterReqDto dto) {
-        communityService.register(dto);
+        System.out.println(dto);
+//        communityService.register(dto);
         return ResponseEntity.ok(ResponseDto.success(null));
     }
 
@@ -45,6 +46,7 @@ public class CommunityController {
     public ResponseEntity<ResponseDto<?>> getCommunities(@RequestParam Integer page, @RequestParam Integer size) {
         System.out.println(page);
         System.out.println(size);
+        System.out.println(communityService.getCommunityList(page, size));
         return ResponseEntity.ok(ResponseDto.success(communityService.getCommunityList(page, size)));
     }
 

@@ -119,7 +119,8 @@ function Header(props) {
                     overflow: "hidden",
                   },
                 }}
-                isOpen={isOpen}>
+                isOpen={isOpen}
+                appElement={document.getElementById("root")}>
                 <div css={s.modalContainer}>
                   <div css={s.modalProfile}>
                     <img src={user?.profileImgPath} alt="" />
@@ -127,7 +128,7 @@ function Header(props) {
                   </div>
 
                   <div css={s.modalButton}>
-                    <Link to={""}>글쓰기</Link>
+                    <Link to={"/community/register"}>글쓰기</Link>
                     {user?.role === "ROLE_ADMIN" ? (
                       <Link to={""}>관리자 페이지</Link>
                     ) : (
