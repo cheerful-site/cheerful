@@ -34,9 +34,8 @@ function Footer(props) {
       </div>
 
       <div css={s.company}>
-        CompanyName @{" "}
-        <div onDoubleClick={handleMoveAdminLoginOnClick}>2025.</div> All rights
-        reserved.
+        Cheerful @ <div onDoubleClick={handleMoveAdminLoginOnClick}>2025.</div>{" "}
+        All rights reserved.
       </div>
     </div>
   );
