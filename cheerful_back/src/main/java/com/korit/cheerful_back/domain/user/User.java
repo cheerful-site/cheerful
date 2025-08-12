@@ -17,6 +17,6 @@ public class User {
   public String email;
   public String profileImgPath;
   public String role;
-  public String providerId;
   public String provider;
+  public String providerId;
 }
