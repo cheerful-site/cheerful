@@ -7,11 +7,12 @@ export const reqCommunity = async (category) =>
     },
   });
 
-export const reqCommunityList = async (page, size) => {
+export const reqCommunityList = async (page, size, categoryId) => {
   return await api.get(`/community`, {
     params: {
       page,
       size,
+      categoryId,
     },
   });
 };
