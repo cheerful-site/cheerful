@@ -1,8 +1,11 @@
 package com.korit.cheerful_back.security.filter;
 
+import com.korit.cheerful_back.domain.admin.Admin;
+import com.korit.cheerful_back.domain.admin.AdminMapper;
 import com.korit.cheerful_back.domain.user.User;
 import com.korit.cheerful_back.domain.user.UserMapper;
 import com.korit.cheerful_back.security.jwt.JwtUtil;
+import com.korit.cheerful_back.security.model.PrincipalAdmin;
 import com.korit.cheerful_back.security.model.PrincipalUser;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.Filter;
@@ -29,6 +32,7 @@ public class JwtFilter implements Filter {
 
   private final JwtUtil jwtUtil;
   private final UserMapper userMapper;
+  private final AdminMapper adminMapper;
 
   @Override
   public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse,
@@ -63,7 +67,11 @@ public class JwtFilter implements Filter {
       return;
     }
 
-    setAuthentication(claims);
+    if (claims.get("adminLoginId") != null) {
+      setAdminAuthentication(claims);
+    } else if (claims.get("userId") != null) {
+      setAuthentication(claims);
+    }
 
   }
 
@@ -81,6 +89,24 @@ public class JwtFilter implements Filter {
 
     PrincipalUser principal = PrincipalUser.builder().user(foundUser).build();
     Authentication authentication = new UsernamePasswordAuthenticationToken(principal, "", principal.getAuthorities());
+    SecurityContextHolder.getContext().setAuthentication(authentication);
+  }
+
+  /*
+    adminId로 DB 조회
+    -> Principal 구성
+    -> Authentication 세팅
+   */
+  private void setAdminAuthentication(Claims claims) {
+    String adminId = (String) claims.get("adminId");
+    System.out.println(adminId);
+    Admin foundAdmin = adminMapper.findByAdminId(adminId);
+    if (foundAdmin == null) {
+      return;
+    }
+
+    PrincipalAdmin principalAdmin = PrincipalAdmin.builder().admin(foundAdmin).build();
+    Authentication authentication = new UsernamePasswordAuthenticationToken(principalAdmin, "", principalAdmin.getAuthorities());
     SecurityContextHolder.getContext().setAuthentication(authentication);
   }
 
