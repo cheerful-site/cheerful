@@ -31,23 +31,24 @@ public class CommunityController {
         특정 카테고리의 모든 커뮤니티 글을 조회
         categoryId가 1이면 전체 조회
      */
-    @GetMapping("/{categoryId}")
-    // 카테고리 이동시 카테고리 가져오기
-    public ResponseEntity<ResponseDto<?>> getCommunity(@PathVariable Integer categoryId) {
-//        System.out.println(communityService.getCommunity(categoryId));
-        return ResponseEntity.ok(ResponseDto.success(communityService.getCommunity(categoryId)));
-    }
+//    @GetMapping("/{categoryId}")
+//    // 카테고리 이동시 카테고리 가져오기
+//    public ResponseEntity<ResponseDto<?>> getCommunity(@PathVariable Integer categoryId) {
+////        System.out.println(communityService.getCommunity(categoryId));
+//        return ResponseEntity.ok(ResponseDto.success(communityService.getCommunity(categoryId)));
+//    }
 
     /*
         커뮤니티 페이징 목록 조회
      */
-    @GetMapping
+    @GetMapping("/{categoryId}")
     //페이지네이션
-    public ResponseEntity<ResponseDto<?>> getCommunities(@RequestParam Integer page, @RequestParam Integer size) {
+    public ResponseEntity<ResponseDto<?>> getCommunities(@RequestParam Integer page, @RequestParam Integer size, @PathVariable Integer categoryId) {
         System.out.println(page);
         System.out.println(size);
-        System.out.println(communityService.getCommunityList(page, size));
-        return ResponseEntity.ok(ResponseDto.success(communityService.getCommunityList(page, size)));
+        System.out.println(categoryId);
+        System.out.println(communityService.getCommunityList(page, size, categoryId));
+        return ResponseEntity.ok(ResponseDto.success(communityService.getCommunityList(page, size, categoryId)));
     }
 
     /*

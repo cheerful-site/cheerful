@@ -59,6 +59,7 @@ public class SecurityConfig {
       auth.requestMatchers("/login/oauth2/**").permitAll();
       auth.requestMatchers("/oauth2/**").permitAll();
       auth.requestMatchers("/image/**").permitAll();
+      auth.requestMatchers("/community/**").permitAll();
       auth.anyRequest().authenticated();
     });
 

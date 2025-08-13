@@ -46,7 +46,7 @@
         values (default, #{communityCategoryId}, #{userId}, #{title}, #{content}, now())
     </insert>
 
-    <select id="findAllBySearchOption" resultMap="CommunityMap">
+    <select id="findAllByOption" resultMap="CommunityMap">
         select
             *
         from
@@ -55,6 +55,9 @@
                 ct.community_id,
                 ct.community_category_id,
                 ct.user_id as ct_user_id,
+                ct.community_title,
+                ct.community_content,
+                ct.created_at,
 
                 ut.user_id as ut_user_id,
                 ut.user_name,
@@ -64,10 +67,6 @@
                 ut.provider,
                 ut.provider_id,
 
-                ct.community_title,
-                ct.community_content,
-                ct.created_at,
-
                 cit.community_img_id,
                 cit.community_id as cit_community_id,
                 cit.seq,
@@ -76,56 +75,87 @@
                 ifnull(clt.community_like_id, 0) as is_like,
                 ifnull(clc.like_count, 0) as like_count,
                 ifnull(cc.comments_count, 0) as comments_count
-        from
-            community_tb ct
-            left outer join user_tb ut on(ut.user_id = ct.user_id)
-            left outer join community_img_tb cit on(cit.community_id = ct.community_id)
-            left outer join community_like_tb clt on(clt.community_id = ct.community_id and clt.user_id = #{userId})
-            left outer join (select community_id, count(*) as like_count from community_like_tb group by community_id) clc on(clc.community_id = ct.community_id)
-            left outer join (select community_id, count(*) as comments_count from community_comment_tb group by community_id) cc on(cc.community_id = ct.community_id)
-        where
-            ct.user_id = #{userId}
-        order by
-            ct.created_at desc,
-            ct.community_id desc,
-            cit.seq) communities
+            from
+                community_tb ct
+                left outer join user_tb ut on(ut.user_id = ct.user_id)
+                left outer join community_img_tb cit on(cit.community_id = ct.community_id)
+                left outer join community_like_tb clt on(clt.community_id = ct.community_id)
+                left outer join community_category_tb cct on(cct.community_category_id = ct.community_category_id)
+                left outer join (select community_id, count(*) as like_count from community_like_tb group by community_id) clc on(clc.community_id = ct.community_id)
+                left outer join (select community_id, count(*) as comments_count from community_comment_tb group by community_id) cc on(cc.community_id = ct.community_id)
+            <where>
+                <choose>
+                    <!-- categoryId == 1 이면 전체 -->
+                    <when test="categoryId == 1">
+                        1 = 1
+                    </when>
+                    <otherwise>
+                        ct.community_category_id = #{categoryId}
+                    </otherwise>
+                </choose>
+            </where>
+            order by
+                ct.created_at desc,
+                ct.community_id desc,
+                cit.seq) communities
         where
             community_number between #{startIndex} + 1 and #{endIndex}
+<!--        limit #{startIndex}, #{size}-->
     </select>
 
-    <select id="findByCategoryId" resultMap="CommunityMap">
+<!--    <select id="findByCategoryId" resultMap="CommunityMap">-->
+<!--        select-->
+<!--            ct.community_id,-->
+<!--            ct.community_category_id,-->
+<!--            ct.user_id as ct_user_id,-->
+
+<!--            ut.user_id as ut_user_id,-->
+<!--            ut.user_name,-->
+<!--            ut.user_email,-->
+<!--            ut.profile_img_path,-->
+<!--            ut.role,-->
+<!--            ut.provider,-->
+<!--            ut.provider_id,-->
+
+<!--            ct.community_title,-->
+<!--            ct.community_content,-->
+<!--            ct.created_at,-->
+
+<!--            cit.community_img_id,-->
+<!--            cit.community_id as cit_community_id,-->
+<!--            cit.seq,-->
+<!--            cit.`img_path`,-->
+
+<!--            ifnull(clt.community_like_id, 0) as is_like,-->
+<!--            ifnull(clc.like_count, 0) as like_count,-->
+<!--            ifnull(cc.comments_count, 0) as comments_count-->
+<!--        from-->
+<!--            community_tb ct-->
+<!--            left outer join user_tb ut on(ut.user_id = ct.user_id)-->
+<!--            left outer join community_img_tb cit on(cit.community_id = ct.community_id)-->
+<!--            left outer join community_like_tb clt on(clt.community_id = ct.community_id)-->
+<!--            left outer join (select community_id, count(*) as like_count from community_like_tb group by community_id) clc on(clc.community_id = ct.community_id)-->
+<!--            left outer join (select community_id, count(*) as comments_count from community_comment_tb group by community_id) cc on(cc.community_id = ct.community_id)-->
+<!--        <where>-->
+<!--            <choose>-->
+<!--                &lt;!&ndash; categoryId == 1 이면 전체 &ndash;&gt;-->
+<!--                <when test="categoryId == 1">-->
+<!--                    1 = 1-->
+<!--                </when>-->
+<!--                <otherwise>-->
+<!--                    ct.community_category_id = #{categoryId}-->
+<!--                </otherwise>-->
+<!--            </choose>-->
+<!--        </where>-->
+<!--        order by ct.community_id desc;-->
+<!--    </select>-->
+
+    <select id="getCountOfOptions" resultType="java.lang.Integer">
         select
-            ct.community_id,
-            ct.community_category_id,
-            ct.user_id as ct_user_id,
-
-            ut.user_id as ut_user_id,
-            ut.user_name,
-            ut.user_email,
-            ut.profile_img_path,
-            ut.role,
-            ut.provider,
-            ut.provider_id,
-
-            ct.community_title,
-            ct.community_content,
-            ct.created_at,
-
-            cit.community_img_id,
-            cit.community_id as cit_community_id,
-            cit.seq,
-            cit.`img_path`,
-
-            ifnull(clt.community_like_id, 0) as is_like,
-            ifnull(clc.like_count, 0) as like_count,
-            ifnull(cc.comments_count, 0) as comments_count
+            count(*)
         from
             community_tb ct
-            left outer join user_tb ut on(ut.user_id = ct.user_id)
-            left outer join community_img_tb cit on(cit.community_id = ct.community_id)
-            left outer join community_like_tb clt on(clt.community_id = ct.community_id and clt.user_id = #{userId})
-            left outer join (select community_id, count(*) as like_count from community_like_tb group by community_id) clc on(clc.community_id = ct.community_id)
-            left outer join (select community_id, count(*) as comments_count from community_comment_tb group by community_id) cc on(cc.community_id = ct.community_id)
+            left outer join community_category_tb cct on (cct.community_category_id = ct.community_category_id)
         <where>
             <choose>
                 <!-- categoryId == 1 이면 전체 -->
@@ -137,15 +167,7 @@
                 </otherwise>
             </choose>
         </where>
-        order by ct.community_id desc;
-    </select>
-
-    <select id="getCountOfOptions" resultType="java.lang.Integer">
-        select
-            count(*)
-        from
-            community_tb ct
-        where
-            ct.user_id = #{userId}
+<!--        where-->
+<!--            ct.user_id = #{userId}-->
     </select>
 </mapper>

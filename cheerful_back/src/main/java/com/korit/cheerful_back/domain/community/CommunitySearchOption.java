@@ -9,5 +9,7 @@ public class CommunitySearchOption {
   private Integer startIndex;
   private Integer endIndex;
   private Integer size;
+  private Integer categoryId;
   private Integer userId;
+
 }
