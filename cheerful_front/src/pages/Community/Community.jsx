@@ -3,14 +3,12 @@ import { Link, useParams } from "react-router-dom";
 import Footer from "../../components/Footer/Footer";
 import * as s from "./styles";
 import { useEffect, useState } from "react";
-import useCommunityQuery from "../../queries/CommunityQuery/useCommunityQuery";
 import Post from "../../components/Post/Post";
 import CategoryComponent from "../../components/CategoryComponent/CategoryComponent";
 import useCommunityListQuery from "../../queries/CommunityQuery/useCommunityListQuery";
 
 function Community(props) {
   const { category } = useParams();
-  const community = useCommunityQuery(category);
   const communityList = useCommunityListQuery(1, 10, category);
 
   const [communityContents, setCommunityContents] = useState([]);
@@ -31,6 +29,7 @@ function Community(props) {
 
   useEffect(() => {
     setCommunityContents(contents?.content);
+    communityList.refetch();
   }, [category]);
 
   return (
