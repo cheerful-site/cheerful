@@ -73,32 +73,33 @@ public class CommunityService {
         카테고리별 커뮤니티 목록 조회
         categoryId가 1이면 전체 조회
      */
-    public List<Community> getCommunity(Integer categoryId) {
-        Integer userId = principalUtil.getPrincipalUser().getUser().getUserId();
-//        System.out.println(categoryId);
-//        System.out.println(userId);
-        return communityMapper.findByCategoryId(categoryId, userId);
-    }
+//    public List<Community> getCommunity(Integer categoryId) {
+//        Integer userId = principalUtil.getPrincipalUser().getUser().getUserId();
+////        System.out.println(categoryId);
+////        System.out.println(userId);
+//        return communityMapper.findByCategoryId(categoryId, userId);
+//    }
 
     /*
         커뮤니티 페이징 목록 조회
      */
-    public PaginationRespDto<Community> getCommunityList(Integer page, Integer size) {
+    public PaginationRespDto<Community> getCommunityList(Integer page, Integer size, Integer categoryId) {
         CommunitySearchOption searchOption = CommunitySearchOption.builder()
                 .startIndex((page - 1) * size)
                 .endIndex(size * page)
                 .size(size)
-                .userId(principalUtil.getPrincipalUser().getUser().getUserId())
+                .categoryId(categoryId)
                 .build();
 
         // 총 건수 / 총 페이지 / 마지막 여부 계산
-        List<Community> contests = communityMapper.findAllBySearchOption(searchOption);
+        List<Community> contests = communityMapper.findAllByOption(searchOption);
         Integer totalElements = communityMapper.getCountOfOptions(searchOption);
         Integer totalPages = (int) Math.ceil(totalElements.longValue() / size.doubleValue());
         Boolean isLast = page.equals(totalPages);
 
         return PaginationRespDto.<Community>builder()
                 .content(contests)
+                .categoryId(categoryId)
                 .totalElements(totalElements)
                 .totalPages(totalPages)
                 .isLast(isLast)

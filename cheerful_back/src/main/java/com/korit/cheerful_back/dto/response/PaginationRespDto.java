@@ -13,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 public class PaginationRespDto<T> {
     private List<T> content;
+    private Integer categoryId;
     private Integer totalElements;
     private Integer totalPages;
     private Integer page;
