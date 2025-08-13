@@ -130,7 +130,7 @@ function Header(props) {
                   <div css={s.modalButton}>
                     <Link to={"/community/register"}>글쓰기</Link>
                     {user?.role === "ROLE_ADMIN" ? (
-                      <Link to={""}>관리자 페이지</Link>
+                      <Link to={"/admin/manager/users"}>관리자 페이지</Link>
                     ) : (
                       <></>
                     )}

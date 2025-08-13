@@ -13,7 +13,6 @@ import Admin from "../pages/Admin/Admin/Admin";
 
 function MainRoute(props) {
   const location = useLocation();
-  console.log(location.pathname);
   return (
     <>
       {location.pathname.startsWith("/admin") ? <></> : <Header />}

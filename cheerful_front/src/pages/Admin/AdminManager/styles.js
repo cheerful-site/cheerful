@@ -40,7 +40,7 @@ export const logoContainer = css`
   }
 `;
 
-export const categoryUser = css`
+export const categoryUser = (isSeleted) => css`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -56,27 +56,27 @@ export const categoryUser = css`
     color: #22222260;
   }
 
-  & > div > div {
+  & > div > a {
     display: flex;
     align-items: center;
     margin: 1rem 0;
     border-radius: 0.5rem;
     width: 16rem;
     height: 3rem;
-    background-color: #ffc42140;
-
+    background-color: ${isSeleted ? "#ffc42140" : "#ffffff"};
+    text-decoration: none;
     & > svg {
       margin-left: 1rem;
       width: 2.3rem;
       height: 2.3rem;
-      color: #ffc421;
+      color: ${isSeleted ? "#ffc421" : "#22222260"};
     }
 
     & > span {
       margin-left: 0.5rem;
       font-size: 1.6rem;
       font-weight: 700;
-      color: #ffc421;
+      color: ${isSeleted ? "#ffc421" : "#22222260"};
     }
   }
 `;
@@ -95,29 +95,30 @@ export const categoryAdmin = css`
     font-size: 1.8rem;
     color: #22222260;
   }
+`;
 
-  & > div > div {
-    display: flex;
-    align-items: center;
-    margin: 1rem 0;
-    border-radius: 0.5rem;
-    width: 16rem;
-    height: 3rem;
-    background-color: #ffc42140;
+export const adminLink = (isSeleted) => css`
+  display: flex;
+  align-items: center;
+  margin: 1rem 0;
+  border-radius: 0.5rem;
+  width: 16rem;
+  height: 3rem;
+  text-decoration: none;
+  background-color: ${isSeleted ? "#ffc42140" : "#ffffff"};
 
-    & > svg {
-      margin-left: 1rem;
-      width: 2.3rem;
-      height: 2.3rem;
-      color: #ffc421;
-    }
+  & > svg {
+    margin-left: 1rem;
+    width: 2.3rem;
+    height: 2.3rem;
+    color: ${isSeleted ? "#ffc421" : "#22222260"};
+  }
 
-    & > span {
-      margin-left: 0.5rem;
-      font-size: 1.6rem;
-      font-weight: 700;
-      color: #ffc421;
-    }
+  & > span {
+    margin-left: 0.5rem;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: ${isSeleted ? "#ffc421" : "#22222260"};
   }
 `;
 
