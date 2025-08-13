@@ -8,12 +8,15 @@ import { HiUsers } from "react-icons/hi";
 import { TbDogBowl } from "react-icons/tb";
 import { ImNotification } from "react-icons/im";
 import { Link, useLocation } from "react-router-dom";
+import usePrincipalAdminQuery from "../../../queries/PrincipalAdminQuery/usePrincipalAdminQuery";
 
 function AdminManage(props) {
-  const principalUser = usePrincipalQuery();
-  const user = principalUser?.data?.data.body.user;
+  const principalAdmin = usePrincipalAdminQuery();
+  const principal = usePrincipalQuery();
   const location = useLocation();
-  console.log(location);
+
+  console.log(principal?.data?.data);
+  console.log(principalAdmin?.data?.data);
 
   const tableInfo = [
     {
@@ -166,8 +169,8 @@ function AdminManage(props) {
         </div>
         <div css={s.manageLayout}>
           <div css={s.manageUser}>
-            <img src={user?.profileImgPath} alt="" />
-            <span>{user?.username}</span>
+            <img src={""} alt="" />
+            <span>{}</span>
           </div>
           <div css={s.manageContent}>
             <div>
