@@ -1,0 +1,3 @@
+import api from "../axios/axios";
+
+export const reqPrincipal = async () => await api.get("/account/principal");

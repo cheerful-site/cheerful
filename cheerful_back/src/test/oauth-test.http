@@ -1,0 +1,12 @@
+### GET request to example server
+GET https://examples.http-client.intellij.net/get
+    ?generated-in=IntelliJ IDEA
+
+### 카카오 로그인 엔드포인트 테스트
+GET http://localhost:8080/oauth2/authorization/kakao
+
+### 네이버 로그인 엔드포인트 테스트
+GET http://localhost:8080/oauth2/authorization/naver
+
+### 구글 로그인 엔드포인트 테스트
+GET http://localhost:8080/oauth2/authorization/google

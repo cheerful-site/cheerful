@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.korit.cheerful_back.domain.community.CommunityLikeMapper">
+
+  <insert id="insert">
+    insert into community_like_tb
+    values(default, #{communityId}, #{userId});
+  </insert>
+
+  <delete id="delete">
+    select
+    from
+      community_like_tb
+    where
+      community_id = #{communityId},
+      user_id = #{userId}
+  </delete>
+
+  <select id="getLikeCount" resultType="java.lang.Integer">
+    select
+      count(*)
+    from
+      community_like_tb
+    where
+      community_id = #{communityId}
+  </select>
+
+</mapper>
