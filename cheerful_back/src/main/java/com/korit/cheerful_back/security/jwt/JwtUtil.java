@@ -2,6 +2,7 @@ package com.korit.cheerful_back.security.jwt;
 
 
 
+import com.korit.cheerful_back.domain.admin.Admin;
 import com.korit.cheerful_back.domain.user.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -29,7 +30,7 @@ public class JwtUtil {
   }
 
   /*
-    Access Token 생성
+    Access User Token 생성
    */
   public String generateAccessToken(User user) {
     return Jwts.builder()
@@ -37,6 +38,19 @@ public class JwtUtil {
         .issuer("cheerful")
         .expiration(new Date(new Date().getTime() + EXPIRED_TIME))
         .claim("userId", user.getUserId())
+        .signWith(KEY)
+        .compact();
+  }
+
+  /*
+    Access Admin Token 생성
+   */
+  public String generateAdminAccessToken(Admin admin) {
+    return Jwts.builder()
+        .subject("cheerful_access_token")
+        .issuer("cheerful")
+        .expiration(new Date(new Date().getTime() + EXPIRED_TIME))
+        .claim("adminId", admin.adminId)
         .signWith(KEY)
         .compact();
   }
