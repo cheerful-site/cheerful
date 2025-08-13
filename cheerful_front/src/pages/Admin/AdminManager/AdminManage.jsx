@@ -7,11 +7,13 @@ import { PiUserCircleFill } from "react-icons/pi";
 import { HiUsers } from "react-icons/hi";
 import { TbDogBowl } from "react-icons/tb";
 import { ImNotification } from "react-icons/im";
+import { Link, useLocation } from "react-router-dom";
 
 function AdminManage(props) {
   const principalUser = usePrincipalQuery();
   const user = principalUser?.data?.data.body.user;
-  console.log(user);
+  const location = useLocation();
+  console.log(location);
 
   const tableInfo = [
     {
@@ -106,7 +108,29 @@ function AdminManage(props) {
     },
   ];
 
-  const adminCategory = [{}];
+  const adminCategory = [
+    {
+      id: 1,
+      name: "Community",
+      category: "community",
+      path: "/admin/manager/community",
+      icon: <HiUsers />,
+    },
+    {
+      id: 2,
+      name: "Food",
+      category: "food",
+      path: "/admin/manager/food",
+      icon: <TbDogBowl />,
+    },
+    {
+      id: 3,
+      name: "Notice",
+      category: "notice",
+      path: "/admin/manager/notice",
+      icon: <ImNotification />,
+    },
+  ];
 
   return (
     <div css={s.layout}>
@@ -115,30 +139,28 @@ function AdminManage(props) {
           <div css={s.logoContainer}>
             <img src={logo} alt="" />
           </div>
-          <div css={s.categoryUser}>
+          <div
+            css={s.categoryUser(location.pathname === "/admin/manager/users")}>
             <div>
               <span>User</span>
-              <div>
+              <Link to={"/admin/manager/users"}>
                 <PiUserCircleFill />
                 <span>Users</span>
-              </div>
+              </Link>
             </div>
           </div>
           <div css={s.categoryAdmin}>
             <div>
               <span>Admin</span>
-              <div>
-                <HiUsers />
-                <span>Community</span>
-              </div>
-              <div>
-                <TbDogBowl />
-                <span>Food</span>
-              </div>
-              <div>
-                <ImNotification />
-                <span>Notice</span>
-              </div>
+              {adminCategory.map((category) => (
+                <Link
+                  key={category.id}
+                  to={category.path}
+                  css={s.adminLink(location.pathname === category.path)}>
+                  {category.icon}
+                  <span>{category.name}</span>
+                </Link>
+              ))}
             </div>
           </div>
         </div>
@@ -157,39 +179,43 @@ function AdminManage(props) {
                 <FaSearch />
               </div>
               <table css={s.manageTable}>
-                <tr css={s.TableHeader}>
-                  <th>
-                    <input type="checkbox" name="" id="" />
-                  </th>
-                  <th>UserId</th>
-                  <th>Username</th>
-                  <th>Email</th>
-                  <th>Profile Img Path</th>
-                  <th>Provider</th>
-                  <th>ProviderId</th>
-                  <th>Del</th>
-                </tr>
-                {tableInfo.map((info) => (
-                  <tr key={info.userId} css={s.userRows}>
-                    <td>
-                      <input
-                        type="checkbox"
-                        name=""
-                        id=""
-                        value={info.checked}
-                      />
-                    </td>
-                    <td>{info.userId}</td>
-                    <td>{info.username}</td>
-                    <td>{info.email}</td>
-                    <td>{info.profileImgPath}</td>
-                    <td>{info.provider}</td>
-                    <td>{info.providerId}</td>
-                    <td>
-                      <FaRegTrashAlt />
-                    </td>
+                <thead>
+                  <tr css={s.TableHeader}>
+                    <th>
+                      <input type="checkbox" name="" id="" />
+                    </th>
+                    <th>UserId</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Profile Img Path</th>
+                    <th>Provider</th>
+                    <th>ProviderId</th>
+                    <th>Del</th>
                   </tr>
-                ))}
+                </thead>
+                <tbody>
+                  {tableInfo.map((info) => (
+                    <tr key={info.userId} css={s.userRows}>
+                      <td>
+                        <input
+                          type="checkbox"
+                          name=""
+                          id=""
+                          value={info.checked}
+                        />
+                      </td>
+                      <td>{info.userId}</td>
+                      <td>{info.username}</td>
+                      <td>{info.email}</td>
+                      <td>{info.profileImgPath}</td>
+                      <td>{info.provider}</td>
+                      <td>{info.providerId}</td>
+                      <td>
+                        <FaRegTrashAlt />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
               </table>
             </div>
           </div>
