@@ -4,9 +4,11 @@ import logo from "../../../../logo/cheerful_login.png";
 import { useState } from "react";
 import { reqAdminLogin } from "../../../api/adminApi/adminApi";
 import { useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 
 function AdminLogin(props) {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [inputValue, setInputValue] = useState({
     adminLoginId: "",
     password: "",
@@ -17,14 +19,22 @@ function AdminLogin(props) {
   };
 
   const handleLoginOnClick = async () => {
-    console.log("submit payload:", inputValue);
     if (!inputValue.adminLoginId.trim() || !inputValue.password.trim()) {
       alert("아이디와 비밀번호를 입력하세요.");
       return;
     }
     try {
       const res = await reqAdminLogin(inputValue);
-      navigate("/admin/manager/users");
+      // const accessToken = searchParams.get("accessToken");
+      const { accessToken } = res.data.body;
+      localStorage.setItem("AccessToken", `Bearer ${accessToken}`);
+      queryClient
+        .invalidateQueries({
+          queryKey: ["principal"],
+        })
+        .then(() => {
+          navigate("/admin/manager/users");
+        });
     } catch (e) {
       console.error("login failed:", e);
     }
