@@ -5,5 +5,5 @@ import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface AdminMapper {
-  Admin findByAdminId(@Param("adminLoginId") Integer adminLoginId);
+  Admin findByAdminId(@Param("adminLoginId") String adminLoginId);
 }
