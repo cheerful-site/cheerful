@@ -8,7 +8,7 @@ function AdminRoute(props) {
   return (
     <Routes>
       <Route path="/login" element={<AdminLogin />} />
-      <Route path="/manager" element={<AdminManage />} />
+      <Route path="/manager/:category" element={<AdminManage />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

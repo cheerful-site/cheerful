@@ -190,9 +190,103 @@ export const manageSearch = css`
 
 export const manageTable = css`
   display: flex;
+  flex-direction: column;
   box-sizing: border-box;
   border: 0.1rem solid #dde1e6;
   border-radius: 1rem;
-  width: 100rem;
-  height: 50rem;
+  width: 110rem;
+  height: 54rem;
+`;
+
+export const TableHeader = css`
+  display: flex;
+  box-sizing: border-box;
+  align-items: center;
+  border-radius: 1rem 1rem 0 0;
+  width: 100%;
+  height: 4.8rem;
+  background-color: #dde1e6;
+
+  & > th {
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    padding: 0;
+    height: 4.8rem;
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: #222222;
+  }
+
+  & > th:nth-of-type(1) {
+    display: flex;
+    justify-content: center;
+    width: 4rem;
+  }
+  & > th:nth-of-type(2) {
+    width: 6rem;
+  }
+  & > th:nth-of-type(3) {
+    width: 15rem;
+  }
+  & > th:nth-of-type(4) {
+    width: 25rem;
+  }
+  & > th:nth-of-type(5) {
+    width: 30rem;
+  }
+  & > th:nth-of-type(6) {
+    width: 13rem;
+  }
+  & > th:nth-of-type(7) {
+    width: 10rem;
+  }
+  & > th:nth-of-type(8) {
+    display: flex;
+    justify-content: center;
+    width: 6rem;
+  }
+`;
+
+export const userRows = css`
+  display: flex;
+  & > td {
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    padding: 0;
+    height: 4.8rem;
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: #222222;
+  }
+
+  & > td:nth-of-type(1) {
+    display: flex;
+    justify-content: center;
+    width: 4rem;
+  }
+  & > td:nth-of-type(2) {
+    width: 6rem;
+  }
+  & > td:nth-of-type(3) {
+    width: 15rem;
+  }
+  & > td:nth-of-type(4) {
+    width: 25rem;
+  }
+  & > td:nth-of-type(5) {
+    width: 30rem;
+  }
+  & > td:nth-of-type(6) {
+    width: 13rem;
+  }
+  & > td:nth-of-type(7) {
+    width: 10rem;
+  }
+  & > td:nth-of-type(8) {
+    display: flex;
+    justify-content: center;
+    width: 6rem;
+  }
 `;
