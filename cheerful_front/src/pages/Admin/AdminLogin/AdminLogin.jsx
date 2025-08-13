@@ -2,6 +2,7 @@
 import * as s from "./styles";
 import logo from "../../../../logo/cheerful_login.png";
 import { useState } from "react";
+import { reqAdminLogin } from "../../../api/adminApi/adminApi";
 
 function AdminLogin(props) {
   const [inputValue, setInputValue] = useState({
@@ -16,7 +17,12 @@ function AdminLogin(props) {
   };
 
   const handleLoginOnClick = () => {
-    console.log(inputValue);
+    const admin = {
+      adminLoginId: inputValue.adminName,
+      password: inputValue.adminPassword,
+    };
+
+    reqAdminLogin(admin);
   };
 
   return (

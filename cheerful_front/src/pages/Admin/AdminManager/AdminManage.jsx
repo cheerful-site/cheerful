@@ -106,11 +106,7 @@ function AdminManage(props) {
     },
   ];
 
-  const adminCategory = [
-    {
-      
-    }
-  ]
+  const adminCategory = [{}];
 
   return (
     <div css={s.layout}>
