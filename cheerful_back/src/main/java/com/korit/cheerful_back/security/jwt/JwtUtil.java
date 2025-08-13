@@ -50,7 +50,7 @@ public class JwtUtil {
         .subject("cheerful_access_token")
         .issuer("cheerful")
         .expiration(new Date(new Date().getTime() + EXPIRED_TIME))
-        .claim("adminId", admin.adminId)
+        .claim("adminId", admin.getAdminLoginId())
         .signWith(KEY)
         .compact();
   }

@@ -11,11 +11,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Admin {
-  public Integer adminId;
-  public String adminName;
-  public String adminLoginId;
+  private Integer adminId;
+  private String adminName;
+  private String adminLoginId;
   @JsonIgnore
-  public String password;
-  public String profileImgPath;
-  public String role;
+  private String password;
+  private String profileImgPath;
+  private String role;
 }
