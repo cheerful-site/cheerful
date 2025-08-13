@@ -3,26 +3,31 @@ import * as s from "./styles";
 import logo from "../../../../logo/cheerful_login.png";
 import { useState } from "react";
 import { reqAdminLogin } from "../../../api/adminApi/adminApi";
+import { useNavigate } from "react-router-dom";
 
 function AdminLogin(props) {
+  const navigate = useNavigate();
   const [inputValue, setInputValue] = useState({
-    adminName: "",
-    adminPassword: "",
+    adminLoginId: "",
+    password: "",
   });
   const handleOnChange = (e) => {
-    setInputValue((prev) => ({
-      ...prev,
-      [e.target.name]: [e.target.value],
-    }));
+    const { name, value } = e.target;
+    setInputValue((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleLoginOnClick = () => {
-    const admin = {
-      adminLoginId: inputValue.adminName,
-      password: inputValue.adminPassword,
-    };
-
-    reqAdminLogin(admin);
+  const handleLoginOnClick = async () => {
+    console.log("submit payload:", inputValue);
+    if (!inputValue.adminLoginId.trim() || !inputValue.password.trim()) {
+      alert("아이디와 비밀번호를 입력하세요.");
+      return;
+    }
+    try {
+      const res = await reqAdminLogin(inputValue);
+      navigate("/admin/manager/users");
+    } catch (e) {
+      console.error("login failed:", e);
+    }
   };
 
   return (
@@ -35,13 +40,13 @@ function AdminLogin(props) {
         <span>ADMIN LOGIN</span>
         <input
           type="text"
-          name="adminname"
+          name="adminLoginId"
           placeholder="아이디"
           onChange={handleOnChange}
         />
         <input
           type="password"
-          name="adminpassword"
+          name="password"
           placeholder="비밀번호"
           onChange={handleOnChange}
         />
