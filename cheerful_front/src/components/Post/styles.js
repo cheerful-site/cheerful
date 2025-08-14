@@ -15,6 +15,7 @@ export const postImg = css`
   border-radius: 1rem;
   width: 11rem;
   height: 11rem;
+  cursor: pointer;
 `;
 
 export const postContainer = css`
@@ -29,6 +30,7 @@ export const postTitle = css`
   font-size: 1.6rem;
   font-weight: 700;
   color: #222222;
+  cursor: pointer;
 `;
 
 export const postContent = css`

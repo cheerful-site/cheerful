@@ -1,10 +1,8 @@
 /**@jsxImportSource @emotion/react */
-import Footer from "../../components/Footer/Footer";
-import usePrincipalQuery from "../../queries/PrincipalQuery/usePrincipalQuery";
 import * as s from "./styles";
 import { useState } from "react";
-import { reqCommunityRegister } from "../../api/communityApi/communityApi";
 import { useNavigate } from "react-router-dom";
+import usePrincipalQuery from "../../../queries/PrincipalQuery/usePrincipalQuery";
 
 function CommunityRegister(props) {
   const [inputValue, setInputValue] = useState({
@@ -32,7 +30,7 @@ function CommunityRegister(props) {
       content: inputValue.content,
     };
 
-    reqCommunityRegister(reqData);
+    // reqCommunityRegister(reqData);
 
     // try {
     //   reqCommunityRegister(registerPost);
@@ -72,7 +70,8 @@ function CommunityRegister(props) {
             <textarea
               name="content"
               onChange={handleOnChange}
-              placeholder="내용을 작성해 주세요. (최소 5자)"></textarea>
+              placeholder="내용을 작성해 주세요. (최소 5자)"
+            />
           </div>
 
           <button css={s.registerButton} onClick={handleRegisterOnClick}>
