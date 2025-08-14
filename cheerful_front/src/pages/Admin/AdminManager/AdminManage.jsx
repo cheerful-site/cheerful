@@ -7,17 +7,33 @@ import { PiUserCircleFill } from "react-icons/pi";
 import { HiUsers } from "react-icons/hi";
 import { TbDogBowl } from "react-icons/tb";
 import { ImNotification } from "react-icons/im";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import usePrincipalAdminQuery from "../../../queries/PrincipalAdminQuery/usePrincipalAdminQuery";
+import { useState } from "react";
+import ReactModal from "react-modal";
+import { useQueryClient } from "@tanstack/react-query";
 
 function AdminManage(props) {
-  const principalAdmin = usePrincipalAdminQuery();
-  const principal = usePrincipalQuery();
+  const navigate = useNavigate();
   const location = useLocation();
+  const queryClient = useQueryClient();
+  const principalAdmin = usePrincipalAdminQuery();
+  const [isOpen, setIsOpen] = useState(false);
 
-  console.log(principal?.data?.data);
-  console.log(principalAdmin?.data?.data);
+  const handleProfileOnClick = () => {
+    setIsOpen((prev) => !prev);
+  };
+  const handleLogoutOnClick = async () => {
+    localStorage.removeItem("AccessToken");
+    await queryClient.invalidateQueries({
+      queryKey: ["principal"],
+    });
+    navigate("/auth/login");
+  };
 
+  const admin = principalAdmin?.data?.data.body.admin;
+
+  console.log(admin);
   const tableInfo = [
     {
       checked: false,
@@ -170,9 +186,57 @@ function AdminManage(props) {
           </div>
         </div>
         <div css={s.manageLayout}>
-          <div css={s.manageUser}>
-            <img src={""} alt="" />
-            <span>{}</span>
+          <div css={s.manageUser} onClick={handleProfileOnClick}>
+            <img src={admin?.profileImgPath} alt="" />
+            <span>{admin?.adminName}</span>
+
+            {isOpen ? (
+              <ReactModal
+                style={{
+                  overlay: {
+                    backgroundColor: "#000000cc",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    zIndex: 100,
+                  },
+                  content: {
+                    position: "static",
+                    border: "none",
+                    padding: "0",
+                    overflow: "hidden",
+                  },
+                }}
+                isOpen={isOpen}
+                appElement={document.getElementById("root")}>
+                <div css={s.modalContainer}>
+                  <div css={s.modalProfile}>
+                    <img src={admin?.profileImgPath} alt="" />
+                    <span>{admin?.adminName}</span>
+                  </div>
+
+                  <div css={s.modalButton}>
+                    <Link to={"/community/register"}>글쓰기</Link>
+                    <div onClick={handleLogoutOnClick}>로그아웃</div>
+                  </div>
+
+                  <div css={s.horizon}></div>
+
+                  <div css={s.modalContent}>
+                    <div>
+                      <span>내가 쓴 글</span>
+                      <span>10개</span>
+                    </div>
+                    <div>
+                      <span>내가 쓴 댓글</span>
+                      <span>10개</span>
+                    </div>
+                  </div>
+                </div>
+              </ReactModal>
+            ) : (
+              <></>
+            )}
           </div>
           <div css={s.manageContent}>
             <div>

@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import usePrincipalQuery from "../../queries/PrincipalQuery/usePrincipalQuery";
 import ReactModal from "react-modal";
 import { useQueryClient } from "@tanstack/react-query";
+import usePrincipalAdminQuery from "../../queries/PrincipalAdminQuery/usePrincipalAdminQuery";
 
 function Header(props) {
   const [login, setLogin] = useState(false);
@@ -13,8 +14,11 @@ function Header(props) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const principalQuery = usePrincipalQuery();
+  const principalAdminQuery = usePrincipalAdminQuery();
   const user = principalQuery?.data?.data.body.user;
-  // console.log(user);
+  const admin = principalAdminQuery?.data?.data.body.admin;
+  console.log(user);
+  console.log(admin);
 
   const MENU = [
     {
@@ -98,10 +102,14 @@ function Header(props) {
             </Link>
           </div>
           <div css={s.profileImgBox}>
-            <img src={user?.profileImgPath} alt="" css={s.profileImg} />
+            <img
+              src={user?.profileImgPath || admin?.profileImgPath}
+              alt=""
+              css={s.profileImg}
+            />
           </div>
           <div css={s.profileEdit} onClick={handleProfileOnClick}>
-            <div>{user?.username}</div>
+            <div>{user?.username || admin?.adminName}</div>
             {isOpen ? (
               <ReactModal
                 style={{
@@ -123,17 +131,15 @@ function Header(props) {
                 appElement={document.getElementById("root")}>
                 <div css={s.modalContainer}>
                   <div css={s.modalProfile}>
-                    <img src={user?.profileImgPath} alt="" />
-                    <span>{user?.username}</span>
+                    <img
+                      src={user?.profileImgPath || admin?.profileImgPath}
+                      alt=""
+                    />
+                    <span>{user?.username || admin?.adminName}</span>
                   </div>
 
                   <div css={s.modalButton}>
                     <Link to={"/community/register"}>글쓰기</Link>
-                    {user?.role === "ROLE_ADMIN" ? (
-                      <Link to={"/admin/manager/users"}>관리자 페이지</Link>
-                    ) : (
-                      <></>
-                    )}
                     <div onClick={handleLogoutOnClick}>로그아웃</div>
                   </div>
 
