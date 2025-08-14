@@ -39,7 +39,7 @@
                 user_id,
                 content,
                 created_at,
-                0 as `level`,
+                0 as level,
                 cast(lpad(community_comment_id, 5, '0') as char(1000)) as `path`
             from
                 community_comment_tb
@@ -47,7 +47,7 @@
                 community_id = #{communityId}
                 and parent_comment_id is null
 
-        union all
+            union all
 
             select
                 cct.community_comment_id,
@@ -57,8 +57,8 @@
                 cct.user_id,
                 cct.content,
                 cct.created_at,
-                ct.0 as `level`,
-                cast(concat(ct.path, ',', lpad(cct.community_comment_id, 5, '0') as char(1000)) as `path`
+                ct.level + 1,
+                cast(concat(ct.path, ',', lpad(cct.community_comment_id, 5, '0')) as char(1000)) as `path`
             from
                 community_comment_tb cct
                 join comment_tb ct on(ct.community_comment_id = cct.parent_comment_id)
@@ -71,11 +71,11 @@
             ct.community_id,
             ct.parent_comment_id,
             ct.parent_user_id,
-            put.username ad parent_username,
+            put.user_name as parent_username,
             ct.user_id as ct_user_id,
 
             ut.user_id,
-            ut.username,
+            ut.user_name,
             ut.profile_img_path,
 
             ct.content,
