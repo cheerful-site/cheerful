@@ -25,8 +25,9 @@ public class AdminController {
         return ResponseEntity.ok(ResponseDto.success(adminService.login(dto)));
     }
 
-    @GetMapping("/login")
+    @GetMapping("/principal")
     public ResponseEntity<ResponseDto<?>> principal(@AuthenticationPrincipal PrincipalAdmin principalAdmin) {
+        if (principalAdmin == null) return ResponseEntity.status(401).build();
         return ResponseEntity.ok(ResponseDto.success(principalAdmin));
     }
 }
