@@ -3,6 +3,7 @@ package com.korit.cheerful_back.domain.communityComment;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface CommunityCommentMapper {
@@ -13,4 +14,8 @@ public interface CommunityCommentMapper {
     List<CommunityComment> findAllByCommunityId(Integer categoryId, Integer communityId);
 
     int getCountByCommentId(Integer communityId);
+
+    int increaseViews(@Param("categoryId") Integer categoryId, @Param("communityId") Integer communityId);
+
+    Integer selectViews(@Param("categoryId") Integer categoryId, @Param("communityId") Integer communityId);
 }

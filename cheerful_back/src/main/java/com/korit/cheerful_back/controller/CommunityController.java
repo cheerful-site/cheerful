@@ -80,6 +80,15 @@ public class CommunityController {
     }
 
     /*
+        특정 글 조회수
+     */
+    @PostMapping("/{categoryId}/{communityId}")
+    public ResponseEntity<ResponseDto<?>> getCommunityViews(@PathVariable Integer categoryId, @PathVariable Integer communityId) {
+        int views = communityService.increaseViews(categoryId, communityId);
+        return ResponseEntity.ok(ResponseDto.success(views));
+    }
+
+    /*
         특정 글의 댓글 등록
      */
     @PostMapping("/{communityId}/comments")

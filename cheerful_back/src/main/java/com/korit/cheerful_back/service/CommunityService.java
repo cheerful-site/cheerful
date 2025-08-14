@@ -132,6 +132,14 @@ public class CommunityService {
     }
 
     /*
+        특정 글 조회수
+     */
+    public int increaseViews(Integer categoryId, Integer communityId) {
+        int updated = communityCommentMapper.increaseViews(categoryId, communityId);
+        return communityCommentMapper.selectViews(categoryId, communityId);
+    }
+
+    /*
         댓글 작성
      */
     public Integer registerComment(CommunityCommentRegisterReqDto dto) {
