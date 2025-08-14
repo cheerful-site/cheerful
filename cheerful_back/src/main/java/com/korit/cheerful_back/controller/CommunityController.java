@@ -34,7 +34,7 @@ public class CommunityController {
 //    @GetMapping("/{categoryId}")
 //    // 카테고리 이동시 카테고리 가져오기
 //    public ResponseEntity<ResponseDto<?>> getCommunity(@PathVariable Integer categoryId) {
-////        System.out.println(communityService.getCommunity(categoryId));
+    ////        System.out.println(communityService.getCommunity(categoryId));
 //        return ResponseEntity.ok(ResponseDto.success(communityService.getCommunity(categoryId)));
 //    }
 
@@ -74,6 +74,8 @@ public class CommunityController {
      */
     @GetMapping("/{categoryId}/{communityId}")
     public ResponseEntity<ResponseDto<?>> getCommunityContent(@PathVariable Integer categoryId, @PathVariable Integer communityId) {
+        System.out.println(categoryId);
+        System.out.println(communityId);
         return ResponseEntity.ok(ResponseDto.success(communityService.getCommunityContent(categoryId, communityId)));
     }
 

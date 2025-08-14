@@ -81,7 +81,7 @@
             ct.content,
             ct.created_at,
             ct.`level`,
-            ct.`path
+            ct.`path`
         from
             comment_tb ct
             left outer join user_tb ut on(ut.user_id = ct.user_id)
