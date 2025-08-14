@@ -10,7 +10,7 @@ public interface CommunityCommentMapper {
     // 유저 기능
     int insert(CommunityComment communityComment);
 
-    List<CommunityComment> findAllByCommunityId(Integer communityId);
+    List<CommunityComment> findAllByCommunityId(Integer categoryId, Integer communityId);
 
     int getCountByCommentId(Integer communityId);
 }

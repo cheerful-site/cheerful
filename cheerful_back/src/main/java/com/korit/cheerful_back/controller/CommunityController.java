@@ -72,9 +72,9 @@ public class CommunityController {
     /*
         특정 글 클릭해서 내용 보기
      */
-    @GetMapping("/{communityId}")
-    public ResponseEntity<ResponseDto<?>> getCommunityContent(@PathVariable Integer communityId) {
-        return ResponseEntity.ok(ResponseDto.success(communityService.getCommunityContent(communityId)));
+    @GetMapping("/{categoryId}/{communityId}")
+    public ResponseEntity<ResponseDto<?>> getCommunityContent(@PathVariable Integer categoryId, @PathVariable Integer communityId) {
+        return ResponseEntity.ok(ResponseDto.success(communityService.getCommunityContent(categoryId, communityId)));
     }
 
     /*
