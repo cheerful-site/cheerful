@@ -9,8 +9,9 @@ const api = axios.create({
 
 api.interceptors.request.use((config) => {
   const lsAccessToken = localStorage.getItem("AccessToken");
+
   if (!!lsAccessToken) {
-    config.headers.Authorization = lsAccessToken;
+    config.headers.Authorization = `${lsAccessToken}`;
   }
   return config;
 });

@@ -16,3 +16,6 @@ export const reqCommunityRegister = async (data) =>
       "Content-Type": "multipart/form-data",
     },
   });
+
+export const reqCommunityDetail = async (communityId) =>
+  await api.get(`/community/${communityId}`);

@@ -34,7 +34,7 @@ export const logoContainer = css`
   width: 100%;
   height: 7rem;
 
-  & > img {
+  & > a > img {
     width: 10rem;
     height: 3.5rem;
   }

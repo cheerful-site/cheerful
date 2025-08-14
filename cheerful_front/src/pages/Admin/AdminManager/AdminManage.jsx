@@ -140,7 +140,9 @@ function AdminManage(props) {
       <div css={s.manageContainer}>
         <div css={s.manageCategory}>
           <div css={s.logoContainer}>
-            <img src={logo} alt="" />
+            <Link to={"/"}>
+              <img src={logo} alt="" />
+            </Link>
           </div>
           <div
             css={s.categoryUser(location.pathname === "/admin/manager/users")}>

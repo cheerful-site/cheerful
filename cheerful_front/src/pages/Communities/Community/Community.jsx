@@ -1,11 +1,11 @@
 /**@jsxImportSource @emotion/react */
 import { Link, useParams } from "react-router-dom";
-import Footer from "../../components/Footer/Footer";
 import * as s from "./styles";
 import { useEffect, useState } from "react";
-import Post from "../../components/Post/Post";
-import CategoryComponent from "../../components/CategoryComponent/CategoryComponent";
-import useCommunityListQuery from "../../queries/CommunityQuery/useCommunityListQuery";
+import useCommunityListQuery from "../../../queries/CommunityQuery/useCommunityListQuery";
+import Post from "../../../components/Post/Post";
+import CategoryComponent from "../../../components/CategoryComponent/CategoryComponent";
+import Footer from "../../../components/Footer/Footer";
 
 function Community(props) {
   const { category } = useParams();
@@ -56,7 +56,11 @@ function Community(props) {
 
       <div css={s.postContainer}>
         {communityContents?.map((content) => (
-          <Post key={content.communityId} content={content} />
+          <Post
+            key={content.communityId}
+            content={content}
+            category={category}
+          />
         ))}
       </div>
 
