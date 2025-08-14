@@ -67,7 +67,7 @@ public class JwtFilter implements Filter {
       return;
     }
 
-    if (claims.get("adminLoginId") != null) {
+    if (claims.get("adminId") != null) {
       setAdminAuthentication(claims);
     } else if (claims.get("userId") != null) {
       setAuthentication(claims);
@@ -99,7 +99,6 @@ public class JwtFilter implements Filter {
    */
   private void setAdminAuthentication(Claims claims) {
     String adminId = (String) claims.get("adminId");
-    System.out.println(adminId);
     Admin foundAdmin = adminMapper.findByAdminId(adminId);
     if (foundAdmin == null) {
       return;

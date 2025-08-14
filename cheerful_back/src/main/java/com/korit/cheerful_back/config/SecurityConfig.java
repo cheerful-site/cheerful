@@ -56,11 +56,11 @@ public class SecurityConfig {
 
     // 접근 제어 규칙
     http.authorizeHttpRequests(auth -> {
-      auth.requestMatchers("/login/oauth2/**").permitAll();
-      auth.requestMatchers("/oauth2/**").permitAll();
-      auth.requestMatchers("/image/**").permitAll();
-      auth.requestMatchers("/community/**").permitAll();
-      auth.requestMatchers("/admin/login/**").permitAll();
+      auth.requestMatchers("/", "/login/oauth2/**", "/oauth2/**", "/image/**",
+          "/community/**", "/admin/login/**", "/account/principal").permitAll();
+
+      // 관리자 전용
+      auth.requestMatchers("/admin/**").hasRole("ADMIN");
       auth.anyRequest().authenticated();
     });
 

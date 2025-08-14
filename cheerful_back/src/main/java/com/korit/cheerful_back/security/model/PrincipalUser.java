@@ -23,7 +23,10 @@ public class PrincipalUser implements UserDetails, OAuth2User {
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    return Collections.singletonList(new SimpleGrantedAuthority(user.getRole()));
+//    return Collections.singletonList(new SimpleGrantedAuthority(user.getRole()));
+    String role = user.getRole(); // 또는 admin.getRole()
+    String authority = role != null && role.startsWith("ROLE_") ? role : "ROLE_" + role;
+    return List.of(new SimpleGrantedAuthority(authority));
   }
 
   @Override
