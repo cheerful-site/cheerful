@@ -70,11 +70,11 @@ public class CommunityController {
     }
 
     /*
-        특정 글의 댓글 목록 조회
+        특정 글 클릭해서 내용 보기
      */
-    @GetMapping("/{communityId}/comments")
-    public ResponseEntity<ResponseDto<?>> getComment(@PathVariable Integer communityId) {
-        return ResponseEntity.ok(ResponseDto.success(communityService.getComment(communityId)));
+    @GetMapping("/{categoryId}/{communityId}")
+    public ResponseEntity<ResponseDto<?>> getCommunityContent(@PathVariable Integer categoryId, @PathVariable Integer communityId) {
+        return ResponseEntity.ok(ResponseDto.success(communityService.getCommunityContent(categoryId, communityId)));
     }
 
     /*
