@@ -1,6 +1,7 @@
 package com.korit.cheerful_back.domain.communityComment;
 
 import com.korit.cheerful_back.domain.community.Community;
+import com.korit.cheerful_back.domain.communityImg.CommunityImg;
 import com.korit.cheerful_back.domain.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Builder
@@ -27,4 +29,5 @@ public class CommunityComment {
 
     private User user;
     private Community community;
+    private List<CommunityImg> communityImgs;
 }
