@@ -17,5 +17,5 @@ export const reqCommunityRegister = async (data) =>
     },
   });
 
-export const reqCommunityDetail = async (communityId) =>
-  await api.get(`/community/${communityId}`);
+export const reqCommunityDetail = async (categoryId, communityId) =>
+  await api.get(`/community/${categoryId}/${communityId}`);

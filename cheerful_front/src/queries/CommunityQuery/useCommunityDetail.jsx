@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { reqCommunityDetail } from "../../api/communityApi/communityApi";
 
-function useCommunityDetailQuery(communityId) {
+function useCommunityDetailQuery(categoryId, communityId) {
   return useQuery({
-    queryKey: ["communityDetail", communityId],
-    queryFn: async () => await reqCommunityDetail(communityId),
+    queryKey: ["communityDetail", categoryId, communityId],
+    queryFn: async () => await reqCommunityDetail(categoryId, communityId),
   });
 }
 
