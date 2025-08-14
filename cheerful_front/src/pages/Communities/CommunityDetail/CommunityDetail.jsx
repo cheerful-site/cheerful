@@ -7,8 +7,12 @@ import useCommunityDetailQuery from "../../../queries/CommunityQuery/useCommunit
 
 function CommunityDetail(props) {
   const params = useParams();
-  const communityDetail = useCommunityDetailQuery(params.communityId);
+  const communityDetail = useCommunityDetailQuery(
+    params.category,
+    params.communityId
+  );
 
+  console.log(params.category);
   console.log(communityDetail?.data);
 
   useEffect(() => {}, []);
