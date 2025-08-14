@@ -15,7 +15,18 @@
         <result property="createdAt" column="created_at" />
         <result property="level" column="level" />
         <result property="path" column="path" />
+        <association property="community" resultMap="CommunityMap" />
         <association property="user" resultMap="UserMap" />
+    </resultMap>
+
+    <resultMap id="CommunityMap" type="com.korit.cheerful_back.domain.community.Community">
+        <id property="communityId" column="community_id" />
+        <result property="communityCategoryId" column="community_category_id" />
+        <result property="userId" column="user_id" />
+        <result property="title" column="community_title" />
+        <result property="content" column="community_content" />
+        <result property="createdAt" column="created_at" />
+        <result property="views" column="community_views" />
     </resultMap>
 
     <resultMap id="UserMap" type="com.korit.cheerful_back.domain.user.User">
@@ -26,10 +37,10 @@
 
     <insert id="insert">
         insert into community_comment_tb
-        values (default, #{communityId}. #{parentCommentId}, #{parentUserId}, #{userId}, #{content}, now())
+        values (default, #{communityId}, #{parentCommentId}, #{parentUserId}, #{userId}, #{content}, now())
     </insert>
 
-    <select id="findAllByCommunityId" resultType="com.korit.cheerful_back.domain.communityComment.CommunityComment">
+    <select id="findAllByCommunityId" resultMap="CommentMap">
         with recursive comment_tb as (
             select
                 community_comment_id,
@@ -78,6 +89,14 @@
             ut.user_name,
             ut.profile_img_path,
 
+            cmt.community_id,
+            cmt.community_category_id,
+            cmt.user_id,
+            cmt.community_title,
+            cmt.community_content,
+            cmt.created_at,
+            cmt.community_views,
+
             ct.content,
             ct.created_at,
             ct.`level`,
@@ -86,6 +105,7 @@
             comment_tb ct
             left outer join user_tb ut on(ut.user_id = ct.user_id)
             left outer join user_tb put on(put.user_id = ct.parent_user_id)
+            left outer join community_tb cmt on(cmt.community_id = ct.community_id and cmt.community_category_id = #{categoryId})
         order by
             order_number desc,
             `path`;

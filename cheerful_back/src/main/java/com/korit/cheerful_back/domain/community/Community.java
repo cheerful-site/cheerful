@@ -25,6 +25,7 @@ public class Community {
     private Integer isLike;
     private Integer likeCount;
     private Integer commentCount;
+    private Integer views;
 
     private CommunityCategory communityCategory;
     private User user;

@@ -1,5 +1,6 @@
 package com.korit.cheerful_back.domain.communityComment;
 
+import com.korit.cheerful_back.domain.community.Community;
 import com.korit.cheerful_back.domain.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,4 +26,5 @@ public class CommunityComment {
     private String path;
 
     private User user;
+    private Community community;
 }
