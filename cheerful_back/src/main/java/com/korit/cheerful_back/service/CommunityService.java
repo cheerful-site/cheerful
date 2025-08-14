@@ -127,8 +127,8 @@ public class CommunityService {
     /*
         특정 글 클릭해서 내용 보기
      */
-    public List<CommunityComment> getCommunityContent(Integer communityId) {
-        return communityCommentMapper.findAllByCommunityId(communityId);
+    public List<CommunityComment> getCommunityContent(Integer categoryId, Integer communityId) {
+        return communityCommentMapper.findAllByCommunityId(categoryId, communityId);
     }
 
     /*
