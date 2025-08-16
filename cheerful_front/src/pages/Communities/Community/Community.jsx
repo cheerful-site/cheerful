@@ -53,7 +53,7 @@ function Community(props) {
 
       <div css={s.horizon}></div>
 
-      <div css={s.postContainer}>
+      <div css={s.postContainer}> 
         {communityContents?.content?.map((content) => (
           <Post
             key={content.communityId}
@@ -64,13 +64,13 @@ function Community(props) {
       </div>
 
       <div>
-        <PageNation
+        {/* <PageNation
           page={page}
           setPage={setPage}
           size={communityContents?.size}
           totalElements={communityContents?.totalElements}
           totalPage={communityContents?.totalPages}
-        />
+        /> */}
       </div>
 
       <Footer />
