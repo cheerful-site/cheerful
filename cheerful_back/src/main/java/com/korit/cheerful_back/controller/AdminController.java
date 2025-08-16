@@ -4,7 +4,6 @@ import com.korit.cheerful_back.domain.user.User;
 import com.korit.cheerful_back.dto.admin.AdminLoginReqDto;
 import com.korit.cheerful_back.dto.response.PaginationRespDto;
 import com.korit.cheerful_back.dto.response.ResponseDto;
-import com.korit.cheerful_back.dto.user.UserSearchReqDto;
 import com.korit.cheerful_back.security.model.PrincipalAdmin;
 import com.korit.cheerful_back.service.AdminService;
 import lombok.RequiredArgsConstructor;
@@ -45,9 +44,17 @@ public class AdminController {
     /*
         사용자 조회
      */
+//    @GetMapping("/manager/users")
+//    public ResponseEntity<ResponseDto<PaginationRespDto<User>>> searchUsers(UserSearchReqDto dto) {
+//        return ResponseEntity.ok(ResponseDto.success(adminService.searchUsers(dto)));
+//    }
+
     @GetMapping("/manager/users")
-    public ResponseEntity<ResponseDto<PaginationRespDto<User>>> searchUsers(UserSearchReqDto dto) {
-        return ResponseEntity.ok(ResponseDto.success(adminService.searchUsers(dto)));
+    public ResponseEntity<ResponseDto<?>> managerUsers(@RequestParam Integer page, @RequestParam Integer size, @RequestParam(required = false) String searchText) {
+        System.out.println(page);
+        System.out.println(size);
+        System.out.println(searchText);
+        return ResponseEntity.ok(ResponseDto.success(adminService.getUserSearchList(page, size, searchText)));
     }
 
     /*

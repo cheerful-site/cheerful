@@ -55,7 +55,7 @@
       or ut.user_email like concat('%', #{searchText}, '%')
     order by
       ut.user_id
-    limit #{searchIndex}, #{size}
+    limit #{startIndex}, #{size}
   </select>
 
   <select id="getCountOfOptions" resultType="java.lang.Integer" >

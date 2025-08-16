@@ -7,10 +7,10 @@ import com.korit.cheerful_back.domain.community.CommunityMapper;
 import com.korit.cheerful_back.domain.community.CommunitySearchOption;
 import com.korit.cheerful_back.domain.user.User;
 import com.korit.cheerful_back.domain.user.UserMapper;
+import com.korit.cheerful_back.domain.user.UserSearchOption;
 import com.korit.cheerful_back.dto.admin.AdminLoginReqDto;
 import com.korit.cheerful_back.dto.admin.TokenDto;
 import com.korit.cheerful_back.dto.response.PaginationRespDto;
-import com.korit.cheerful_back.dto.user.UserSearchReqDto;
 import com.korit.cheerful_back.exception.auth.LoginException;
 import com.korit.cheerful_back.security.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -78,19 +78,26 @@ public class AdminService {
     /*
     사용자 검색 결과를 페이징 처리해서 반환
    */
-    public PaginationRespDto<User> searchUsers(UserSearchReqDto dto) {
-        Integer totalElements = userMapper.getCountOfOptions(dto.toOption());
-        Integer totalPages = (int) Math.ceil(totalElements.doubleValue() / dto.getSize().doubleValue());
-        List<User> foundUsers = userMapper.findAllBySearchOption(dto.toOption());
-        boolean isLast = dto.getPage().equals(totalPages);
+    public PaginationRespDto<User> getUserSearchList(Integer page, Integer size, String searchText) {
+        UserSearchOption searchOption = UserSearchOption.builder()
+                .startIndex((page - 1) * size)
+                .endIndex(size * page)
+                .size(size)
+                .searchText(searchText)
+                .build();
+
+        List<User> users = userMapper.findAllBySearchOption(searchOption);
+        Integer totalElements = userMapper.getCountOfOptions(searchOption);
+        Integer totalPages = (int) Math.ceil(totalElements.doubleValue() / size.doubleValue());
+        boolean isLast = page >= totalPages;
 
         return PaginationRespDto.<User>builder()
-                .content(foundUsers)
+                .content(users)
                 .totalElements(totalElements)
                 .totalPages(totalPages)
                 .isLast(isLast)
-                .page(dto.getPage())
-                .size(dto.getSize())
+                .page(page)
+                .size(size)
                 .build();
     }
 
