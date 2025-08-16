@@ -11,7 +11,14 @@
   </insert>
 
   <delete id="deleteByUserIds">
-
+    delete
+    from
+      user_tb
+    where
+      user_id in
+      <foreach item="userId" collection="userIds" separator="," open="(" close=")">
+        #{userId}
+      </foreach>
   </delete>
 
   <select id="findById" resultType="com.korit.cheerful_back.domain.user.User">
@@ -30,6 +37,35 @@
       user_tb
     where
       provider_id = #{providerId}
+  </select>
+
+  <select id="findAllBySearchOption" resultType="com.korit.cheerful_back.domain.user.User">
+    select
+      ut.user_id,
+      ut.user_name,
+      ut.user_email,
+      ut.profile_img_path,
+      ut.role,
+      ut.provider,
+      ut.provider_id
+    from
+      user_tb ut
+    where
+      ut.user_name like concat('%', #{searchText}, '%')
+      or ut.user_email like concat('%', #{searchText}, '%')
+    order by
+      ut.user_id
+    limit #{searchIndex}, #{size}
+  </select>
+
+  <select id="getCountOfOptions" resultType="java.lang.Integer" >
+    select
+      count(*)
+    from
+      user_tb
+    where
+      user_name like concat('%', #{searchText}, '%')
+      or user_email like concat('%', #{searchText}, '%')
   </select>
 
 </mapper>
