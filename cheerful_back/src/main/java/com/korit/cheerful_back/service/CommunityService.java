@@ -135,7 +135,10 @@ public class CommunityService {
         특정 글 조회수
      */
     public int increaseViews(Integer categoryId, Integer communityId) {
-        communityMapper.increaseViews(categoryId, communityId);
+        int updated = communityMapper.increaseViews(categoryId, communityId);
+        if(updated == 0) {
+            return 0;
+        }
         return communityMapper.selectViews(categoryId, communityId);
     }
 
