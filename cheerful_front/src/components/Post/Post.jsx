@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 function Post({ content, category }) {
   const navigate = useNavigate();
-  console.log(content);
+  // console.log(content);
 
   const handleOnClick = () => {
     navigate(`/community/${category}/${content.communityId}`);

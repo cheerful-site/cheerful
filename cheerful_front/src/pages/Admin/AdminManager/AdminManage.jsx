@@ -186,57 +186,65 @@ function AdminManage(props) {
           </div>
         </div>
         <div css={s.manageLayout}>
-          <div css={s.manageUser} onClick={handleProfileOnClick}>
-            <img src={admin?.profileImgPath} alt="" />
-            <span>{admin?.adminName}</span>
-
-            {isOpen ? (
-              <ReactModal
-                style={{
-                  overlay: {
-                    backgroundColor: "#000000cc",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    zIndex: 100,
-                  },
-                  content: {
-                    position: "static",
-                    border: "none",
-                    padding: "0",
-                    overflow: "hidden",
-                  },
-                }}
-                isOpen={isOpen}
-                appElement={document.getElementById("root")}>
-                <div css={s.modalContainer}>
-                  <div css={s.modalProfile}>
-                    <img src={admin?.profileImgPath} alt="" />
-                    <span>{admin?.adminName}</span>
-                  </div>
-
-                  <div css={s.modalButton}>
-                    <Link to={"/community/register"}>글쓰기</Link>
-                    <div onClick={handleLogoutOnClick}>로그아웃</div>
-                  </div>
-
-                  <div css={s.horizon}></div>
-
-                  <div css={s.modalContent}>
-                    <div>
-                      <span>내가 쓴 글</span>
-                      <span>10개</span>
+          <div css={s.manageUser}>
+            <div css={s.profileImgBox}>
+              <img src={admin?.profileImgPath} alt="" css={s.profileImg} />
+            </div>
+            <div css={s.profileEdit} onClick={handleProfileOnClick}>
+              <div>{admin?.adminName}</div>
+              {isOpen ? (
+                <ReactModal
+                  style={{
+                    overlay: {
+                      backgroundColor: "#000000cc",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      zIndex: 100,
+                    },
+                    content: {
+                      position: "static",
+                      border: "none",
+                      padding: "0",
+                      overflow: "hidden",
+                    },
+                  }}
+                  isOpen={isOpen}
+                  appElement={document.getElementById("root")}>
+                  <div css={s.modalContainer}>
+                    <div css={s.modalProfile}>
+                      <img src={admin?.profileImgPath} alt="" />
+                      <span>{admin?.adminName}</span>
                     </div>
-                    <div>
-                      <span>내가 쓴 댓글</span>
-                      <span>10개</span>
+
+                    <div css={s.modalButton}>
+                      <Link to={"/community/register"}>글쓰기</Link>
+                      {admin ? (
+                        <Link to={"/admin/manager/users"}>관리자 페이지</Link>
+                      ) : (
+                        <></>
+                      )}
+                      <div onClick={handleLogoutOnClick}>로그아웃</div>
+                    </div>
+
+                    <div css={s.horizon}></div>
+
+                    <div css={s.modalContent}>
+                      <div>
+                        <span>내가 쓴 글</span>
+                        <span>10개</span>
+                      </div>
+                      <div>
+                        <span>내가 쓴 댓글</span>
+                        <span>10개</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </ReactModal>
-            ) : (
-              <></>
-            )}
+                </ReactModal>
+              ) : (
+                <></>
+              )}
+            </div>
           </div>
           <div css={s.manageContent}>
             <div>

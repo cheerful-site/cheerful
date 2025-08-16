@@ -6,11 +6,12 @@ import useCommunityListQuery from "../../../queries/CommunityQuery/useCommunityL
 import Post from "../../../components/Post/Post";
 import CategoryComponent from "../../../components/CategoryComponent/CategoryComponent";
 import Footer from "../../../components/Footer/Footer";
+import PageNation from "../../../components/PageNation/PageNation";
 
 function Community(props) {
   const { category } = useParams();
-  const communityList = useCommunityListQuery(1, 10, category);
-
+  const [page, setPage] = useState(1);
+  const communityList = useCommunityListQuery(page, 10, category);
   const [communityContents, setCommunityContents] = useState([]);
 
   const communityCategory = [
@@ -23,12 +24,10 @@ function Community(props) {
     { id: 7, title: "임보 / 입양", category: 7 },
   ];
 
-  console.log(communityList?.data?.data.body);
-
-  const contents = communityList?.data?.data.body;
+  console.log(communityList.data?.data.body);
 
   useEffect(() => {
-    setCommunityContents(contents?.content);
+    setCommunityContents(communityList.data?.data.body);
     communityList.refetch();
   }, [category]);
 
@@ -55,7 +54,7 @@ function Community(props) {
       <div css={s.horizon}></div>
 
       <div css={s.postContainer}>
-        {communityContents?.map((content) => (
+        {communityContents?.content?.map((content) => (
           <Post
             key={content.communityId}
             content={content}
@@ -64,7 +63,15 @@ function Community(props) {
         ))}
       </div>
 
-      <div>{contents?.page}</div>
+      <div>
+        <PageNation
+          page={page}
+          setPage={setPage}
+          size={communityContents?.size}
+          totalElements={communityContents?.totalElements}
+          totalPage={communityContents?.totalPages}
+        />
+      </div>
 
       <Footer />
     </div>
