@@ -10,11 +10,13 @@ import com.korit.cheerful_back.domain.user.UserMapper;
 import com.korit.cheerful_back.dto.admin.AdminLoginReqDto;
 import com.korit.cheerful_back.dto.admin.TokenDto;
 import com.korit.cheerful_back.dto.response.PaginationRespDto;
+import com.korit.cheerful_back.dto.user.UserSearchReqDto;
 import com.korit.cheerful_back.exception.auth.LoginException;
 import com.korit.cheerful_back.security.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -26,6 +28,7 @@ public class AdminService {
     private final JwtUtil jwtUtil;
     private final AdminMapper adminMapper;
     private final CommunityMapper communityMapper;
+    private final UserMapper userMapper;
 
     public TokenDto login(AdminLoginReqDto dto) {
 
@@ -69,5 +72,34 @@ public class AdminService {
                 .page(page)
                 .size(size)
                 .build();
+    }
+
+
+    /*
+    사용자 검색 결과를 페이징 처리해서 반환
+   */
+    public PaginationRespDto<User> searchUsers(UserSearchReqDto dto) {
+        Integer totalElements = userMapper.getCountOfOptions(dto.toOption());
+        Integer totalPages = (int) Math.ceil(totalElements.doubleValue() / dto.getSize().doubleValue());
+        List<User> foundUsers = userMapper.findAllBySearchOption(dto.toOption());
+        boolean isLast = dto.getPage().equals(totalPages);
+
+        return PaginationRespDto.<User>builder()
+                .content(foundUsers)
+                .totalElements(totalElements)
+                .totalPages(totalPages)
+                .isLast(isLast)
+                .page(dto.getPage())
+                .size(dto.getSize())
+                .build();
+    }
+
+
+    /*
+      전달된 사용자 id 목록을 모두 삭제
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void delete(List<Integer> userIds) {
+        userMapper.deleteByUserIds(userIds);
     }
 }
