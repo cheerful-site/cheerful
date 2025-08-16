@@ -12,17 +12,22 @@ import usePrincipalAdminQuery from "../../../queries/PrincipalAdminQuery/usePrin
 import { useState } from "react";
 import ReactModal from "react-modal";
 import { useQueryClient } from "@tanstack/react-query";
+import useAdminUsersQuery from "../../../queries/AdminUsersQuery/useAdminUsersQuery";
 
 function AdminManage(props) {
   const navigate = useNavigate();
   const location = useLocation();
   const queryClient = useQueryClient();
   const principalAdmin = usePrincipalAdminQuery();
+  const adminUsers = useAdminUsersQuery();
   const [isOpen, setIsOpen] = useState(false);
+
+  console.log(adminUsers?.data?.data);
 
   const handleProfileOnClick = () => {
     setIsOpen((prev) => !prev);
   };
+
   const handleLogoutOnClick = async () => {
     localStorage.removeItem("AccessToken");
     await queryClient.invalidateQueries({
@@ -33,7 +38,6 @@ function AdminManage(props) {
 
   const admin = principalAdmin?.data?.data.body.admin;
 
-  console.log(admin);
   const tableInfo = [
     {
       checked: false,
