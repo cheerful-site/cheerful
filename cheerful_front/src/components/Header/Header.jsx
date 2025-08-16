@@ -17,8 +17,8 @@ function Header(props) {
   const principalAdminQuery = usePrincipalAdminQuery();
   const user = principalQuery?.data?.data.body.user;
   const admin = principalAdminQuery?.data?.data.body.admin;
-  console.log(user);
-  console.log(admin);
+  // console.log(user);
+  // console.log(admin);
 
   const MENU = [
     {
@@ -140,6 +140,11 @@ function Header(props) {
 
                   <div css={s.modalButton}>
                     <Link to={"/community/register"}>글쓰기</Link>
+                    {admin ? (
+                      <Link to={"/admin/manager/users"}>관리자 페이지</Link>
+                    ) : (
+                      <></>
+                    )}
                     <div onClick={handleLogoutOnClick}>로그아웃</div>
                   </div>
 

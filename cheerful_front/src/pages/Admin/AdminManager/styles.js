@@ -134,25 +134,25 @@ export const manageUser = css`
   border-bottom: 0.1rem solid #22222230;
   width: 100%;
   height: 7rem;
+`;
+export const profileImg = css`
+  border-radius: 50%;
+  width: 3.4rem;
+  height: 3.4rem;
+  background-color: #dbdbdb;
+`;
 
-    & > img {
-      border-radius: 50%;
-      width: 3.5rem;
-      height: 3.5rem;
-    }
-
-    & > span {
-      margin-left: 0.5rem;
-      margin-right: 6rem;
-      border-radius: 1rem;
-      width: 14rem;
-      height: 3.5rem;
-      text-align: center;
-      align-content: center;
-      color: #ffffff;
-      background-color: #ffc421;
-      cursor: pointer;
-    }
+export const profileEdit = css`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0.5rem 2rem 0.5rem 0.5rem;
+  border-radius: 1rem;
+  width: 14rem;
+  height: 3.5rem;
+  background-color: #ffc421;
+  color: #ffffff;
+  cursor: pointer;
 `;
 
 export const modalContainer = css`
@@ -363,5 +363,6 @@ export const userRows = css`
     display: flex;
     justify-content: center;
     width: 6rem;
+    cursor: pointer;
   }
 `;

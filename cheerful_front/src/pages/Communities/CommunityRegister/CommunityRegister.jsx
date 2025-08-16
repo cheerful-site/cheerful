@@ -3,6 +3,9 @@ import * as s from "./styles";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import usePrincipalQuery from "../../../queries/PrincipalQuery/usePrincipalQuery";
+import Footer from "../../../components/Footer/Footer";
+import usePrincipalAdminQuery from "../../../queries/PrincipalAdminQuery/usePrincipalAdminQuery";
+import ReactQuill from "react-quill-new";
 
 function CommunityRegister(props) {
   const [inputValue, setInputValue] = useState({
@@ -13,7 +16,9 @@ function CommunityRegister(props) {
 
   const navigate = useNavigate();
   const principalQuery = usePrincipalQuery();
+  const principalAdmin = usePrincipalAdminQuery();
   const user = principalQuery?.data?.data.body.user;
+  const admin = principalAdmin?.data?.data.body.admin;
   // console.log(user);
 
   const handleOnChange = (e) => {
@@ -29,15 +34,7 @@ function CommunityRegister(props) {
       title: inputValue.title,
       content: inputValue.content,
     };
-
-    // reqCommunityRegister(reqData);
-
-    // try {
-    //   reqCommunityRegister(registerPost);
-    //   // navigate("/community/1");
-    // } catch (e) {
-    //   console.log(e);
-    // }
+    console.log(reqData);
   };
 
   return (
@@ -45,8 +42,8 @@ function CommunityRegister(props) {
       <div css={s.layout}>
         <div css={s.registerContainer}>
           <div css={s.registerUser}>
-            <img src={user?.profileImgPath} alt="" />
-            <span>{user?.username}</span>
+            <img src={user?.profileImgPath || admin?.profileImgPath} alt="" />
+            <span>{user?.username || admin?.adminName}</span>
           </div>
 
           <div css={s.registerInputTitle}>
@@ -73,7 +70,6 @@ function CommunityRegister(props) {
               placeholder="내용을 작성해 주세요. (최소 5자)"
             />
           </div>
-
           <button css={s.registerButton} onClick={handleRegisterOnClick}>
             등록하기
           </button>
