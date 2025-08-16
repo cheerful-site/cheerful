@@ -11,6 +11,7 @@
         <result property="title" column="community_title" />
         <result property="content" column="community_content" />
         <result property="createdAt" column="created_at" />
+        <result property="views" column="community_views" />
         <result property="isLike" column="is_like" />
         <result property="likeCount" column="like_count" />
         <result property="commentCount" column="comments_count" />
@@ -184,7 +185,7 @@
             community_views
         from
             community_tb
-        where category_id = #{categoryId}
+        where community_category_id = #{categoryId}
             and community_id = #{communityId}
     </select>
 

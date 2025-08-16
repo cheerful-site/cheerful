@@ -27,7 +27,6 @@
         <result property="title" column="community_title" />
         <result property="content" column="community_content" />
         <result property="createdAt" column="created_at" />
-        <result property="views" column="community_views" />
     </resultMap>
 
     <resultMap id="UserMap" type="com.korit.cheerful_back.domain.user.User">
