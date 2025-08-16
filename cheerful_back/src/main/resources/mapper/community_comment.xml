@@ -135,7 +135,7 @@
     <update id="increaseViews">
         update community_tb
         set community_views = community_views + 1
-        where category_id = #{categoryId}
+        where community_category_id = #{categoryId}
             and community_id = #{communityId}
     </update>
 

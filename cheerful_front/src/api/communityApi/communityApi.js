@@ -19,3 +19,6 @@ export const reqCommunityRegister = async (data) =>
 
 export const reqCommunityDetail = async (categoryId, communityId) =>
   await api.get(`/community/${categoryId}/${communityId}`);
+
+export const reqCommunityViews = async (categoryId, communityId) =>
+  await api.post(`/community/${categoryId}/${communityId}`);

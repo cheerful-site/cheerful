@@ -3,12 +3,14 @@ import * as s from "./styles";
 import noImage from "../../icons/Frame2.png";
 import { AiFillLike } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
+import { reqCommunityViews } from "../../api/communityApi/communityApi";
 
 function Post({ content, category }) {
   const navigate = useNavigate();
   // console.log(content);
 
   const handleOnClick = () => {
+    reqCommunityViews(category, content.communityId);
     navigate(`/community/${category}/${content.communityId}`);
   };
 

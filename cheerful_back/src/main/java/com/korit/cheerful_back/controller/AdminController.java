@@ -51,7 +51,7 @@ public class AdminController {
     }
 
     /*
-      사용자 삭제
+    사용자 삭제
      */
     @DeleteMapping("/manager/users")
     public ResponseEntity<ResponseDto<?>> deleteUserIds(@RequestParam List<Integer> userIds) {
