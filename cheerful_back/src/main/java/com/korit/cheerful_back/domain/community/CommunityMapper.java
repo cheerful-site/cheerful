@@ -7,7 +7,13 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface CommunityMapper {
     int insert(Community community);
+
+    // user전용 community
     List<Community> findAllByOption(CommunitySearchOption communitySearchOption);
 //    List<Community> findByCategoryId(@Param("categoryId") Integer categoryId, @Param("userId") Integer userId);
     int getCountOfOptions(CommunitySearchOption communitySearchOption);
+
+    // admin전용 community
+    List<Community> findAllBySearchOption(CommunitySearchOption communitySearchOption);
+    int getCountOfSearchOption(CommunitySearchOption communitySearchOption);
 }

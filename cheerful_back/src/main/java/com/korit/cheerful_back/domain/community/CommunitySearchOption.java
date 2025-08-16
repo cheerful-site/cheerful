@@ -9,6 +9,7 @@ public class CommunitySearchOption {
   private Integer startIndex;
   private Integer endIndex;
   private Integer size;
+  private String searchText;
   private Integer categoryId;
   private Integer userId;
 

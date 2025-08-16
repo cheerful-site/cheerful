@@ -92,13 +92,13 @@ public class CommunityService {
                 .build();
 
         // 총 건수 / 총 페이지 / 마지막 여부 계산
-        List<Community> contests = communityMapper.findAllByOption(searchOption);
+        List<Community> contents = communityMapper.findAllByOption(searchOption);
         Integer totalElements = communityMapper.getCountOfOptions(searchOption);
         Integer totalPages = (int) Math.ceil(totalElements.longValue() / size.doubleValue());
         Boolean isLast = page.equals(totalPages);
 
         return PaginationRespDto.<Community>builder()
-                .content(contests)
+                .content(contents)
                 .categoryId(categoryId)
                 .totalElements(totalElements)
                 .totalPages(totalPages)
@@ -135,7 +135,7 @@ public class CommunityService {
         특정 글 조회수
      */
     public int increaseViews(Integer categoryId, Integer communityId) {
-        int updated = communityCommentMapper.increaseViews(categoryId, communityId);
+        communityCommentMapper.increaseViews(categoryId, communityId);
         return communityCommentMapper.selectViews(categoryId, communityId);
     }
 
@@ -147,5 +147,4 @@ public class CommunityService {
         communityCommentMapper.insert(dto.toEntity(userId));
         return communityCommentMapper.getCountByCommentId(dto.getCommunityId());
     }
-
 }
