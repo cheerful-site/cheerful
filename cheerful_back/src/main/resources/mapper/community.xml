@@ -171,7 +171,24 @@
 <!--            ct.user_id = #{userId}-->
     </select>
 
+<!--    조회수-->
+    <update id="increaseViews">
+        update community_tb
+        set community_views = community_views + 1
+        where community_category_id = #{categoryId}
+            and community_id = #{communityId}
+    </update>
 
+    <select id="selectViews" resultType="java.lang.Integer">
+        select
+            community_views
+        from
+            community_tb
+        where category_id = #{categoryId}
+            and community_id = #{communityId}
+    </select>
+
+<!--    관리자 권한-->
     <select id="findAllBySearchOption" resultMap="CommunityMap">
         select
             ct.community_id,

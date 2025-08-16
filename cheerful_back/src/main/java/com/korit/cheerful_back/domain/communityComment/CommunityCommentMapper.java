@@ -15,7 +15,4 @@ public interface CommunityCommentMapper {
 
     int getCountByCommentId(Integer communityId);
 
-    int increaseViews(@Param("categoryId") Integer categoryId, @Param("communityId") Integer communityId);
-
-    Integer selectViews(@Param("categoryId") Integer categoryId, @Param("communityId") Integer communityId);
 }

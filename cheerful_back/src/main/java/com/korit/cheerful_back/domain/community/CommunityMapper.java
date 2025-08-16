@@ -13,6 +13,11 @@ public interface CommunityMapper {
 //    List<Community> findByCategoryId(@Param("categoryId") Integer categoryId, @Param("userId") Integer userId);
     int getCountOfOptions(CommunitySearchOption communitySearchOption);
 
+    // 조회수
+    int increaseViews(@Param("categoryId") Integer categoryId, @Param("communityId") Integer communityId);
+
+    Integer selectViews(@Param("categoryId") Integer categoryId, @Param("communityId") Integer communityId);
+
     // admin전용 community
     List<Community> findAllBySearchOption(CommunitySearchOption communitySearchOption);
     int getCountOfSearchOption(CommunitySearchOption communitySearchOption);
