@@ -43,7 +43,7 @@
     </resultMap>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="communityId">
-        insert into community_tb
+        insert into community_tb(community_id, community_category_id, user_id, title, content, created_at)
         values (default, #{communityCategoryId}, #{userId}, #{title}, #{content}, now())
     </insert>
 
@@ -174,19 +174,39 @@
 
 <!--    조회수-->
     <update id="increaseViews">
-        update community_tb
-        set community_views = community_views + 1
-        where community_category_id = #{categoryId}
-            and community_id = #{communityId}
+        update community_tb as ct
+        set ct.community_views = ct.community_views + 1
+        <where>
+            <choose>
+                <!-- categoryId == 1 이면 전체 -->
+                <when test="categoryId == 1">
+                    1 = 1
+                </when>
+                <otherwise>
+                    ct.community_category_id = #{categoryId}
+                </otherwise>
+            </choose>
+            and ct.community_id = #{communityId}
+        </where>
     </update>
 
     <select id="selectViews" resultType="java.lang.Integer">
         select
-            community_views
+            ct.community_views
         from
-            community_tb
-        where community_category_id = #{categoryId}
-            and community_id = #{communityId}
+            community_tb ct
+        <where>
+            <choose>
+                <!-- categoryId == 1 이면 전체 -->
+                <when test="categoryId == 1">
+                    1 = 1
+                </when>
+                <otherwise>
+                    ct.community_category_id = #{categoryId}
+                </otherwise>
+            </choose>
+            and ct.community_id = #{communityId}
+        </where>
     </select>
 
 <!--    관리자 권한-->

@@ -85,6 +85,9 @@ public class CommunityController {
     @PostMapping("/{categoryId}/{communityId}")
     public ResponseEntity<ResponseDto<?>> getCommunityViews(@PathVariable Integer categoryId, @PathVariable Integer communityId) {
         int views = communityService.increaseViews(categoryId, communityId);
+        if (views > 0) {
+            views = 0;
+        }
         return ResponseEntity.ok(ResponseDto.success(views));
     }
 
