@@ -4,6 +4,15 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.korit.cheerful_back.domain.user.UserMapper">
+  <resultMap id="UserMap" type="com.korit.cheerful_back.domain.user.User">
+    <id property="userId" column="user_id"/>
+    <result property="username" column="user_name"/>
+    <result property="email" column="user_email"/> <!-- 👈 여기 필수 -->
+    <result property="profileImgPath" column="profile_img_path"/>
+    <result property="role" column="role"/>
+    <result property="provider" column="provider"/>
+    <result property="providerId" column="provider_id"/>
+  </resultMap>
 
   <insert id="insert" useGeneratedKeys="true" keyProperty="userId">
     insert into user_tb
@@ -39,7 +48,7 @@
       provider_id = #{providerId}
   </select>
 
-  <select id="findAllBySearchOption" resultType="com.korit.cheerful_back.domain.user.User">
+  <select id="findAllBySearchOption" resultMap="UserMap">
     select
       ut.user_id,
       ut.user_name,
@@ -55,7 +64,7 @@
       or ut.user_email like concat('%', #{searchText}, '%')
     order by
       ut.user_id
-    limit #{searchIndex}, #{size}
+    limit #{startIndex}, #{size}
   </select>
 
   <select id="getCountOfOptions" resultType="java.lang.Integer" >

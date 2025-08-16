@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserSearchOption {
     private Integer startIndex;
+    private Integer endIndex;
     private Integer size;
     private String searchText;
+    private Integer userId;
 }

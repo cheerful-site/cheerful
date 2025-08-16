@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 public class User {
   public Integer userId;
   public String username;
-  @JsonIgnore
   public String email;
   public String profileImgPath;
   public String role;

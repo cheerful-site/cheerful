@@ -99,7 +99,7 @@ public class CommunityService {
 
         return PaginationRespDto.<Community>builder()
                 .content(contents)
-                .categoryId(categoryId)
+//                .categoryId(categoryId)
                 .totalElements(totalElements)
                 .totalPages(totalPages)
                 .isLast(isLast)
