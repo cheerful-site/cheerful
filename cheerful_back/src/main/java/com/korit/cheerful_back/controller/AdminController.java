@@ -51,9 +51,6 @@ public class AdminController {
 
     @GetMapping("/manager/users")
     public ResponseEntity<ResponseDto<?>> managerUsers(@RequestParam Integer page, @RequestParam Integer size, @RequestParam(required = false) String searchText) {
-        System.out.println(page);
-        System.out.println(size);
-        System.out.println(searchText);
         return ResponseEntity.ok(ResponseDto.success(adminService.getUserSearchList(page, size, searchText)));
     }
 

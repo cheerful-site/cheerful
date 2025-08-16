@@ -9,6 +9,7 @@ import com.korit.cheerful_back.domain.user.User;
 import com.korit.cheerful_back.domain.user.UserMapper;
 import com.korit.cheerful_back.domain.user.UserSearchOption;
 import com.korit.cheerful_back.dto.admin.AdminLoginReqDto;
+import com.korit.cheerful_back.dto.admin.AdminUserRespDto;
 import com.korit.cheerful_back.dto.admin.TokenDto;
 import com.korit.cheerful_back.dto.response.PaginationRespDto;
 import com.korit.cheerful_back.exception.auth.LoginException;
@@ -65,7 +66,7 @@ public class AdminService {
 
         return PaginationRespDto.<Community>builder()
                 .content(contents)
-                .categoryId(categoryId)
+//                .categoryId(categoryId)
                 .totalElements(totalElements)
                 .totalPages(totalPages)
                 .isLast(isLast)
@@ -78,7 +79,7 @@ public class AdminService {
     /*
     사용자 검색 결과를 페이징 처리해서 반환
    */
-    public PaginationRespDto<User> getUserSearchList(Integer page, Integer size, String searchText) {
+    public PaginationRespDto<AdminUserRespDto> getUserSearchList(Integer page, Integer size, String searchText) {
         UserSearchOption searchOption = UserSearchOption.builder()
                 .startIndex((page - 1) * size)
                 .endIndex(size * page)
@@ -91,8 +92,20 @@ public class AdminService {
         Integer totalPages = (int) Math.ceil(totalElements.doubleValue() / size.doubleValue());
         boolean isLast = page >= totalPages;
 
-        return PaginationRespDto.<User>builder()
-                .content(users)
+        List<AdminUserRespDto> contents = users.stream()
+                .map(user -> AdminUserRespDto.builder()
+                        .userId(user.getUserId())
+                        .username(user.getUsername())
+                        .email(user.getEmail())   // 👈 email 내려줌
+                        .profileImgPath(user.getProfileImgPath())
+                        .role(user.getRole())
+                        .provider(user.getProvider())
+                        .providerId(user.getProviderId())
+                        .build())
+                .toList();
+
+        return PaginationRespDto.<AdminUserRespDto>builder()
+                .content(contents)
                 .totalElements(totalElements)
                 .totalPages(totalPages)
                 .isLast(isLast)
