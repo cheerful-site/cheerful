@@ -1,6 +1,5 @@
 /**@jsxImportSource @emotion/react */
 import { FaRegTrashAlt, FaSearch } from "react-icons/fa";
-import usePrincipalQuery from "../../../queries/PrincipalQuery/usePrincipalQuery";
 import * as s from "./styles";
 import logo from "../../../../logo/cheerful_login.png";
 import { PiUserCircleFill } from "react-icons/pi";
@@ -12,8 +11,8 @@ import usePrincipalAdminQuery from "../../../queries/PrincipalAdminQuery/usePrin
 import { useState } from "react";
 import ReactModal from "react-modal";
 import { useQueryClient } from "@tanstack/react-query";
-import useAdminUsersQuery from "../../../queries/AdminUsersQuery/useAdminUsersQuery";
-import useAdminCommunityQuery from "../../../queries/AdminUsersQuery/useAdminCommunityQuery";
+import useAdminUsersQuery from "../../../queries/AdminQuery/useAdminUsersQuery";
+import useAdminCommunityQuery from "../../../queries/AdminQuery/useAdminCommunityQuery";
 
 function AdminManage(props) {
   const navigate = useNavigate();
