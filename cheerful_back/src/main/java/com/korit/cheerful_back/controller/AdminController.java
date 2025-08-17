@@ -49,18 +49,46 @@ public class AdminController {
     }
 
     /*
-    사용자 삭제
+        사용자 삭제
      */
     @DeleteMapping("/manager/users")
     public ResponseEntity<ResponseDto<?>> deleteUserIds(@RequestParam List<Integer> userIds) {
-        adminService.delete(userIds);
+        adminService.deleteUser(userIds);
         return ResponseEntity.ok(ResponseDto.success("회원 정보를 삭제하였습니다."));
     }
 
+    /*
+        community 조회
+     */
     @GetMapping("/manager/community/{categoryId}")
     public ResponseEntity<ResponseDto<?>> managerCommunity(@RequestParam Integer page, @RequestParam Integer size
             , @PathVariable Integer categoryId, @RequestParam(required = false) String searchText) {
         return ResponseEntity.ok(ResponseDto.success(adminService.getCommunitySearchList(page, size, categoryId, searchText)));
     }
 
+    /*
+        community 삭제
+     */
+    @DeleteMapping("/manager/community/{categoryId}")
+    public ResponseEntity<ResponseDto<?>> deleteCommunityIds(@RequestParam List<Integer> communityIds) {
+        adminService.deleteCommunity(communityIds);
+        return ResponseEntity.ok(ResponseDto.success("community 정보를 삭제하였습니다."));
+    }
+
+    /*
+        food 조회
+     */
+    @GetMapping("/manager/food")
+    public ResponseEntity<ResponseDto<?>> managerFood(@RequestParam Integer page, @RequestParam Integer size, @RequestParam(required = false) String searchText) {
+        return ResponseEntity.ok(ResponseDto.success(adminService.getFoodSearchList(page, size, searchText)));
+    }
+
+    /*
+        food 삭제
+     */
+    @DeleteMapping("/manager/food")
+    public ResponseEntity<ResponseDto<?>> deleteFoodIds(@RequestParam List<Integer> foodIds) {
+        adminService.deleteFood(foodIds);
+        return ResponseEntity.ok(ResponseDto.success("food 정보를 삭제하였습니다."));
+    }
 }

@@ -5,6 +5,9 @@ import com.korit.cheerful_back.domain.admin.AdminMapper;
 import com.korit.cheerful_back.domain.community.Community;
 import com.korit.cheerful_back.domain.community.CommunityMapper;
 import com.korit.cheerful_back.domain.community.CommunitySearchOption;
+import com.korit.cheerful_back.domain.food.Food;
+import com.korit.cheerful_back.domain.food.FoodMapper;
+import com.korit.cheerful_back.domain.food.FoodSearchOption;
 import com.korit.cheerful_back.domain.user.User;
 import com.korit.cheerful_back.domain.user.UserMapper;
 import com.korit.cheerful_back.domain.user.UserSearchOption;
@@ -29,6 +32,7 @@ public class AdminService {
     private final AdminMapper adminMapper;
     private final CommunityMapper communityMapper;
     private final UserMapper userMapper;
+    private final FoodMapper foodMapper;
 
     public TokenDto login(AdminLoginReqDto dto) {
 
@@ -75,7 +79,7 @@ public class AdminService {
         전달된 사용자 id 목록을 모두 삭제
      */
     @Transactional(rollbackFor = Exception.class)
-    public void delete(List<Integer> userIds) {
+    public void deleteUser(List<Integer> userIds) {
         userMapper.deleteByUserIds(userIds);
     }
 
@@ -107,5 +111,48 @@ public class AdminService {
                 .page(page)
                 .size(size)
                 .build();
+    }
+
+    /*
+        전달된 community id 목록을 모두 삭제
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteCommunity(List<Integer> communityIds) {
+        communityMapper.deleteByCommunityIds(communityIds);
+    }
+
+
+    /*
+        admin 전용 food 목록 조회
+     */
+    public PaginationRespDto<Food> getFoodSearchList(Integer page, Integer size, String searchText) {
+        FoodSearchOption searchOption = FoodSearchOption.builder()
+                .startIndex((page - 1) * size)
+                .endIndex(size * page)
+                .size(size)
+                .searchText(searchText)
+                .build();
+
+        List<Food> contents = foodMapper.findAllBySearchOption(searchOption);
+        Integer totalElements = foodMapper.getCountOfSearchOption(searchOption);
+        Integer totalPages = (int) Math.ceil(totalElements.longValue() / size.doubleValue());
+        Boolean isLast = page >= totalPages;
+
+        return PaginationRespDto.<Food>builder()
+                .content(contents)
+                .totalElements(totalElements)
+                .totalPages(totalPages)
+                .isLast(isLast)
+                .page(page)
+                .size(size)
+                .build();
+    }
+
+    /*
+        전달된 food id 목록을 모두 삭제
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteFood(List<Integer> foodIds) {
+        foodMapper.deleteByFoodIds(foodIds);
     }
 }

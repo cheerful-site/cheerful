@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.korit.cheerful_back.domain.food.FoodMapper">
+    <resultMap id="FoodMap" type="com.korit.cheerful_back.domain.food.Food">
+        <id property="foodId" column="food_id" />
+        <result property="foodCategoryId" column="food_category_id" />
+        <result property="adminId" column="admin_id" />
+        <result property="title" column="food_title" />
+        <result property="content" column="food_content" />
+        <result property="price" column="food_price" />
+        <result property="createdAt" column="created_at" />
+        <association property="admin" resultMap="AdminMap" />
+        <association property="foodCategory" resultMap="FoodCategoryMap" />
+        <collection property="foodImgs" javaType="list" resultMap="FoodImgMap" />
+    </resultMap>
+
+    <resultMap id="AdminMap" type="com.korit.cheerful_back.domain.admin.Admin">
+        <id property="adminId" column="admin_id" />
+        <result property="adminName" column="admin_name" />
+        <result property="adminLoginId" column="admin_login_id" />
+        <result property="password" column="password" />
+        <result property="profileImgPath" column="profile_img_path" />
+        <result property="role" column="role" />
+    </resultMap>
+
+    <resultMap id="FoodCategoryMap" type="com.korit.cheerful_back.domain.foodCategory.FoodCategory" >
+        <id property="foodCategoryId" column="food_category_id" />
+        <result property="foodCategoryName" column="food_category_name" />
+    </resultMap>
+
+    <resultMap id="FoodImgMap" type="com.korit.cheerful_back.domain.foodImg.FoodImg">
+        <id property="foodImgId" column="food_img_id" />
+        <result property="foodId" column="food_id" />
+        <result property="seq" column="seq" />
+        <result property="imgPath" column="img_path" />
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="foodId">
+        insert into food_tb
+        values (default, #{foodCategoryId}, #{adminId}, #{title}, #{content}, #{price}, now())
+    </insert>
+
+    <select id="findAllBySearchOption" resultMap="FoodMap">
+        select
+            ft.food_id,
+            ft.admin_id as ft_admin_id,
+            ft.food_title,
+            ft.food_content,
+            ft.created_at,
+
+            fct.food_category_name,
+
+            at.admin_id as at_admin_id,
+            at.admin_name,
+            at.admin_login_id
+        from
+            food_tb ft
+            left outer join admin_tb at on(at.admin_id = ft.admin_id)
+            left outer join food_category_tb fct on(fct.food_category_id = ft.food_category_id)
+        where
+            ft.food_title like concat('%', #{searchText}, '%')
+            or ft.food_content like concat('%', #{searchText}, '%')
+        order by
+            ft.food_id
+        limit #{startIndex}, #{size}
+    </select>
+
+    <select id="getCountOfSearchOption" resultType="java.lang.Integer">
+        select
+            count(*)
+        from
+            food_tb ft
+            left outer join admin_tb at on(at.admin_id = ft.admin_id)
+            left outer join food_category_tb fct on(fct.food_category_id = ft.food_category_id)
+        where
+            ft.food_title like concat('%', #{searchText}, '%')
+            or ft.food_content like concat('%', #{searchText}, '%')
+    </select>
+
+    <delete id="deleteByFoodIds">
+        delete
+        from
+            food_tb
+        where
+            food_id in
+            <foreach item="foodId" collection="foodIds" separator="," open="(" close=")" >
+                #{foodId}
+            </foreach>
+    </delete>
+</mapper>
