@@ -1,6 +1,7 @@
 package com.korit.cheerful_back.domain.community;
 
 import com.korit.cheerful_back.domain.communityCategory.CommunityCategory;
+import com.korit.cheerful_back.domain.communityComment.CommunityComment;
 import com.korit.cheerful_back.domain.communityImg.CommunityImg;
 import com.korit.cheerful_back.domain.user.User;
 import lombok.AllArgsConstructor;
@@ -30,4 +31,5 @@ public class Community {
     private CommunityCategory communityCategory;
     private User user;
     private List<CommunityImg> communityImgs;
+    private List<CommunityComment> communityComments;
 }

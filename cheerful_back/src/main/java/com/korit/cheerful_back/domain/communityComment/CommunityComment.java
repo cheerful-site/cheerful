@@ -28,6 +28,6 @@ public class CommunityComment {
     private String path;
 
     private User user;
-    private Community community;
+//    private Community community;
     private List<CommunityImg> communityImgs;
 }
