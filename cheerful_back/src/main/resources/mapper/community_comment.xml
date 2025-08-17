@@ -15,18 +15,8 @@
         <result property="createdAt" column="created_at" />
         <result property="level" column="level" />
         <result property="path" column="path" />
-        <association property="community" resultMap="CommunityMap" />
         <association property="user" resultMap="UserMap" />
         <association property="communityImgs" resultMap="CommunityImgMap" />
-    </resultMap>
-
-    <resultMap id="CommunityMap" type="com.korit.cheerful_back.domain.community.Community">
-        <id property="communityId" column="community_id" />
-        <result property="communityCategoryId" column="community_category_id" />
-        <result property="userId" column="user_id" />
-        <result property="title" column="community_title" />
-        <result property="content" column="community_content" />
-        <result property="createdAt" column="created_at" />
     </resultMap>
 
     <resultMap id="UserMap" type="com.korit.cheerful_back.domain.user.User">
@@ -96,14 +86,6 @@
             ut.user_name,
             ut.profile_img_path,
 
-            cmt.community_id,
-            cmt.community_category_id,
-            cmt.user_id,
-            cmt.community_title,
-            cmt.community_content,
-            cmt.created_at,
-            cmt.community_views,
-
             cit.community_img_id,
             cit.community_id as cit_community_id,
             cit.seq,
@@ -117,7 +99,6 @@
             comment_tb ct
             left outer join user_tb ut on(ut.user_id = ct.user_id)
             left outer join user_tb put on(put.user_id = ct.parent_user_id)
-            left outer join community_tb cmt on(cmt.community_id = ct.community_id and cmt.community_category_id = #{categoryId})
             left outer join community_img_tb cit on(cit.community_id = ct.community_id)
         order by
             order_number desc,
