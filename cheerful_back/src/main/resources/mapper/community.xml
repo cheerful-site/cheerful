@@ -249,8 +249,7 @@
             </if>
         </where>
         order by
-            ct.created_at desc,
-            ct.community_id desc
+            ct.community_id
 <!--        limit #{size} offset #{startIndex}-->
         limit #{startIndex}, #{size}
     </select>
@@ -280,4 +279,15 @@
             </if>
         </where>
     </select>
+
+    <delete id="deleteByCommunityIds">
+        delete
+        from
+        community_tb
+        where
+        community_id in
+        <foreach item="communityId" collection="communityIds" separator="," open="(" close=")" >
+
+        </foreach>
+    </delete>
 </mapper>
