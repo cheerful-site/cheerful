@@ -213,13 +213,11 @@
     <select id="findAllBySearchOption" resultMap="CommunityMap">
         select
             ct.community_id,
-            ct.community_category_id as ct_category_id,
             ct.user_id as ct_user_id,
             ct.community_title,
             ct.community_content,
             ct.created_at,
 
-            cct.community_category_id as cct_category_id,
             cct.community_category_name,
 
             ut.user_id as ut_user_id,
