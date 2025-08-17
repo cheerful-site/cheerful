@@ -45,21 +45,28 @@
 
     <select id="findAllBySearchOption" resultMap="FoodMap">
         select
-            ft.food_id,
+            ft.food_id as ft_food_id,
             ft.admin_id as ft_admin_id,
             ft.food_title,
             ft.food_content,
+            ft.food_price,
             ft.created_at,
 
             fct.food_category_name,
 
             at.admin_id as at_admin_id,
             at.admin_name,
-            at.admin_login_id
+            at.admin_login_id,
+
+            fit.food_img_id,
+            fit.food_id as fit_food_id,
+            fit.seq,
+            fit.img_path
         from
             food_tb ft
             left outer join admin_tb at on(at.admin_id = ft.admin_id)
             left outer join food_category_tb fct on(fct.food_category_id = ft.food_category_id)
+            left outer join food_img_tb fit on(fit.food_id = ft.food_id)
         where
             ft.food_title like concat('%', #{searchText}, '%')
             or ft.food_content like concat('%', #{searchText}, '%')
