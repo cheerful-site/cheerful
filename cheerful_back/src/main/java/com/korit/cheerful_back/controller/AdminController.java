@@ -35,12 +35,6 @@ public class AdminController {
         return ResponseEntity.ok(ResponseDto.success(principalAdmin));
     }
 
-    @GetMapping("/manager/community/{categoryId}")
-    public ResponseEntity<ResponseDto<?>> managerCommunity(@RequestParam Integer page, @RequestParam Integer size
-            , @PathVariable Integer categoryId, @RequestParam(required = false) String searchText) {
-        return ResponseEntity.ok(ResponseDto.success(adminService.getCommunitySearchList(page, size, categoryId, searchText)));
-    }
-
     /*
         사용자 조회
      */
@@ -62,4 +56,11 @@ public class AdminController {
         adminService.delete(userIds);
         return ResponseEntity.ok(ResponseDto.success("회원 정보를 삭제하였습니다."));
     }
+
+    @GetMapping("/manager/community/{categoryId}")
+    public ResponseEntity<ResponseDto<?>> managerCommunity(@RequestParam Integer page, @RequestParam Integer size
+            , @PathVariable Integer categoryId, @RequestParam(required = false) String searchText) {
+        return ResponseEntity.ok(ResponseDto.success(adminService.getCommunitySearchList(page, size, categoryId, searchText)));
+    }
+
 }

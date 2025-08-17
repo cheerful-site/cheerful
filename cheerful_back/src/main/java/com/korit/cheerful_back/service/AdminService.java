@@ -46,6 +46,41 @@ public class AdminService {
 
 
     /*
+        admin 전용 사용자 목록 조회
+   */
+    public PaginationRespDto<User> getUserSearchList(Integer page, Integer size, String searchText) {
+        UserSearchOption searchOption = UserSearchOption.builder()
+                .startIndex((page - 1) * size)
+                .endIndex(size * page)
+                .size(size)
+                .searchText(searchText)
+                .build();
+
+        List<User> contents = userMapper.findAllBySearchOption(searchOption);
+        Integer totalElements = userMapper.getCountOfOptions(searchOption);
+        Integer totalPages = (int) Math.ceil(totalElements.doubleValue() / size.doubleValue());
+        boolean isLast = page >= totalPages;
+
+        return PaginationRespDto.<User>builder()
+                .content(contents)
+                .totalElements(totalElements)
+                .totalPages(totalPages)
+                .isLast(isLast)
+                .page(page)
+                .size(size)
+                .build();
+    }
+
+    /*
+        전달된 사용자 id 목록을 모두 삭제
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void delete(List<Integer> userIds) {
+        userMapper.deleteByUserIds(userIds);
+    }
+
+
+    /*
         admin 전용 커뮤니티 페이징 목록 조회
      */
     public PaginationRespDto<Community> getCommunitySearchList(Integer page, Integer size, Integer categoryId, String searchText) {
@@ -72,41 +107,5 @@ public class AdminService {
                 .page(page)
                 .size(size)
                 .build();
-    }
-
-
-    /*
-    사용자 검색 결과를 페이징 처리해서 반환
-   */
-    public PaginationRespDto<User> getUserSearchList(Integer page, Integer size, String searchText) {
-        UserSearchOption searchOption = UserSearchOption.builder()
-                .startIndex((page - 1) * size)
-                .endIndex(size * page)
-                .size(size)
-                .searchText(searchText)
-                .build();
-
-        List<User> contents = userMapper.findAllBySearchOption(searchOption);
-        Integer totalElements = userMapper.getCountOfOptions(searchOption);
-        Integer totalPages = (int) Math.ceil(totalElements.doubleValue() / size.doubleValue());
-        boolean isLast = page >= totalPages;
-
-        return PaginationRespDto.<User>builder()
-                .content(contents)
-                .totalElements(totalElements)
-                .totalPages(totalPages)
-                .isLast(isLast)
-                .page(page)
-                .size(size)
-                .build();
-    }
-
-
-    /*
-      전달된 사용자 id 목록을 모두 삭제
-     */
-    @Transactional(rollbackFor = Exception.class)
-    public void delete(List<Integer> userIds) {
-        userMapper.deleteByUserIds(userIds);
     }
 }

@@ -175,7 +175,7 @@
 <!--    조회수-->
     <update id="increaseViews">
         update community_tb as ct
-        set ct.community_views = ct.community_views + 1
+        set ct.community_views = coalesce(ct.community_views, 0) + 1
         <where>
             <choose>
                 <!-- categoryId == 1 이면 전체 -->
@@ -192,7 +192,7 @@
 
     <select id="selectViews" resultType="java.lang.Integer">
         select
-            ct.community_views
+            ifnull(max(ct.community_views), 0) as views
         from
             community_tb ct
         <where>
@@ -253,12 +253,13 @@
         order by
             ct.created_at desc,
             ct.community_id desc
-        limit #{size} offset #{startIndex}
+<!--        limit #{size} offset #{startIndex}-->
+        limit #{startIndex}, #{size}
     </select>
 
     <select id="getCountOfSearchOption" resultType="java.lang.Integer">
         select
-            *
+            count(*)
         from
             community_tb ct
             left outer join user_tb ut on(ut.user_id = ct.user_id)
@@ -276,7 +277,7 @@
 
             <if test="searchText != null and searchText != ''">
                 and (
-                ct.community_title like concat('%', #{searchText}, '%')
+                    ct.community_title like concat('%', #{searchText}, '%')
                 )
             </if>
         </where>
