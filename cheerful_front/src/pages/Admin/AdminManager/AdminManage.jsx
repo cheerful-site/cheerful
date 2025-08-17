@@ -13,6 +13,7 @@ import { useState } from "react";
 import ReactModal from "react-modal";
 import { useQueryClient } from "@tanstack/react-query";
 import useAdminUsersQuery from "../../../queries/AdminUsersQuery/useAdminUsersQuery";
+import useAdminCommunityQuery from "../../../queries/AdminUsersQuery/useAdminCommunityQuery";
 
 function AdminManage(props) {
   const navigate = useNavigate();
@@ -21,6 +22,8 @@ function AdminManage(props) {
   const principalAdmin = usePrincipalAdminQuery();
   const [inputValue, setInputValue] = useState("");
   const adminUsers = useAdminUsersQuery(1, 10, inputValue);
+  const adminCommunity = useAdminCommunityQuery(1, 10, 1, inputValue);
+
   const [isOpen, setIsOpen] = useState(false);
 
   const handleProfileOnClick = () => {

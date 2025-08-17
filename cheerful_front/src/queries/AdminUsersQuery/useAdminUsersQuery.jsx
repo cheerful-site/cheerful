@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import React from "react";
 import { reqAdminUsers } from "../../api/adminApi/adminApi";
 
 function useAdminUsersQuery(page, size, searchText) {
