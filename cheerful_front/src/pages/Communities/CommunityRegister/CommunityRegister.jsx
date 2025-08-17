@@ -5,7 +5,8 @@ import { useNavigate } from "react-router-dom";
 import usePrincipalQuery from "../../../queries/PrincipalQuery/usePrincipalQuery";
 import Footer from "../../../components/Footer/Footer";
 import usePrincipalAdminQuery from "../../../queries/PrincipalAdminQuery/usePrincipalAdminQuery";
-import ReactQuill from "react-quill-new";
+import { FiPlus, FiX } from "react-icons/fi";
+import Slider from "react-slick";
 
 function CommunityRegister(props) {
   const [inputValue, setInputValue] = useState({
@@ -13,6 +14,7 @@ function CommunityRegister(props) {
     title: "",
     content: "",
   });
+  const [files, setFiles] = useState([]);
 
   const navigate = useNavigate();
   const principalQuery = usePrincipalQuery();
@@ -28,14 +30,11 @@ function CommunityRegister(props) {
     }));
   };
 
-  const handleRegisterOnClick = () => {
-    const reqData = {
-      communityCategoryId: inputValue.communityCategoryId,
-      title: inputValue.title,
-      content: inputValue.content,
-    };
-    console.log(reqData);
-  };
+  const handlePlusOnClick = () => {};
+
+  const handleImgDeleteOnClick = () => {};
+
+  const handleRegisterOnClick = () => {};
 
   return (
     <>
@@ -61,6 +60,9 @@ function CommunityRegister(props) {
               onChange={handleOnChange}
               placeholder="제목을 입력해주세요."
             />
+          </div>
+
+          <div>
           </div>
 
           <div css={s.registerTextArea}>
