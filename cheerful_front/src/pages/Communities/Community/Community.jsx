@@ -27,7 +27,7 @@ function Community(props) {
   console.log(communityList.data?.data.body);
 
   useEffect(() => {
-    setCommunityContents(communityList.data?.data.body);
+    setCommunityContents(communityList.data?.data.body || []);
     communityList.refetch();
   }, [category]);
 
@@ -53,7 +53,7 @@ function Community(props) {
 
       <div css={s.horizon}></div>
 
-      <div css={s.postContainer}> 
+      <div css={s.postContainer}>
         {communityContents?.content?.map((content) => (
           <Post
             key={content.communityId}

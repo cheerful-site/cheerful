@@ -2,10 +2,10 @@ import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import { reqAdminUsers } from "../../api/adminApi/adminApi";
 
-function useAdminUsersQuery(props) {
+function useAdminUsersQuery(page, size, searchText) {
   return useQuery({
-    queryKey: ["adminUsers"],
-    queryFn: async () => await reqAdminUsers(),
+    queryKey: ["adminUsers", page, size, searchText],
+    queryFn: async () => await reqAdminUsers(page, size, searchText),
   });
 }
 

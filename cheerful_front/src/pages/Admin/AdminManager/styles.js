@@ -334,6 +334,9 @@ export const userRows = css`
     font-size: 1.4rem;
     font-weight: 500;
     color: #222222;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 
   & > td:nth-of-type(1) {
