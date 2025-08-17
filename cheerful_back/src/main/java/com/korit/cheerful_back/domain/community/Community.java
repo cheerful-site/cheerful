@@ -22,10 +22,10 @@ public class Community {
     private String title;
     private String content;
     private LocalDateTime createdAt;
+    private Integer views;
     private Integer isLike;
     private Integer likeCount;
     private Integer commentCount;
-    private Integer views;
 
     private CommunityCategory communityCategory;
     private User user;
