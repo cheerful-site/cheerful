@@ -19,10 +19,9 @@ function AdminManage(props) {
   const location = useLocation();
   const queryClient = useQueryClient();
   const principalAdmin = usePrincipalAdminQuery();
-  const adminUsers = useAdminUsersQuery();
+  const [inputValue, setInputValue] = useState("");
+  const adminUsers = useAdminUsersQuery(1, 10, inputValue);
   const [isOpen, setIsOpen] = useState(false);
-
-  console.log(adminUsers?.data?.data);
 
   const handleProfileOnClick = () => {
     setIsOpen((prev) => !prev);
@@ -36,100 +35,14 @@ function AdminManage(props) {
     navigate("/auth/login");
   };
 
+  const handleOnChange = (e) => {
+    setInputValue(e.target.value);
+  };
+
+  const UserList = adminUsers?.data?.data.body.content;
   const admin = principalAdmin?.data?.data.body.admin;
 
-  const tableInfo = [
-    {
-      checked: false,
-      userId: 1,
-      username: "jane doe",
-      email: "jbojsun@naver.com",
-      profileImgPath: "a/ddd/ddddd.jpg",
-      provider: "google",
-      providerId: "123123123",
-    },
-    {
-      checked: false,
-      userId: 2,
-      username: "jane doe",
-      email: "jbojsun@naver.com",
-      profileImgPath: "a/ddd/ddddd.jpg",
-      provider: "google",
-      providerId: "123123123",
-    },
-    {
-      checked: false,
-      userId: 3,
-      username: "jane doe",
-      email: "jbojsun@naver.com",
-      profileImgPath: "a/ddd/ddddd.jpg",
-      provider: "google",
-      providerId: "123123123",
-    },
-    {
-      checked: false,
-      userId: 4,
-      username: "jane doe",
-      email: "jbojsun@naver.com",
-      profileImgPath: "a/ddd/ddddd.jpg",
-      provider: "google",
-      providerId: "123123123",
-    },
-    {
-      checked: false,
-      userId: 5,
-      username: "jane doe",
-      email: "jbojsun@naver.com",
-      profileImgPath: "a/ddd/ddddd.jpg",
-      provider: "google",
-      providerId: "123123123",
-    },
-    {
-      checked: false,
-      userId: 6,
-      username: "jane doe",
-      email: "jbojsun@naver.com",
-      profileImgPath: "a/ddd/ddddd.jpg",
-      provider: "google",
-      providerId: "123123123",
-    },
-    {
-      checked: false,
-      userId: 7,
-      username: "jane doe",
-      email: "jbojsun@naver.com",
-      profileImgPath: "a/ddd/ddddd.jpg",
-      provider: "google",
-      providerId: "123123123",
-    },
-    {
-      checked: false,
-      userId: 8,
-      username: "jane doe",
-      email: "jbojsun@naver.com",
-      profileImgPath: "a/ddd/ddddd.jpg",
-      provider: "google",
-      providerId: "123123123",
-    },
-    {
-      checked: false,
-      userId: 9,
-      username: "jane doe",
-      email: "jbojsun@naver.com",
-      profileImgPath: "a/ddd/ddddd.jpg",
-      provider: "google",
-      providerId: "123123123",
-    },
-    {
-      checked: false,
-      userId: 10,
-      username: "jane doe",
-      email: "jbojsun@naver.com",
-      profileImgPath: "a/ddd/ddddd.jpg",
-      provider: "google",
-      providerId: "123123123",
-    },
-  ];
+  console.log(UserList);
 
   const adminCategory = [
     {
@@ -256,6 +169,7 @@ function AdminManage(props) {
                 <input
                   type="text"
                   placeholder="Search for username or email..."
+                  onChange={handleOnChange}
                 />
                 <FaSearch />
               </div>
@@ -275,7 +189,7 @@ function AdminManage(props) {
                   </tr>
                 </thead>
                 <tbody>
-                  {tableInfo.map((info) => (
+                  {UserList?.map((info) => (
                     <tr key={info.userId} css={s.userRows}>
                       <td>
                         <input
