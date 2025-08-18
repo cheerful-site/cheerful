@@ -2,12 +2,12 @@ import { Route, Routes } from "react-router-dom";
 import NotFound from "../pages/NotFound/NotFound";
 import AdminLogin from "../pages/Admin/AdminLogin/AdminLogin";
 import AdminManage from "../pages/Admin/AdminManager/AdminManage";
-import usePrincipalAdminQuery from "../queries/PrincipalAdminQuery/usePrincipalAdminQuery";
+import usePrincipalQuery from "../queries/PrincipalQuery/usePrincipalQuery";
 
 function AdminRoute(props) {
-  const principalAdmin = usePrincipalAdminQuery();
+  const principal = usePrincipalQuery();
 
-  if (principalAdmin.isFetched && principalAdmin.isSuccess) {
+  if (principal?.data.data.body) {
     return (
       <Routes>
         <Route path="/manager/:categoryId" element={<AdminManage />} />
