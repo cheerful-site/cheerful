@@ -17,11 +17,11 @@ public class adminGeneration implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         User user = User.builder()
-                .username("admin1")
+                .username("admin3")
                 .password("qwer1234")
-                .name("관리자1")
-                .email("cleo708028@gmail.com")
-                .profileImgPath("cheerful_back/upload/profile/뚱이.png")
+                .name("관리자3")
+                .email("uu.3120@gmail.com")
+                .profileImgPath("스폰지밥.png")
                 .role("ROLE_ADMIN")
                 .build();
 

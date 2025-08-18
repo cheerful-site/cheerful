@@ -40,6 +40,9 @@ public class AdminService {
         if (!passwordEncoder.matches(dto.getPassword(), foundUser.getPassword())) {
             throw new LoginException("로그인 오류", "관리자 정보를 다시 확인하세요.");
         }
+
+        System.out.println(jwtUtil.generateAccessToken(foundUser));
+
         return TokenDto.builder()
                 .accessToken(jwtUtil.generateAccessToken(foundUser))
                 .build();
