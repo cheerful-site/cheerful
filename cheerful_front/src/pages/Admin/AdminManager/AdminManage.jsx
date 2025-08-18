@@ -7,7 +7,6 @@ import { HiUsers } from "react-icons/hi";
 import { TbDogBowl } from "react-icons/tb";
 import { ImNotification } from "react-icons/im";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import usePrincipalAdminQuery from "../../../queries/PrincipalAdminQuery/usePrincipalAdminQuery";
 import { useState } from "react";
 import ReactModal from "react-modal";
 import { useQueryClient } from "@tanstack/react-query";
@@ -19,7 +18,6 @@ function AdminManage(props) {
   const navigate = useNavigate();
   const location = useLocation();
   const queryClient = useQueryClient();
-  const principalAdmin = usePrincipalAdminQuery();
   const [inputValue, setInputValue] = useState("");
 
   const adminUsers = useAdminUsersQuery(1, 10, inputValue);
@@ -44,7 +42,6 @@ function AdminManage(props) {
     setInputValue(e.target.value);
   };
 
-  const admin = principalAdmin?.data?.data.body.admin; // admin 정보
   const userList = adminUsers?.data?.data.body.content; // user 리스트
   const communityList = adminCommunity?.data?.data.body.content; // community 리스트
   const adminFoodList = adminFood?.data?.data.body; //food 리스트
@@ -113,11 +110,11 @@ function AdminManage(props) {
         </div>
         <div css={s.manageLayout}>
           <div css={s.manageUser}>
-            <div css={s.profileImgBox}>
-              <img src={admin?.profileImgPath} alt="" css={s.profileImg} />
+            <div>
+              <img src={""} alt="" css={s.profileImg} />
             </div>
             <div css={s.profileEdit} onClick={handleProfileOnClick}>
-              <div>{admin?.adminName}</div>
+              <div>{""}</div>
               {isOpen ? (
                 <ReactModal
                   style={{
@@ -139,17 +136,17 @@ function AdminManage(props) {
                   appElement={document.getElementById("root")}>
                   <div css={s.modalContainer}>
                     <div css={s.modalProfile}>
-                      <img src={admin?.profileImgPath} alt="" />
-                      <span>{admin?.adminName}</span>
+                      <img src={""} alt="" />
+                      <span>{""}</span>
                     </div>
 
                     <div css={s.modalButton}>
                       <Link to={"/community/register"}>글쓰기</Link>
-                      {admin ? (
+                      {/* {admin ? (
                         <Link to={"/admin/manager/users"}>관리자 페이지</Link>
                       ) : (
                         <></>
-                      )}
+                      )} */}
                       <div onClick={handleLogoutOnClick}>로그아웃</div>
                     </div>
 

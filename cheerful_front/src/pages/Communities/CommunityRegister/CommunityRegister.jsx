@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import usePrincipalQuery from "../../../queries/PrincipalQuery/usePrincipalQuery";
 import Footer from "../../../components/Footer/Footer";
-import usePrincipalAdminQuery from "../../../queries/PrincipalAdminQuery/usePrincipalAdminQuery";
 import { FiPlus, FiX } from "react-icons/fi";
 import { reqCommunityRegister } from "../../../api/communityApi/communityApi";
 
@@ -18,9 +17,7 @@ function CommunityRegister(props) {
 
   const navigate = useNavigate();
   const principalQuery = usePrincipalQuery();
-  const principalAdmin = usePrincipalAdminQuery();
   const user = principalQuery?.data?.data.body.user;
-  const admin = principalAdmin?.data?.data.body.admin;
   // console.log(user);
 
   const handleOnChange = (e) => {
@@ -83,8 +80,8 @@ function CommunityRegister(props) {
       <div css={s.layout}>
         <div css={s.registerContainer}>
           <div css={s.registerUser}>
-            <img src={user?.profileImgPath || admin?.profileImgPath} alt="" />
-            <span>{user?.username || admin?.adminName}</span>
+            <img src={user?.profileImgPath} alt="" />
+            <span>{user?.username}</span>
           </div>
 
           <div css={s.registerInputTitle}>

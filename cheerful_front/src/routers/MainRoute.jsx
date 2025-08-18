@@ -8,8 +8,8 @@ import Food from "../pages/Food/Food";
 import MapPage from "../pages/Map/MapPage";
 import Notice from "../pages/Notice/Notice";
 import CommunityRegister from "../pages/Communities/CommunityRegister/CommunityRegister";
-import Admin from "../pages/Admin/Admin/Admin";
 import Communities from "../pages/Communities/Communities/Communities";
+import AdminRoute from "./AdminRoute";
 
 function MainRoute(props) {
   const location = useLocation();
@@ -24,7 +24,7 @@ function MainRoute(props) {
         <Route path="/food" element={<Food />} />
         <Route path="/map/:category" element={<MapPage />} />
         <Route path="/notice/:category" element={<Notice />} />
-        <Route path="/admin/*" element={<Admin />} />
+        <Route path="/admin/*" element={<AdminRoute />} />
         <Route path="/" element={<Home />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
