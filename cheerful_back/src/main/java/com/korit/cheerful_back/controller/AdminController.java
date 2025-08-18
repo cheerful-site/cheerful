@@ -16,10 +16,6 @@ public class AdminController {
     private final AdminService adminService;
 
     /*
-    관리자 전용 사용자 관리 API
-   */
-
-    /*
         사용자 조회
      */
 //    @GetMapping("/manager/users")

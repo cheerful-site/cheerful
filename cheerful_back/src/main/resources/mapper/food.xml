@@ -50,7 +50,7 @@
     <select id="findAllBySearchOption" resultMap="FoodMap">
         select
             ft.food_id as ft_food_id,
-            ft.admin_id as ft_admin_id,
+            ft.user_id as ft_user_id,
             ft.food_title,
             ft.food_content,
             ft.food_price,
