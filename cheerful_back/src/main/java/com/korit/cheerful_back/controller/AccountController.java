@@ -14,14 +14,8 @@ public class AccountController {
     현재 로그인한 사용자의 PrincipalUser 반환
    */
   @GetMapping("/account/principal")
-  public ResponseEntity<ResponseDto<?>> principal(@AuthenticationPrincipal Object principal) {
-//    System.out.println(principalUser);
-//    return ResponseEntity.ok(ResponseDto.success(principalUser));
-    if (principal instanceof PrincipalUser principalUser) {
+  public ResponseEntity<ResponseDto<?>> principal(@AuthenticationPrincipal PrincipalUser principalUser) {
       return ResponseEntity.ok(ResponseDto.success(principalUser));
-    } else if (principal instanceof PrincipalAdmin principalAdmin) {
-      return ResponseEntity.ok(ResponseDto.success(principalAdmin));
-    }
-    return ResponseEntity.status(401).build();
+
   }
 }
