@@ -13,6 +13,7 @@ import ReactModal from "react-modal";
 import { useQueryClient } from "@tanstack/react-query";
 import useAdminUsersQuery from "../../../queries/AdminQuery/useAdminUsersQuery";
 import useAdminCommunityQuery from "../../../queries/AdminQuery/useAdminCommunityQuery";
+import useAdminFoodQuery from "../../../queries/AdminQuery/useAdminFoodQuery";
 
 function AdminManage(props) {
   const navigate = useNavigate();
@@ -20,8 +21,10 @@ function AdminManage(props) {
   const queryClient = useQueryClient();
   const principalAdmin = usePrincipalAdminQuery();
   const [inputValue, setInputValue] = useState("");
+
   const adminUsers = useAdminUsersQuery(1, 10, inputValue);
   const adminCommunity = useAdminCommunityQuery(1, 10, 1, inputValue);
+  const adminFood = useAdminFoodQuery(1, 10, inputValue);
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -41,10 +44,14 @@ function AdminManage(props) {
     setInputValue(e.target.value);
   };
 
-  const UserList = adminUsers?.data?.data.body.content;
-  const admin = principalAdmin?.data?.data.body.admin;
+  const admin = principalAdmin?.data?.data.body.admin; // admin 정보
+  const userList = adminUsers?.data?.data.body.content; // user 리스트
+  const communityList = adminCommunity?.data?.data.body.content; // community 리스트
+  const adminFoodList = adminFood?.data?.data.body; //food 리스트
 
-  console.log(UserList);
+  // console.log(communityList);
+  // console.log(userList);
+  console.log(adminFoodList);
 
   const adminCategory = [
     {
@@ -191,7 +198,7 @@ function AdminManage(props) {
                   </tr>
                 </thead>
                 <tbody>
-                  {UserList?.map((info) => (
+                  {userList?.map((info) => (
                     <tr key={info.userId} css={s.userRows}>
                       <td>
                         <input

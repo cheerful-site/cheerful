@@ -264,6 +264,7 @@ export const manageSearch = css`
 `;
 
 export const manageTable = css`
+// 테이블 디자인 ||||
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
@@ -293,10 +294,13 @@ export const TableHeader = css`
     color: #222222;
   }
 
-  & > th:nth-of-type(1) {
+& > th:nth-of-type(1) {
     display: flex;
     justify-content: center;
     width: 4rem;
+    & > input {
+      margin: 0;
+    }
   }
   & > th:nth-of-type(2) {
     width: 6rem;
@@ -308,23 +312,27 @@ export const TableHeader = css`
     width: 25rem;
   }
   & > th:nth-of-type(5) {
+    margin-right: 2rem;
     width: 30rem;
   }
   & > th:nth-of-type(6) {
-    width: 13rem;
+    width: 10rem;
   }
   & > th:nth-of-type(7) {
-    width: 10rem;
+    width: 15rem;
   }
   & > th:nth-of-type(8) {
     display: flex;
     justify-content: center;
     width: 6rem;
+    cursor: pointer;
   }
 `;
 
 export const userRows = css`
   display: flex;
+  align-items: center;
+
   & > td {
     display: flex;
     align-items: center;
@@ -343,6 +351,9 @@ export const userRows = css`
     display: flex;
     justify-content: center;
     width: 4rem;
+    & > input {
+      margin: 0;
+    }
   }
   & > td:nth-of-type(2) {
     width: 6rem;
@@ -354,13 +365,14 @@ export const userRows = css`
     width: 25rem;
   }
   & > td:nth-of-type(5) {
+    margin-right: 2rem;
     width: 30rem;
   }
   & > td:nth-of-type(6) {
-    width: 13rem;
+    width: 10rem;
   }
   & > td:nth-of-type(7) {
-    width: 10rem;
+    width: 15rem;
   }
   & > td:nth-of-type(8) {
     display: flex;
