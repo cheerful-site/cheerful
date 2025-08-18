@@ -27,7 +27,7 @@ public class AdminController {
 //        return ResponseEntity.ok(ResponseDto.success(adminService.searchUsers(dto)));
 //    }
 
-    @GetMapping("/manager/users")
+    @GetMapping("/users")
     public ResponseEntity<ResponseDto<?>> managerUsers(@RequestParam Integer page, @RequestParam Integer size, @RequestParam(required = false) String searchText) {
         return ResponseEntity.ok(ResponseDto.success(adminService.getUserSearchList(page, size, searchText)));
     }
@@ -35,7 +35,7 @@ public class AdminController {
     /*
         사용자 삭제
      */
-    @DeleteMapping("/manager/users")
+    @DeleteMapping("/users")
     public ResponseEntity<ResponseDto<?>> deleteUserIds(@RequestParam List<Integer> userIds) {
         adminService.deleteUser(userIds);
         return ResponseEntity.ok(ResponseDto.success("회원 정보를 삭제하였습니다."));
@@ -44,7 +44,7 @@ public class AdminController {
     /*
         community 조회
      */
-    @GetMapping("/manager/community/{categoryId}")
+    @GetMapping("/communities/{categoryId}")
     public ResponseEntity<ResponseDto<?>> managerCommunity(@RequestParam Integer page, @RequestParam Integer size
             , @PathVariable Integer categoryId, @RequestParam(required = false) String searchText) {
         return ResponseEntity.ok(ResponseDto.success(adminService.getCommunitySearchList(page, size, categoryId, searchText)));
@@ -53,7 +53,7 @@ public class AdminController {
     /*
         community 삭제
      */
-    @DeleteMapping("/manager/community/{categoryId}")
+    @DeleteMapping("/communities/{categoryId}")
     public ResponseEntity<ResponseDto<?>> deleteCommunityIds(@RequestParam List<Integer> communityIds) {
         adminService.deleteCommunity(communityIds);
         return ResponseEntity.ok(ResponseDto.success("community 정보를 삭제하였습니다."));
@@ -62,7 +62,7 @@ public class AdminController {
     /*
         food 조회
      */
-    @GetMapping("/manager/food")
+    @GetMapping("/foods")
     public ResponseEntity<ResponseDto<?>> managerFood(@RequestParam Integer page, @RequestParam Integer size, @RequestParam(required = false) String searchText) {
         return ResponseEntity.ok(ResponseDto.success(adminService.getFoodSearchList(page, size, searchText)));
     }
@@ -70,7 +70,7 @@ public class AdminController {
     /*
         food 삭제
      */
-    @DeleteMapping("/manager/food")
+    @DeleteMapping("/foods")
     public ResponseEntity<ResponseDto<?>> deleteFoodIds(@RequestParam List<Integer> foodIds) {
         adminService.deleteFood(foodIds);
         return ResponseEntity.ok(ResponseDto.success("food 정보를 삭제하였습니다."));

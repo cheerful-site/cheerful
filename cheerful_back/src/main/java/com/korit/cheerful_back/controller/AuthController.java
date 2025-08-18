@@ -15,7 +15,7 @@ public class AuthController {
 
     private final AdminService adminService;
 
-    @PostMapping("auth/login")
+    @PostMapping("/auth/login")
     public ResponseEntity<?> login(@RequestBody AdminLoginReqDto dto) {
         return ResponseEntity.ok(ResponseDto.success(adminService.login(dto)));
     }
