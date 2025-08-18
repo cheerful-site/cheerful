@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import { reqPrincipalAdmin } from "../../api/authApi/authApi";
+import { reqPrincipal } from "../../api/authApi/authApi";
 
 function usePrincipalAdminQuery(props) {
   return useQuery({
     queryKey: ["principalAdmin"],
-    queryFn: async () => await reqPrincipalAdmin(),
+    queryFn: async () => await reqPrincipal(),
   });
 }
 

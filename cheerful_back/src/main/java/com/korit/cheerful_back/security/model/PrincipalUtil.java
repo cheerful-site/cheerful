@@ -15,8 +15,4 @@ public class PrincipalUtil {
     public PrincipalUser getPrincipalUser() {
         return (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
-
-    public PrincipalAdmin getPrincipalAdmin() {
-        return (PrincipalAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    }
 }

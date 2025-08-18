@@ -10,7 +10,7 @@ function AdminLogin(props) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [inputValue, setInputValue] = useState({
-    adminLoginId: "",
+    username: "",
     password: "",
   });
   const handleOnChange = (e) => {
@@ -19,7 +19,7 @@ function AdminLogin(props) {
   };
 
   const handleLoginOnClick = async () => {
-    if (!inputValue.adminLoginId.trim() || !inputValue.password.trim()) {
+    if (!inputValue.username.trim() || !inputValue.password.trim()) {
       alert("아이디와 비밀번호를 입력하세요.");
       return;
     }
@@ -50,7 +50,7 @@ function AdminLogin(props) {
         <span>ADMIN LOGIN</span>
         <input
           type="text"
-          name="adminLoginId"
+          name="username"
           placeholder="아이디"
           onChange={handleOnChange}
         />

@@ -6,23 +6,26 @@
 <mapper namespace="com.korit.cheerful_back.domain.user.UserMapper">
   <resultMap id="UserMap" type="com.korit.cheerful_back.domain.user.User">
     <id property="userId" column="user_id"/>
-    <result property="username" column="user_name"/>
-    <result property="email" column="user_email"/> <!-- 👈 여기 필수 -->
-    <result property="profileImgPath" column="profile_img_path"/>
+    <result property="username" column="username"/>
+    <result property="password" column="password"/>
+    <result property="name" column="name"/>
+    <result property="email" column="email"/>
+    <result property="profileImg" column="profile_img"/>
     <result property="role" column="role"/>
     <result property="provider" column="provider"/>
     <result property="providerId" column="provider_id"/>
+    <result property="createdAt" column="created_at"/>
   </resultMap>
 
   <insert id="insert" useGeneratedKeys="true" keyProperty="userId">
-    insert into user_tb
-    values (default, #{username}, #{email}, #{profileImgPath}, #{role}, #{provider}, #{providerId})
+    insert into user_tb2
+    values (default, #{username}, #{password}, #{name}, #{email}, #{profileImg}, #{role}, #{provider}, #{providerId}, now())
   </insert>
 
   <delete id="deleteByUserIds">
     delete
     from
-      user_tb
+      user_tb2
     where
       user_id in
       <foreach item="userId" collection="userIds" separator="," open="(" close=")">
@@ -30,40 +33,34 @@
       </foreach>
   </delete>
 
-  <select id="findById" resultType="com.korit.cheerful_back.domain.user.User">
+  <select id="findById" resultMap="UserMap">
     select
       *
     from
-      user_tb
+      user_tb2
     where
       user_id = #{userId}
   </select>
 
-  <select id="findByProviderId" resultType="com.korit.cheerful_back.domain.user.User">
+  <select id="findByProviderId" resultMap="UserMap">
     select
       *
     from
-      user_tb
+      user_tb2
     where
       provider_id = #{providerId}
   </select>
 
   <select id="findAllBySearchOption" resultMap="UserMap">
     select
-      ut.user_id,
-      ut.user_name,
-      ut.user_email,
-      ut.profile_img_path,
-      ut.role,
-      ut.provider,
-      ut.provider_id
+      *
     from
-      user_tb ut
+      user_tb2
     where
-      ut.user_name like concat('%', #{searchText}, '%')
-      or ut.user_email like concat('%', #{searchText}, '%')
+      username like concat('%', #{searchText}, '%')
+      or email like concat('%', #{searchText}, '%')
     order by
-      ut.user_id
+      user_id
     limit #{startIndex}, #{size}
   </select>
 
@@ -71,10 +68,18 @@
     select
       count(*)
     from
-      user_tb
+      user_tb2
     where
-      user_name like concat('%', #{searchText}, '%')
-      or user_email like concat('%', #{searchText}, '%')
+      username like concat('%', #{searchText}, '%')
+      or email like concat('%', #{searchText}, '%')
+  </select>
+  <select id="findByUsername" resultMap="UserMap">
+    select
+      *
+    from
+      user_tb2
+    where
+      username = #{username}
   </select>
 
 </mapper>

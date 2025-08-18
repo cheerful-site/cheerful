@@ -16,7 +16,7 @@ function Header(props) {
   const principalQuery = usePrincipalQuery();
   const principalAdminQuery = usePrincipalAdminQuery();
   const user = principalQuery?.data?.data.body.user;
-  const admin = principalAdminQuery?.data?.data.body.admin;
+  const admin = principalAdminQuery?.data?.data.body.user;
   // console.log(user);
   // console.log(admin);
 

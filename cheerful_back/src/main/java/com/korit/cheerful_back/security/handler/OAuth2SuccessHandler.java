@@ -20,13 +20,13 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
-  private final JwtUtil jwtUtil;
+    private final JwtUtil jwtUtil;
 
-  @Override
-  public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-      Authentication authentication) throws IOException, ServletException {
-    PrincipalUser principalUser = (PrincipalUser) authentication.getPrincipal();
-    String accessToken = jwtUtil.generateAccessToken(principalUser.getUser());
+    @Override
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
+        Authentication authentication) throws IOException, ServletException {
+      PrincipalUser principalUser = (PrincipalUser) authentication.getPrincipal();
+      String accessToken = jwtUtil.generateAccessToken(principalUser.getUser());
     response.sendRedirect("http://localhost:5173/auth/oauth2/login?accessToken=" + accessToken);
   }
 }

@@ -29,7 +29,7 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
     String email = null;
     String name = null;
     String providerId = null;
-    String profileImgPath = null;
+    String profileImg = null;
 
     OAuth2User oAuth2User = super.loadUser(userRequest);
 
@@ -39,7 +39,7 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
       email = oAuth2User.getAttribute("email");
       name = oAuth2User.getAttribute("name");
       providerId = oAuth2User.getAttribute("sub");
-      profileImgPath = oAuth2User.getAttribute("picture");
+      profileImg = oAuth2User.getAttribute("picture");
 
     } else if ("kakao".equals(registrationId)) {
       // kakao에서 제공하는 정보를 가져옴.
@@ -50,14 +50,14 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
       email = kakaoAccount.get("email").toString();
       name = profile.get("nickname").toString();
       providerId = attributes.get("id").toString();
-      profileImgPath = profile.get("profile_image_url").toString();
+      profileImg = profile.get("profile_image_url").toString();
     } else if ("naver".equals(registrationId)) {
       Map<String, Object> response = (Map<String, Object>) attributes.get("response");
 
       email = response.get("email").toString();
       name = response.get("nickname").toString();
       providerId = response.get("id").toString();
-      profileImgPath = response.get("profile_image").toString();
+      profileImg = response.get("profile_image").toString();
 
     } else {
       throw new OAuth2AuthenticationException("지원하지 않는 소셜 로그인입니다: " + registrationId);
@@ -71,10 +71,11 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
     // not null 추가
     if (user == null) {
       user = User.builder()
-          .username(name)
+          .username(providerId)
+          .name(name)
           .email(email)
           .role("ROLE_USER")
-          .profileImgPath(profileImgPath != null ? profileImgPath : "/upload/profile/default.jpg")
+          .profileImg(profileImg != null ? profileImg : "/upload/profile/default.jpg")
           .provider(registrationId)
           .providerId(providerId)
           .build();

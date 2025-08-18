@@ -1,6 +1,7 @@
 package com.korit.cheerful_back.domain.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,11 +12,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {
-  public Integer userId;
-  public String username;
-  public String email;
-  public String profileImgPath;
-  public String role;
-  public String provider;
-  public String providerId;
+  private Integer userId;
+  private String username;
+  private String password;
+  private String name;
+  private String email;
+  private String profileImg;
+  private String role;
+  private String provider;
+  private String providerId;
+  private LocalDateTime createdAt;
 }

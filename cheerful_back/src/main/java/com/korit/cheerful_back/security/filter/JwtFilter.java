@@ -1,11 +1,8 @@
 package com.korit.cheerful_back.security.filter;
 
-import com.korit.cheerful_back.domain.admin.Admin;
-import com.korit.cheerful_back.domain.admin.AdminMapper;
 import com.korit.cheerful_back.domain.user.User;
 import com.korit.cheerful_back.domain.user.UserMapper;
 import com.korit.cheerful_back.security.jwt.JwtUtil;
-import com.korit.cheerful_back.security.model.PrincipalAdmin;
 import com.korit.cheerful_back.security.model.PrincipalUser;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.Filter;
@@ -13,7 +10,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +28,6 @@ public class JwtFilter implements Filter {
 
   private final JwtUtil jwtUtil;
   private final UserMapper userMapper;
-  private final AdminMapper adminMapper;
 
   @Override
   public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse,
@@ -67,11 +62,7 @@ public class JwtFilter implements Filter {
       return;
     }
 
-    if (claims.get("adminId") != null) {
-      setAdminAuthentication(claims);
-    } else if (claims.get("userId") != null) {
-      setAuthentication(claims);
-    }
+    setAuthentication(claims);
 
   }
 
@@ -91,22 +82,4 @@ public class JwtFilter implements Filter {
     Authentication authentication = new UsernamePasswordAuthenticationToken(principal, "", principal.getAuthorities());
     SecurityContextHolder.getContext().setAuthentication(authentication);
   }
-
-  /*
-    adminId로 DB 조회
-    -> Principal 구성
-    -> Authentication 세팅
-   */
-  private void setAdminAuthentication(Claims claims) {
-    String adminId = (String) claims.get("adminId");
-    Admin foundAdmin = adminMapper.findByAdminId(adminId);
-    if (foundAdmin == null) {
-      return;
-    }
-
-    PrincipalAdmin principalAdmin = PrincipalAdmin.builder().admin(foundAdmin).build();
-    Authentication authentication = new UsernamePasswordAuthenticationToken(principalAdmin, "", principalAdmin.getAuthorities());
-    SecurityContextHolder.getContext().setAuthentication(authentication);
-  }
-
 }

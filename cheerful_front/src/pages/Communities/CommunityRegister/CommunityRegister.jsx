@@ -20,7 +20,7 @@ function CommunityRegister(props) {
   const principalQuery = usePrincipalQuery();
   const principalAdmin = usePrincipalAdminQuery();
   const user = principalQuery?.data?.data.body.user;
-  const admin = principalAdmin?.data?.data.body.admin;
+  const admin = principalAdmin?.data?.data.body.user;
   // console.log(user);
 
   const handleOnChange = (e) => {
