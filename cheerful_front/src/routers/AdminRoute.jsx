@@ -6,8 +6,9 @@ import usePrincipalQuery from "../queries/PrincipalQuery/usePrincipalQuery";
 
 function AdminRoute(props) {
   const principal = usePrincipalQuery();
+  const user = principal?.data?.data?.body?.user || [];
 
-  if (principal?.data.data.body) {
+  if (user?.role === "ROLE_ADMIN") {
     return (
       <Routes>
         <Route path="/:categoryId" element={<AdminManage />} />
