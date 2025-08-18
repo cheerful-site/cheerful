@@ -12,7 +12,7 @@ function Community(props) {
   const { category } = useParams();
   const [page, setPage] = useState(1);
   const communityList = useCommunityListQuery(page, 10, category);
-  const [communityContents, setCommunityContents] = useState([]);
+  const communityContents = communityList?.data?.data.body || [];
 
   const communityCategory = [
     { id: 1, title: "전체", category: 1 },
@@ -25,11 +25,6 @@ function Community(props) {
   ];
 
   console.log(communityList.data?.data.body);
-
-  useEffect(() => {
-    setCommunityContents(communityList.data?.data.body || []);
-    communityList.refetch();
-  }, [category]);
 
   return (
     <div css={s.layout}>
@@ -64,13 +59,17 @@ function Community(props) {
       </div>
 
       <div>
-        {/* <PageNation
-          page={page}
-          setPage={setPage}
-          size={communityContents?.size}
-          totalElements={communityContents?.totalElements}
-          totalPage={communityContents?.totalPages}
-        /> */}
+        {communityList.isLoading ? (
+          <></>
+        ) : (
+          <PageNation
+            page={page}
+            setPage={setPage}
+            size={communityContents?.size}
+            totalElements={communityContents?.totalElements}
+            totalPage={communityContents?.totalPages}
+          />
+        )}
       </div>
 
       <Footer />

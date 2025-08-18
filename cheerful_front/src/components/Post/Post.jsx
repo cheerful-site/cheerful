@@ -4,6 +4,7 @@ import noImage from "../../icons/Frame2.png";
 import { AiFillLike } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { reqCommunityViews } from "../../api/communityApi/communityApi";
+import { PiEyesFill } from "react-icons/pi";
 
 function Post({ content, category }) {
   const navigate = useNavigate();
@@ -37,11 +38,16 @@ function Post({ content, category }) {
         <div css={s.postLike}>
           <div>
             <span>{content.user.name}</span>
-            {/* <span>{content.createdAt.slice(0, 10)}</span> */}
           </div>
           <div>
-            <AiFillLike />
-            <span>{content.likeCount}</span>
+            <div>
+              <AiFillLike />
+              <span>{content.likeCount}</span>
+            </div>
+            <div>
+              <PiEyesFill />
+              <span>{content.views}</span>
+            </div>
           </div>
         </div>
       </div>

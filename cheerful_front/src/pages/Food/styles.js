@@ -9,10 +9,11 @@ export const layout = css`
 `;
 
 export const foodTitle = css`
-  width: 93.6rem;
+  margin-top: 8rem;
   text-align: center;
 
   & > h1 {
+    margin: 0;
     font-size: 4rem;
     font-weight: 500;
 
