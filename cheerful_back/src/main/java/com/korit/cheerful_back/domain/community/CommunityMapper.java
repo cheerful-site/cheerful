@@ -9,8 +9,8 @@ public interface CommunityMapper {
     int insert(Community community);
 
     // user전용 community
-    List<Community> findAllByOption(CommunitySearchOption communitySearchOption);
-//    List<Community> findByCategoryId(@Param("categoryId") Integer categoryId, @Param("userId") Integer userId);
+    List<Community> findAllByOptions(CommunitySearchOption communitySearchOption);
+    Community findByOption(@Param("categoryId") Integer categoryId, @Param("communityId") Integer userId);
     int getCountOfOptions(CommunitySearchOption communitySearchOption);
 
     // 조회수
