@@ -8,7 +8,6 @@ import java.util.List;
 public interface FoodMapper {
     int insert(Food food);
 
-
     // admin전용 food
     List<Food> findAllBySearchOption(FoodSearchOption foodSearchOption);
     int getCountOfSearchOption(FoodSearchOption foodSearchOption);

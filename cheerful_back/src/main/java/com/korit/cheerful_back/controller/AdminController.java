@@ -1,10 +1,7 @@
 package com.korit.cheerful_back.controller;
 
-import com.korit.cheerful_back.domain.user.User;
 import com.korit.cheerful_back.dto.admin.AdminLoginReqDto;
-import com.korit.cheerful_back.dto.response.PaginationRespDto;
 import com.korit.cheerful_back.dto.response.ResponseDto;
-import com.korit.cheerful_back.security.model.PrincipalAdmin;
 import com.korit.cheerful_back.service.AdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

@@ -71,7 +71,8 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
     // not null 추가
     if (user == null) {
       user = User.builder()
-          .username(name)
+          .username(providerId)
+          .name(name)
           .email(email)
           .role("ROLE_USER")
           .profileImgPath(profileImgPath != null ? profileImgPath : "/upload/profile/default.jpg")

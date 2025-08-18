@@ -1,7 +1,6 @@
 package com.korit.cheerful_back.controller;
 
 import com.korit.cheerful_back.dto.response.ResponseDto;
-import com.korit.cheerful_back.security.model.PrincipalAdmin;
 import com.korit.cheerful_back.security.model.PrincipalUser;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

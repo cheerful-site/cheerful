@@ -7,23 +7,27 @@
     <resultMap id="FoodMap" type="com.korit.cheerful_back.domain.food.Food">
         <id property="foodId" column="food_id" />
         <result property="foodCategoryId" column="food_category_id" />
-        <result property="adminId" column="admin_id" />
+        <result property="userId" column="user_id" />
         <result property="title" column="food_title" />
         <result property="content" column="food_content" />
         <result property="price" column="food_price" />
         <result property="createdAt" column="created_at" />
-        <association property="admin" resultMap="AdminMap" />
+        <association property="user" resultMap="UserMap" />
         <association property="foodCategory" resultMap="FoodCategoryMap" />
         <collection property="foodImgs" javaType="list" resultMap="FoodImgMap" />
     </resultMap>
 
-    <resultMap id="AdminMap" type="com.korit.cheerful_back.domain.admin.Admin">
-        <id property="adminId" column="admin_id" />
-        <result property="adminName" column="admin_name" />
-        <result property="adminLoginId" column="admin_login_id" />
-        <result property="password" column="password" />
-        <result property="profileImgPath" column="profile_img_path" />
-        <result property="role" column="role" />
+    <resultMap id="UserMap" type="com.korit.cheerful_back.domain.user.User">
+        <id property="userId" column="user_id"/>
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+        <result property="name" column="name"/>
+        <result property="email" column="email"/>
+        <result property="profileImgPath" column="profile_img_path"/>
+        <result property="role" column="role"/>
+        <result property="provider" column="provider"/>
+        <result property="providerId" column="provider_id"/>
+        <result property="createdAt" column="created_at" />
     </resultMap>
 
     <resultMap id="FoodCategoryMap" type="com.korit.cheerful_back.domain.foodCategory.FoodCategory" >
@@ -40,7 +44,7 @@
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="foodId">
         insert into food_tb
-        values (default, #{foodCategoryId}, #{adminId}, #{title}, #{content}, #{price}, now())
+        values (default, #{foodCategoryId}, #{userId}, #{title}, #{content}, #{price}, now())
     </insert>
 
     <select id="findAllBySearchOption" resultMap="FoodMap">
@@ -54,9 +58,9 @@
 
             fct.food_category_name,
 
-            at.admin_id as at_admin_id,
-            at.admin_name,
-            at.admin_login_id,
+            ut.user_id as ut_user_id,
+            ut.username,
+            ut.name,
 
             fit.food_img_id,
             fit.food_id as fit_food_id,
@@ -64,7 +68,7 @@
             fit.img_path
         from
             food_tb ft
-            left outer join admin_tb at on(at.admin_id = ft.admin_id)
+            left outer join user_tb ut on(ut.user_id = ft.user_id)
             left outer join food_category_tb fct on(fct.food_category_id = ft.food_category_id)
             left outer join food_img_tb fit on(fit.food_id = ft.food_id)
         where
@@ -80,7 +84,7 @@
             count(*)
         from
             food_tb ft
-            left outer join admin_tb at on(at.admin_id = ft.admin_id)
+            left outer join user_tb ut on(ut.user_id = ft.user_id)
             left outer join food_category_tb fct on(fct.food_category_id = ft.food_category_id)
         where
             ft.food_title like concat('%', #{searchText}, '%')

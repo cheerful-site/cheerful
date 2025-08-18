@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CommunityImg {
-
     private Integer communityImgId;
     private Integer communityId;
     private Integer seq;
