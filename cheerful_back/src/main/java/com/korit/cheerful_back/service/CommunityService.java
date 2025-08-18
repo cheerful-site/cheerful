@@ -92,7 +92,7 @@ public class CommunityService {
                 .build();
 
         // 총 건수 / 총 페이지 / 마지막 여부 계산
-        List<Community> contents = communityMapper.findAllByOption(searchOption);
+        List<Community> contents = communityMapper.findAllByOptions(searchOption);
         Integer totalElements = communityMapper.getCountOfOptions(searchOption);
         Integer totalPages = (int) Math.ceil(totalElements.longValue() / size.doubleValue());
         Boolean isLast = page.equals(totalPages);
@@ -127,8 +127,19 @@ public class CommunityService {
     /*
         특정 글 클릭해서 내용 보기
      */
-    public List<CommunityComment> getCommunityContent(Integer categoryId, Integer communityId) {
-        return communityCommentMapper.findAllByCommunityId(categoryId, communityId);
+//    public List<CommunityComment> getCommunityContent(Integer categoryId, Integer communityId) {
+//        return communityCommentMapper.findAllByCommunityId(categoryId, communityId);
+//    }
+
+    public Community getCommunityContent(Integer categoryId, Integer communityId) {
+        // 게시글 단건 조회
+        Community community = communityMapper.findByOption(categoryId, communityId);
+
+        // 댓글도 조회해서 세팅
+        List<CommunityComment> comments = communityCommentMapper.findAllByCommunityId(categoryId, communityId);
+        community.setCommunityComments(comments);
+
+        return community;
     }
 
     /*
