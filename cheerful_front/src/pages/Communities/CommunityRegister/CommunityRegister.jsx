@@ -6,7 +6,7 @@ import usePrincipalQuery from "../../../queries/PrincipalQuery/usePrincipalQuery
 import Footer from "../../../components/Footer/Footer";
 import usePrincipalAdminQuery from "../../../queries/PrincipalAdminQuery/usePrincipalAdminQuery";
 import { FiPlus, FiX } from "react-icons/fi";
-import Slider from "react-slick";
+import { reqCommunityRegister } from "../../../api/communityApi/communityApi";
 
 function CommunityRegister(props) {
   const [inputValue, setInputValue] = useState({
@@ -30,11 +30,53 @@ function CommunityRegister(props) {
     }));
   };
 
-  const handlePlusOnClick = () => {};
+  const handlePlusOnClick = () => {
+    const fileInput = document.createElement("input");
+    fileInput.setAttribute("type", "file");
+    fileInput.setAttribute("multiple", "true");
+    fileInput.click();
+    fileInput.onchange = async (e) => {
+      if (files.length + e.target.files.length > 10) {
+        return;
+      }
 
-  const handleImgDeleteOnClick = () => {};
+      const filesArray = [...e.target.files];
 
-  const handleRegisterOnClick = () => {};
+      //async await의 경우 return을 해줘야기 떄문에 resolve를 사용하지 못함
+      //Promise가 들어가 있는 배열이여야 Promise.all
+      Promise.all(
+        filesArray.map((file) => {
+          return new Promise((resolve) => {
+            const fileReader = new FileReader();
+            fileReader.onload = (e) => {
+              resolve({ file, dataUrl: e.target.result });
+            };
+            fileReader.readAsDataURL(file);
+          });
+        })
+      ).then((resolves) => {
+        setFiles((prev) => [...prev, ...resolves]);
+      });
+    };
+  };
+
+  const handleImgDeleteOnClick = (index) => {
+    setFiles(files.filter((file, i) => i !== index));
+  };
+
+  const handleRegisterOnClick = () => {
+    const formData = new FormData();
+    formData.append(
+      "communityCategoryId",
+      parseInt(inputValue.communityCategoryId)
+    );
+    formData.append("title", inputValue.title);
+    formData.append("content", inputValue.content);
+    files.forEach((f) => formData.append("files", f.file));
+
+    reqCommunityRegister(formData);
+    console.log(formData);
+  };
 
   return (
     <>
@@ -62,7 +104,28 @@ function CommunityRegister(props) {
             />
           </div>
 
-          <div>
+          <div css={s.imgListContainer}>
+            {files.length < 5 && ( //파일 갯수
+              <div css={s.imgContainer}>
+                <div css={s.plus} onClick={handlePlusOnClick}>
+                  <FiPlus />
+                </div>
+              </div>
+            )}
+            {files.map(
+              (
+                file,
+                index // 파일 미리보기 및 삭제
+              ) => (
+                <div css={s.imgContainer}>
+                  <div css={s.imgBox(`${file.dataUrl}`)}>
+                    <div css={s.fixButton}>
+                      <FiX onClick={() => handleImgDeleteOnClick(index)} />
+                    </div>
+                  </div>
+                </div>
+              )
+            )}
           </div>
 
           <div css={s.registerTextArea}>

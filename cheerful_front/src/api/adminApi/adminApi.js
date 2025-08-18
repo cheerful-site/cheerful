@@ -10,3 +10,8 @@ export const reqAdminCommunity = async (page, size, categoryId, searchText) =>
   await api.get(`/admin/manager/community/${categoryId}`, {
     params: { page, size, categoryId, searchText },
   });
+
+export const reqAdminFood = async (page, size, searchText) =>
+  await api.get(`/admin/manager/food`, {
+    params: { page, size, searchText },
+  });

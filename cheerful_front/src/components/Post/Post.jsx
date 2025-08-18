@@ -37,7 +37,7 @@ function Post({ content, category }) {
         <div css={s.postLike}>
           <div>
             <span>{content.user.username}</span>
-            <span>{content.createdAt.slice(0, 10)}</span>
+            {/* <span>{content.createdAt.slice(0, 10)}</span> */}
           </div>
           <div>
             <AiFillLike />

@@ -1,4 +1,3 @@
-import React from "react";
 import { Route, Routes } from "react-router-dom";
 import NotFound from "../pages/NotFound/NotFound";
 import AdminLogin from "../pages/Admin/AdminLogin/AdminLogin";
@@ -11,7 +10,7 @@ function AdminRoute(props) {
   if (principalAdmin.isFetched && principalAdmin.isSuccess) {
     return (
       <Routes>
-        <Route path="/manager/:category" element={<AdminManage />} />
+        <Route path="/manager/:categoryId" element={<AdminManage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     );
