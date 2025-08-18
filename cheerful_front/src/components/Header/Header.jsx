@@ -13,8 +13,8 @@ function Header(props) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const principalQuery = usePrincipalQuery();
-  const user = principalQuery?.data?.data.body.user;
-  // console.log(user);
+  const user = principalQuery?.data;
+  console.log(user);
 
   const MENU = [
     {
@@ -130,7 +130,7 @@ function Header(props) {
                   <div css={s.modalButton}>
                     <Link to={"/community/register"}>글쓰기</Link>
                     {/* { ? (
-                      <Link to={"/admin/manager/users"}>관리자 페이지</Link>
+                      <Link to={"/admin/users"}>관리자 페이지</Link>
                     ) : (
                       <></>
                     )} */}

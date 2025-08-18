@@ -10,7 +10,7 @@ function AdminRoute(props) {
   if (principal?.data.data.body) {
     return (
       <Routes>
-        <Route path="/manager/:categoryId" element={<AdminManage />} />
+        <Route path="/:categoryId" element={<AdminManage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     );
