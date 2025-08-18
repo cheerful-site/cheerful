@@ -9,7 +9,7 @@
         <result property="communityId" column="community_id" />
         <result property="parentCommentId" column="parent_comment_id" />
         <result property="parentUserId" column="parent_user_id" />
-        <result property="parentUsername" column="parent_user_name" />
+        <result property="parentUsername" column="parent_username" />
         <result property="userId" column="user_id" />
         <result property="content" column="content" />
         <result property="createdAt" column="created_at" />
@@ -21,7 +21,7 @@
 
     <resultMap id="UserMap" type="com.korit.cheerful_back.domain.user.User">
         <id property="userId" column="user_id" />
-        <result property="username" column="user_name" />
+        <result property="username" column="username" />
         <result property="profileImgPath" column="profile_img_path" />
     </resultMap>
 
@@ -79,11 +79,11 @@
             ct.community_id,
             ct.parent_comment_id,
             ct.parent_user_id,
-            put.user_name as parent_username,
+            put.username as parent_username,
             ct.user_id as ct_user_id,
 
             ut.user_id,
-            ut.user_name,
+            ut.username,
             ut.profile_img_path,
 
             cit.community_img_id,

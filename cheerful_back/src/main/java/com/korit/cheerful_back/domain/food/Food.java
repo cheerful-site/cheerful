@@ -1,7 +1,7 @@
 package com.korit.cheerful_back.domain.food;
 
-import com.korit.cheerful_back.domain.admin.Admin;
 import com.korit.cheerful_back.domain.foodCategory.FoodCategory;
+import com.korit.cheerful_back.domain.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,13 +17,13 @@ import java.util.List;
 public class Food {
     private Integer foodId;
     private Integer foodCategoryId;
-    private Integer adminId;
+    private Integer userId;
     private String title;
     private String content;
     private Integer price;
     private LocalDateTime createdAt;
 
-    private Admin admin;
+    private User user;
     private FoodCategory foodCategory;
     private List<Food> foodImgs;
 }

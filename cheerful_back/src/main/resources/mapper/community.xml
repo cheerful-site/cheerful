@@ -19,17 +19,19 @@
         <association property="communityCategory" resultMap="CommunityCategoryMap" />
         <collection property="communityImgs" javaType="list" resultMap="CommunityImgMap" />
         <collection property="communityComments" javaType="list" resultMap="CommunityCommentMap" />
-
     </resultMap>
 
     <resultMap id="UserMap" type="com.korit.cheerful_back.domain.user.User">
-        <id     property="userId" column="ut_user_id"/>
-        <result property="username" column="user_name"/>
-        <result property="email" column="user_email" />
+        <id property="userId" column="user_id"/>
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+        <result property="name" column="name"/>
+        <result property="email" column="email"/>
         <result property="profileImgPath" column="profile_img_path"/>
-        <result property="role" column="role" />
-        <result property="provider" column="provider" />
-        <result property="providerId" column="provider_id" />
+        <result property="role" column="role"/>
+        <result property="provider" column="provider"/>
+        <result property="providerId" column="provider_id"/>
+        <result property="createdAt" column="created_at" />
     </resultMap>
 
     <resultMap id="CommunityCategoryMap" type="com.korit.cheerful_back.domain.communityCategory.CommunityCategory">
@@ -73,12 +75,15 @@
                 ct.created_at as ct_created_at,
 
                 ut.user_id as ut_user_id,
-                ut.user_name,
-                ut.user_email,
+                ut.username,
+                ut.password,
+                ut.name,
+                ut.email,
                 ut.profile_img_path,
                 ut.role,
                 ut.provider,
                 ut.provider_id,
+                ut.created_at as ut_created_at,
 
                 cit.community_img_id,
                 cit.community_id as cit_community_id,
@@ -132,8 +137,8 @@
 <!--            ct.user_id as ct_user_id,-->
 
 <!--            ut.user_id as ut_user_id,-->
-<!--            ut.user_name,-->
-<!--            ut.user_email,-->
+<!--            ut.username,-->
+<!--            ut.email,-->
 <!--            ut.profile_img_path,-->
 <!--            ut.role,-->
 <!--            ut.provider,-->
@@ -242,12 +247,15 @@
             cct.community_category_name,
 
             ut.user_id as ut_user_id,
-            ut.user_name,
-            ut.user_email,
+            ut.username,
+            ut.password,
+            ut.name,
+            ut.email,
             ut.profile_img_path,
             ut.role,
             ut.provider,
-            ut.provider_id
+            ut.provider_id,
+            ut.created_at as ut_created_at
         from
             community_tb ct
             left outer join user_tb ut on(ut.user_id = ct.user_id)

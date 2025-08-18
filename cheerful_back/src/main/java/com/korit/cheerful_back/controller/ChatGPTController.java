@@ -45,7 +45,7 @@ public class ChatGPTController {
      * @param modelName
      * @return
      */
-    @GetMapping("/model")
+    @GetMapping("/models")
     public ResponseEntity<Map<String, Object>> isValidModel(@RequestParam(name = "modelName") String modelName) {
         Map<String, Object> result = chatGPTService.isValidModel(modelName);
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -57,7 +57,7 @@ public class ChatGPTController {
      * @param completionDto {}
      * @return ResponseEntity<Map < String, Object>>
      */
-    @PostMapping("/legacyPrompt")
+    @PostMapping("/legacyPrompts")
     public ResponseEntity<Map<String, Object>> selectLegacyPrompt(@RequestBody CompletionDto completionDto) {
         log.debug("param :: " + completionDto.toString());
         Map<String, Object> result = chatGPTService.legacyPrompt(completionDto);
@@ -70,7 +70,7 @@ public class ChatGPTController {
      * @param chatCompletionDto
      * @return
      */
-    @PostMapping("/prompt")
+    @PostMapping("/prompts")
     public ResponseEntity<Map<String, Object>> selectPrompt(@RequestBody ChatCompletionDto chatCompletionDto) {
         log.debug("param :: " + chatCompletionDto.toString());
         Map<String, Object> result = chatGPTService.prompt(chatCompletionDto);

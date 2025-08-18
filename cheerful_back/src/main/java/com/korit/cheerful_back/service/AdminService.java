@@ -1,7 +1,5 @@
 package com.korit.cheerful_back.service;
 
-import com.korit.cheerful_back.domain.admin.Admin;
-import com.korit.cheerful_back.domain.admin.AdminMapper;
 import com.korit.cheerful_back.domain.community.Community;
 import com.korit.cheerful_back.domain.community.CommunityMapper;
 import com.korit.cheerful_back.domain.community.CommunitySearchOption;
@@ -29,25 +27,28 @@ public class AdminService {
 
     private final BCryptPasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
-    private final AdminMapper adminMapper;
     private final CommunityMapper communityMapper;
     private final UserMapper userMapper;
     private final FoodMapper foodMapper;
 
     public TokenDto login(AdminLoginReqDto dto) {
 
-        Admin foundAdmin = adminMapper.findByAdminId(dto.getAdminLoginId());
-        if (foundAdmin == null) {
+        User foundUser = userMapper.findByUsername(dto.getUsername());
+        if (foundUser == null) {
             throw new LoginException("로그인 오류", "관리자 정보를 다시 확인하세요.");
         }
-        if (!passwordEncoder.matches(dto.getPassword(), foundAdmin.getPassword())) {
+        if (!passwordEncoder.matches(dto.getPassword(), foundUser.getPassword())) {
             throw new LoginException("로그인 오류", "관리자 정보를 다시 확인하세요.");
         }
         return TokenDto.builder()
-                .accessToken(jwtUtil.generateAdminAccessToken(foundAdmin))
+                .accessToken(jwtUtil.generateAccessToken(foundUser))
                 .build();
     }
 
+    public void join(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userMapper.insert(user);
+    }
 
     /*
         admin 전용 사용자 목록 조회
