@@ -10,16 +10,17 @@ function AdminLogin(props) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [inputValue, setInputValue] = useState({
-    adminLoginId: "",
+    username: "",
     password: "",
   });
+
   const handleOnChange = (e) => {
     const { name, value } = e.target;
     setInputValue((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleLoginOnClick = async () => {
-    if (!inputValue.adminLoginId.trim() || !inputValue.password.trim()) {
+    if (!inputValue.username.trim() || !inputValue.password.trim()) {
       alert("아이디와 비밀번호를 입력하세요.");
       return;
     }
@@ -33,7 +34,7 @@ function AdminLogin(props) {
           queryKey: ["principal"],
         })
         .then(() => {
-          navigate("/admin/manager/users");
+          navigate("/admin/users");
         });
     } catch (e) {
       console.error("login failed:", e);
@@ -50,7 +51,7 @@ function AdminLogin(props) {
         <span>ADMIN LOGIN</span>
         <input
           type="text"
-          name="adminLoginId"
+          name="username"
           placeholder="아이디"
           onChange={handleOnChange}
         />

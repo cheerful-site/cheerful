@@ -55,21 +55,21 @@ function AdminManage(props) {
       id: 1,
       name: "Community",
       category: "community",
-      path: "/admin/manager/community",
+      path: "/admin/community",
       icon: <HiUsers />,
     },
     {
       id: 2,
       name: "Food",
       category: "food",
-      path: "/admin/manager/food",
+      path: "/admin/food",
       icon: <TbDogBowl />,
     },
     {
       id: 3,
       name: "Notice",
       category: "notice",
-      path: "/admin/manager/notice",
+      path: "/admin/notice",
       icon: <ImNotification />,
     },
   ];
@@ -83,11 +83,10 @@ function AdminManage(props) {
               <img src={logo} alt="" />
             </Link>
           </div>
-          <div
-            css={s.categoryUser(location.pathname === "/admin/manager/users")}>
+          <div css={s.categoryUser(location.pathname === "/admin/users")}>
             <div>
               <span>User</span>
-              <Link to={"/admin/manager/users"}>
+              <Link to={"/admin/users"}>
                 <PiUserCircleFill />
                 <span>Users</span>
               </Link>
@@ -143,7 +142,7 @@ function AdminManage(props) {
                     <div css={s.modalButton}>
                       <Link to={"/community/register"}>글쓰기</Link>
                       {/* {admin ? (
-                        <Link to={"/admin/manager/users"}>관리자 페이지</Link>
+                        <Link to={"/admin/users"}>관리자 페이지</Link>
                       ) : (
                         <></>
                       )} */}
