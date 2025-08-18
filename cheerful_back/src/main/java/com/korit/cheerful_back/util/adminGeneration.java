@@ -21,7 +21,7 @@ public class adminGeneration implements CommandLineRunner {
                 .password("qwer1234")
                 .name("관리자3")
                 .email("uu.3120@gmail.com")
-                .profileImgPath("스폰지밥.png")
+                .profileImgPath("스폰지밥.jpg")
                 .role("ROLE_ADMIN")
                 .build();
 
