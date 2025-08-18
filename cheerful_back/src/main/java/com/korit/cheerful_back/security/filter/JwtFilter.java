@@ -62,7 +62,7 @@ public class JwtFilter implements Filter {
       return;
     }
 
-      setAuthentication(claims);
+    setAuthentication(claims);
 
   }
 
