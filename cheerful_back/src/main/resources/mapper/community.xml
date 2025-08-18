@@ -73,6 +73,7 @@
                 ct.community_title,
                 ct.community_content,
                 ct.created_at as ct_created_at,
+                ct.community_views,
 
                 ut.user_id as ut_user_id,
                 ut.username,
