@@ -21,7 +21,7 @@ public class adminGeneration implements CommandLineRunner {
                 .password("qwer1234")
                 .name("관리자1")
                 .email("cleo708028@gmail.com")
-                .profileImgPath("jetbrains://idea/navigate/reference?project=cheerful_back&path=upload%2Fprofile%2F%EB%9A%B1%EC%9D%B4.png")
+                .profileImgPath("cheerful_back/upload/profile/뚱이.png")
                 .role("ROLE_ADMIN")
                 .build();
 
