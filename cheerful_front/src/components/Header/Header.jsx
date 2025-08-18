@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import usePrincipalQuery from "../../queries/PrincipalQuery/usePrincipalQuery";
 import ReactModal from "react-modal";
 import { useQueryClient } from "@tanstack/react-query";
+import { baseURL } from "../../api/axios/axios";
 
 function Header(props) {
   const [login, setLogin] = useState(false);
@@ -13,7 +14,7 @@ function Header(props) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const principalQuery = usePrincipalQuery();
-  const user = principalQuery?.data;
+  const user = principalQuery?.data?.data?.body?.user || [];
   console.log(user);
 
   const MENU = [
@@ -98,10 +99,18 @@ function Header(props) {
             </Link>
           </div>
           <div css={s.profileImgBox}>
-            <img src={user?.profileImgPath} alt="" css={s.profileImg} />
+            <img
+              src={
+                user?.role === "ROLE_ADMIN"
+                  ? `${baseURL}/upload/profile/${user?.profileImgPath}`
+                  : user?.profileImgPath
+              }
+              alt=""
+              css={s.profileImg}
+            />
           </div>
           <div css={s.profileEdit} onClick={handleProfileOnClick}>
-            <div>{user?.username}</div>
+            <div>{user?.name}</div>
             {isOpen ? (
               <ReactModal
                 style={{
@@ -123,17 +132,24 @@ function Header(props) {
                 appElement={document.getElementById("root")}>
                 <div css={s.modalContainer}>
                   <div css={s.modalProfile}>
-                    <img src={user?.profileImgPath} alt="" />
-                    <span>{user?.username}</span>
+                    <img
+                      src={
+                        user?.role === "ROLE_ADMIN"
+                          ? `${baseURL}/upload/profile/${user?.profileImgPath}`
+                          : user?.profileImgPath
+                      }
+                      alt=""
+                    />
+                    <span>{user?.name}</span>
                   </div>
 
                   <div css={s.modalButton}>
                     <Link to={"/community/register"}>글쓰기</Link>
-                    {/* { ? (
+                    {user?.role === "ROLE_ADMIN" ? (
                       <Link to={"/admin/users"}>관리자 페이지</Link>
                     ) : (
                       <></>
-                    )} */}
+                    )}
                     <div onClick={handleLogoutOnClick}>로그아웃</div>
                   </div>
 

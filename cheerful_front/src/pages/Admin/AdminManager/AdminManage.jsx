@@ -13,12 +13,16 @@ import { useQueryClient } from "@tanstack/react-query";
 import useAdminUsersQuery from "../../../queries/AdminQuery/useAdminUsersQuery";
 import useAdminCommunityQuery from "../../../queries/AdminQuery/useAdminCommunityQuery";
 import useAdminFoodQuery from "../../../queries/AdminQuery/useAdminFoodQuery";
+import usePrincipalQuery from "../../../queries/PrincipalQuery/usePrincipalQuery";
+import { baseURL } from "../../../api/axios/axios";
 
 function AdminManage(props) {
   const navigate = useNavigate();
   const location = useLocation();
   const queryClient = useQueryClient();
+  const principalQuery = usePrincipalQuery();
   const [inputValue, setInputValue] = useState("");
+  const user = principalQuery?.data?.data?.body?.user || [];
 
   const adminUsers = useAdminUsersQuery(1, 10, inputValue);
   const adminCommunity = useAdminCommunityQuery(1, 10, 1, inputValue);
@@ -110,10 +114,14 @@ function AdminManage(props) {
         <div css={s.manageLayout}>
           <div css={s.manageUser}>
             <div>
-              <img src={""} alt="" css={s.profileImg} />
+              <img
+                src={`${baseURL}/upload/profile/${user?.profileImgPath}`}
+                alt=""
+                css={s.profileImg}
+              />
             </div>
             <div css={s.profileEdit} onClick={handleProfileOnClick}>
-              <div>{""}</div>
+              <div>{user?.name}</div>
               {isOpen ? (
                 <ReactModal
                   style={{
@@ -135,17 +143,16 @@ function AdminManage(props) {
                   appElement={document.getElementById("root")}>
                   <div css={s.modalContainer}>
                     <div css={s.modalProfile}>
-                      <img src={""} alt="" />
-                      <span>{""}</span>
+                      <img
+                        src={`${baseURL}/upload/profile/${user?.profileImgPath}`}
+                        alt=""
+                      />
+                      <span>{user?.name}</span>
                     </div>
 
                     <div css={s.modalButton}>
                       <Link to={"/community/register"}>글쓰기</Link>
-                      {/* {admin ? (
-                        <Link to={"/admin/users"}>관리자 페이지</Link>
-                      ) : (
-                        <></>
-                      )} */}
+                      <Link to={"/admin/users"}>관리자 페이지</Link>
                       <div onClick={handleLogoutOnClick}>로그아웃</div>
                     </div>
 

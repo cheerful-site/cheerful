@@ -36,7 +36,7 @@ function Post({ content, category }) {
         </div>
         <div css={s.postLike}>
           <div>
-            <span>{content.user.username}</span>
+            <span>{content.user.name}</span>
             {/* <span>{content.createdAt.slice(0, 10)}</span> */}
           </div>
           <div>
