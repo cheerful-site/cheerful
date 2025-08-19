@@ -56,6 +56,7 @@ export const foodContainer = css`
   margin-top: 4rem;
 
   & > div > img {
+    border-radius: 1rem;
     width: 20rem;
     height: 20rem;
   }

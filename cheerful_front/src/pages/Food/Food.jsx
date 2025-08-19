@@ -4,11 +4,13 @@ import Footer from "../../components/Footer/Footer";
 import noImage from "../../icons/Frame2.png";
 import * as s from "./styles";
 import useFoodListQuery from "../../queries/FoodQuery/useFoodListQuery";
+import PageNation from "../../components/PageNation/PageNation";
 
 function Food(props) {
   const [page, setPage] = useState(1);
   const food = useFoodListQuery(page, 16);
 
+  const foodPages = food?.data?.data?.body;
   const foodList = food?.data?.data?.body?.content;
 
   console.log(foodList);
@@ -36,17 +38,24 @@ function Food(props) {
         </div>
 
         <div css={s.foodContainer}>
-          {foodList.map((food) => (
+          {foodList?.map((food) => (
             <div key={food.id}>
               <img src={noImage} alt="" />
               <div>
-                <span>{food.foodName}</span>
-                <span>{food.price}</span>
-                <span>{food.category}</span>
+                <span>{food.title}</span>
+                <span>{food.price.toLocaleString()}원</span>
+                <span>{food.foodCategory?.foodCategoryName}</span>
               </div>
             </div>
           ))}
         </div>
+        <PageNation
+          page={page}
+          setPage={setPage}
+          size={foodPages?.size}
+          totalElements={foodPages?.totalElements}
+          totalPage={foodPages?.totalPages}
+        />
       </div>
       <Footer />
     </div>
