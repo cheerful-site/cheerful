@@ -66,3 +66,11 @@ export const noticePost = css`
   width: 100%;
   height: 3rem;
 `;
+
+export const noticeAuthor = css`
+  & > span:nth-of-type(1) {
+    margin-right: 2rem;
+  }
+  & > span:nth-of-type(2) {
+  }
+`;

@@ -5,61 +5,16 @@ import * as s from "./styles";
 import CategoryComponent from "../../components/CategoryComponent/CategoryComponent";
 import useNoticeListQuery from "../../queries/NoticeQuery/useNoticeListQuery";
 import { useState } from "react";
+import PageNation from "../../components/PageNation/PageNation";
 
 function Notice(props) {
   const { category } = useParams();
   const [page, setPage] = useState(1);
-  const contents = [
-    {
-      id: 1,
-      title: "데이터 추가 및 업데이트 안내 (2025-08-04)",
-      content:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ",
-      author: "admin",
-      createdAt: "2025-08-08 09:58:31",
-      category: 1,
-    },
-    {
-      id: 2,
-      title: "데이터 추가 및 업데이트 안내 (2025-08-04)",
-      content:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ",
-      author: "admin",
-      createdAt: "2025-08-08 09:58:31",
-      category: 2,
-    },
-    {
-      id: 3,
-      title: "데이터 추가 및 업데이트 안내 (2025-08-04)",
-      content:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ",
-      author: "admin",
-      createdAt: "2025-08-08 09:58:31",
-      category: 3,
-    },
-    {
-      id: 4,
-      title: "데이터 추가 및 업데이트 안내 (2025-08-04)",
-      content:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ",
-      author: "admin",
-      createdAt: "2025-08-08 09:58:31",
-      category: 3,
-    },
-    {
-      id: 5,
-      title: "데이터 추가 및 업데이트 안내 (2025-08-04)",
-      content:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ",
-      author: "admin",
-      createdAt: "2025-08-08 09:58:31",
-      category: 1,
-    },
-  ];
-
   const notice = useNoticeListQuery(page, 10, parseInt(category));
+  const noticePages = notice?.data?.data?.body;
+  const noticeList = notice?.data?.data?.body?.content;
 
-  console.log(notice?.data?.data?.body);
+  console.log(noticeList);
 
   const noticeCategory = [
     { id: 1, title: "공지사항", category: 1 },
@@ -88,14 +43,23 @@ function Notice(props) {
       </div>
 
       <div css={s.noticePostContainer}>
-        {contents.map((post) => (
-          <div key={post.id} css={s.noticePost}>
+        {noticeList?.map((post) => (
+          <div key={post.noticeId} css={s.noticePost}>
             <div>{post.title}</div>
-            <div>{post.createdAt.substring(0, 10)}</div>
+            <div css={s.noticeAuthor}>
+              <span>{post?.user.name}</span>
+              <span>{post.createdAt.substring(0, 10)}</span>
+            </div>
           </div>
         ))}
       </div>
-
+      <PageNation
+        page={page}
+        setPage={setPage}
+        size={noticePages?.size}
+        totalElements={noticePages?.totalElements}
+        totalPage={noticePages?.totalPages}
+      />
       <Footer />
     </div>
   );
