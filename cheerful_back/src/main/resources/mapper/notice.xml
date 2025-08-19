@@ -55,55 +55,48 @@
             *
         from
             (select
-            dense_rank() over(order by nt.created_at desc, nt.notice_id desc) as notice_number,
-            nt.notice_id,
-            nt.user_id as nt_user_id,
-            nt.notice_category_id,
-            nt.notice_title,
-            nt.notice_content,
-            nt.created_at,
-            nt.notice_views,
+                dense_rank() over(order by nt.created_at desc, nt.notice_id desc) as notice_number,
+                nt.notice_id,
+                nt.user_id as nt_user_id,
+                nt.notice_category_id,
+                nt.notice_title,
+                nt.notice_content,
+                nt.created_at,
+                nt.notice_views,
 
-            ut.user_id,
-            ut.username,
-            ut.password,
-            ut.name,
-            ut.email,
-            ut.profile_img_path,
-            ut.role,
-            ut.provider,
-            ut.provider_id,
-            ut.created_at as ut_created_at,
+                nct.notice_category_name,
 
-            nit.notice_img_id,
-            nit.notice_id as nit_notice_id,
-            nit.seq,
-            nit.`img_path`,
+                ut.user_id,
+                ut.username,
+                ut.password,
+                ut.name,
+                ut.email,
+                ut.profile_img_path,
+                ut.role,
+                ut.provider,
+                ut.provider_id,
+                ut.created_at as ut_created_at,
 
-            ifnull(nlt.notice_like_id, 0) as is_like,
-            ifnull(nlc.like_count, 0) as like_count
-        from
-            notice_tb nt
-            left outer join user_tb ut on(ut.user_id = nt.user_id)
-            left outer join notice_img_tb nit on(nit.notice_id = nt.notice_id)
-            left outer join notice_like_tb nlt on(nlt.notice_id = nt.notice_id)
-            left outer join notice_category_tb nct on(nct.notice_category_id = nt.notice_category_id)
-            left outer join (select notice_id, count(*) as like_count from notice_like_tb group by notice_id) nlc on(nlc.notice_id = nt.notice_id)
-        <where>
-            <choose>
-                <!-- categoryId == 1 이면 전체 -->
-                <when test="categoryId == 1">
-                    1 = 1
-                </when>
-                <otherwise>
-                    nt.notice_category_id = #{noticeCategoryId}
-                </otherwise>
-            </choose>
-        </where>
-        order by
-            nt.created_at desc,
-            nt.notice_id desc,
-            nit.seq) communities
+                nit.notice_img_id,
+                nit.notice_id as nit_notice_id,
+                nit.seq,
+                nit.`img_path`,
+
+                ifnull(nlt.notice_like_id, 0) as is_like,
+                ifnull(nlc.like_count, 0) as like_count
+            from
+                notice_tb nt
+                left outer join user_tb ut on(ut.user_id = nt.user_id)
+                left outer join notice_img_tb nit on(nit.notice_id = nt.notice_id)
+                left outer join notice_like_tb nlt on(nlt.notice_id = nt.notice_id)
+                left outer join notice_category_tb nct on(nct.notice_category_id = nt.notice_category_id)
+                left outer join (select notice_id, count(*) as like_count from notice_like_tb group by notice_id) nlc on(nlc.notice_id = nt.notice_id)
+            where
+                nt.notice_category_id = #{noticeCategoryId}
+            order by
+                nt.created_at desc,
+                nt.notice_id desc,
+                nit.seq) communities
         where
             notice_number between #{startIndex} + 1 and #{endIndex}
     </select>
