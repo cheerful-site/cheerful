@@ -4,18 +4,21 @@ import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 import useCommunityDetailQuery from "../../../queries/CommunityQuery/useCommunityDetail";
 import Footer from "../../../components/Footer/Footer";
+import usePrincipalQuery from "../../../queries/PrincipalQuery/usePrincipalQuery";
 
 function CommunityDetail(props) {
   const params = useParams();
+  const principal = usePrincipalQuery();
   const communityDetail = useCommunityDetailQuery(
     params.category,
     params.communityId
   );
+  const token = localStorage.getItem("AccessToken");
 
-  console.log(params.category);
-  console.log(communityDetail?.data);
-
-  useEffect(() => {}, []);
+  const detailContent = communityDetail?.data?.data?.body;
+  const user = principal?.data?.data?.body?.user || [];
+  console.log(user);
+  console.log(detailContent);
 
   return (
     <>
@@ -30,33 +33,37 @@ function CommunityDetail(props) {
           <div css={s.postContainer}>
             <div css={s.content}>
               <div css={s.contentTitle}>
-                <span>Title</span>
+                <span>{detailContent?.title}</span>
                 <div>
-                  <span>username</span>
-                  <span>xxxx.xx.xx</span>
+                  <span>{detailContent?.user.name}</span>
+                  <span>{detailContent?.createdAt.slice(0, 10)}</span>
                 </div>
               </div>
-              <div>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-                nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-                sunt in culpa qui officia deserunt mollit anim id est laborum.
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-                nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-                sunt in culpa qui officia deserunt mollit anim id est laborum.
-              </div>
+              <div>{detailContent?.content}</div>
             </div>
 
             <div css={s.postLike}>
-              <span>공감해요 0</span>
+              <span>공감해요 {detailContent?.likeCount}</span>
             </div>
+            {token ? (
+              <>
+                <div css={s.commentContainer}>
+                  <div css={s.commentRegister}>
+                    <span>{user?.name || []}</span>
+                    <textarea
+                      name="comment"
+                      id=""
+                      placeholder="댓글을 남겨주세요..."></textarea>
+                    <div>
+                      <button>등록하기</button>
+                    </div>
+                  </div>
+                  <div>댓글 {detailContent?.communityComments.length}</div>
+                </div>
+              </>
+            ) : (
+              <></>
+            )}
           </div>
         </div>
       </div>

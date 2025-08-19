@@ -21,9 +21,8 @@ export const postImg = css`
 export const postContainer = css`
   display: flex;
   flex-direction: column;
-  margin: 0 4rem;
+  margin: 0 2rem;
   width: 100%;
-  height: 11rem;
 `;
 
 export const postTitle = css`
@@ -31,19 +30,37 @@ export const postTitle = css`
   font-weight: 700;
   color: #222222;
   cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
 `;
 
 export const postContent = css`
   width: 70rem;
   height: 6rem;
   overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 export const postLike = css`
   display: flex;
   justify-content: space-between;
+`;
 
-  & > div > span:first-of-type {
-    margin-right: 2rem;
+export const likeAndViews = css`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  & > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 1rem;
+
+    & > svg {
+      margin-right: 0.5rem;
+    }
   }
 `;

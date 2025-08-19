@@ -6,8 +6,11 @@ import { Wrapper } from "@googlemaps/react-wrapper";
 import { GoogleMap, MarkerF } from "@react-google-maps/api";
 import Footer from "../../components/Footer/Footer";
 import SearchBar from "../../components/SearchBar/SearchBar";
+import usePrincipalQuery from "../../queries/PrincipalQuery/usePrincipalQuery";
 
 function Home(props) {
+  const principal = usePrincipalQuery();
+  console.log(principal?.data?.data?.body);
   const [currentIndex, setCurrentIndex] = useState(0);
   const foodImg = [
     {

@@ -22,9 +22,9 @@ export const postContainer = css`
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-bottom: 10rem;
   border-radius: 1.5rem;
   width: 110rem;
-  height: 220rem;
   background-color: #ffffff;
 `;
 
@@ -64,7 +64,6 @@ export const postLike = css`
   justify-content: center;
   margin-top: 10rem;
   width: 100%;
-  cursor: pointer;
 
   & > span {
     display: flex;
@@ -75,5 +74,53 @@ export const postLike = css`
     width: 13rem;
     height: 4rem;
     font-weight: 500;
+    cursor: pointer;
+  }
+`;
+
+export const commentContainer = css`
+  display: flex;
+  flex-direction: column;
+  margin: 4rem 0;
+`;
+
+export const commentRegister = css`
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  margin-bottom: 2rem;
+  padding: 2rem;
+  border: 0.1rem solid #22222230;
+  border-radius: 1rem;
+  width: 95rem;
+  height: 15rem;
+
+  & > span {
+    margin-bottom: 1rem;
+    font-size: 1.4rem;
+    font-weight: 700;
+  }
+
+  & > textarea {
+    border: none;
+    width: 100%;
+    height: 6rem;
+    text-decoration: none;
+    outline: none;
+    resize: none;
+  }
+
+  & > div {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+
+    & > button {
+      border: none;
+      font-size: 1.4rem;
+      color: #22222230;
+      background-color: #ffffff;
+      cursor: pointer;
+    }
   }
 `;
