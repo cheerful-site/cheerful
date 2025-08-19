@@ -22,7 +22,14 @@
     <resultMap id="UserMap" type="com.korit.cheerful_back.domain.user.User">
         <id property="userId" column="user_id" />
         <result property="username" column="username" />
+        <result property="password" column="password" />
+        <result property="name" column="name" />
+        <result property="email" column="email" />
         <result property="profileImgPath" column="profile_img_path" />
+        <result property="role" column="role" />
+        <result property="provider" column="provider" />
+        <result property="providerId" column="provider_id" />
+        <result property="createdAt" column="created_at" />
     </resultMap>
 
     <resultMap id="CommunityImgMap" type="com.korit.cheerful_back.domain.communityImg.CommunityImg">
@@ -84,7 +91,14 @@
 
             ut.user_id,
             ut.username,
+            ut.password,
+            ut.name,
+            ut.email,
             ut.profile_img_path,
+            ut.role,
+            ut.provider,
+            ut.provider_id,
+            ut.created_at,
 
             cit.community_img_id,
             cit.community_id as cit_community_id,
