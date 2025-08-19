@@ -52,7 +52,7 @@
         select
             ft.food_id as ft_food_id,
             ft.food_category_id,
-            ft.user_id as ft_usr_id,
+            ft.user_id as ft_user_id,
             ft.food_title,
             ft.food_content,
             ft.food_price,
