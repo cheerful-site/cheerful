@@ -1,5 +1,6 @@
 package com.korit.cheerful_back.controller;
 
+import com.korit.cheerful_back.dto.notice.NoticeRegisterReqDto;
 import com.korit.cheerful_back.dto.response.ResponseDto;
 import com.korit.cheerful_back.service.AdminService;
 import com.korit.cheerful_back.service.NoticeService;
@@ -20,7 +21,7 @@ public class NoticeController {
         @ModelAttribute 로 DTO 바인딩
      */
     @PostMapping
-    public ResponseEntity<ResponseDto<?>> register() {
+    public ResponseEntity<ResponseDto<?>> register(@ModelAttribute NoticeRegisterReqDto dto) {
         return ResponseEntity.ok(ResponseDto.success("공지사항 글을 등록하였습니다."));
     }
 
