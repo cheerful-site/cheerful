@@ -1,5 +1,6 @@
 package com.korit.cheerful_back.controller;
 
+import com.korit.cheerful_back.dto.food.FoodRegisterReqDto;
 import com.korit.cheerful_back.dto.response.ResponseDto;
 import com.korit.cheerful_back.service.AdminService;
 import lombok.RequiredArgsConstructor;
@@ -64,6 +65,14 @@ public class AdminController {
 //        System.out.println(size);
 //        System.out.println(adminService.getFoodSearchList(page, size, searchText));
         return ResponseEntity.ok(ResponseDto.success(adminService.getFoodSearchList(page, size, searchText)));
+    }
+
+    /*
+        food 글 등록
+     */
+    @PostMapping("/foods")
+    public ResponseEntity<ResponseDto<?>> register(@ModelAttribute FoodRegisterReqDto dto) {
+        return ResponseEntity.ok(ResponseDto.success("food 글을 등록했습니다."));
     }
 
     /*
