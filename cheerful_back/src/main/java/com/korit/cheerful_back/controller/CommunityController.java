@@ -22,7 +22,7 @@ public class CommunityController {
      */
     @PostMapping
     public ResponseEntity<ResponseDto<?>> register(@ModelAttribute CommunityRegisterReqDto dto) {
-        System.out.println(dto);
+//        System.out.println(dto);
 //        communityService.register(dto);
         return ResponseEntity.ok(ResponseDto.success(null));
     }
@@ -44,10 +44,10 @@ public class CommunityController {
     @GetMapping("/{categoryId}")
     //페이지네이션
     public ResponseEntity<ResponseDto<?>> getCommunities(@RequestParam Integer page, @RequestParam Integer size, @PathVariable Integer categoryId) {
-        System.out.println(page);
-        System.out.println(size);
-        System.out.println(categoryId);
-        System.out.println(communityService.getCommunityList(page, size, categoryId));
+//        System.out.println(page);
+//        System.out.println(size);
+//        System.out.println(categoryId);
+//        System.out.println(communityService.getCommunityList(page, size, categoryId));
         return ResponseEntity.ok(ResponseDto.success(communityService.getCommunityList(page, size, categoryId)));
     }
 
@@ -74,8 +74,8 @@ public class CommunityController {
      */
     @GetMapping("/{categoryId}/{communityId}")
     public ResponseEntity<ResponseDto<?>> getCommunityContent(@PathVariable Integer categoryId, @PathVariable Integer communityId) {
-        System.out.println(categoryId);
-        System.out.println(communityId);
+//        System.out.println(categoryId);
+//        System.out.println(communityId);
         return ResponseEntity.ok(ResponseDto.success(communityService.getCommunityContent(categoryId, communityId)));
     }
 
