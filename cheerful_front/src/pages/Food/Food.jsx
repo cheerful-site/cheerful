@@ -1,9 +1,13 @@
 /**@jsxImportSource @emotion/react */
+import { useState } from "react";
 import Footer from "../../components/Footer/Footer";
 import noImage from "../../icons/Frame2.png";
 import * as s from "./styles";
+import useFoodListQuery from "../../queries/FoodQuery/useFoodListQuery";
 
 function Food(props) {
+  const [page, setPage] = useState(1);
+  const foodList = useFoodListQuery(page, 10);
   const food = [
     {
       id: 1,
@@ -102,6 +106,9 @@ function Food(props) {
       category: "간식",
     },
   ];
+
+  console.log(foodList);
+
   return (
     <div css={s.layout}>
       <div css={s.foodTitle}>

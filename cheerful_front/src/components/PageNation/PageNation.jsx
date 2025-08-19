@@ -4,7 +4,7 @@ import { RxDoubleArrowLeft, RxDoubleArrowRight } from "react-icons/rx";
 
 function PageNation({ page, size, totalElements, totalPage, setPage }) {
   const numPages = Math.ceil(totalElements / size);
-  console.log(page);
+  // console.log(page);
 
   return (
     <div css={s.layout}>
