@@ -372,13 +372,11 @@
     </select>
 
     <delete id="deleteByCommunityIds">
-        delete
-        from
-        community_tb
+        delete from community_tb
         where
-        community_id in
-        <foreach item="communityId" collection="communityIds" separator="," open="(" close=")" >
-
-        </foreach>
+            community_id in
+            <foreach item="communityId" collection="communityIds" separator="," open="(" close=")" >
+                #{community_id}
+            </foreach>
     </delete>
 </mapper>
