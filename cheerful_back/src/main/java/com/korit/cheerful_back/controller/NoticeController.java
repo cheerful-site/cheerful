@@ -30,7 +30,7 @@ public class NoticeController {
     /*
         공지사항 페이징 목록 조회
      */
-    @GetMapping
+    @GetMapping("/{categoryId}")
     public ResponseEntity<ResponseDto<?>> getNotices(@RequestParam Integer page, @RequestParam Integer size, @PathVariable Integer categoryId) {
         // 페이지네이션
         System.out.println(page);
