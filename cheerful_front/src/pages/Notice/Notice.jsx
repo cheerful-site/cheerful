@@ -3,9 +3,12 @@ import { Link, useParams } from "react-router-dom";
 import Footer from "../../components/Footer/Footer";
 import * as s from "./styles";
 import CategoryComponent from "../../components/CategoryComponent/CategoryComponent";
+import useNoticeListQuery from "../../queries/NoticeQuery/useNoticeListQuery";
+import { useState } from "react";
 
 function Notice(props) {
   const { category } = useParams();
+  const [page, setPage] = useState(1);
   const contents = [
     {
       id: 1,
@@ -53,6 +56,10 @@ function Notice(props) {
       category: 1,
     },
   ];
+
+  const notice = useNoticeListQuery(page, 10, parseInt(category));
+
+  console.log(notice?.data?.data?.body);
 
   const noticeCategory = [
     { id: 1, title: "공지사항", category: 1 },

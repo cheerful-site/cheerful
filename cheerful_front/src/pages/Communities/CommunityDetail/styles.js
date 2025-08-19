@@ -59,6 +59,10 @@ export const contentTitle = css`
   }
 `;
 
+export const contentContainer = css`
+  margin: 2rem 0;
+`;
+
 export const postLike = css`
   display: flex;
   justify-content: center;

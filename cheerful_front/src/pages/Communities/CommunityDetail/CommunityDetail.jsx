@@ -50,7 +50,7 @@ function CommunityDetail(props) {
                   <span>{detailContent?.createdAt.slice(0, 10)}</span>
                 </div>
               </div>
-              <div>{detailContent?.content}</div>
+              <div css={s.contentContainer}>{detailContent?.content}</div>
               {detailContent?.communityImgs ? (
                 detailContent?.communityImgs?.map((img, index) => (
                   <img
