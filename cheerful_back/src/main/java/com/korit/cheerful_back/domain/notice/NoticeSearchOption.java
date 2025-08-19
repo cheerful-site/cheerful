@@ -15,7 +15,7 @@ public class NoticeSearchOption {
     private Integer endIndex;
     private Integer size;
     private String searchText;
-    private Integer categoryId;
+    private Integer noticeCategoryId;
     private Integer userId;
 
 }

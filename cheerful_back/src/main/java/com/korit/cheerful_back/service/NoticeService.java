@@ -23,7 +23,7 @@ public class NoticeService {
                 .startIndex((page - 1) * size)
                 .endIndex(size * page)
                 .size(size)
-                .categoryId(categoryId)
+                .noticeCategoryId(categoryId)
                 .build();
 
         List<Notice> contents = noticeMapper.findAllBySearchOptions(searchOption);
