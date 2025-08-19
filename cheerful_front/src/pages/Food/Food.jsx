@@ -107,7 +107,7 @@ function Food(props) {
     },
   ];
 
-  console.log(foodList);
+  console.log(foodList?.data?.data?.body);
 
   return (
     <div css={s.layout}>

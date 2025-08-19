@@ -12,6 +12,8 @@ import usePrincipalQuery from "../../../queries/PrincipalQuery/usePrincipalQuery
 import { baseURL } from "../../../api/axios/axios";
 import LeftSideBar from "../../../components/LeftSideBar/LeftSideBar";
 import DataTable from "../../../components/DataTable/DataTable";
+import PageNation from "../../../components/PageNation/PageNation";
+import { usePageStore } from "../../../stores/usePageStore";
 
 function AdminManage(props) {
   const navigate = useNavigate();
@@ -20,10 +22,11 @@ function AdminManage(props) {
   const principalQuery = usePrincipalQuery();
   const [inputValue, setInputValue] = useState("");
   const user = principalQuery?.data?.data?.body?.user || [];
+  const { page } = usePageStore();
 
-  const adminUsers = useAdminUsersQuery(1, 10, inputValue);
-  const adminCommunity = useAdminCommunityQuery(1, 10, 1, inputValue);
-  const adminFood = useAdminFoodQuery(1, 10, inputValue);
+  const adminUsers = useAdminUsersQuery(page, 10, inputValue);
+  const adminCommunity = useAdminCommunityQuery(page, 10, 1, inputValue);
+  const adminFood = useAdminFoodQuery(page, 10, inputValue);
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -43,52 +46,28 @@ function AdminManage(props) {
     setInputValue(e.target.value);
   };
 
+  const users = adminUsers?.data?.data?.body;
   const userList = adminUsers?.data?.data?.body?.content || []; // user 리스트
+
   const community = adminCommunity?.data?.data?.body; // community 리스트
   const communityList = community?.content.map((community) => ({
     ...community,
     ...community.user,
     ...community.communityCategory,
   }));
-  const foodList = adminFood?.data?.data?.body; //food 리스트
 
-  // console.log(userList);
-  console.log(communityList);
+  const food = adminFood?.data?.data?.body; //food 리스트
+  const foodList = food?.content.map((food) => ({
+    ...food,
+    ...food.foodCategory,
+    ...food.user,
+  }));
+
+  // console.log(users);
+  // console.log(communityList);
   // console.log(foodList);
   // console.log(params);
-
-  const communityCols = [
-    {
-      filed: "communityId",
-      label: "Id",
-      size: "6rem",
-    },
-    {
-      filed: "communityCategoryName",
-      label: "Category Name",
-      size: "6rem",
-    },
-    {
-      filed: "name",
-      label: "Username",
-      size: "6rem",
-    },
-    {
-      filed: "title",
-      label: "Title",
-      size: "6rem",
-    },
-    {
-      filed: "content",
-      label: "Content",
-      size: "6rem",
-    },
-    {
-      filed: "createdAt",
-      label: "CreateAt",
-      size: "6rem",
-    },
-  ];
+  // console.log(food);
 
   const usersCols = [
     {
@@ -120,6 +99,72 @@ function AdminManage(props) {
       field: "providerId",
       label: "ProviderId",
       size: "20rem",
+    },
+  ];
+
+  const communityCols = [
+    {
+      field: "communityId",
+      label: "Id",
+      size: "6rem",
+    },
+    {
+      field: "communityCategoryName",
+      label: "Category Name",
+      size: "15rem",
+    },
+    {
+      field: "name",
+      label: "Username",
+      size: "6rem",
+    },
+    {
+      field: "title",
+      label: "Title",
+      size: "10rem",
+    },
+    {
+      field: "content",
+      label: "Content",
+      size: "15rem",
+    },
+    {
+      field: "createdAt",
+      label: "CreateAt",
+      size: "7.5rem",
+    },
+  ];
+
+  const foodCols = [
+    {
+      field: "foodId",
+      label: "Id",
+      size: "6rem",
+    },
+    {
+      field: "foodCategoryName",
+      label: "Category Name",
+      size: "12rem",
+    },
+    {
+      field: "name",
+      label: "Username",
+      size: "6rem",
+    },
+    {
+      field: "title",
+      label: "Title",
+      size: "15rem",
+    },
+    {
+      field: "content",
+      label: "Content",
+      size: "28rem",
+    },
+    {
+      field: "createdAt",
+      label: "CreateAt",
+      size: "7.5rem",
     },
   ];
 
@@ -206,18 +251,21 @@ function AdminManage(props) {
                   isCheckBoxEnabled={true}
                   cols={usersCols}
                   rows={userList}
+                  pagenation={users}
                 />
               ) : params.categoryId === "community" ? (
                 <DataTable
                   isCheckBoxEnabled={true}
                   cols={communityCols}
                   rows={communityList}
+                  pagenation={community}
                 />
               ) : params.categoryId === "food" ? (
                 <DataTable
                   isCheckBoxEnabled={true}
-                  cols={usersCols}
-                  rows={userList}
+                  cols={foodCols}
+                  rows={foodList}
+                  pagenation={food}
                 />
               ) : params.categoryId === "notice" ? (
                 <DataTable

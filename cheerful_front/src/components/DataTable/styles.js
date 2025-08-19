@@ -41,6 +41,7 @@ export const rows = css`
   display: flex;
   justify-content: space-around;
   align-items: center;
+  border-bottom: 0.1rem solid #dde1e6;
 
   & > td {
     display: flex;
@@ -58,4 +59,8 @@ export const rows = css`
       display: none;
     }
   }
+`;
+
+export const deleteButton = css`
+  width: 3rem;
 `;

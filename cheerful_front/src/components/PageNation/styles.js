@@ -4,7 +4,8 @@ export const layout = css`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 5rem;
+  margin: 2rem 0;
+  height: 3rem;
 `;
 
 export const pageLeftButton = (isTrue) => css`
@@ -27,10 +28,11 @@ export const pageRightButton = (isTrue) => css`
 
 export const pageNumberButton = (page) => css`
   border: none;
+  margin: 0 0.5rem;
   font-size: 1.6rem;
   font-weight: 500;
-  background-color: #f2f4f8;
   color: #22222230;
+  background-color: transparent;
   cursor: pointer;
 
   &:hover {
