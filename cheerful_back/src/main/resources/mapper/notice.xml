@@ -62,9 +62,9 @@
             nt.notice_title,
             nt.notice_content,
             nt.created_at,
-            nt.created_views,
+            nt.notice_views,
 
-            ut.user_id as ut_user_id,
+            ut.user_id,
             ut.username,
             ut.password,
             ut.name,
@@ -87,7 +87,7 @@
             left outer join user_tb ut on(ut.user_id = nt.user_id)
             left outer join notice_img_tb nit on(nit.notice_id = nt.notice_id)
             left outer join notice_like_tb nlt on(nlt.notice_id = nt.notice_id)
-            left outer join notice_category_tb nct on(nct.notice_category_id = ct.notice_category_id)
+            left outer join notice_category_tb nct on(nct.notice_category_id = nt.notice_category_id)
             left outer join (select notice_id, count(*) as like_count from notice_like_tb group by notice_id) nlc on(nlc.notice_id = nt.notice_id)
         <where>
             <choose>
@@ -96,7 +96,7 @@
                     1 = 1
                 </when>
                 <otherwise>
-                    nt.notice_category_id = #{categoryId}
+                    nt.notice_category_id = #{noticeCategoryId}
                 </otherwise>
             </choose>
         </where>
@@ -105,7 +105,7 @@
             nt.notice_id desc,
             nit.seq) communities
         where
-            community_number between #{startIndex} + 1 and #{endIndex}
+            notice_number between #{startIndex} + 1 and #{endIndex}
     </select>
 
 <!--    <update id="increaseViews"></update>-->
@@ -122,7 +122,7 @@
         select
             count(*)
         from
-            notice_tb ct
+            notice_tb nt
             left outer join notice_category_tb nct on(nct.notice_category_id = nt.notice_category_id)
         <where>
             <choose>
@@ -131,7 +131,7 @@
                     1 = 1
                 </when>
                 <otherwise>
-                    nt.notice_category_id = #{categoryId}
+                    nt.notice_category_id = #{noticeCategoryId}
                 </otherwise>
             </choose>
         </where>
