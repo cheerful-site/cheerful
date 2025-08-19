@@ -50,7 +50,7 @@
         values (default, #{userId}, #{noticeCategoryId}, #{title}, #{content}, now())
     </insert>
 
-    <select id="findAllBySearchOption" resultMap="NoticeMap">
+    <select id="findAllBySearchOptions" resultMap="NoticeMap">
         select
             *
         from
@@ -118,6 +118,23 @@
 
 
 
-<!--    <select id="getCountSearchOption" resultType="java.lang.Integer"></select>-->
+    <select id="getCountOfOptions" resultType="java.lang.Integer">
+        select
+            count(*)
+        from
+            notice_tb ct
+            left outer join notice_category_tb nct on(nct.notice_category_id = nt.notice_category_id)
+        <where>
+            <choose>
+                <!-- categoryId == 1 이면 전체 -->
+                <when test="categoryId == 1">
+                    1 = 1
+                </when>
+                <otherwise>
+                    nt.notice_category_id = #{categoryId}
+                </otherwise>
+            </choose>
+        </where>
+    </select>
 
 </mapper>

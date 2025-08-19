@@ -10,10 +10,10 @@ public interface NoticeMapper {
 
     // 게시글 등록
     int insert(Notice notice);
-//
-//    // admin전용 notice
-    List<Notice> findAllBySearchOption(NoticeSearchOption noticeSearchOption);
-//    int getCountSearchOption(NoticeSearchOption noticeSearchOption);
+
+    List<Notice> findAllBySearchOptions(NoticeSearchOption noticeSearchOption);
+    int getCountOfOptions(NoticeSearchOption noticeSearchOption);
+
 //    int deleteByNoticeIds(List<Integer> noticesIds);
 //    int update(Notice notice);
 //
