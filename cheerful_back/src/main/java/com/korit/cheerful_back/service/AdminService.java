@@ -41,7 +41,7 @@ public class AdminService {
             throw new LoginException("로그인 오류", "관리자 정보를 다시 확인하세요.");
         }
 
-        System.out.println(jwtUtil.generateAccessToken(foundUser));
+//        System.out.println(jwtUtil.generateAccessToken(foundUser));
 
         return TokenDto.builder()
                 .accessToken(jwtUtil.generateAccessToken(foundUser))
