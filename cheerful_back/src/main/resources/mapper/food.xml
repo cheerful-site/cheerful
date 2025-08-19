@@ -12,6 +12,9 @@
         <result property="content" column="food_content" />
         <result property="price" column="food_price" />
         <result property="createdAt" column="created_at" />
+        <result property="isLike" column="is_like" />
+        <result property="likeCount" column="like_count" />
+        <result property="commentCount" column="comments_count" />
         <association property="user" resultMap="UserMap" />
         <association property="foodCategory" resultMap="FoodCategoryMap" />
         <collection property="foodImgs" javaType="list" resultMap="FoodImgMap" />
@@ -92,7 +95,7 @@
                 left outer join (select food_id, count(*) as like_count from food_like_tb group by food_id) flc on(flc.food_id = ft.food_id)
                 left outer join (select food_id, count(*) as comments_count from food_comment_tb group by food_id) fcc on(fcc.food_id = ft.food_id)
             order by
-                is_like desc,
+                like_count desc,
                 ft.created_at desc,
                 fit.seq) foods
         where
