@@ -1,7 +1,7 @@
 /**@jsxImportSource @emotion/react */
 import * as s from "./styles";
 import { useParams } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useCommunityDetailQuery from "../../../queries/CommunityQuery/useCommunityDetail";
 import Footer from "../../../components/Footer/Footer";
 import usePrincipalQuery from "../../../queries/PrincipalQuery/usePrincipalQuery";
@@ -9,16 +9,24 @@ import usePrincipalQuery from "../../../queries/PrincipalQuery/usePrincipalQuery
 function CommunityDetail(props) {
   const params = useParams();
   const principal = usePrincipalQuery();
+  const token = localStorage.getItem("AccessToken");
   const communityDetail = useCommunityDetailQuery(
     params.category,
     params.communityId
   );
-  const token = localStorage.getItem("AccessToken");
+  const [inputValue, setInputValue] = useState();
 
   const detailContent = communityDetail?.data?.data?.body;
   const user = principal?.data?.data?.body?.user || [];
-  console.log(user);
+  // console.log(user);
   console.log(detailContent);
+
+  const handleOnChange = (e) => {
+    setInputValue(e.target.value);
+  };
+  const handleCommentsOnClick = () => {
+    console.log(inputValue);
+  };
 
   return (
     <>
@@ -28,7 +36,9 @@ function CommunityDetail(props) {
             {/* categoryname */}
             <span>커뮤니티</span>
             <span> &gt; </span>
-            <span>강아지</span>
+            <span>
+              {detailContent?.communityCategory?.communityCategoryName}
+            </span>
           </div>
           <div css={s.postContainer}>
             <div css={s.content}>
@@ -40,6 +50,9 @@ function CommunityDetail(props) {
                 </div>
               </div>
               <div>{detailContent?.content}</div>
+              {
+                
+              }
             </div>
 
             <div css={s.postLike}>
@@ -49,13 +62,15 @@ function CommunityDetail(props) {
               <>
                 <div css={s.commentContainer}>
                   <div css={s.commentRegister}>
-                    <span>{user?.name || []}</span>
+                    <span>{user?.name}</span>
                     <textarea
                       name="comment"
                       id=""
-                      placeholder="댓글을 남겨주세요..."></textarea>
+                      placeholder="댓글을 남겨주세요..."
+                      onChange={handleOnChange}
+                    />
                     <div>
-                      <button>등록하기</button>
+                      <button onClick={handleCommentsOnClick}>등록하기</button>
                     </div>
                   </div>
                   <div>댓글 {detailContent?.communityComments.length}</div>

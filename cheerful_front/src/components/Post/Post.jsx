@@ -5,6 +5,7 @@ import { AiFillLike } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { reqCommunityViews } from "../../api/communityApi/communityApi";
 import { PiEyesFill } from "react-icons/pi";
+import { baseURL } from "../../api/axios/axios";
 
 function Post({ content, category }) {
   const navigate = useNavigate();
@@ -15,13 +16,15 @@ function Post({ content, category }) {
     navigate(`/community/${category}/${content.communityId}`);
   };
 
+  console.log(content?.communityImgs[0]?.imgPath);
+
   return (
     <div css={s.postLayout}>
       <img
         css={s.postImg}
         src={
-          content.communityImgs[0]?.imgPath
-            ? content.communityImgs[0].imgPath
+          content?.communityImgs[0]?.imgPath
+            ? `${baseURL}/upload${content?.communityImgs[0]?.imgPath}`
             : noImage
         }
         alt=""

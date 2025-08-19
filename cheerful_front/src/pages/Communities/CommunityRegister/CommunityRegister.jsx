@@ -6,6 +6,7 @@ import usePrincipalQuery from "../../../queries/PrincipalQuery/usePrincipalQuery
 import Footer from "../../../components/Footer/Footer";
 import { FiPlus, FiX } from "react-icons/fi";
 import { reqCommunityRegister } from "../../../api/communityApi/communityApi";
+import { baseURL } from "../../../api/axios/axios";
 
 function CommunityRegister(props) {
   const [inputValue, setInputValue] = useState({
@@ -80,7 +81,10 @@ function CommunityRegister(props) {
       <div css={s.layout}>
         <div css={s.registerContainer}>
           <div css={s.registerUser}>
-            <img src={user?.profileImgPath} alt="" />
+            <img
+              src={`${baseURL}/upload/profile/${user?.profileImgPath}`}
+              alt=""
+            />
             <span>{user?.username}</span>
           </div>
 

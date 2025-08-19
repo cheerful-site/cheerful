@@ -1,12 +1,7 @@
 /**@jsxImportSource @emotion/react */
 import { FaRegTrashAlt, FaSearch } from "react-icons/fa";
 import * as s from "./styles";
-import logo from "../../../../logo/cheerful_login.png";
-import { PiUserCircleFill } from "react-icons/pi";
-import { HiUsers } from "react-icons/hi";
-import { TbDogBowl } from "react-icons/tb";
-import { ImNotification } from "react-icons/im";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
 import ReactModal from "react-modal";
 import { useQueryClient } from "@tanstack/react-query";
@@ -15,10 +10,12 @@ import useAdminCommunityQuery from "../../../queries/AdminQuery/useAdminCommunit
 import useAdminFoodQuery from "../../../queries/AdminQuery/useAdminFoodQuery";
 import usePrincipalQuery from "../../../queries/PrincipalQuery/usePrincipalQuery";
 import { baseURL } from "../../../api/axios/axios";
+import LeftSideBar from "../../../components/LeftSideBar/LeftSideBar";
+import DataTable from "../../../components/DataTable/DataTable";
 
 function AdminManage(props) {
   const navigate = useNavigate();
-  const location = useLocation();
+  const params = useParams();
   const queryClient = useQueryClient();
   const principalQuery = usePrincipalQuery();
   const [inputValue, setInputValue] = useState("");
@@ -46,71 +43,90 @@ function AdminManage(props) {
     setInputValue(e.target.value);
   };
 
-  const userList = adminUsers?.data?.data.body.content; // user 리스트
-  const communityList = adminCommunity?.data?.data.body.content; // community 리스트
-  const adminFoodList = adminFood?.data?.data.body; //food 리스트
+  const userList = adminUsers?.data?.data?.body?.content || []; // user 리스트
+  const community = adminCommunity?.data?.data?.body; // community 리스트
+  const communityList = community?.content.map((community) => ({
+    ...community,
+    ...community.user,
+    ...community.communityCategory,
+  }));
+  const foodList = adminFood?.data?.data?.body; //food 리스트
 
-  // console.log(communityList);
   // console.log(userList);
-  console.log(adminFoodList);
+  console.log(communityList);
+  // console.log(foodList);
+  // console.log(params);
 
-  const adminCategory = [
+  const communityCols = [
     {
-      id: 1,
-      name: "Community",
-      category: "community",
-      path: "/admin/community",
-      icon: <HiUsers />,
+      filed: "communityId",
+      label: "Id",
+      size: "6rem",
     },
     {
-      id: 2,
-      name: "Food",
-      category: "food",
-      path: "/admin/food",
-      icon: <TbDogBowl />,
+      filed: "communityCategoryName",
+      label: "Category Name",
+      size: "6rem",
     },
     {
-      id: 3,
-      name: "Notice",
-      category: "notice",
-      path: "/admin/notice",
-      icon: <ImNotification />,
+      filed: "name",
+      label: "Username",
+      size: "6rem",
+    },
+    {
+      filed: "title",
+      label: "Title",
+      size: "6rem",
+    },
+    {
+      filed: "content",
+      label: "Content",
+      size: "6rem",
+    },
+    {
+      filed: "createdAt",
+      label: "CreateAt",
+      size: "6rem",
+    },
+  ];
+
+  const usersCols = [
+    {
+      field: "userId",
+      label: "UserId",
+      size: "6rem",
+    },
+    {
+      field: "username",
+      label: "Username",
+      size: "12rem",
+    },
+    {
+      field: "email",
+      label: "Email",
+      size: "20rem",
+    },
+    {
+      field: "profileImgPath",
+      label: "Profile Img Path",
+      size: "20rem",
+    },
+    {
+      field: "provider",
+      label: "Provider",
+      size: "6rem",
+    },
+    {
+      field: "providerId",
+      label: "ProviderId",
+      size: "20rem",
     },
   ];
 
   return (
     <div css={s.layout}>
       <div css={s.manageContainer}>
-        <div css={s.manageCategory}>
-          <div css={s.logoContainer}>
-            <Link to={"/"}>
-              <img src={logo} alt="" />
-            </Link>
-          </div>
-          <div css={s.categoryUser(location.pathname === "/admin/users")}>
-            <div>
-              <span>User</span>
-              <Link to={"/admin/users"}>
-                <PiUserCircleFill />
-                <span>Users</span>
-              </Link>
-            </div>
-          </div>
-          <div css={s.categoryAdmin}>
-            <div>
-              <span>Admin</span>
-              {adminCategory.map((category) => (
-                <Link
-                  key={category.id}
-                  to={category.path}
-                  css={s.adminLink(location.pathname === category.path)}>
-                  {category.icon}
-                  <span>{category.name}</span>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </div>
+        <LeftSideBar />
         <div css={s.manageLayout}>
           <div css={s.manageUser}>
             <div>
@@ -185,45 +201,33 @@ function AdminManage(props) {
                 />
                 <FaSearch />
               </div>
-              <table css={s.manageTable}>
-                <thead>
-                  <tr css={s.TableHeader}>
-                    <th>
-                      <input type="checkbox" name="" id="" />
-                    </th>
-                    <th>UserId</th>
-                    <th>Username</th>
-                    <th>Email</th>
-                    <th>Profile Img Path</th>
-                    <th>Provider</th>
-                    <th>ProviderId</th>
-                    <th>Del</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {userList?.map((info) => (
-                    <tr key={info.userId} css={s.userRows}>
-                      <td>
-                        <input
-                          type="checkbox"
-                          name=""
-                          id=""
-                          value={info.checked}
-                        />
-                      </td>
-                      <td>{info.userId}</td>
-                      <td>{info.username}</td>
-                      <td>{info.email}</td>
-                      <td>{info.profileImgPath}</td>
-                      <td>{info.provider}</td>
-                      <td>{info.providerId}</td>
-                      <td>
-                        <FaRegTrashAlt />
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              {params.categoryId === "users" ? (
+                <DataTable
+                  isCheckBoxEnabled={true}
+                  cols={usersCols}
+                  rows={userList}
+                />
+              ) : params.categoryId === "community" ? (
+                <DataTable
+                  isCheckBoxEnabled={true}
+                  cols={communityCols}
+                  rows={communityList}
+                />
+              ) : params.categoryId === "food" ? (
+                <DataTable
+                  isCheckBoxEnabled={true}
+                  cols={usersCols}
+                  rows={userList}
+                />
+              ) : params.categoryId === "notice" ? (
+                <DataTable
+                  isCheckBoxEnabled={true}
+                  cols={usersCols}
+                  rows={userList}
+                />
+              ) : (
+                <></>
+              )}
             </div>
           </div>
         </div>
