@@ -120,7 +120,6 @@
             food_tb ft
             left outer join user_tb ut on(ut.user_id = ft.user_id)
             left outer join food_category_tb fct on(fct.food_category_id = ft.food_category_id)
-            left outer join food_img_tb fit on(fit.food_id = ft.food_id)
         where
             ft.food_title like concat('%', #{searchText}, '%')
             or ft.food_content like concat('%', #{searchText}, '%')
