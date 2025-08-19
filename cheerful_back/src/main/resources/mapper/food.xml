@@ -47,58 +47,104 @@
         values (default, #{foodCategoryId}, #{userId}, #{title}, #{content}, #{price}, now())
     </insert>
 
+<!--    user 전용-->
+    <select id="findAllByOptions" resultMap="FoodMap">
+        select
+            *
+        from
+            (select
+                ft.food_id,
+                ft.food_category_id,
+                ft.user_id as ft_usr_id,
+                ft.food_title,
+                ft.food_content,
+                ft.food_price,
+                ft.created_at,
+
+                fit.food_img_id,
+                fit.food_id,
+                fit.seq,
+                fit.`img_path`,
+
+                ifnull(flt.food_like_id, 0) as is_like,
+                ifnull(flc.like_count, 0) as like_count,
+                ifnull(fcc.comments_count, 0) as comments_count
+            from
+                food_tb ft
+<!--                left outer join user_tb ut on(ut.user_id = ft.user_id)-->
+                left outer join food_img_tb fit on(fit.food_id = ft.food_id)
+                left outer join food_like_tb flt on(flt.food_id = ft.food_id)
+                left outer join food_category_tb fct on(fct.food_category_id = ft.food_category_id)
+                left outer join (select food_id, count(*) as like_count from food_like_tb group by food_id) flc on(flc.food_id = ft.food_id)
+                left outer join (select food_id, count(*) as comments_count from food_comment_tb group by food_id) fcc on(fcc.food_id = ft.food_id)
+            order by
+                is_like desc,
+                ft.created_at desc,
+                fit.seq) foods,
+        limit #{startIndex}, #{size}
+    </select>
+
+    <select id="getCountOfOptions" resultType="java.lang.Integer">
+        select
+            count(*)
+        from
+            food_tb
+    </select>
+
+
+<!--    admin 전용-->
     <select id="findAllBySearchOption" resultMap="FoodMap">
         select
-            ft.food_id as ft_food_id,
-            ft.user_id as ft_user_id,
-            ft.food_title,
-            ft.food_content,
-            ft.food_price,
-            ft.created_at,
+        ft.food_id as ft_food_id,
+        ft.user_id as ft_user_id,
+        ft.food_title,
+        ft.food_content,
+        ft.food_price,
+        ft.created_at,
 
-            fct.food_category_name,
+        fct.food_category_name,
 
-            ut.user_id as ut_user_id,
-            ut.username,
-            ut.name,
+        ut.user_id as ut_user_id,
+        ut.username,
+        ut.name,
 
-            fit.food_img_id,
-            fit.food_id as fit_food_id,
-            fit.seq,
-            fit.img_path
+        fit.food_img_id,
+        fit.food_id as fit_food_id,
+        fit.seq,
+        fit.img_path
         from
-            food_tb ft
-            left outer join user_tb ut on(ut.user_id = ft.user_id)
-            left outer join food_category_tb fct on(fct.food_category_id = ft.food_category_id)
-            left outer join food_img_tb fit on(fit.food_id = ft.food_id)
+        food_tb ft
+        left outer join user_tb ut on(ut.user_id = ft.user_id)
+        left outer join food_category_tb fct on(fct.food_category_id = ft.food_category_id)
+        left outer join food_img_tb fit on(fit.food_id = ft.food_id)
         where
-            ft.food_title like concat('%', #{searchText}, '%')
-            or ft.food_content like concat('%', #{searchText}, '%')
+        ft.food_title like concat('%', #{searchText}, '%')
+        or ft.food_content like concat('%', #{searchText}, '%')
         order by
-            ft.food_id
+        ft.food_id
         limit #{startIndex}, #{size}
     </select>
 
     <select id="getCountOfSearchOption" resultType="java.lang.Integer">
         select
-            count(*)
+        count(*)
         from
-            food_tb ft
-            left outer join user_tb ut on(ut.user_id = ft.user_id)
-            left outer join food_category_tb fct on(fct.food_category_id = ft.food_category_id)
+        food_tb ft
+        left outer join user_tb ut on(ut.user_id = ft.user_id)
+        left outer join food_category_tb fct on(fct.food_category_id = ft.food_category_id)
         where
-            ft.food_title like concat('%', #{searchText}, '%')
-            or ft.food_content like concat('%', #{searchText}, '%')
+        ft.food_title like concat('%', #{searchText}, '%')
+        or ft.food_content like concat('%', #{searchText}, '%')
     </select>
 
     <delete id="deleteByFoodIds">
         delete
         from
-            food_tb
+        food_tb
         where
-            food_id in
-            <foreach item="foodId" collection="foodIds" separator="," open="(" close=")" >
-                #{foodId}
-            </foreach>
+        food_id in
+        <foreach item="foodId" collection="foodIds" separator="," open="(" close=")" >
+            #{foodId}
+        </foreach>
     </delete>
 </mapper>

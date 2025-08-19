@@ -24,7 +24,7 @@ public class CommunityController {
     public ResponseEntity<ResponseDto<?>> register(@ModelAttribute CommunityRegisterReqDto dto) {
         System.out.println(dto);
         communityService.register(dto);
-        return ResponseEntity.ok(ResponseDto.success("글을 등록하였습니다."));
+        return ResponseEntity.ok(ResponseDto.success("community 글을 등록하였습니다."));
     }
 
     /*
