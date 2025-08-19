@@ -63,4 +63,5 @@ export const rows = css`
 
 export const deleteButton = css`
   width: 3rem;
+  cursor: pointer;
 `;

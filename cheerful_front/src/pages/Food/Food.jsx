@@ -7,107 +7,11 @@ import useFoodListQuery from "../../queries/FoodQuery/useFoodListQuery";
 
 function Food(props) {
   const [page, setPage] = useState(1);
-  const foodList = useFoodListQuery(page, 10);
-  const food = [
-    {
-      id: 1,
-      foodName: "foodName",
-      price: "10,000원",
-      category: "간식",
-    },
-    {
-      id: 2,
-      foodName: "foodName",
-      price: "10,000원",
-      category: "간식",
-    },
-    {
-      id: 3,
-      foodName: "foodName",
-      price: "10,000원",
-      category: "간식",
-    },
-    {
-      id: 4,
-      foodName: "foodName",
-      price: "10,000원",
-      category: "간식",
-    },
-    {
-      id: 5,
-      foodName: "foodName",
-      price: "10,000원",
-      category: "간식",
-    },
-    {
-      id: 6,
-      foodName: "foodName",
-      price: "10,000원",
-      category: "간식",
-    },
-    {
-      id: 7,
-      foodName: "foodName",
-      price: "10,000원",
-      category: "간식",
-    },
-    {
-      id: 8,
-      foodName: "foodName",
-      price: "10,000원",
-      category: "간식",
-    },
-    {
-      id: 9,
-      foodName: "foodName",
-      price: "10,000원",
-      category: "간식",
-    },
-    {
-      id: 10,
-      foodName: "foodName",
-      price: "10,000원",
-      category: "간식",
-    },
-    {
-      id: 11,
-      foodName: "foodName",
-      price: "10,000원",
-      category: "간식",
-    },
-    {
-      id: 12,
-      foodName: "foodName",
-      price: "10,000원",
-      category: "간식",
-    },
-    {
-      id: 13,
-      foodName: "foodName",
-      price: "10,000원",
-      category: "간식",
-    },
-    {
-      id: 14,
-      foodName: "foodName",
-      price: "10,000원",
-      category: "간식",
-    },
-    {
-      id: 15,
-      foodName: "foodName",
-      price: "10,000원",
-      category: "간식",
-    },
-    {
-      id: 16,
-      foodName: "foodName",
-      price: "10,000원",
-      category: "간식",
-    },
-  ];
+  const food = useFoodListQuery(page, 16);
 
-  console.log(foodList?.data?.data?.body);
+  const foodList = food?.data?.data?.body?.content;
+
+  console.log(foodList);
 
   return (
     <div css={s.layout}>
@@ -132,7 +36,7 @@ function Food(props) {
         </div>
 
         <div css={s.foodContainer}>
-          {food.map((food) => (
+          {foodList.map((food) => (
             <div key={food.id}>
               <img src={noImage} alt="" />
               <div>
