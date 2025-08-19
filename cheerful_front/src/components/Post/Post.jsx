@@ -2,34 +2,49 @@
 import * as s from "./styles";
 import noImage from "../../icons/Frame2.png";
 import { AiFillLike } from "react-icons/ai";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { reqCommunityViews } from "../../api/communityApi/communityApi";
 import { PiEyesFill } from "react-icons/pi";
 import { baseURL } from "../../api/axios/axios";
 
 function Post({ content, category }) {
   const navigate = useNavigate();
+  const location = useLocation();
   // console.log(content);
 
   const handleOnClick = () => {
-    reqCommunityViews(category, content.communityId);
-    navigate(`/community/${category}/${content.communityId}`);
+    if (location.pathname.startsWith("/notice")) {
+      return;
+    } else {
+      reqCommunityViews(category, content.communityId);
+      navigate(`/community/${category}/${content.communityId}`);
+      return;
+    }
   };
 
-  console.log(content?.communityImgs[0]?.imgPath);
+  console.log(content);
 
   return (
     <div css={s.postLayout}>
-      <img
-        css={s.postImg}
-        src={
-          content?.communityImgs[0]?.imgPath
-            ? `${baseURL}/upload${content?.communityImgs[0]?.imgPath}`
-            : noImage
-        }
-        alt=""
-        onClick={handleOnClick}
-      />
+      {location.pathname.startsWith("/notice") ? (
+        <img
+          css={s.postImg}
+          src={content?.noticeImgs[0]?.imgPath}
+          alt=""
+          onClick={handleOnClick}
+        />
+      ) : (
+        <img
+          css={s.postImg}
+          src={
+            content?.communityImgs[0]?.imgPath
+              ? `${baseURL}/upload${content?.communityImgs[0]?.imgPath}`
+              : noImage
+          }
+          alt=""
+          onClick={handleOnClick}
+        />
+      )}
 
       <div css={s.postContainer}>
         <div css={s.postTitle} onClick={handleOnClick}>

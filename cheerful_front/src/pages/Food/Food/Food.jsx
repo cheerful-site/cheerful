@@ -1,10 +1,11 @@
 /**@jsxImportSource @emotion/react */
 import { useState } from "react";
-import Footer from "../../components/Footer/Footer";
-import noImage from "../../icons/Frame2.png";
+import Footer from "../../../components/Footer/Footer";
+import noImage from "../../../../logo/Frame_2_1.png";
 import * as s from "./styles";
-import useFoodListQuery from "../../queries/FoodQuery/useFoodListQuery";
-import PageNation from "../../components/PageNation/PageNation";
+import useFoodListQuery from "../../../queries/FoodQuery/useFoodListQuery";
+import PageNation from "../../../components/PageNation/PageNation";
+import { baseURL } from "../../../api/axios/axios";
 
 function Food(props) {
   const [page, setPage] = useState(1);
@@ -39,8 +40,11 @@ function Food(props) {
 
         <div css={s.foodContainer}>
           {foodList?.map((food) => (
-            <div key={food.id}>
-              <img src={noImage} alt="" />
+            <div key={food.foodId}>
+              <img
+                src={`${baseURL}/upload/food/${food.foodImgs[0].imgPath}`}
+                alt=""
+              />
               <div>
                 <span>{food.title}</span>
                 <span>{food.price.toLocaleString()}원</span>

@@ -1,11 +1,12 @@
 /**@jsxImportSource @emotion/react */
 import { Link, useParams } from "react-router-dom";
-import Footer from "../../components/Footer/Footer";
+import Footer from "../../../components/Footer/Footer";
 import * as s from "./styles";
-import CategoryComponent from "../../components/CategoryComponent/CategoryComponent";
-import useNoticeListQuery from "../../queries/NoticeQuery/useNoticeListQuery";
+import CategoryComponent from "../../../components/CategoryComponent/CategoryComponent";
+import useNoticeListQuery from "../../../queries/NoticeQuery/useNoticeListQuery";
 import { useState } from "react";
-import PageNation from "../../components/PageNation/PageNation";
+import PageNation from "../../../components/PageNation/PageNation";
+import Post from "../../../components/Post/Post";
 
 function Notice(props) {
   const { category } = useParams();
@@ -43,15 +44,19 @@ function Notice(props) {
       </div>
 
       <div css={s.noticePostContainer}>
-        {noticeList?.map((post) => (
-          <div key={post.noticeId} css={s.noticePost}>
-            <div>{post.title}</div>
-            <div css={s.noticeAuthor}>
-              <span>{post?.user.name}</span>
-              <span>{post.createdAt.substring(0, 10)}</span>
-            </div>
-          </div>
-        ))}
+        {parseInt(category) === 1
+          ? noticeList?.map((post) => (
+              <div key={post.noticeId} css={s.noticePost}>
+                <div>{post.title}</div>
+                <div css={s.noticeAuthor}>
+                  <span>{post?.user.name}</span>
+                  <span>{post.createdAt.substring(0, 10)}</span>
+                </div>
+              </div>
+            ))
+          : noticeList?.map((post) => (
+              <Post key={post.noticeId} content={post} category={category} />
+            ))}
       </div>
       <PageNation
         page={page}
