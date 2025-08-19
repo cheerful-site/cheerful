@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class NoticeController {
 
-//    private final NoticeService noticeService;
+    private final NoticeService noticeService;
+
+    //    private final NoticeService noticeService;
 //    private final AdminService adminService;
 //
 //    /*
@@ -25,14 +27,17 @@ public class NoticeController {
 //        return ResponseEntity.ok(ResponseDto.success("공지사항 글을 등록하였습니다."));
 //    }
 //
-//    /*
-//        공지사항 페이징 목록 조회
-//     */
-//    @GetMapping
-//    public ResponseEntity<ResponseDto<?>> getNotices() {
-//        // 페이지네이션
-//        return ResponseEntity.ok(ResponseDto.success(null));
-//    }
+    /*
+        공지사항 페이징 목록 조회
+     */
+    @GetMapping
+    public ResponseEntity<ResponseDto<?>> getNotices(@RequestParam Integer page, @RequestParam Integer size, @PathVariable Integer categoryId) {
+        // 페이지네이션
+        System.out.println(page);
+        System.out.println(size);
+        System.out.println(categoryId);
+        return ResponseEntity.ok(ResponseDto.success(noticeService.getNoticeList(page, size, categoryId)));
+    }
 //
 //    /*
 //        특정 공지사항 글에 좋아요 추가
