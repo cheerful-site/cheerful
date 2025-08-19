@@ -2,17 +2,18 @@
 import { useEffect, useState } from "react";
 import * as s from "./styles";
 import { FaRegTrashAlt } from "react-icons/fa";
+import PageNation from "../PageNation/PageNation";
+import { usePageStore } from "../../stores/usePageStore";
 
-function DataTable({ isCheckBoxEnabled, cols, rows }) {
+function DataTable({ isCheckBoxEnabled, cols, rows, pagenation }) {
   const [newRows, setNewRows] = useState([]);
-
-  console.log(rows);
+  const { page, setPage } = usePageStore();
 
   useEffect(() => {
     let newRows = [];
 
-    for (let i = 0; i < rows.length; i++) {
-      //th 순서 정렬
+    for (let i = 0; i < rows?.length; i++) {
+      //rows 순서 정렬
       const entries = Object.entries(rows[i]);
       let newRow = [];
       for (let j = 0; j < cols.length; j++) {
@@ -21,6 +22,7 @@ function DataTable({ isCheckBoxEnabled, cols, rows }) {
           // console.log(key, value);
           if (cols[j].field === key) {
             newRow = [...newRow, { field: key, value: value }];
+            // console.log(newRow);
           }
         }
       }
@@ -32,40 +34,51 @@ function DataTable({ isCheckBoxEnabled, cols, rows }) {
   const handleDeleteOnClick = () => {};
 
   return (
-    <table css={s.manageTable}>
-      <thead>
-        <tr css={s.TableHeader}>
-          {isCheckBoxEnabled && (
-            <th>
-              <input type="checkbox" name="" id="" />
-            </th>
-          )}
-          {cols.map((col, index) => (
-            <th key={index} css={s.thAndTd(col.size)}>
-              {col.label}
-            </th>
-          ))}
-          <th>Del</th>
-        </tr>
-      </thead>
-      <tbody>
-        {newRows.map((row, index) => (
-          <tr key={index} css={s.rows}>
+    <>
+      <table css={s.manageTable}>
+        <thead>
+          <tr css={s.TableHeader}>
             {isCheckBoxEnabled && (
-              <td>
-                <input type="checkbox" name="" id="" value={row.checked} />
-              </td>
+              <th>
+                <input type="checkbox" name="" id="" />
+              </th>
             )}
-            {row.map((row, index) => (
-              <td css={s.thAndTd(cols[index].size)}>{row.value}</td>
+            {cols.map((col, index) => (
+              <th key={index} css={s.thAndTd(col.size)}>
+                {col.label}
+              </th>
             ))}
-            <td onClick={handleDeleteOnClick}>
-              <FaRegTrashAlt />
-            </td>
+            <th css={s.deleteButton}>Del</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {newRows.map((row, index) => (
+            <tr key={index} css={s.rows}>
+              {isCheckBoxEnabled && (
+                <td>
+                  <input type="checkbox" name="" id="" value={row.checked} />
+                </td>
+              )}
+              {row.map((row, index) => (
+                <td key={index} css={s.thAndTd(cols[index].size)}>
+                  {row.value}
+                </td>
+              ))}
+              <td css={s.deleteButton} onClick={handleDeleteOnClick}>
+                <FaRegTrashAlt />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <PageNation
+        page={page}
+        setPage={setPage}
+        size={pagenation?.size}
+        totalElements={pagenation?.totalElements}
+        totalPage={pagenation?.totalPages}
+      />
+    </>
   );
 }
 

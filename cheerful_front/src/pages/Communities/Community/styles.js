@@ -62,5 +62,5 @@ export const postContainer = css`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin: 4rem 0;
+  margin-top: 4rem;
 `;

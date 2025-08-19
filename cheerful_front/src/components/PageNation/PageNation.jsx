@@ -3,7 +3,7 @@ import * as s from "./styles";
 import { RxDoubleArrowLeft, RxDoubleArrowRight } from "react-icons/rx";
 
 function PageNation({ page, size, totalElements, totalPage, setPage }) {
-  const numPages = Math.ceil(totalElements / size);
+  const numPages = Math.ceil(totalElements / size) || [];
   // console.log(page);
 
   return (
