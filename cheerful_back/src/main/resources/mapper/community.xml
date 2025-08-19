@@ -95,7 +95,7 @@
                 cmt.community_id as cmt_community_id,
                 cmt.parent_comment_id,
                 cmt.parent_user_id,
-                cmt.user_id,
+                cmt.user_id as cmt_user_id,
                 cmt.content,
                 cmt.created_at as cmt_created_at,
 
@@ -211,7 +211,7 @@
             cmt.community_id as cmt_community_id,
             cmt.parent_comment_id,
             cmt.parent_user_id,
-            cmt.user_id,
+            cmt.user_id as cmt_user_id,
             cmt.content,
             cmt.created_at as cmt_created_at,
 
