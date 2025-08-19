@@ -5,6 +5,7 @@ import { RxDoubleArrowLeft, RxDoubleArrowRight } from "react-icons/rx";
 function PageNation({ page, size, totalElements, totalPage, setPage }) {
   const numPages = Math.ceil(totalElements / size);
   console.log(page);
+
   return (
     <div css={s.layout}>
       <RxDoubleArrowLeft
@@ -17,7 +18,7 @@ function PageNation({ page, size, totalElements, totalPage, setPage }) {
         .map((_, i) => (
           <button
             key={i + 1}
-            css={s.pageNumberButton}
+            css={s.pageNumberButton(parseInt(page))}
             onClick={() => setPage(i + 1)}
             aria-current={page === i + 1 ? "page" : undefined}>
             {i + 1}

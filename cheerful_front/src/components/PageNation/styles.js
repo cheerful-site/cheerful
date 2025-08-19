@@ -25,10 +25,25 @@ export const pageRightButton = (isTrue) => css`
   cursor: pointer;
 `;
 
-export const pageNumberButton = css`
+export const pageNumberButton = (page) => css`
   border: none;
   font-size: 1.6rem;
   font-weight: 500;
   background-color: #f2f4f8;
+  color: #22222230;
   cursor: pointer;
+
+  &:hover {
+    color: #000000;
+    font-size: 2rem;
+    cursor: pointer;
+    transform: translateY(-2px);
+  }
+
+  &[aria-current] {
+    color: #222222;
+    font-weight: bold;
+    cursor: revert;
+    transform: revert;
+  }
 `;

@@ -39,7 +39,7 @@ function Post({ content, category }) {
           <div>
             <span>{content.user.name}</span>
           </div>
-          <div>
+          <div css={s.likeAndViews}>
             <div>
               <AiFillLike />
               <span>{content.likeCount}</span>
