@@ -15,18 +15,18 @@ import org.springframework.stereotype.Service;
 public class FoodService {
 
   private final FileService fileService;
-  private FoodMapper foodMapper;
+  private final FoodMapper foodMapper;
 
   /*
     food 글 등록 (admin)
    */
-  public void register(FoodRegisterReqDto dto) {
-    List<String> uploadFilePath = dto.getFiles()
-        .stream()
-        .map(file -> "/food/" + fileService.uploadFile(file, "/food"))
-        .peek(newFileName -> System.out.println(newFileName))
-        .collect(Collectors.toList());
-  }
+//  public void register(FoodRegisterReqDto dto) {
+//    List<String> uploadFilePath = dto.getFiles()
+//        .stream()
+//        .map(file -> "/food/" + fileService.uploadFile(file, "/food"))
+//        .peek(newFileName -> System.out.println(newFileName))
+//        .collect(Collectors.toList());
+//  }
 
   /*
     food 페이징 목록 조회
