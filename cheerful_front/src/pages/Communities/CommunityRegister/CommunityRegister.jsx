@@ -10,7 +10,7 @@ import { baseURL } from "../../../api/axios/axios";
 
 function CommunityRegister(props) {
   const [inputValue, setInputValue] = useState({
-    communityCategoryId: "",
+    communityCategoryId: "2",
     title: "",
     content: "",
   });

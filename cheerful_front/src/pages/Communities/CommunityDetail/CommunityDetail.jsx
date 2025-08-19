@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import useCommunityDetailQuery from "../../../queries/CommunityQuery/useCommunityDetail";
 import Footer from "../../../components/Footer/Footer";
 import usePrincipalQuery from "../../../queries/PrincipalQuery/usePrincipalQuery";
+import { baseURL } from "../../../api/axios/axios";
 
 function CommunityDetail(props) {
   const params = useParams();
@@ -50,9 +51,17 @@ function CommunityDetail(props) {
                 </div>
               </div>
               <div>{detailContent?.content}</div>
-              {
-                
-              }
+              {detailContent?.communityImgs ? (
+                detailContent?.communityImgs?.map((img, index) => (
+                  <img
+                    key={index}
+                    src={`${baseURL}/upload${img.imgPath}`}
+                    alt=""
+                  />
+                ))
+              ) : (
+                <></>
+              )}
             </div>
 
             <div css={s.postLike}>

@@ -31,7 +31,11 @@ function DataTable({ isCheckBoxEnabled, cols, rows, pagenation }) {
     setNewRows(newRows);
   }, [rows]);
 
-  const handleDeleteOnClick = () => {};
+  console.log(newRows);
+
+  const handleDeleteOnClick = (id) => {
+    console.log(id);
+  };
 
   return (
     <>
@@ -64,7 +68,9 @@ function DataTable({ isCheckBoxEnabled, cols, rows, pagenation }) {
                   {row.value}
                 </td>
               ))}
-              <td css={s.deleteButton} onClick={handleDeleteOnClick}>
+              <td
+                css={s.deleteButton}
+                onClick={() => handleDeleteOnClick(row[0].value)}>
                 <FaRegTrashAlt />
               </td>
             </tr>
