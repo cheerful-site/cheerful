@@ -50,7 +50,7 @@
 <!--    user 전용-->
     <select id="findAllByOptions" resultMap="FoodMap">
         select
-            ft.food_id,
+            ft.food_id as ft_food_id,
             ft.food_category_id,
             ft.user_id as ft_usr_id,
             ft.food_title,
@@ -58,8 +58,19 @@
             ft.food_price,
             ft.created_at,
 
+            ut.user_id as ut_user_id,
+            ut.username,
+            ut.password,
+            ut.name,
+            ut.email,
+            ut.profile_img_path,
+            ut.role,
+            ut.provider,
+            ut.provider_id,
+            ut.created_at as ut_created_at,
+
             fit.food_img_id,
-            fit.food_id,
+            fit.food_id as fit_food_id,
             fit.seq,
             fit.`img_path`,
 
@@ -68,7 +79,7 @@
             ifnull(fcc.comments_count, 0) as comments_count
         from
             food_tb ft
-<!--                left outer join user_tb ut on(ut.user_id = ft.user_id)-->
+            left outer join user_tb ut on(ut.user_id = ft.user_id)
             left outer join food_img_tb fit on(fit.food_id = ft.food_id)
             left outer join food_like_tb flt on(flt.food_id = ft.food_id)
             left outer join food_category_tb fct on(fct.food_category_id = ft.food_category_id)
