@@ -57,7 +57,7 @@
     </resultMap>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="communityId">
-        insert into community_tb(community_id, community_category_id, user_id, title, content, created_at)
+        insert into community_tb(community_id, community_category_id, user_id, community_title, community_content, created_at)
         values (default, #{communityCategoryId}, #{userId}, #{title}, #{content}, now())
     </insert>
 
