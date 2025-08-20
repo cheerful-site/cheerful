@@ -33,9 +33,9 @@ public class NoticeController {
     @GetMapping("/{categoryId}")
     public ResponseEntity<ResponseDto<?>> getNotices(@RequestParam Integer page, @RequestParam Integer size, @PathVariable Integer categoryId) {
         // 페이지네이션
-        System.out.println(page);
-        System.out.println(size);
-        System.out.println(categoryId);
+//        System.out.println(page);
+//        System.out.println(size);
+//        System.out.println(categoryId);
         return ResponseEntity.ok(ResponseDto.success(noticeService.getNoticeList(page, size, categoryId)));
     }
 //

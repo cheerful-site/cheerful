@@ -26,7 +26,7 @@ public class NoticeService {
                 .noticeCategoryId(categoryId)
                 .build();
 
-        List<Notice> contents = noticeMapper.findAllBySearchOptions(searchOption);
+        List<Notice> contents = noticeMapper.findAllByOptions(searchOption);
         Integer totalElements = noticeMapper.getCountOfOptions(searchOption);
         Integer totalPages = (int) Math.ceil(totalElements.longValue() / size.doubleValue());
         Boolean isLast = page.equals(totalPages);
