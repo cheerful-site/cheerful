@@ -7,6 +7,7 @@ import useNoticeListQuery from "../../../queries/NoticeQuery/useNoticeListQuery"
 import CategoryComponent from "../../../components/CategoryComponent/CategoryComponent";
 import PageNation from "../../../components/PageNation/PageNation";
 import { reqNoticeViews } from "../../../api/noticeApi/noticeApi";
+import Post from "../../../components/Post/Post";
 
 function Notice(props) {
   const { category } = useParams();
@@ -25,7 +26,7 @@ function Notice(props) {
   ];
 
   const handleOnClick = (categoryId, noticeId) => {
-    // console.log(categoryId, noticeId);
+    console.log(categoryId, noticeId);
     reqNoticeViews(categoryId, noticeId);
     navigate(`/notice/${categoryId}/${noticeId}`);
   };
@@ -51,20 +52,24 @@ function Notice(props) {
       </div>
 
       <div css={s.noticePostContainer}>
-        {noticeList?.map((post) => (
-          <div key={post.noticeId} css={s.noticePost}>
-            <div
-              onClick={() =>
-                handleOnClick(post.noticeId, post.noticeCategoryId)
-              }>
-              {post.title}
-            </div>
-            <div css={s.noticeAuthor}>
-              <span>{post?.user.name}</span>
-              <span>{post.createdAt.substring(0, 10)}</span>
-            </div>
-          </div>
-        ))}
+        {parseInt(category) === 1
+          ? noticeList?.map((post) => (
+              <div key={post.noticeId} css={s.noticePost}>
+                <div
+                  onClick={() =>
+                    handleOnClick(post.noticeId, post.noticeCategoryId)
+                  }>
+                  {post.title}
+                </div>
+                <div css={s.noticeAuthor}>
+                  <span>{post?.user.name}</span>
+                  <span>{post.createdAt.substring(0, 10)}</span>
+                </div>
+              </div>
+            ))
+          : noticeList?.map((post) => (
+              <Post content={post} category={category} />
+            ))}
       </div>
       <PageNation
         page={page}

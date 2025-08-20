@@ -7,3 +7,217 @@ export const layout = css`
   width: 100%;
   background-color: #f2f4f8;
 `;
+
+export const foodContainer = css`
+  display: flex;
+  align-items: center;
+  border-radius: 1.5rem;
+  margin-top: 10rem;
+  width: 110rem;
+  height: 43rem;
+  background-color: #ffffff;
+`;
+
+export const foodImgContainer = css`
+  & > img {
+    margin-left: 10rem;
+    width: 30rem;
+    height: 30rem;
+  }
+`;
+
+export const contentContainer = css`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-left: 8rem;
+  width: 50rem;
+  height: 100%;
+
+  & > div:nth-of-type(1) > span {
+    font-size: 1.2rem;
+    color: #222222;
+  }
+`;
+
+export const contentLayout = css`
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  border-bottom: 0.15rem solid #22222230;
+  width: 100%;
+`;
+
+export const contentTitle = css`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+
+  & > span {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #222222;
+  }
+
+  & > div > img {
+    cursor: pointer;
+  }
+`;
+
+export const contentUser = css`
+  display: flex;
+  flex-direction: column;
+  & > span {
+    font-size: 1.2rem;
+    font-weight: 350;
+    color: #222222;
+  }
+
+  & > span:last-of-type {
+    margin: 0.5rem 0;
+  }
+`;
+
+export const foodPrice = css`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  & > span {
+    margin: 2.5rem 0;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #222222;
+  }
+
+  & > button {
+    border: 0.2rem solid #ffc421;
+    border-radius: 1rem;
+    width: 22rem;
+    height: 4rem;
+    font-size: 1.4rem;
+    font-weight: 900;
+    color: #ffc421;
+    background-color: #ffffff;
+
+    &:hover {
+      color: #ffffff;
+      background-color: #ffc421;
+    }
+  }
+`;
+
+export const commentsRegister = css`
+  box-sizing: border-box;
+  border-radius: 1.5rem;
+  margin: 3rem 0;
+  padding: 3rem;
+  width: 110rem;
+  height: 24rem;
+  background-color: #ffffff;
+`;
+
+export const imgListContainer = css`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  box-sizing: border-box;
+  width: 100%;
+  height: 5rem;
+  background-color: #ffffff;
+`;
+
+export const imgContainer = css`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 1rem;
+  box-sizing: border-box;
+  border: 0.1rem solid #22222250;
+  border-radius: 1rem;
+  width: 5rem;
+  height: 5rem;
+  overflow: hidden;
+`;
+
+export const plus = css`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+
+  & > svg {
+    color: #22222260;
+    font-size: 3rem;
+  }
+`;
+
+export const imgBox = (url) => css`
+  width: 100%;
+  height: 100%;
+  background-image: url(${url});
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  &:hover > div {
+    opacity: 1;
+  }
+`;
+
+export const fixButton = css`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  font-size: 2rem;
+  opacity: 0;
+
+  & > svg {
+    margin: 0.5rem;
+  }
+`;
+
+export const registerTextArea = css`
+  margin-top: 1rem;
+  width: 100%;
+  height: 10rem;
+
+  & > textarea {
+    box-sizing: border-box;
+    border: none;
+    border-radius: 0 0 1.5rem 1.5rem;
+    width: 100%;
+    height: 100%;
+    font-size: 1.4rem;
+    color: #22222260;
+    outline: none;
+    resize: none;
+  }
+`;
+
+export const buttonLayout = css`
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+`;
+
+export const registerButton = css`
+  margin-right: 2rem;
+  margin-bottom: 2rem;
+  border: none;
+  outline: none;
+  font-size: 1.4rem;
+  font-weight: 400;
+  color: #22222280;
+  background-color: #ffffff;
+  cursor: pointer;
+`;
+
+export const commentsContainer = css`
+  width: 100%;
+  height: 110rem;
+`;
