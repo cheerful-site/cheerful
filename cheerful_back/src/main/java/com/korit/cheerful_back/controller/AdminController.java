@@ -83,4 +83,13 @@ public class AdminController {
         adminService.deleteFood(foodIds);
         return ResponseEntity.ok(ResponseDto.success("food 정보를 삭제하였습니다."));
     }
+
+    /*
+        notice 조회
+     */
+    @GetMapping("/notice/{categoryId}")
+    public ResponseEntity<ResponseDto<?>> managerNotice(@RequestParam Integer page, @RequestParam Integer size
+        , @PathVariable Integer categoryId, @RequestParam(required = false) String searchText) {
+        return ResponseEntity.ok(ResponseDto.success(adminService.getNoticeSearchList(page, size, categoryId, searchText)));
+    }
 }
