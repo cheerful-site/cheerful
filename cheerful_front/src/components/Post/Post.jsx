@@ -16,8 +16,6 @@ function Post({ content, category }) {
     navigate(`/community/${category}/${content.communityId}`);
   };
 
-  console.log(content?.communityImgs[0]?.imgPath);
-
   return (
     <div css={s.postLayout}>
       <img

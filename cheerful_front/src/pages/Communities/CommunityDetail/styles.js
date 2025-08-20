@@ -67,6 +67,7 @@ export const postLike = css`
   display: flex;
   justify-content: center;
   margin-top: 10rem;
+  margin-bottom: 4rem;
   width: 100%;
 
   & > span {
@@ -82,17 +83,16 @@ export const postLike = css`
   }
 `;
 
-export const commentContainer = css`
+export const commentRegisterContainer = css`
   display: flex;
   flex-direction: column;
-  margin: 4rem 0;
+  margin-bottom: 4rem;
 `;
 
 export const commentRegister = css`
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-  margin-bottom: 2rem;
   padding: 2rem;
   border: 0.1rem solid #22222230;
   border-radius: 1rem;
@@ -127,4 +127,68 @@ export const commentRegister = css`
       cursor: pointer;
     }
   }
+`;
+
+export const commentsLayout = css`
+  display: flex;
+  flex-direction: column;
+  width: 95rem;
+`;
+
+export const commentsContainer = css`
+  display: flex;
+  flex-direction: column;
+  margin: 3rem 0;
+  width: 100%;
+`;
+
+export const commentUser = css`
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  & > img {
+    margin-right: 1rem;
+    border-radius: 50%;
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  & > span {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #22222290;
+  }
+`;
+
+export const commentContent = css`
+  border-left: 0.1rem solid #22222230;
+  margin-bottom: 2rem;
+  padding-left: 3rem;
+  width: 100%;
+
+  & > span {
+    font-size: 1.6rem;
+    color: #444444;
+  }
+
+  & > div {
+    margin-top: 0.5rem;
+  }
+
+  & > div > span {
+    margin-right: 0.5rem;
+    font-size: 1.2rem;
+    color: #22222250;
+  }
+
+  & > div > span:nth-of-type(3) {
+    margin-left: 0.5rem;
+    cursor: pointer;
+  }
+`;
+
+export const subComments = css`
+  padding-left: 6rem;
+  width: 100%;
 `;
