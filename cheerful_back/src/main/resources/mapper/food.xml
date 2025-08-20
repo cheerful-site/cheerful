@@ -45,7 +45,21 @@
         <result property="imgPath" column="img_path" />
     </resultMap>
 
-<!--    <resultMap id="FoodAdminRowMap" type="com.korit.cheerful_back.domain.food."-->
+    <resultMap id="FoodAdminRowMap" type="com.korit.cheerful_back.domain.food.FoodAdminRow">
+        <id     property="foodId"           column="food_id"/>
+        <result property="foodCategoryId"   column="food_category_id"/>
+        <result property="userId"           column="ft_user_id"/>
+        <result property="title"        column="food_title"/>
+        <result property="content"      column="food_content"/>
+        <result property="price"        column="food_price"/>
+        <result property="createdAt"        column="created_at"/>
+        <result property="foodCategoryName" column="food_category_name"/>
+        <result property="username"         column="username"/>
+        <result property="name"             column="name"/>
+        <!-- "/community/1_1.jpg,/community/1_2.jpg" 형태 -->
+        <result property="imgPaths"         column="img_paths"/>
+    </resultMap>
+
 
     <!--    user 전용-->
     <select id="findAllByOptions" resultMap="FoodMap">
@@ -151,8 +165,8 @@
             ft.food_id = #{foodId}
     </select>
 
-<!--    admin 전용-->
-    <select id="findAllBySearchOption" resultMap="FoodMap">
+    <!--    admin 전용-->
+    <select id="findAllBySearchOption" parameterType="com.korit.cheerful_back.domain.food.FoodSearchOption" resultMap="FoodAdminRowMap">
         select
             ft.food_id,
             ft.food_category_id,
@@ -161,43 +175,99 @@
             ft.food_content,
             ft.food_price,
             ft.created_at,
-
             fct.food_category_name,
 
             ut.user_id as ut_user_id,
             ut.username,
             ut.name,
-
-            fit.food_img_id,
-            fit.food_id as fit_food_id,
-            fit.seq,
-            fit.`img_path`
-        from
-            food_tb ft
-            left outer join user_tb ut on(ut.user_id = ft.user_id)
-            left outer join food_img_tb fit on(fit.food_id = ft.food_id)
-            left outer join food_category_tb fct on(fct.food_category_id = ft.food_category_id)
-        where
-            ft.food_title like concat('%', #{searchText}, '%')
-            or ft.food_content like concat('%', #{searchText}, '%')
-            or ut.name like concat('%', #{searchText}, '%')
-        order by
-            ft.food_id
-        limit #{startIndex}, #{size}
+            COALESCE(imgs.img_paths, '') as img_paths
+        from (
+            select ft1.food_id
+            from food_tb ft1
+            left join user_tb ut1 on ut1.user_id = ft1.user_id
+            <where>
+                <if test="searchText != null and searchText != ''">
+                    ( ft1.food_title like concat('%', #{searchText}, '%')
+                    or ft1.food_content like concat('%', #{searchText}, '%')
+                    or ut1.name like concat('%', #{searchText}, '%') )
+                </if>
+            </where>
+            order by ft1.food_id
+            limit #{startIndex}, #{size}
+            ) page
+        join food_tb ft on ft.food_id = page.food_id
+        left join user_tb ut on ut.user_id = ft.user_id
+        left join food_category_tb fct on fct.food_category_id = ft.food_category_id
+        left join (
+            select
+                food_id,
+                group_concat(img_path order by seq separator ',') as img_paths
+            from food_img_tb
+            group by food_id
+        ) imgs on imgs.food_id = ft.food_id
+        order by ft.food_id
     </select>
 
-    <select id="getCountOfSearchOption" resultType="java.lang.Integer">
-        select
-            count(DISTINCT ft.food_id)
-        from
-            food_tb ft
-            left outer join user_tb ut on(ut.user_id = ft.user_id)
-            left outer join food_category_tb fct on(fct.food_category_id = ft.food_category_id)
-        where
-            ft.food_title like concat('%', #{searchText}, '%')
-            or ft.food_content like concat('%', #{searchText}, '%')
-            or ut.name like concat('%', #{searchText}, '%')
+    <select id="getCountOfSearchOption" parameterType="com.korit.cheerful_back.domain.food.FoodSearchOption" resultType="int">
+        select count(DISTINCT ft.food_id)
+        from food_tb ft
+        left join user_tb ut on ut.user_id = ft.user_id
+        <where>
+            <if test="searchText != null and searchText != ''">
+                ( ft.food_title like concat('%', #{searchText}, '%')
+                or ft.food_content like concat('%', #{searchText}, '%')
+                or ut.name like concat('%', #{searchText}, '%') )
+            </if>
+        </where>
     </select>
+
+    <!--    admin 전용-->
+<!--    <select id="findAllBySearchOption" resultMap="FoodMap">-->
+<!--        select-->
+<!--            ft.food_id,-->
+<!--            ft.food_category_id,-->
+<!--            ft.user_id as ft_user_id,-->
+<!--            ft.food_title,-->
+<!--            ft.food_content,-->
+<!--            ft.food_price,-->
+<!--            ft.created_at,-->
+
+<!--            fct.food_category_name,-->
+
+<!--            ut.user_id as ut_user_id,-->
+<!--            ut.username,-->
+<!--            ut.name,-->
+
+<!--            fit.food_img_id,-->
+<!--            fit.food_id as fit_food_id,-->
+<!--            fit.seq,-->
+<!--            fit.`img_path`-->
+<!--        from-->
+<!--            food_tb ft-->
+<!--            left outer join user_tb ut on(ut.user_id = ft.user_id)-->
+<!--            left outer join food_img_tb fit on(fit.food_id = ft.food_id)-->
+<!--            left outer join food_category_tb fct on(fct.food_category_id = ft.food_category_id)-->
+<!--        where-->
+<!--            ft.food_title like concat('%', #{searchText}, '%')-->
+<!--            or ft.food_content like concat('%', #{searchText}, '%')-->
+<!--            or ut.name like concat('%', #{searchText}, '%')-->
+<!--        order by-->
+<!--            ft.food_id-->
+<!--        limit #{startIndex}, #{size}-->
+<!--    </select>-->
+
+<!--    <select id="getCountOfSearchOption" resultType="java.lang.Integer">-->
+<!--        select-->
+<!--            count(DISTINCT ft.food_id)-->
+<!--        from-->
+<!--            food_tb ft-->
+<!--            left outer join user_tb ut on(ut.user_id = ft.user_id)-->
+<!--            left outer join food_category_tb fct on(fct.food_category_id = ft.food_category_id)-->
+<!--        where-->
+<!--            ft.food_title like concat('%', #{searchText}, '%')-->
+<!--            or ft.food_content like concat('%', #{searchText}, '%')-->
+<!--            or ut.name like concat('%', #{searchText}, '%')-->
+<!--    </select>-->
 
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="foodId">

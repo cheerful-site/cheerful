@@ -5,6 +5,7 @@ import com.korit.cheerful_back.domain.community.CommunityMapper;
 import com.korit.cheerful_back.domain.community.CommunitySearchOption;
 import com.korit.cheerful_back.domain.communityImg.CommunityImg;
 import com.korit.cheerful_back.domain.food.Food;
+import com.korit.cheerful_back.domain.food.FoodAdminRow;
 import com.korit.cheerful_back.domain.food.FoodMapper;
 import com.korit.cheerful_back.domain.food.FoodSearchOption;
 import com.korit.cheerful_back.domain.foodImg.FoodImg;
@@ -151,7 +152,7 @@ public class AdminService {
     /*
         admin 전용 food 목록 조회
      */
-    public PaginationRespDto<Food> getFoodSearchList(Integer page, Integer size, String searchText) {
+    public PaginationRespDto<FoodAdminRow> getFoodSearchList(Integer page, Integer size, String searchText) {
         FoodSearchOption searchOption = FoodSearchOption.builder()
                 .startIndex((page - 1) * size)
                 .endIndex(size * page)
@@ -159,12 +160,12 @@ public class AdminService {
                 .searchText(searchText)
                 .build();
 
-        List<Food> contents = foodMapper.findAllBySearchOption(searchOption);
+        List<FoodAdminRow> contents = foodMapper.findAllBySearchOption(searchOption);
         Integer totalElements = foodMapper.getCountOfSearchOption(searchOption);
         Integer totalPages = (int) Math.ceil(totalElements.longValue() / size.doubleValue());
         Boolean isLast = page >= totalPages;
 
-        return PaginationRespDto.<Food>builder()
+        return PaginationRespDto.<FoodAdminRow>builder()
                 .content(contents)
                 .totalElements(totalElements)
                 .totalPages(totalPages)
