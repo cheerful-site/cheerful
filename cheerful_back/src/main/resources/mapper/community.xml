@@ -183,7 +183,7 @@
         select
             ct.community_id,
             ct.community_category_id,
-            ct.user_id as ct_user_id,
+            ct.user_id,
             ct.community_title,
             ct.community_content,
             ct.created_at,
@@ -302,7 +302,7 @@
     <select id="findAllBySearchOption" resultMap="CommunityMap">
         select
             ct.community_id,
-            ct.user_id as ct_user_id,
+            ct.user_id,
             ct.community_title,
             ct.community_content,
             ct.created_at,
@@ -337,6 +337,7 @@
             <if test="searchText != null and searchText != ''">
                 and (
                     ct.community_title like concat('%', #{searchText}, '%')
+                    or ut.name like concat('%', #{searchText}, '%')
                 )
             </if>
         </where>
@@ -367,6 +368,7 @@
             <if test="searchText != null and searchText != ''">
                 and (
                     ct.community_title like concat('%', #{searchText}, '%')
+                    or ut.name like concat('%', #{searchText}, '%')
                 )
             </if>
         </where>

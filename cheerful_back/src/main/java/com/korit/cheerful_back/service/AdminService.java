@@ -6,6 +6,8 @@ import com.korit.cheerful_back.domain.community.CommunitySearchOption;
 import com.korit.cheerful_back.domain.food.Food;
 import com.korit.cheerful_back.domain.food.FoodMapper;
 import com.korit.cheerful_back.domain.food.FoodSearchOption;
+import com.korit.cheerful_back.domain.foodImg.FoodImg;
+import com.korit.cheerful_back.domain.foodImg.FoodImgMapper;
 import com.korit.cheerful_back.domain.notice.Notice;
 import com.korit.cheerful_back.domain.notice.NoticeMapper;
 import com.korit.cheerful_back.domain.notice.NoticeSearchOption;
@@ -14,9 +16,14 @@ import com.korit.cheerful_back.domain.user.UserMapper;
 import com.korit.cheerful_back.domain.user.UserSearchOption;
 import com.korit.cheerful_back.dto.admin.AdminLoginReqDto;
 import com.korit.cheerful_back.dto.admin.TokenDto;
+import com.korit.cheerful_back.dto.food.FoodModifyReqDto;
+import com.korit.cheerful_back.dto.food.FoodRegisterReqDto;
 import com.korit.cheerful_back.dto.response.PaginationRespDto;
 import com.korit.cheerful_back.exception.auth.LoginException;
 import com.korit.cheerful_back.security.jwt.JwtUtil;
+import com.korit.cheerful_back.security.model.PrincipalUtil;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -33,7 +40,10 @@ public class AdminService {
     private final CommunityMapper communityMapper;
     private final UserMapper userMapper;
     private final FoodMapper foodMapper;
+    private final PrincipalUtil principalUtil;
+    private final FileService fileService;
     private final NoticeMapper noticeMapper;
+    private final FoodImgMapper foodImgMapper;
 
     public TokenDto login(AdminLoginReqDto dto) {
 
@@ -162,6 +172,46 @@ public class AdminService {
     @Transactional(rollbackFor = Exception.class)
     public void deleteFood(List<Integer> foodIds) {
         foodMapper.deleteByFoodIds(foodIds);
+    }
+
+    /*
+        food 글 등록
+   */
+    @Transactional(rollbackFor = Exception.class)
+    public void registerFood(FoodRegisterReqDto dto) {
+        List<String> uploadFilePath = dto.getFiles()
+            .stream()
+            .map(file -> "/food/" + fileService.uploadFile(file, "/food"))
+            .peek(newFileName -> System.out.println(newFileName))
+            .collect(Collectors.toList());
+
+        Integer userId = principalUtil.getPrincipalUser().getUser().getUserId();
+
+        Food food = Food.builder()
+            .userId(userId)
+            .title(dto.getTitle())
+            .content(dto.getContent())
+            .price(dto.getPrice())
+            .build();
+        foodMapper.insert(food);
+
+        AtomicInteger atomicInteger = new AtomicInteger(0);
+        List<FoodImg> foodImgs = uploadFilePath.stream()
+            .map(path -> FoodImg.builder()
+                .seq(atomicInteger.getAndIncrement() + 1)
+                .foodId(food.getFoodId())
+                .imgPath(path)
+                .build())
+            .collect(Collectors.toList());
+        foodImgMapper.insertMany(foodImgs);
+    }
+
+    /*
+        food 글 수정
+     */
+    public void modifyFood(FoodModifyReqDto dto) {
+        Food food = dto.toEntity();
+
     }
 
     /*

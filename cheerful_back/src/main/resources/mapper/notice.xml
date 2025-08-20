@@ -149,7 +149,8 @@
             left outer join notice_category_tb nct on(nct.notice_category_id = nt.notice_category_id)
         where
             nt.notice_category_id = #{noticeCategoryId}
-            and nt.notice_title like concat('%', #{searchText}, '%')
+            and (nt.notice_title like concat('%', #{searchText}, '%')
+                or ut.name like concat('%', #{searchText}, '%'))
         order by
             nt.notice_id
         limit #{startIndex}, #{size}
@@ -164,7 +165,8 @@
             left outer join notice_category_tb nct on(nct.notice_category_id = nt.notice_category_id)
         where
             nt.notice_category_id = #{noticeCategoryId}
-            and nt.notice_title like concat('%', #{searchText}, '%')
+            and (nt.notice_title like concat('%', #{searchText}, '%')
+                or ut.name like concat('%', #{searchText}, '%'))
     </select>
 
     <!--    게시글 클릭 시 -->

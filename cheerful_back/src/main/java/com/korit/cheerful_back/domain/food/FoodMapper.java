@@ -6,7 +6,6 @@ import java.util.List;
 
 @Mapper
 public interface FoodMapper {
-    int insert(Food food);
 
     // user전용 food
     List<Food> findAllByOptions(FoodSearchOption option);
@@ -15,5 +14,8 @@ public interface FoodMapper {
     // admin전용 food
     List<Food> findAllBySearchOption(FoodSearchOption foodSearchOption);
     int getCountOfSearchOption(FoodSearchOption foodSearchOption);
+
+    int insert(Food food);
+    int update(Food food);
     int deleteByFoodIds(List<Integer> foodIds);
 }

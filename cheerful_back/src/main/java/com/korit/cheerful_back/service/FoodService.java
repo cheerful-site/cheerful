@@ -1,32 +1,27 @@
 package com.korit.cheerful_back.service;
 
 import com.korit.cheerful_back.domain.food.Food;
+import com.korit.cheerful_back.domain.food.FoodLikeMapper;
 import com.korit.cheerful_back.domain.food.FoodMapper;
 import com.korit.cheerful_back.domain.food.FoodSearchOption;
+import com.korit.cheerful_back.domain.foodImg.FoodImg;
 import com.korit.cheerful_back.dto.food.FoodRegisterReqDto;
 import com.korit.cheerful_back.dto.response.PaginationRespDto;
+import com.korit.cheerful_back.security.model.PrincipalUtil;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class FoodService {
 
-  private final FileService fileService;
   private final FoodMapper foodMapper;
-
-  /*
-    food 글 등록 (admin)
-   */
-//  public void register(FoodRegisterReqDto dto) {
-//    List<String> uploadFilePath = dto.getFiles()
-//        .stream()
-//        .map(file -> "/food/" + fileService.uploadFile(file, "/food"))
-//        .peek(newFileName -> System.out.println(newFileName))
-//        .collect(Collectors.toList());
-//  }
+  private final FoodLikeMapper foodLikeMapper;
+  private final PrincipalUtil principalUtil;
 
   /*
     food 페이징 목록 조회
@@ -51,6 +46,22 @@ public class FoodService {
         .page(page)
         .size(size)
         .build();
+  }
+
+  /*
+        좋아요 추가
+     */
+  public void like(Integer foodId) {
+    Integer userId = principalUtil.getPrincipalUser().getUser().getUserId();
+    foodLikeMapper.insert(foodId, userId);
+  }
+
+  /*
+      좋아요 취소
+   */
+  public void disLike(Integer foodId) {
+    Integer userId = principalUtil.getPrincipalUser().getUser().getUserId();
+    foodLikeMapper.delete(foodId, userId);
   }
 
 }

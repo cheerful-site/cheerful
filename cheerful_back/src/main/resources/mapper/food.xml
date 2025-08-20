@@ -45,12 +45,8 @@
         <result property="imgPath" column="img_path" />
     </resultMap>
 
-    <insert id="insert" useGeneratedKeys="true" keyProperty="foodId">
-        insert into food_tb
-        values (default, #{foodCategoryId}, #{userId}, #{title}, #{content}, #{price}, now())
-    </insert>
 
-<!--    user 전용-->
+    <!--    user 전용-->
     <select id="findAllByOptions" resultMap="FoodMap">
         select
             *
@@ -126,14 +122,21 @@
 
             ut.user_id as ut_user_id,
             ut.username,
-            ut.name
+            ut.name,
+
+            fit.food_img_id,
+            fit.food_id as fit_food_id,
+            fit.seq,
+            fit.`img_path`
         from
             food_tb ft
             left outer join user_tb ut on(ut.user_id = ft.user_id)
+            left outer join food_img_tb fit on(fit.food_id = ft.food_id)
             left outer join food_category_tb fct on(fct.food_category_id = ft.food_category_id)
         where
             ft.food_title like concat('%', #{searchText}, '%')
             or ft.food_content like concat('%', #{searchText}, '%')
+            or ut.name like concat('%', #{searchText}, '%')
         order by
             ft.food_id
         limit #{startIndex}, #{size}
@@ -149,7 +152,24 @@
         where
             ft.food_title like concat('%', #{searchText}, '%')
             or ft.food_content like concat('%', #{searchText}, '%')
+            or ut.name like concat('%', #{searchText}, '%')
     </select>
+
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="foodId">
+        insert into food_tb
+        values (default, #{foodCategoryId}, #{userId}, #{title}, #{content}, #{price}, now())
+    </insert>
+
+    <update id="update">
+        update food_tb
+        set
+            food_category_id = #{foodCategoryId},
+            user_id = #{userId},
+            food_title = #{title},
+            food_content = #{content},
+            food_price = #{price},
+    </update>
 
     <delete id="deleteByFoodIds">
         delete from food_tb

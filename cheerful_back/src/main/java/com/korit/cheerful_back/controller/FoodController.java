@@ -32,22 +32,22 @@ public class FoodController {
     return ResponseEntity.ok(ResponseDto.success(foodService.getFoodList(page, size)));
   }
 
-//  /*
-//    특정 food 글에 좋아요 추가
-//   */
-//  @PostMapping("/{foodId}/like")
-//  public ResponseEntity<ResponseDto<?>> getLike(@PathVariable Integer foodId) {
-//    communityService.like(foodId);
-//    return ResponseEntity.ok(ResponseDto.success("좋아요"));
-//  }
-//
-//  /*
-//      특정 food 글을 좋아요 취소
-//   */
-//  @DeleteMapping("/{foodId}/disLike")
-//  public ResponseEntity<ResponseDto<?>> getDisLike(@PathVariable Integer foodId) {
-//    communityService.disLike(foodId);
-//    return ResponseEntity.ok(ResponseDto.success("좋아요 취소"));
-//  }
+  /*
+    특정 food 글에 좋아요 추가
+   */
+  @PostMapping("/{foodId}/like")
+  public ResponseEntity<ResponseDto<?>> getLike(@PathVariable Integer foodId) {
+    foodService.like(foodId);
+    return ResponseEntity.ok(ResponseDto.success("좋아요"));
+  }
+
+  /*
+      특정 food 글을 좋아요 취소
+   */
+  @DeleteMapping("/{foodId}/disLike")
+  public ResponseEntity<ResponseDto<?>> getDisLike(@PathVariable Integer foodId) {
+    foodService.disLike(foodId);
+    return ResponseEntity.ok(ResponseDto.success("좋아요 취소"));
+  }
 
 }
