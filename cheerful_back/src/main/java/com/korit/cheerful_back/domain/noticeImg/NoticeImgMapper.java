@@ -7,7 +7,7 @@ import java.util.List;
 @Mapper
 public interface NoticeImgMapper {
 
-//    int insert(NoticeImg noticeImg);
-//    int insertMany(List<NoticeImg> noticeImgs);
+    int insert(NoticeImg noticeImg);
+    int insertMany(List<NoticeImg> noticeImgs);
 
 }

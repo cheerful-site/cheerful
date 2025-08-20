@@ -3,6 +3,7 @@ package com.korit.cheerful_back.service;
 import com.korit.cheerful_back.domain.community.Community;
 import com.korit.cheerful_back.domain.community.CommunityMapper;
 import com.korit.cheerful_back.domain.community.CommunitySearchOption;
+import com.korit.cheerful_back.domain.communityImg.CommunityImg;
 import com.korit.cheerful_back.domain.food.Food;
 import com.korit.cheerful_back.domain.food.FoodMapper;
 import com.korit.cheerful_back.domain.food.FoodSearchOption;
@@ -11,17 +12,23 @@ import com.korit.cheerful_back.domain.foodImg.FoodImgMapper;
 import com.korit.cheerful_back.domain.notice.Notice;
 import com.korit.cheerful_back.domain.notice.NoticeMapper;
 import com.korit.cheerful_back.domain.notice.NoticeSearchOption;
+import com.korit.cheerful_back.domain.noticeImg.NoticeImg;
+import com.korit.cheerful_back.domain.noticeImg.NoticeImgMapper;
 import com.korit.cheerful_back.domain.user.User;
 import com.korit.cheerful_back.domain.user.UserMapper;
 import com.korit.cheerful_back.domain.user.UserSearchOption;
 import com.korit.cheerful_back.dto.admin.AdminLoginReqDto;
 import com.korit.cheerful_back.dto.admin.TokenDto;
+import com.korit.cheerful_back.dto.community.CommunityRegisterReqDto;
 import com.korit.cheerful_back.dto.food.FoodModifyReqDto;
 import com.korit.cheerful_back.dto.food.FoodRegisterReqDto;
+import com.korit.cheerful_back.dto.notice.NoticeRegisterReqDto;
 import com.korit.cheerful_back.dto.response.PaginationRespDto;
 import com.korit.cheerful_back.exception.auth.LoginException;
 import com.korit.cheerful_back.security.jwt.JwtUtil;
 import com.korit.cheerful_back.security.model.PrincipalUtil;
+
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -44,6 +51,7 @@ public class AdminService {
     private final FileService fileService;
     private final NoticeMapper noticeMapper;
     private final FoodImgMapper foodImgMapper;
+    private final NoticeImgMapper noticeImgMapper;
 
     public TokenDto login(AdminLoginReqDto dto) {
 
@@ -250,4 +258,46 @@ public class AdminService {
     public void deleteNotice(List<Integer> noticeIds) {
         noticeMapper.deleteByNoticeIds(noticeIds);
     }
+
+    /*
+        notice 글 등록
+    */
+    @Transactional(rollbackFor = Exception.class)
+    public void registerNotice(NoticeRegisterReqDto dto) {
+        // 1) 파일이 존재할 경우에만 업로드 실행 > if문 사용
+        List<String> uploadFilepath = new ArrayList<>();
+
+        if (dto.getFiles() != null && !dto.getFiles().isEmpty()) {
+            uploadFilepath = dto.getFiles().stream()
+                    .filter(file -> file != null && !file.isEmpty()) // 빈 파일 제외
+                    .map(file -> "/notice/" + fileService.uploadFile(file, "/notice"))
+                    .peek(newFileName -> System.out.println(newFileName))
+                    .collect(Collectors.toList());
+        }
+
+        // 2) 사용자 식별
+        Integer userId = principalUtil.getPrincipalUser().getUser().getUserId();
+
+        // 3) 게시글 저장
+        Notice notice = Notice.builder()
+                .userId(userId)
+                .noticeCategoryId(dto.getNoticeCategoryId())
+                .title(dto.getTitle())
+                .content(dto.getContent())
+                .build();
+        noticeMapper.insert(notice);
+
+        if (!uploadFilepath.isEmpty()) {
+            AtomicInteger atomicInteger = new AtomicInteger(0);
+            List<NoticeImg> noticeImgs = uploadFilepath.stream()
+                    .map(path -> NoticeImg.builder()
+                            .seq(atomicInteger.getAndIncrement() + 1)
+                            .noticeId(notice.getNoticeId())
+                            .imgPath(path)
+                            .build())
+                    .collect(Collectors.toList());
+            noticeImgMapper.insertMany(noticeImgs);
+        }
+    }
+
 }

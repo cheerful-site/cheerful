@@ -5,17 +5,17 @@
 
 <mapper namespace="com.korit.cheerful_back.domain.noticeImg.NoticeImgMapper">
 
-<!--    <insert id="insert">-->
-<!--        insert into notice_img_tb-->
-<!--        values (default, #{noticeId}, #{seq}, #{imgPath});-->
-<!--    </insert>-->
+    <insert id="insert">
+        insert into notice_img_tb
+        values (default, #{noticeId}, #{seq}, #{imgPath});
+    </insert>
 
-<!--    <insert id="insertMany">-->
-<!--        insert into notice_img_tb-->
-<!--        values-->
-<!--        <foreach item="noticeImg" collection="noticeImgs" separator=",">-->
-<!--            (default, #{noticeImg.noticeId}, #{noticeImg.seq}, #{noticeImg.imgPath})-->
-<!--        </foreach>-->
-<!--    </insert>-->
+    <insert id="insertMany">
+        insert into notice_img_tb
+        values
+        <foreach item="noticeImg" collection="noticeImgs" separator=",">
+            (default, #{noticeImg.noticeId}, #{noticeImg.seq}, #{noticeImg.imgPath})
+        </foreach>
+    </insert>
 
 </mapper>
