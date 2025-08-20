@@ -1,14 +1,16 @@
 /**@jsxImportSource @emotion/react */
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import * as s from "./styles";
 import { useState } from "react";
 import Footer from "../../../components/Footer/Footer";
 import useNoticeListQuery from "../../../queries/NoticeQuery/useNoticeListQuery";
 import CategoryComponent from "../../../components/CategoryComponent/CategoryComponent";
 import PageNation from "../../../components/PageNation/PageNation";
+import { reqNoticeViews } from "../../../api/noticeApi/noticeApi";
 
 function Notice(props) {
   const { category } = useParams();
+  const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const notice = useNoticeListQuery(page, 10, parseInt(category));
   const noticePages = notice?.data?.data?.body;
@@ -21,6 +23,12 @@ function Notice(props) {
     { id: 2, title: "매거진", category: 2 },
     { id: 3, title: "이벤트", category: 3 },
   ];
+
+  const handleOnClick = (categoryId, noticeId) => {
+    // console.log(categoryId, noticeId);
+    reqNoticeViews(categoryId, noticeId);
+    navigate(`/notice/${categoryId}/${noticeId}`);
+  };
 
   return (
     <div css={s.layout}>
@@ -45,7 +53,12 @@ function Notice(props) {
       <div css={s.noticePostContainer}>
         {noticeList?.map((post) => (
           <div key={post.noticeId} css={s.noticePost}>
-            <div>{post.title}</div>
+            <div
+              onClick={() =>
+                handleOnClick(post.noticeId, post.noticeCategoryId)
+              }>
+              {post.title}
+            </div>
             <div css={s.noticeAuthor}>
               <span>{post?.user.name}</span>
               <span>{post.createdAt.substring(0, 10)}</span>

@@ -15,3 +15,8 @@ export const reqAdminFood = async (page, size, searchText) =>
   await api.get(`/admin/foods`, {
     params: { page, size, searchText },
   });
+
+export const reqAdminNotice = async (page, size, categoryId, searchText) =>
+  await api.get(`/admin/notice/${categoryId}`, {
+    params: { page, size, categoryId, searchText },
+  });

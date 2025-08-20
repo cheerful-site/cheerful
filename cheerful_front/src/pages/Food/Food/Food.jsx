@@ -5,15 +5,21 @@ import Footer from "../../../components/Footer/Footer";
 import useFoodListQuery from "../../../queries/FoodQuery/useFoodListQuery";
 import PageNation from "../../../components/PageNation/PageNation";
 import { baseURL } from "../../../api/axios/axios";
+import { useNavigate } from "react-router-dom";
 
 function Food(props) {
   const [page, setPage] = useState(1);
+  const navigate = useNavigate();
   const food = useFoodListQuery(page, 16);
 
   const foodPages = food?.data?.data?.body;
   const foodList = food?.data?.data?.body?.content;
 
-  console.log(foodList);
+  // console.log(foodList);
+
+  const handleDetailOnClick = (foodId) => {
+    navigate(`/food/${foodId}`);
+  };
 
   return (
     <div css={s.layout}>
@@ -39,13 +45,16 @@ function Food(props) {
 
         <div css={s.foodContainer}>
           {foodList?.map((food) => (
-            <div key={food.id}>
+            <div key={food.foodId}>
               <img
                 src={`${baseURL}/upload/food/${food.foodImgs[0].imgPath}`}
                 alt=""
+                onClick={() => handleDetailOnClick(food.foodId)}
               />
               <div>
-                <span>{food.title}</span>
+                <span onClick={() => handleDetailOnClick(food.foodId)}>
+                  {food.title}
+                </span>
                 <span>{food.price.toLocaleString()}원</span>
                 <span>{food.foodCategory?.foodCategoryName}</span>
               </div>

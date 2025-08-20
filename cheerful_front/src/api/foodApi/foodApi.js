@@ -7,3 +7,6 @@ export const reqFoodList = async (page, size) =>
       size,
     },
   });
+
+export const reqFoodDetail = async (foodId) =>
+  await api.get(`/foods/${foodId}`);
