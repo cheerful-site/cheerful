@@ -212,18 +212,9 @@
             left outer join notice_like_tb nlt on(nlt.notice_id = nt.notice_id)
             left outer join notice_category_tb nct on(nct.notice_category_id = nt.notice_category_id)
             left outer join (select notice_id, count(*) as like_count from notice_like_tb group by notice_id) nlc on(nlc.notice_id = nt.notice_id)
-        <where>
-            <choose>
-                <!-- categoryId == 1 이면 전체 -->
-                <when test="categoryId == 1">
-                    1 = 1
-                </when>
-                <otherwise>
-                    nt.notice_category_id = #{categoryId}
-                </otherwise>
-            </choose>
+        where
+            nt.notice_category_id = #{categoryId}
             and nt.notice_id = #{noticeId}
-        </where>
     </select>
 
     <select id="selectViews" resultType="java.lang.Integer">
@@ -231,18 +222,9 @@
             ifnull(max(nt.notice_views), 0) as views
         from
             notice_tb nt
-        <where>
-            <choose>
-                <!-- categoryId == 1 이면 전체 -->
-                <when test="categoryId == 1">
-                    1 = 1
-                </when>
-                <otherwise>
-                    nt.notice_category_id = #{categoryId}
-                </otherwise>
-            </choose>
+        where
+            nt.notice_category_id = #{categoryId}
             and nt.notice_id = #{noticeId}
-        </where>
     </select>
 
 </mapper>
