@@ -6,6 +6,9 @@ import com.korit.cheerful_back.domain.community.CommunitySearchOption;
 import com.korit.cheerful_back.domain.food.Food;
 import com.korit.cheerful_back.domain.food.FoodMapper;
 import com.korit.cheerful_back.domain.food.FoodSearchOption;
+import com.korit.cheerful_back.domain.notice.Notice;
+import com.korit.cheerful_back.domain.notice.NoticeMapper;
+import com.korit.cheerful_back.domain.notice.NoticeSearchOption;
 import com.korit.cheerful_back.domain.user.User;
 import com.korit.cheerful_back.domain.user.UserMapper;
 import com.korit.cheerful_back.domain.user.UserSearchOption;
@@ -30,6 +33,7 @@ public class AdminService {
     private final CommunityMapper communityMapper;
     private final UserMapper userMapper;
     private final FoodMapper foodMapper;
+    private final NoticeMapper noticeMapper;
 
     public TokenDto login(AdminLoginReqDto dto) {
 
@@ -158,5 +162,34 @@ public class AdminService {
     @Transactional(rollbackFor = Exception.class)
     public void deleteFood(List<Integer> foodIds) {
         foodMapper.deleteByFoodIds(foodIds);
+    }
+
+    /*
+        admin 전용 notice 페이징 목록 조회
+     */
+    public PaginationRespDto<Notice> getNoticeSearchList(Integer page, Integer size, Integer categoryId, String searchText) {
+        NoticeSearchOption searchOption = NoticeSearchOption.builder()
+            .startIndex((page - 1) * size)
+            .endIndex(size * page)
+            .size(size)
+            .noticeCategoryId(categoryId)
+            .searchText(searchText)
+            .build();
+
+        // 총 건수 / 총 페이지 / 마지막 여부 계산
+        List<Notice> contents = noticeMapper.findAllBySearchOption(searchOption);
+        Integer totalElements = noticeMapper.getCountOfSearchOption(searchOption);
+        Integer totalPages = (int) Math.ceil(totalElements.longValue() / size.doubleValue());
+        Boolean isLast = page >= totalPages;
+
+        return PaginationRespDto.<Notice>builder()
+            .content(contents)
+//                .categoryId(categoryId)
+            .totalElements(totalElements)
+            .totalPages(totalPages)
+            .isLast(isLast)
+            .page(page)
+            .size(size)
+            .build();
     }
 }
