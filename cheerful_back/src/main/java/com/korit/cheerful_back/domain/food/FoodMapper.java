@@ -9,6 +9,7 @@ public interface FoodMapper {
 
     // user전용 food
     List<Food> findAllByOptions(FoodSearchOption option);
+    Food findByOption(Integer foodId);
     int getCountOfOptions(FoodSearchOption option);
 
     // admin전용 food
