@@ -241,7 +241,7 @@ function AdminManage(props) {
               <div css={s.manageSearch}>
                 <input
                   type="text"
-                  placeholder="Search for username or email..."
+                  placeholder="Search for ..."
                   onChange={handleOnChange}
                 />
                 <FaSearch />
