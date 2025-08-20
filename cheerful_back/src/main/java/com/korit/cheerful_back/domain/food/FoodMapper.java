@@ -13,7 +13,7 @@ public interface FoodMapper {
     int getCountOfOptions(FoodSearchOption option);
 
     // admin전용 food
-    List<Food> findAllBySearchOption(FoodSearchOption foodSearchOption);
+    List<FoodAdminRow> findAllBySearchOption(FoodSearchOption foodSearchOption);
     int getCountOfSearchOption(FoodSearchOption foodSearchOption);
 
     int insert(Food food);
