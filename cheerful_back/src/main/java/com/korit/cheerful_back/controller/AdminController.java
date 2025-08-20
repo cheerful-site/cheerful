@@ -101,6 +101,7 @@ public class AdminController {
      */
     @PostMapping("/notice/{categoryId}")
     public ResponseEntity<ResponseDto<?>> register(@ModelAttribute NoticeRegisterReqDto dto) {
+        adminService.registerNotice(dto);
         return ResponseEntity.ok(ResponseDto.success("notice 글을 등록하였습니다."));
     }
 
