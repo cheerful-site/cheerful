@@ -1,6 +1,8 @@
 package com.korit.cheerful_back.controller;
 
+import com.korit.cheerful_back.dto.community.CommunityRegisterReqDto;
 import com.korit.cheerful_back.dto.food.FoodRegisterReqDto;
+import com.korit.cheerful_back.dto.notice.NoticeRegisterReqDto;
 import com.korit.cheerful_back.dto.response.ResponseDto;
 import com.korit.cheerful_back.service.AdminService;
 import lombok.RequiredArgsConstructor;
@@ -91,5 +93,22 @@ public class AdminController {
     public ResponseEntity<ResponseDto<?>> managerNotice(@RequestParam Integer page, @RequestParam Integer size
         , @PathVariable Integer categoryId, @RequestParam(required = false) String searchText) {
         return ResponseEntity.ok(ResponseDto.success(adminService.getNoticeSearchList(page, size, categoryId, searchText)));
+    }
+
+    /*
+        notice 글 등록
+     */
+    @PostMapping("/notice/{categoryId}")
+    public ResponseEntity<ResponseDto<?>> register(@ModelAttribute NoticeRegisterReqDto dto) {
+        return ResponseEntity.ok(ResponseDto.success("notice 글을 등록하였습니다."));
+    }
+
+    /*
+        notice 삭제
+     */
+    @DeleteMapping("/notice/{categoryId}")
+    public ResponseEntity<ResponseDto<?>> deleteNoticeIds(@RequestParam List<Integer> noticeIds) {
+        adminService.deleteNotice(noticeIds);
+        return ResponseEntity.ok(ResponseDto.success("notice 정보를 삭제하였습니다."));
     }
 }
