@@ -64,4 +64,10 @@ public class FoodService {
     foodLikeMapper.delete(foodId, userId);
   }
 
+  /*
+    특정 글 클릭해서 내용 보기
+   */
+  public Food getFoodContent(Integer foodId) {
+    return foodMapper.findByOption(foodId);
+  }
 }

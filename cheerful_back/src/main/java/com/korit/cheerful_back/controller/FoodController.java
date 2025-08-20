@@ -50,4 +50,12 @@ public class FoodController {
     return ResponseEntity.ok(ResponseDto.success("좋아요 취소"));
   }
 
+  /*
+    특정 글 클릭해서 내용 보기
+  */
+  @GetMapping("/{foodId}")
+  public ResponseEntity<ResponseDto<?>> getFoodContent(@PathVariable Integer foodId) {
+    return ResponseEntity.ok(ResponseDto.success(foodService.getFoodContent(foodId)));
+  }
+
 }
