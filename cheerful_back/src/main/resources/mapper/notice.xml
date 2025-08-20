@@ -50,12 +50,6 @@
         values (default, #{userId}, #{noticeCategoryId}, #{title}, #{content}, now())
     </insert>
 
-    <!--    조회수-->
-    <update id="increaseViews">
-        update notice_tb as nt
-        set nt.notice_views = coalesce(nt.notice_views, 0) + 1
-    </update>
-
     <delete id="deleteByNoticeIds">
         delete from notice_tb
         where
@@ -216,6 +210,15 @@
             nt.notice_category_id = #{categoryId}
             and nt.notice_id = #{noticeId}
     </select>
+
+    <!--    조회수-->
+    <update id="increaseViews">
+        update notice_tb as nt
+        set nt.notice_views = coalesce(nt.notice_views, 0) + 1
+        where
+            nt.notice_category_id = #{categoryId}
+            and nt.notice_id = #{noticeId}
+    </update>
 
     <select id="selectViews" resultType="java.lang.Integer">
         select
