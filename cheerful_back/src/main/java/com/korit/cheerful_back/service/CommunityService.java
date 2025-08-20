@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -36,12 +37,23 @@ public class CommunityService {
      */
     @Transactional(rollbackFor = Exception.class)
     public void register(CommunityRegisterReqDto dto) {
-        // 1) 파일 업로드 -> 저장 경로 수집
-        List<String> uploadFilepath = dto.getFiles()
-                .stream()
-                .map(file -> "/community/" + fileService.uploadFile(file, "/community"))
-                .peek(newFileName -> System.out.println(newFileName))
-                .collect(Collectors.toList());
+//        // 1) 파일 업로드 -> 저장 경로 수집 > file이 하나라도 들어갔을 경우에만 실행되는 코드
+//        List<String> uploadFilepath = dto.getFiles()
+//                .stream()
+//                .map(file -> "/community/" + fileService.uploadFile(file, "/community"))
+//                .peek(newFileName -> System.out.println(newFileName))
+//                .collect(Collectors.toList());
+
+        // 1) 파일이 존재할 경우에만 업로드 실행 > if문 사용
+        List<String> uploadFilepath = new ArrayList<>();
+
+        if (dto.getFiles() != null && !dto.getFiles().isEmpty()) {
+            uploadFilepath = dto.getFiles().stream()
+                    .filter(file -> file != null && !file.isEmpty()) // 빈 파일 제외
+                    .map(file -> "/community/" + fileService.uploadFile(file, "/community"))
+                    .peek(newFileName -> System.out.println(newFileName))
+                    .collect(Collectors.toList());
+        }
 
         // 2) 사용자 식별
         Integer userId = principalUtil.getPrincipalUser().getUser().getUserId();
@@ -56,15 +68,27 @@ public class CommunityService {
         communityMapper.insert(community);
 
         // 4) 이미지 저장
-        AtomicInteger atomicInteger = new AtomicInteger(0);
-        List<CommunityImg> communityImgs = uploadFilepath.stream()
-                .map(path -> CommunityImg.builder()
-                        .seq(atomicInteger.getAndIncrement() + 1)
-                        .communityId(community.getCommunityId())
-                        .imgPath(path)
-                        .build())
-                .collect(Collectors.toList());
-        communityImgMapper.insertMany(communityImgs);
+//        AtomicInteger atomicInteger = new AtomicInteger(0);
+//        List<CommunityImg> communityImgs = uploadFilepath.stream()
+//                .map(path -> CommunityImg.builder()
+//                        .seq(atomicInteger.getAndIncrement() + 1)
+//                        .communityId(community.getCommunityId())
+//                        .imgPath(path)
+//                        .build())
+//                .collect(Collectors.toList());
+//        communityImgMapper.insertMany(communityImgs);
+
+        if (!uploadFilepath.isEmpty()) {
+            AtomicInteger atomicInteger = new AtomicInteger(0);
+            List<CommunityImg> communityImgs = uploadFilepath.stream()
+                    .map(path -> CommunityImg.builder()
+                            .seq(atomicInteger.getAndIncrement() + 1)
+                            .communityId(community.getCommunityId())
+                            .imgPath(path)
+                            .build())
+                    .collect(Collectors.toList());
+            communityImgMapper.insertMany(communityImgs);
+        }
 
         System.out.println(uploadFilepath);
     }
