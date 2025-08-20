@@ -5,6 +5,7 @@ import noImage from "../../icons/Frame2.png";
 import * as s from "./styles";
 import useFoodListQuery from "../../queries/FoodQuery/useFoodListQuery";
 import PageNation from "../../components/PageNation/PageNation";
+import { baseURL } from "../../api/axios/axios";
 
 function Food(props) {
   const [page, setPage] = useState(1);
@@ -40,7 +41,10 @@ function Food(props) {
         <div css={s.foodContainer}>
           {foodList?.map((food) => (
             <div key={food.id}>
-              <img src={noImage} alt="" />
+              <img
+                src={`${baseURL}/upload/food/${food.foodImgs[0].imgPath}`}
+                alt=""
+              />
               <div>
                 <span>{food.title}</span>
                 <span>{food.price.toLocaleString()}원</span>

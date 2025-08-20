@@ -6,6 +6,7 @@ import useCommunityDetailQuery from "../../../queries/CommunityQuery/useCommunit
 import Footer from "../../../components/Footer/Footer";
 import usePrincipalQuery from "../../../queries/PrincipalQuery/usePrincipalQuery";
 import { baseURL } from "../../../api/axios/axios";
+import { FaRegComment } from "react-icons/fa";
 
 function CommunityDetail(props) {
   const params = useParams();
@@ -18,9 +19,11 @@ function CommunityDetail(props) {
   const [inputValue, setInputValue] = useState();
 
   const detailContent = communityDetail?.data?.data?.body;
+  const comments = communityDetail?.data?.data?.body?.communityComments;
   const user = principal?.data?.data?.body?.user || [];
   // console.log(user);
-  console.log(detailContent);
+  // console.log(detailContent);
+  console.log(comments);
 
   const handleOnChange = (e) => {
     setInputValue(e.target.value);
@@ -28,6 +31,8 @@ function CommunityDetail(props) {
   const handleCommentsOnClick = () => {
     console.log(inputValue);
   };
+
+  const handleRecommentRegisterOnClick = () => {};
 
   return (
     <>
@@ -69,7 +74,7 @@ function CommunityDetail(props) {
             </div>
             {token ? (
               <>
-                <div css={s.commentContainer}>
+                <div css={s.commentRegisterContainer}>
                   <div css={s.commentRegister}>
                     <span>{user?.name}</span>
                     <textarea
@@ -82,12 +87,59 @@ function CommunityDetail(props) {
                       <button onClick={handleCommentsOnClick}>등록하기</button>
                     </div>
                   </div>
-                  <div>댓글 {detailContent?.communityComments.length}</div>
                 </div>
               </>
             ) : (
               <></>
             )}
+            <div css={s.commentsLayout}>
+              <div>댓글 {detailContent?.communityComments.length}</div>
+              <div css={s.commentsContainer}>
+                {comments?.map((comment) => {
+                  if (comment.level === 0) {
+                    return (
+                      <>
+                        <div css={s.commentUser}>
+                          <img src={comment?.user?.profileImgPath} alt="" />
+                          <span>{comment?.user?.name}</span>
+                        </div>
+                        <div css={s.commentContent}>
+                          <span>{comment.content}</span>
+                          <div>
+                            <span>{comment.createdAt.slice(0, 10)}</span>
+                            <span>{comment.createdAt.slice(11, 16)}</span>
+                            <span onClick={handleRecommentRegisterOnClick}>
+                              답글달기 <FaRegComment />
+                            </span>
+                          </div>
+                        </div>
+                      </>
+                    );
+                  }
+                  return (
+                    <div css={s.subComments}>
+                      <div css={s.commentUser}>
+                        <img src={comment?.user?.profileImgPath} alt="" />
+                        <span>{comment?.user?.name}</span>
+                      </div>
+                      <div css={s.commentContent}>
+                        <span>{comment.content}</span>
+                        <div>
+                          <span>{comment.createdAt.slice(0, 10)}</span>
+                          <span>{comment.createdAt.slice(11, 16)}</span>
+                          <span>
+                            답글달기{" "}
+                            <FaRegComment
+                              onClick={handleRecommentRegisterOnClick}
+                            />
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
           </div>
         </div>
       </div>
