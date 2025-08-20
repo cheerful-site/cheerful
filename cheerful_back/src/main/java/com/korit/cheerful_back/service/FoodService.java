@@ -4,6 +4,8 @@ import com.korit.cheerful_back.domain.food.Food;
 import com.korit.cheerful_back.domain.food.FoodLikeMapper;
 import com.korit.cheerful_back.domain.food.FoodMapper;
 import com.korit.cheerful_back.domain.food.FoodSearchOption;
+import com.korit.cheerful_back.domain.foodComment.FoodComment;
+import com.korit.cheerful_back.domain.foodComment.FoodCommentMapper;
 import com.korit.cheerful_back.domain.foodImg.FoodImg;
 import com.korit.cheerful_back.dto.food.FoodRegisterReqDto;
 import com.korit.cheerful_back.dto.response.PaginationRespDto;
@@ -21,6 +23,7 @@ public class FoodService {
 
   private final FoodMapper foodMapper;
   private final FoodLikeMapper foodLikeMapper;
+  private final FoodCommentMapper foodCommentMapper;
   private final PrincipalUtil principalUtil;
 
   /*
@@ -68,6 +71,11 @@ public class FoodService {
     특정 글 클릭해서 내용 보기
    */
   public Food getFoodContent(Integer foodId) {
-    return foodMapper.findByOption(foodId);
+    Food food = foodMapper.findByOption(foodId);
+
+    FoodComment comment = foodCommentMapper.findAllByFoodId(foodId);
+    food.setFoodComment(comment);
+
+    return food;
   }
 }

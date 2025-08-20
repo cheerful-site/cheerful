@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 public interface FoodCommentMapper {
   int insert(FoodComment foodComment);
 
-  List<FoodComment> findAllByFoodId(Integer foodId);
+  FoodComment findAllByFoodId(Integer foodId);
 
   int getCountByCommentId(Integer foodId);
 }
