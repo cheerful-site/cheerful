@@ -1,11 +1,11 @@
 /**@jsxImportSource @emotion/react */
 import { Link, useParams } from "react-router-dom";
-import Footer from "../../components/Footer/Footer";
 import * as s from "./styles";
-import CategoryComponent from "../../components/CategoryComponent/CategoryComponent";
-import useNoticeListQuery from "../../queries/NoticeQuery/useNoticeListQuery";
 import { useState } from "react";
-import PageNation from "../../components/PageNation/PageNation";
+import Footer from "../../../components/Footer/Footer";
+import useNoticeListQuery from "../../../queries/NoticeQuery/useNoticeListQuery";
+import CategoryComponent from "../../../components/CategoryComponent/CategoryComponent";
+import PageNation from "../../../components/PageNation/PageNation";
 
 function Notice(props) {
   const { category } = useParams();

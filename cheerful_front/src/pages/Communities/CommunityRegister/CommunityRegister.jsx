@@ -82,10 +82,14 @@ function CommunityRegister(props) {
         <div css={s.registerContainer}>
           <div css={s.registerUser}>
             <img
-              src={`${baseURL}/upload/profile/${user?.profileImgPath}`}
+              src={
+                user?.role === "ROLE_ADMIN"
+                  ? `${baseURL}/upload/profile/${user?.profileImgPath}`
+                  : `${user?.profileImgPath}`
+              }
               alt=""
             />
-            <span>{user?.username}</span>
+            <span>{user?.name}</span>
           </div>
 
           <div css={s.registerInputTitle}>

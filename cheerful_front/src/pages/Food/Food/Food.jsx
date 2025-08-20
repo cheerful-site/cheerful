@@ -1,11 +1,10 @@
 /**@jsxImportSource @emotion/react */
 import { useState } from "react";
-import Footer from "../../components/Footer/Footer";
-import noImage from "../../icons/Frame2.png";
 import * as s from "./styles";
-import useFoodListQuery from "../../queries/FoodQuery/useFoodListQuery";
-import PageNation from "../../components/PageNation/PageNation";
-import { baseURL } from "../../api/axios/axios";
+import Footer from "../../../components/Footer/Footer";
+import useFoodListQuery from "../../../queries/FoodQuery/useFoodListQuery";
+import PageNation from "../../../components/PageNation/PageNation";
+import { baseURL } from "../../../api/axios/axios";
 
 function Food(props) {
   const [page, setPage] = useState(1);
