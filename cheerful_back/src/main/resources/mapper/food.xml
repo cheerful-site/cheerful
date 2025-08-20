@@ -56,7 +56,7 @@
             *
         from
             (select
-                dense_rank() over(order by ft.created_at desc) as food_number,
+                dense_rank() over(order by ft.created_at desc, ft.food_id desc) as food_number,
                 ft.food_id,
                 ft.food_category_id,
                 ft.user_id as ft_user_id,
@@ -100,7 +100,7 @@
                 fit.seq) foods
         where
             food_number between #{startIndex} + 1 and #{endIndex}
-        <!--        limit #{startIndex}, #{size}-->
+<!--        limit #{startIndex}, #{size}-->
     </select>
 
     <select id="getCountOfOptions" resultType="java.lang.Integer">

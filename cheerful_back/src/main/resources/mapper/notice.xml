@@ -50,7 +50,7 @@
         values (default, #{userId}, #{noticeCategoryId}, #{title}, #{content}, now())
     </insert>
 
-    <select id="findAllBySearchOptions" resultMap="NoticeMap">
+    <select id="findAllByOptions" resultMap="NoticeMap">
         select
             *
         from
@@ -119,6 +119,53 @@
             left outer join notice_category_tb nct on(nct.notice_category_id = nt.notice_category_id)
         where
             nt.notice_category_id = #{noticeCategoryId}
+    </select>
+
+<!--    관리자 권한-->
+    <select id="findAllBySearchOption" resultMap="NoticeMap">
+        select
+            nt.notice_id,
+            nt.user_id as nt_user_id,
+            nt.notice_category_id,
+            nt.notice_title,
+            nt.notice_content,
+            nt.created_at,
+            nt.notice_views,
+
+            nct.notice_category_name,
+
+            ut.user_id,
+            ut.username,
+            ut.password,
+            ut.name,
+            ut.email,
+            ut.profile_img_path,
+            ut.role,
+            ut.provider,
+            ut.provider_id,
+            ut.created_at as ut_created_at
+        from
+            notice_tb nt
+            left outer join user_tb ut on(ut.user_id = nt.user_id)
+            left outer join notice_category_tb nct on(nct.notice_category_id = nt.notice_category_id)
+        where
+            nt.notice_category_id = #{noticeCategoryId}
+            and nt.notice_title like concat('%', #{searchText}, '%')
+        order by
+            nt.notice_id
+        limit #{startIndex}, #{size}
+    </select>
+
+    <select id="getCountOfSearchOption" resultType="java.lang.Integer">
+        select
+            count(*)
+        from
+            notice_tb nt
+            left outer join user_tb ut on(ut.user_id = nt.user_id)
+            left outer join notice_category_tb nct on(nct.notice_category_id = nt.notice_category_id)
+        where
+            nt.notice_category_id = #{noticeCategoryId}
+            and nt.notice_title like concat('%', #{searchText}, '%')
     </select>
 
 </mapper>
