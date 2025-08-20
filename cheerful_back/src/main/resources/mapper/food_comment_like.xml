@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.korit.cheerful_back.domain.foodComment.FoodCommentLikeMapper">
+
+  <insert id="insert">
+    insert into food_comment_like_tb
+    values(default, #{foodCommentId}, #{userId});
+  </insert>
+
+  <delete id="delete">
+    delete from food_comment_like_tb
+    where
+      food_comment_id = #{foodCommentId},
+      user_id = #{userId}
+  </delete>
+
+  <select id="getLikeCount" resultType="java.lang.Integer">
+    select
+      count(*)
+    from
+      food_comment_like_tb
+    where
+      food_comment_id = #{foodCommentId}
+  </select>
+</mapper>

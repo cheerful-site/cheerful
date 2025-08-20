@@ -17,6 +17,7 @@
         <result property="commentCount" column="comments_count" />
         <association property="user" resultMap="UserMap" />
         <association property="foodCategory" resultMap="FoodCategoryMap" />
+        <association property="foodComment" resultMap="FoodCommentMap" />
         <collection property="foodImgs" javaType="list" resultMap="FoodImgMap" />
     </resultMap>
 
@@ -60,6 +61,16 @@
         <result property="imgPaths"         column="img_paths"/>
     </resultMap>
 
+    <resultMap id="FoodCommentMap" type="com.korit.cheerful_back.domain.foodComment.FoodComment">
+        <id property="foodCommentId" column="food_comment_id" />
+        <result property="foodId" column="food_id" />
+        <result property="userId" column="user_id" />
+        <result property="content" column="content" />
+        <result property="createdAt" column="created_at" />
+        <result property="isLike" column="is_like" />
+        <result property="likeCount" column="like_count" />
+    </resultMap>
+
 
     <!--    user 전용-->
     <select id="findAllByOptions" resultMap="FoodMap">
@@ -94,6 +105,12 @@
                 fit.seq,
                 fit.`img_path`,
 
+                fmt.food_comment_id,
+                fmt.food_id as fmt_food_id,
+                fmt.user_id as fmt_user_id,
+                fmt.content,
+                fmt.created_at ad fmt_created_at,
+
                 ifnull(flt.food_like_id, 0) as is_like,
                 ifnull(flc.like_count, 0) as like_count,
                 ifnull(fcc.comments_count, 0) as comments_count
@@ -103,6 +120,7 @@
                 left outer join food_img_tb fit on(fit.food_id = ft.food_id)
                 left outer join food_like_tb flt on(flt.food_id = ft.food_id)
                 left outer join food_category_tb fct on(fct.food_category_id = ft.food_category_id)
+                left outer join food_comment_tb fmt on(fmt.food_id = ft.food_id)
                 left outer join (select food_id, count(*) as like_count from food_like_tb group by food_id) flc on(flc.food_id = ft.food_id)
                 left outer join (select food_id, count(*) as comments_count from food_comment_tb group by food_id) fcc on(fcc.food_id = ft.food_id)
             order by
@@ -150,6 +168,12 @@
             fit.seq,
             fit.`img_path`,
 
+            fmt.food_comment_id,
+            fmt.food_id as fmt_food_id,
+            fmt.user_id as fmt_user_id,
+            fmt.content,
+            fmt.created_at ad fmt_created_at,
+
             ifnull(flt.food_like_id, 0) as is_like,
             ifnull(flc.like_count, 0) as like_count,
             ifnull(fcc.comments_count, 0) as comments_count
@@ -159,6 +183,7 @@
             left outer join food_img_tb fit on(fit.food_id = ft.food_id)
             left outer join food_like_tb flt on(flt.food_id = ft.food_id)
             left outer join food_category_tb fct on(fct.food_category_id = ft.food_category_id)
+            left outer join food_comment_tb fmt on(fmt.food_id = ft.food_id)
             left outer join (select food_id, count(*) as like_count from food_like_tb group by food_id) flc on(flc.food_id = ft.food_id)
             left outer join (select food_id, count(*) as comments_count from food_comment_tb group by food_id) fcc on(fcc.food_id = ft.food_id)
         where
