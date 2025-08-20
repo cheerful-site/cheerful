@@ -18,7 +18,6 @@ export const manageContainer = css`
   background-color: #ffffff;
 `;
 
-
 export const manageLayout = css`
   width: 100%;
 `;
@@ -160,3 +159,14 @@ export const manageSearch = css`
   }
 `;
 
+export const category = (categoryId) => css`
+  margin-bottom: 1rem;
+  width: 100%;
+`;
+
+export const categorySpan = (categoryId) => css`
+  margin: 0 1rem;
+  font-size: 1.4rem;
+  color: ${categoryId ? "#222222" : "#22222230"};
+  cursor: pointer;
+`;

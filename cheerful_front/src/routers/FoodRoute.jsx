@@ -5,8 +5,8 @@ import FoodDetail from "../pages/Food/FoodDetail/FoodDetail";
 function FoodRoute(props) {
   return (
     <Routes>
-      <Route pate="/" element={<Food />} />
-      <Route pate="/:foodId" element={<FoodDetail />} />
+      <Route path="/" element={<Food />} />
+      <Route path="/:foodId" element={<FoodDetail />} />
     </Routes>
   );
 }

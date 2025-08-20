@@ -2,10 +2,19 @@
 import * as s from "./styles";
 import { FaFacebookF, FaInstagram, FaTwitter, FaYoutube } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
+import usePrincipalQuery from "../../queries/PrincipalQuery/usePrincipalQuery";
 
 function Footer(props) {
   const navigate = useNavigate();
+  const principal = usePrincipalQuery();
+  const user = principal?.data?.data?.body?.user;
   const handleMoveAdminLoginOnClick = () => {
+    if (
+      (principal.isSuccess && user?.role === "ROLE_ADMIN") ||
+      user?.role === "ROLE_USER"
+    ) {
+      return;
+    }
     navigate("/admin/login");
   };
   return (

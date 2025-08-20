@@ -31,7 +31,7 @@ function DataTable({ isCheckBoxEnabled, cols, rows, pagenation }) {
     setNewRows(newRows);
   }, [rows]);
 
-  console.log(newRows);
+  // console.log(newRows);
 
   const handleDeleteOnClick = (id) => {
     console.log(id);
@@ -64,7 +64,7 @@ function DataTable({ isCheckBoxEnabled, cols, rows, pagenation }) {
                 </td>
               )}
               {row.map((row, index) => (
-                <td key={index} css={s.thAndTd(cols[index].size)}>
+                <td key={index} css={s.thAndTd(cols[index]?.size)}>
                   {row.value}
                 </td>
               ))}

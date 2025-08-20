@@ -14,21 +14,34 @@ import LeftSideBar from "../../../components/LeftSideBar/LeftSideBar";
 import DataTable from "../../../components/DataTable/DataTable";
 import PageNation from "../../../components/PageNation/PageNation";
 import { usePageStore } from "../../../stores/usePageStore";
+import useAdminNoticeQuery from "../../../queries/AdminQuery/useAdminNoticeQuery";
+import {
+  communityCategory,
+  noticeCategory,
+} from "../../../constants/adminPage/adminPageCategory";
 
 function AdminManage(props) {
   const navigate = useNavigate();
   const params = useParams();
   const queryClient = useQueryClient();
   const principalQuery = usePrincipalQuery();
+
   const [inputValue, setInputValue] = useState("");
+  const [categoryId, setCategoryId] = useState(1);
+  const [isOpen, setIsOpen] = useState(false);
+
   const user = principalQuery?.data?.data?.body?.user || [];
   const { page } = usePageStore();
 
   const adminUsers = useAdminUsersQuery(page, 10, inputValue);
-  const adminCommunity = useAdminCommunityQuery(page, 10, 1, inputValue);
+  const adminCommunity = useAdminCommunityQuery(
+    page,
+    10,
+    categoryId,
+    inputValue
+  );
   const adminFood = useAdminFoodQuery(page, 10, inputValue);
-
-  const [isOpen, setIsOpen] = useState(false);
+  const adminNotice = useAdminNoticeQuery(page, 10, categoryId, inputValue);
 
   const handleProfileOnClick = () => {
     setIsOpen((prev) => !prev);
@@ -63,11 +76,20 @@ function AdminManage(props) {
     ...food.user,
   }));
 
+  const notice = adminNotice?.data?.data?.body;
+  const noticeList = notice?.content.map((notice) => ({
+    ...notice,
+    ...notice.noticeCategory,
+    ...notice.user,
+  }));
+
   // console.log(users);
   // console.log(communityList);
   // console.log(foodList);
   // console.log(params);
   // console.log(food);
+  // console.log(notice);
+  // console.log(noticeList);
 
   const usersCols = [
     {
@@ -110,12 +132,12 @@ function AdminManage(props) {
     },
     {
       field: "communityCategoryName",
-      label: "Category Name",
-      size: "15rem",
+      label: "Category",
+      size: "10rem",
     },
     {
       field: "name",
-      label: "Username",
+      label: "Name",
       size: "6rem",
     },
     {
@@ -143,12 +165,12 @@ function AdminManage(props) {
     },
     {
       field: "foodCategoryName",
-      label: "Category Name",
-      size: "12rem",
+      label: "Category",
+      size: "8rem",
     },
     {
       field: "name",
-      label: "Username",
+      label: "Name",
       size: "6rem",
     },
     {
@@ -162,11 +184,48 @@ function AdminManage(props) {
       size: "28rem",
     },
     {
+      field: "price",
+      label: "Price",
+      size: "8rem",
+    },
+    {
       field: "createdAt",
       label: "CreateAt",
       size: "7.5rem",
     },
   ];
+
+  const noticeCols = [
+    {
+      field: "noticeId",
+      label: "Id",
+      size: "6rem",
+    },
+    {
+      field: "noticeCategoryName",
+      label: "Category",
+      size: "10rem",
+    },
+    {
+      field: "name",
+      label: "Name",
+      size: "6rem",
+    },
+    {
+      field: "title",
+      label: "Title",
+      size: "15rem",
+    },
+    {
+      field: "content",
+      label: "Content",
+      size: "28rem",
+    },
+  ];
+
+  const handleCategoryOnClick = (categoryId) => {
+    setCategoryId(categoryId);
+  };
 
   return (
     <div css={s.layout}>
@@ -254,12 +313,28 @@ function AdminManage(props) {
                   pagenation={users}
                 />
               ) : params.categoryId === "community" ? (
-                <DataTable
-                  isCheckBoxEnabled={true}
-                  cols={communityCols}
-                  rows={communityList}
-                  pagenation={community}
-                />
+                <>
+                  <div css={s.category}>
+                    {communityCategory.map((community) => (
+                      <span
+                        key={community.id}
+                        css={s.categorySpan(
+                          categoryId === community.categoryId
+                        )}
+                        onClick={() =>
+                          handleCategoryOnClick(community.categoryId)
+                        }>
+                        {community.categoryName}
+                      </span>
+                    ))}
+                  </div>
+                  <DataTable
+                    isCheckBoxEnabled={true}
+                    cols={communityCols}
+                    rows={communityList}
+                    pagenation={community}
+                  />
+                </>
               ) : params.categoryId === "food" ? (
                 <DataTable
                   isCheckBoxEnabled={true}
@@ -268,11 +343,26 @@ function AdminManage(props) {
                   pagenation={food}
                 />
               ) : params.categoryId === "notice" ? (
-                <DataTable
-                  isCheckBoxEnabled={true}
-                  cols={usersCols}
-                  rows={userList}
-                />
+                <>
+                  <div css={s.category}>
+                    {noticeCategory.map((notice) => (
+                      <span
+                        key={notice.id}
+                        css={s.categorySpan(categoryId === notice.categoryId)}
+                        onClick={() =>
+                          handleCategoryOnClick(notice.categoryId)
+                        }>
+                        {notice.categoryName}
+                      </span>
+                    ))}
+                  </div>
+                  <DataTable
+                    isCheckBoxEnabled={true}
+                    cols={noticeCols}
+                    rows={noticeList}
+                    pagenation={notice}
+                  />
+                </>
               ) : (
                 <></>
               )}

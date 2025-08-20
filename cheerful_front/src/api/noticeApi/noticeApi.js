@@ -8,3 +8,6 @@ export const reqNoticeList = async (page, size, categoryId) =>
       categoryId,
     },
   });
+
+export const reqNoticeViews = async (categoryId, noticeId) =>
+  await api.post(`/notice/${categoryId}/${noticeId}`);

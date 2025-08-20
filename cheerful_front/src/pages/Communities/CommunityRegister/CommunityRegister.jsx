@@ -73,7 +73,8 @@ function CommunityRegister(props) {
     files.forEach((f) => formData.append("files", f.file));
 
     reqCommunityRegister(formData);
-    console.log(formData);
+    // console.log(formData);
+    navigate("/community/1");
   };
 
   return (

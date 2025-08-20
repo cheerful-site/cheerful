@@ -23,7 +23,7 @@ function MainRoute(props) {
         <Route path="/search" element={<Search />} />
         <Route path="/community/:category/*" element={<CommunityRoute />} />
         <Route path="/community/register" element={<CommunityRegister />} />
-        <Route path="/food/*" element={<Food />} />
+        <Route path="/food/*" element={<FoodRoute />} />
         <Route path="/notice/:category/*" element={<NoticeRoute />} />
         <Route path="/map/:category" element={<MapPage />} />
         <Route path="/admin/*" element={<AdminRoute />} />
