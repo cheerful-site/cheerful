@@ -192,4 +192,12 @@ public class AdminService {
             .size(size)
             .build();
     }
+
+    /*
+        전달된 notice id 목록을 모두 삭제
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteNotice(List<Integer> noticeIds) {
+        noticeMapper.deleteByNoticeIds(noticeIds);
+    }
 }
