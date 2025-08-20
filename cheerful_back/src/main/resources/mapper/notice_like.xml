@@ -5,27 +5,27 @@
 
 <mapper namespace="com.korit.cheerful_back.domain.notice.NoticeLikeMapper">
 
-<!--    <insert id="insert">-->
-<!--        insert into notice_like_tb-->
-<!--        values (default, #{noticeId}, #{userId});-->
-<!--    </insert>-->
+    <insert id="insert">
+        insert into notice_like_tb
+        values (default, #{noticeId}, #{userId});
+    </insert>
 
-<!--    <delete id="delete">-->
-<!--        delete-->
-<!--        from-->
-<!--            notice_like_tb-->
-<!--        where-->
-<!--            notice_id = #{noticeId},-->
-<!--            user_Id = #{userId}-->
-<!--    </delete>-->
+    <delete id="delete">
+        delete
+        from
+            notice_like_tb
+        where
+            notice_id = #{noticeId},
+            user_Id = #{userId}
+    </delete>
 
-<!--    <select id="getLikeCount" resultType="java.lang.Integer">-->
-<!--        select-->
-<!--            count(*)-->
-<!--        from-->
-<!--            notice_like_tb-->
-<!--        where-->
-<!--            notice_id = #{noticeId}-->
-<!--    </select>-->
+    <select id="getLikeCount" resultType="java.lang.Integer">
+        select
+            count(*)
+        from
+            notice_like_tb
+        where
+            notice_id = #{noticeId}
+    </select>
 
 </mapper>

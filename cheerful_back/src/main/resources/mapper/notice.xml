@@ -50,6 +50,12 @@
         values (default, #{userId}, #{noticeCategoryId}, #{title}, #{content}, now())
     </insert>
 
+    <!--    조회수-->
+    <update id="increaseViews">
+        update notice_tb as nt
+        set nt.notice_views = coalesce(nt.notice_views, 0) + 1
+    </update>
+
     <select id="findAllByOptions" resultMap="NoticeMap">
         select
             *
@@ -100,16 +106,6 @@
         where
             notice_number between #{startIndex} + 1 and #{endIndex}
     </select>
-
-<!--    <update id="increaseViews"></update>-->
-
-<!--    <update id="update"></update>-->
-
-<!--    <delete id="deleteByNoticeIds"></delete>-->
-
-<!--    <select id="selectViews" resultType="java.lang.Integer"></select>-->
-
-
 
     <select id="getCountOfOptions" resultType="java.lang.Integer">
         select
@@ -166,6 +162,78 @@
         where
             nt.notice_category_id = #{noticeCategoryId}
             and nt.notice_title like concat('%', #{searchText}, '%')
+    </select>
+
+    <!--    게시글 클릭 시 -->
+    <select id="findByOption" resultMap="NoticeMap">
+        select
+            nt.notice_id,
+            nt.user_id as nt_user_id,
+            nt.notice_category_id,
+            nt.notice_title,
+            nt.notice_content,
+            nt.created_at,
+            nt.notice_views,
+
+            nct.notice_category_name,
+
+            ut.user_id,
+            ut.username,
+            ut.password,
+            ut.name,
+            ut.email,
+            ut.profile_img_path,
+            ut.role,
+            ut.provider,
+            ut.provider_id,
+            ut.created_at as ut_created_at,
+
+            nit.notice_img_id,
+            nit.notice_id as nit_notice_id,
+            nit.seq,
+            nit.`img_path`,
+
+            ifnull(nlt.notice_like_id, 0) as is_like,
+            ifnull(nlc.like_count, 0) as like_count
+
+        from
+            notice_tb nt
+            left outer join user_tb ut on(ut.user_id = nt.user_id)
+            left outer join notice_img_tb nit on(nit.notice_id = nt.notice_id)
+            left outer join notice_like_tb nlt on(nlt.notice_id = nt.notice_id)
+            left outer join notice_category_tb nct on(nct.notice_category_id = nt.notice_category_id)
+            left outer join (select notice_id, count(*) as like_count from notice_like_tb group by notice_id) nlc on(nlc.notice_id = nt.notice_id)
+        <where>
+            <choose>
+                <!-- categoryId == 1 이면 전체 -->
+                <when test="categoryId == 1">
+                    1 = 1
+                </when>
+                <otherwise>
+                    nt.notice_category_id = #{categoryId}
+                </otherwise>
+            </choose>
+            and nt.notice_id = #{noticeId}
+        </where>
+    </select>
+
+    <select id="selectViews" resultType="java.lang.Integer">
+        select
+            ifnull(max(nt.notice_views), 0) as views
+        from
+            notice_tb nt
+        <where>
+            <choose>
+                <!-- categoryId == 1 이면 전체 -->
+                <when test="categoryId == 1">
+                    1 = 1
+                </when>
+                <otherwise>
+                    nt.notice_category_id = #{categoryId}
+                </otherwise>
+            </choose>
+            and nt.notice_id = #{noticeId}
+        </where>
     </select>
 
 </mapper>

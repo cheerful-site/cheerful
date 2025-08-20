@@ -1,9 +1,12 @@
 package com.korit.cheerful_back.service;
 
 import com.korit.cheerful_back.domain.notice.Notice;
+import com.korit.cheerful_back.domain.notice.NoticeLikeMapper;
 import com.korit.cheerful_back.domain.notice.NoticeMapper;
 import com.korit.cheerful_back.domain.notice.NoticeSearchOption;
 import com.korit.cheerful_back.dto.response.PaginationRespDto;
+import com.korit.cheerful_back.security.model.PrincipalUser;
+import com.korit.cheerful_back.security.model.PrincipalUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +17,8 @@ import java.util.List;
 public class NoticeService {
 
     private final NoticeMapper noticeMapper;
+    private final PrincipalUtil principalUtil;
+    private final NoticeLikeMapper noticeLikeMapper;
 
     /*
         커뮤니티 페이징 목록 조회
@@ -39,6 +44,40 @@ public class NoticeService {
                 .page(page)
                 .size(size)
                 .build();
+    }
+
+    /*
+        좋아요 추가
+     */
+    public void like(Integer noticeId) {
+        Integer userId = principalUtil.getPrincipalUser().getUser().getUserId();
+        noticeLikeMapper.insert(noticeId, userId);
+    }
+
+    /*
+        좋아요 취소
+     */
+    public void disLike(Integer noticeId) {
+        Integer userId = principalUtil.getPrincipalUser().getUser().getUserId();
+        noticeLikeMapper.delete(noticeId, userId);
+    }
+
+    /*
+        특정 공지사항 글 클릭해서 내용 확인하기
+     */
+    public Notice getNoticeContent(Integer categoryId, Integer noticeId) {
+        return noticeMapper.findByOption(categoryId, noticeId);
+    }
+
+    /*
+        특정 공지사항 글 조회수
+     */
+    public int increaseViews(Integer categoryId, Integer noticeId) {
+        int updated = noticeMapper.increaseViews(categoryId, noticeId);
+        if(updated == 0) {
+            return 0;
+        }
+        return noticeMapper.selectViews(categoryId, noticeId);
     }
 
 }

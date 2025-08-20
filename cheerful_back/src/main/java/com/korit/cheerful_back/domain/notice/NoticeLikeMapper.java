@@ -6,8 +6,8 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface NoticeLikeMapper {
 
-//    int insert(@Param("noticeId") Integer noticeId, @Param("userId") Integer userId);
-//    int delete(@Param("noticeId") Integer noticeId, @Param("userId") Integer userId);
-//    int getLikeCount(@Param("noticeId") Integer noticeId);
+    int insert(@Param("noticeId") Integer noticeId, @Param("userId") Integer userId);
+    int delete(@Param("noticeId") Integer noticeId, @Param("userId") Integer userId);
+    int getLikeCount(@Param("noticeId") Integer noticeId);
 
 }

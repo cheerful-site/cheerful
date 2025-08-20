@@ -15,18 +15,6 @@ public class NoticeController {
 
     private final NoticeService noticeService;
 
-    //    private final NoticeService noticeService;
-//    private final AdminService adminService;
-//
-//    /*
-//        멀티파트로 전달된 이미지파일과 함께 공지사항 글을 등록
-//        @ModelAttribute 로 DTO 바인딩
-//     */
-//    @PostMapping
-//    public ResponseEntity<ResponseDto<?>> register(@ModelAttribute NoticeRegisterReqDto dto) {
-//        return ResponseEntity.ok(ResponseDto.success("공지사항 글을 등록하였습니다."));
-//    }
-//
     /*
         공지사항 페이징 목록 조회
      */
@@ -38,37 +26,45 @@ public class NoticeController {
 //        System.out.println(categoryId);
         return ResponseEntity.ok(ResponseDto.success(noticeService.getNoticeList(page, size, categoryId)));
     }
-//
-//    /*
-//        특정 공지사항 글에 좋아요 추가
-//     */
-//    @PostMapping
-//    public ResponseEntity<ResponseDto<?>> getLike() {
-//        return ResponseEntity.ok(ResponseDto.success("좋아요"));
-//    }
-//
-//    /*
-//        특정 공지사항 글을 좋아요 취소
-//     */
-//    @DeleteMapping
-//    public ResponseEntity<ResponseDto<?>> getDisLike() {
-//        return ResponseEntity.ok(ResponseDto.success("좋아요 취소"));
-//    }
-//
-//    /*
-//        특정 글 클릭해서 내용 보기
-//     */
-//    @GetMapping
-//    public ResponseEntity<ResponseDto<?>> getNoticeContent() {
-//        return ResponseEntity.ok(ResponseDto.success(null));
-//    }
-//
-//    /*
-//        특정 글 조회수
-//     */
-//    @PostMapping
-//    public ResponseEntity<ResponseDto<?>> getNoticeViews() {
-//        return ResponseEntity.ok(ResponseDto.success(null));
-//    }
+
+    /*
+        특정 공지사항 글에 좋아요 추가
+     */
+    @PostMapping("/{noticeId}/like")
+    public ResponseEntity<ResponseDto<?>> getLike(@PathVariable Integer noticeId) {
+        noticeService.like(noticeId);
+        return ResponseEntity.ok(ResponseDto.success("좋아요"));
+    }
+
+    /*
+        특정 공지사항 글을 좋아요 취소
+     */
+    @DeleteMapping("/{noticeId}/disLike")
+    public ResponseEntity<ResponseDto<?>> getDisLike(@PathVariable Integer noticeId) {
+        noticeService.disLike(noticeId);
+        return ResponseEntity.ok(ResponseDto.success("좋아요 취소"));
+    }
+
+    /*
+        특정 글 클릭해서 내용 보기
+     */
+    @GetMapping("/{categoryId}/{noticeId}")
+    public ResponseEntity<ResponseDto<?>> getNoticeContent(@PathVariable Integer categoryId, @PathVariable Integer noticeId) {
+        System.out.println(categoryId);
+        System.out.println(noticeId);
+        return ResponseEntity.ok(ResponseDto.success(noticeService.getNoticeContent(categoryId, noticeId)));
+    }
+
+    /*
+        특정 글 조회수
+     */
+    @PostMapping("/{categoryId}/{noticeId}")
+    public ResponseEntity<ResponseDto<?>> getNoticeViews(@PathVariable Integer categoryId, @PathVariable Integer noticeId) {
+        int views = noticeService.increaseViews(categoryId, noticeId);
+        if (views > 0) {
+            views = 0;
+        }
+        return ResponseEntity.ok(ResponseDto.success(views));
+    }
 
 }
