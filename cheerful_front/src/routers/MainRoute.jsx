@@ -9,8 +9,6 @@ import CommunityRegister from "../pages/Communities/CommunityRegister/CommunityR
 import AdminRoute from "./AdminRoute";
 import CommunityRoute from "./CommunityRoute";
 import NoticeRoute from "./NoticeRoute";
-import Food from "../pages/Food/Food/Food";
-import FoodDetail from "../pages/Food/FoodDetail/FoodDetail";
 import FoodRoute from "./FoodRoute";
 
 function MainRoute(props) {
