@@ -1,5 +1,6 @@
 package com.korit.cheerful_back.service;
 
+import com.korit.cheerful_back.domain.community.CommunityMapper;
 import com.korit.cheerful_back.domain.notice.Notice;
 import com.korit.cheerful_back.domain.notice.NoticeLikeMapper;
 import com.korit.cheerful_back.domain.notice.NoticeMapper;
@@ -9,6 +10,7 @@ import com.korit.cheerful_back.security.model.PrincipalUser;
 import com.korit.cheerful_back.security.model.PrincipalUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -28,7 +30,7 @@ public class NoticeService {
                 .startIndex((page - 1) * size)
                 .endIndex(size * page)
                 .size(size)
-                .noticeCategoryId(categoryId)
+                .categoryId(categoryId)
                 .build();
 
         List<Notice> contents = noticeMapper.findAllByOptions(searchOption);
@@ -72,9 +74,10 @@ public class NoticeService {
     /*
         특정 공지사항 글 조회수
      */
+    @Transactional
     public int increaseViews(Integer categoryId, Integer noticeId) {
         int updated = noticeMapper.increaseViews(categoryId, noticeId);
-        if(updated == 0) {
+        if (updated == 0) {
             return 0;
         }
         return noticeMapper.selectViews(categoryId, noticeId);
