@@ -160,6 +160,29 @@ export const manageSearch = css`
 `;
 
 export const category = (categoryId) => css`
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  width: 100%;
+`;
+
+export const registerAndDel = css`
+  & > button {
+    margin: 0 0.5rem;
+    border: none;
+    outline: none;
+    color: #22222250;
+    background-color: #ffffff;
+    cursor: pointer;
+    &:active {
+      color: #222222;
+    }
+  }
+`;
+
+export const buttonLayout = css`
+  display: flex;
+  justify-content: flex-end;
   margin-bottom: 1rem;
   width: 100%;
 `;

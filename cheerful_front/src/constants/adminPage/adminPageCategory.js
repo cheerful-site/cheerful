@@ -57,3 +57,21 @@ export const communityCategory = [
     categoryId: 7,
   },
 ];
+
+export const modeButton = [
+  {
+    id: 1,
+    buttonName: "등록",
+    mode: "register",
+  },
+  {
+    id: 2,
+    buttonName: "수정",
+    mode: "modify",
+  },
+  {
+    id: 3,
+    buttonName: "삭제",
+    mode: "delete",
+  },
+];

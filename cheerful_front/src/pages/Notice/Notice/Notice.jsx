@@ -68,7 +68,10 @@ function Notice(props) {
               </div>
             ))
           : noticeList?.map((post) => (
-              <Post content={post} category={category} />
+              <Post
+                content={post}
+                category={category}
+              />
             ))}
       </div>
       <PageNation
