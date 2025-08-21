@@ -63,7 +63,7 @@ public class FoodService {
         .toList();
 
     return PaginationRespDto.<Food>builder()
-        .content(contents)
+        .content(contentWithUrls)
         .totalElements(totalElements)
         .totalPages(totalPages)
         .isLast(isLast)
