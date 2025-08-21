@@ -1,17 +1,23 @@
 package com.korit.cheerful_back.util;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+@Data
 public class ImageUrlUtil {
 
   private final AppProperties appProperties;
 
-  private String buildImageUrl(String imageUrl, String imageConfigName) {
+  public String buildImageUrl(String imageUrl, String imageConfigName) {
     if(imageConfigName == null) {
-      return null;}
+      return null;
+    }
 
     if(!appProperties.getImageConfigs().containsKey(imageConfigName)) {
       return null;
@@ -32,5 +38,20 @@ public class ImageUrlUtil {
 
   }
 
+  public String profile(String path) {
+    return buildImageUrl(path, "profile");
+  }
+  public String community(String path) {
+    return buildImageUrl(path, "community");
+  }
+  public String food(String path) {
+    return buildImageUrl(path, "food");
+  }
+  public String foodComment(String path) {
+    return buildImageUrl(path, "foodComment");
+  }
+  public String notice(String path) {
+    return buildImageUrl(path, "notice");
+  }
 
 }

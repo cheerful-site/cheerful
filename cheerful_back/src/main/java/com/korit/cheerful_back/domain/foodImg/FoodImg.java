@@ -14,4 +14,5 @@ public class FoodImg {
     private Integer foodId;
     private Integer seq;
     private String imgPath;
+    private String imgUrl;
 }
