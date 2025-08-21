@@ -57,7 +57,7 @@ function Notice(props) {
               <div key={post.noticeId} css={s.noticePost}>
                 <div
                   onClick={() =>
-                    handleOnClick(post.noticeId, post.noticeCategoryId)
+                    handleOnClick(post.noticeCategoryId, post.noticeId)
                   }>
                   {post.title}
                 </div>

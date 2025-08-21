@@ -2,6 +2,8 @@ import { css } from "@emotion/react";
 
 export const searchBar = css`
   position: relative;
+  margin-top: 5rem;
+  margin-bottom: 4rem;
 
   & > svg {
     position: absolute;
