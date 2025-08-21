@@ -44,7 +44,7 @@
         <result property="imgPath" column="img_path" />
     </resultMap>
 
-    <insert id="insert">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="noticeId">
         insert into
             notice_tb(notice_id, user_id, notice_category_id, notice_title, notice_content, created_at)
         values (default, #{userId}, #{noticeCategoryId}, #{title}, #{content}, now())
@@ -101,7 +101,7 @@
                 left outer join notice_category_tb nct on(nct.notice_category_id = nt.notice_category_id)
                 left outer join (select notice_id, count(*) as like_count from notice_like_tb group by notice_id) nlc on(nlc.notice_id = nt.notice_id)
             where
-                nt.notice_category_id = #{noticeCategoryId}
+                nt.notice_category_id = #{categoryId}
             order by
                 nt.created_at desc,
                 nt.notice_id desc,
@@ -117,7 +117,7 @@
             notice_tb nt
             left outer join notice_category_tb nct on(nct.notice_category_id = nt.notice_category_id)
         where
-            nt.notice_category_id = #{noticeCategoryId}
+            nt.notice_category_id = #{categoryId}
     </select>
 
 <!--    관리자 권한-->
@@ -148,7 +148,7 @@
             left outer join user_tb ut on(ut.user_id = nt.user_id)
             left outer join notice_category_tb nct on(nct.notice_category_id = nt.notice_category_id)
         where
-            nt.notice_category_id = #{noticeCategoryId}
+            nt.notice_category_id = #{categoryId}
             and (nt.notice_title like concat('%', #{searchText}, '%')
                 or ut.name like concat('%', #{searchText}, '%'))
         order by
@@ -164,7 +164,7 @@
             left outer join user_tb ut on(ut.user_id = nt.user_id)
             left outer join notice_category_tb nct on(nct.notice_category_id = nt.notice_category_id)
         where
-            nt.notice_category_id = #{noticeCategoryId}
+            nt.notice_category_id = #{categoryId}
             and (nt.notice_title like concat('%', #{searchText}, '%')
                 or ut.name like concat('%', #{searchText}, '%'))
     </select>

@@ -221,6 +221,7 @@ public class AdminService {
 
     }
 
+
     /*
         admin 전용 notice 페이징 목록 조회
      */
@@ -229,7 +230,7 @@ public class AdminService {
             .startIndex((page - 1) * size)
             .endIndex(size * page)
             .size(size)
-            .noticeCategoryId(categoryId)
+            .categoryId(categoryId)
             .searchText(searchText)
             .build();
 
