@@ -59,6 +59,7 @@ export const foodContainer = css`
     border-radius: 1rem;
     width: 20rem;
     height: 20rem;
+    cursor: pointer;
   }
 
   & > div > div {
@@ -66,10 +67,14 @@ export const foodContainer = css`
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
 
     & > span:nth-of-type(1) {
       font-size: 1.8rem;
       font-weight: 700;
+      &:hover {
+        text-decoration: underline;
+      }
     }
 
     & > span:nth-of-type(2),

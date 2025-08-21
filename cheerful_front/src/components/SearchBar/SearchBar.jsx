@@ -1,12 +1,36 @@
 /**@jsxImportSource @emotion/react */
 import { FaSearch } from "react-icons/fa";
 import * as s from "./styles";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function SearchBar(props) {
+  const navigate = useNavigate();
+  const [inputValue, setInputValue] = useState("");
+
+  const handleSearchOnChange = (e) => {
+    setInputValue(e.target.value);
+  };
+
+  const handleSearchOnClick = () => {
+    console.log(inputValue);
+    navigate(`/search/${inputValue}`);
+  };
+
   return (
     <div css={s.searchBar}>
-      <FaSearch />
-      <input autoFocus type="text" placeholder="Search for..." />
+      <FaSearch onClick={handleSearchOnClick} />
+      <input
+        autoFocus
+        type="text"
+        placeholder="Search for..."
+        name="search"
+        onChange={handleSearchOnChange}
+        onKeyDown={(e) => {
+          if (e.keyCode === 13) handleSearchOnClick();
+        }}
+        value={inputValue}
+      />
     </div>
   );
 }

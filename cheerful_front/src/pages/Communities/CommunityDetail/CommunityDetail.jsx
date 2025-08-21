@@ -23,7 +23,7 @@ function CommunityDetail(props) {
   const user = principal?.data?.data?.body?.user || [];
   // console.log(user);
   // console.log(detailContent);
-  console.log(comments);
+  // console.log(comments);
 
   const handleOnChange = (e) => {
     setInputValue(e.target.value);

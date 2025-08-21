@@ -60,11 +60,12 @@ public class NoticeController {
      */
     @PostMapping("/{categoryId}/{noticeId}")
     public ResponseEntity<ResponseDto<?>> getNoticeViews(@PathVariable Integer categoryId, @PathVariable Integer noticeId) {
+        System.out.println(categoryId);
+        System.out.println(noticeId);
         int views = noticeService.increaseViews(categoryId, noticeId);
         if (views > 0) {
             views = 0;
         }
         return ResponseEntity.ok(ResponseDto.success(views));
     }
-
 }

@@ -65,6 +65,13 @@ export const noticePost = css`
   border-top: 0.15rem solid #22222230;
   width: 100%;
   height: 3rem;
+
+  & > div:first-of-type {
+    cursor: pointer;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 `;
 
 export const noticeAuthor = css`
