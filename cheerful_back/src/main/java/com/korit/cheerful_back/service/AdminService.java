@@ -3,6 +3,7 @@ package com.korit.cheerful_back.service;
 import com.korit.cheerful_back.domain.community.Community;
 import com.korit.cheerful_back.domain.community.CommunityMapper;
 import com.korit.cheerful_back.domain.community.CommunitySearchOption;
+import com.korit.cheerful_back.domain.communityImg.CommunityImg;
 import com.korit.cheerful_back.domain.food.Food;
 import com.korit.cheerful_back.domain.food.FoodAdminRow;
 import com.korit.cheerful_back.domain.food.FoodMapper;
@@ -36,6 +37,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -186,11 +188,11 @@ public class AdminService {
    */
     @Transactional(rollbackFor = Exception.class)
     public void registerFood(FoodRegisterReqDto dto) {
-        List<String> uploadFilePath = dto.getFiles()
-            .stream()
-            .map(file -> "/food/" + fileService.uploadFile(file, "/food"))
-            .peek(newFileName -> System.out.println(newFileName))
-            .collect(Collectors.toList());
+//        List<String> uploadFilePath = dto.getFiles()
+//            .stream()
+//            .map(file -> "/food/" + fileService.uploadFile(file, "/food"))
+//            .peek(newFileName -> System.out.println(newFileName))
+//            .collect(Collectors.toList());
 
         Integer userId = principalUtil.getPrincipalUser().getUser().getUserId();
 
@@ -202,15 +204,37 @@ public class AdminService {
             .build();
         foodMapper.insert(food);
 
-        AtomicInteger atomicInteger = new AtomicInteger(0);
-        List<FoodImg> foodImgs = uploadFilePath.stream()
-            .map(path -> FoodImg.builder()
-                .seq(atomicInteger.getAndIncrement() + 1)
-                .foodId(food.getFoodId())
-                .imgPath(path)
-                .build())
-            .collect(Collectors.toList());
-        foodImgMapper.insertMany(foodImgs);
+//        AtomicInteger atomicInteger = new AtomicInteger(0);
+//        List<FoodImg> foodImgs = uploadFilePath.stream()
+//            .map(path -> FoodImg.builder()
+//                .seq(atomicInteger.getAndIncrement() + 1)
+//                .foodId(food.getFoodId())
+//                .imgPath(path)
+//                .build())
+//            .collect(Collectors.toList());
+//        foodImgMapper.insertMany(foodImgs);
+
+
+        List<MultipartFile> imageFiles = dto.getFiles();
+
+        if (imageFiles != null && !imageFiles.isEmpty()) {
+            List<FoodImg> foodImgs = new ArrayList<>();
+            int seq = 1;
+
+            for(MultipartFile file : imageFiles) {
+                String imagePath = fileService.uploadFile(file, "food");
+
+                FoodImg foodImg = FoodImg.builder()
+                    .foodId(food.getFoodId())
+                    .seq(seq++)
+                    .imgPath(imagePath)
+                    .build();
+
+                foodImgs.add(foodImg);
+            }
+
+            foodImgMapper.insertMany(foodImgs);
+        }
     }
 
     /*
@@ -265,15 +289,15 @@ public class AdminService {
     @Transactional(rollbackFor = Exception.class)
     public void registerNotice(NoticeRegisterReqDto dto) {
         // 1) 파일이 존재할 경우에만 업로드 실행 > if문 사용
-        List<String> uploadFilepath = new ArrayList<>();
-
-        if (dto.getFiles() != null && !dto.getFiles().isEmpty()) {
-            uploadFilepath = dto.getFiles().stream()
-                    .filter(file -> file != null && !file.isEmpty()) // 빈 파일 제외
-                    .map(file -> "/notice/" + fileService.uploadFile(file, "/notice"))
-                    .peek(newFileName -> System.out.println(newFileName))
-                    .collect(Collectors.toList());
-        }
+//        List<String> uploadFilepath = new ArrayList<>();
+//
+//        if (dto.getFiles() != null && !dto.getFiles().isEmpty()) {
+//            uploadFilepath = dto.getFiles().stream()
+//                    .filter(file -> file != null && !file.isEmpty()) // 빈 파일 제외
+//                    .map(file -> "/notice/" + fileService.uploadFile(file, "/notice"))
+//                    .peek(newFileName -> System.out.println(newFileName))
+//                    .collect(Collectors.toList());
+//        }
 
         // 2) 사용자 식별
         Integer userId = principalUtil.getPrincipalUser().getUser().getUserId();
@@ -287,15 +311,36 @@ public class AdminService {
                 .build();
         noticeMapper.insert(notice);
 
-        if (!uploadFilepath.isEmpty()) {
-            AtomicInteger atomicInteger = new AtomicInteger(0);
-            List<NoticeImg> noticeImgs = uploadFilepath.stream()
-                    .map(path -> NoticeImg.builder()
-                            .seq(atomicInteger.getAndIncrement() + 1)
-                            .noticeId(notice.getNoticeId())
-                            .imgPath(path)
-                            .build())
-                    .collect(Collectors.toList());
+//        if (!uploadFilepath.isEmpty()) {
+//            AtomicInteger atomicInteger = new AtomicInteger(0);
+//            List<NoticeImg> noticeImgs = uploadFilepath.stream()
+//                    .map(path -> NoticeImg.builder()
+//                            .seq(atomicInteger.getAndIncrement() + 1)
+//                            .noticeId(notice.getNoticeId())
+//                            .imgPath(path)
+//                            .build())
+//                    .collect(Collectors.toList());
+//            noticeImgMapper.insertMany(noticeImgs);
+//        }
+
+        List<MultipartFile> imageFiles = dto.getFiles();
+
+        if (imageFiles != null && !imageFiles.isEmpty()) {
+            List<NoticeImg> noticeImgs = new ArrayList<>();
+            int seq = 1;
+
+            for(MultipartFile file : imageFiles) {
+                String imagePath = fileService.uploadFile(file, "notice");
+
+                NoticeImg noticeImg = NoticeImg.builder()
+                    .noticeId(notice.getNoticeId())
+                    .seq(seq++)
+                    .imgPath(imagePath)
+                    .build();
+
+                noticeImgs.add(noticeImg);
+            }
+
             noticeImgMapper.insertMany(noticeImgs);
         }
     }

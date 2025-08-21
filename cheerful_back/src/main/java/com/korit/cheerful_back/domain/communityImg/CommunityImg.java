@@ -14,4 +14,5 @@ public class CommunityImg {
     private Integer communityId;
     private Integer seq;
     private String imgPath;
+    private String imgUrl;
 }

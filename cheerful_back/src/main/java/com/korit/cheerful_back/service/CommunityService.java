@@ -12,14 +12,15 @@ import com.korit.cheerful_back.dto.community.CommunityCommentRegisterReqDto;
 import com.korit.cheerful_back.dto.community.CommunityRegisterReqDto;
 import com.korit.cheerful_back.dto.response.PaginationRespDto;
 import com.korit.cheerful_back.security.model.PrincipalUtil;
+import com.korit.cheerful_back.util.ImageUrlUtil;
+import java.util.Comparator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +32,7 @@ public class CommunityService {
     private final CommunityImgMapper communityImgMapper;
     private final CommunityLikeMapper communityLikeMapper;
     private final CommunityCommentMapper communityCommentMapper;
+    private final ImageUrlUtil imageUrlUtil;
 
     /*
         커뮤니티 글 등록 + 이미지 저장
@@ -45,15 +47,16 @@ public class CommunityService {
 //                .collect(Collectors.toList());
 
         // 1) 파일이 존재할 경우에만 업로드 실행 > if문 사용
-        List<String> uploadFilepath = new ArrayList<>();
 
-        if (dto.getFiles() != null && !dto.getFiles().isEmpty()) {
-            uploadFilepath = dto.getFiles().stream()
-                    .filter(file -> file != null && !file.isEmpty()) // 빈 파일 제외
-                    .map(file -> fileService.uploadFile(file, "community"))
-                    .peek(newFileName -> System.out.println(newFileName))
-                    .collect(Collectors.toList());
-        }
+//        List<String> uploadFilepath = new ArrayList<>();
+
+//        if (dto.getFiles() != null && !dto.getFiles().isEmpty()) {
+//            uploadFilepath = dto.getFiles().stream()
+//                    .filter(file -> file != null && !file.isEmpty()) // 빈 파일 제외
+//                    .map(file -> "/community/" + fileService.uploadFile(file, "/community"))
+//                    .peek(newFileName -> System.out.println(newFileName))
+//                    .collect(Collectors.toList());
+//        }
 
         // 2) 사용자 식별
         Integer userId = principalUtil.getPrincipalUser().getUser().getUserId();
@@ -78,17 +81,41 @@ public class CommunityService {
 //                .collect(Collectors.toList());
 //        communityImgMapper.insertMany(communityImgs);
 
-        if (!uploadFilepath.isEmpty()) {
-            AtomicInteger atomicInteger = new AtomicInteger(0);
-            List<CommunityImg> communityImgs = uploadFilepath.stream()
-                    .map(path -> CommunityImg.builder()
-                            .seq(atomicInteger.getAndIncrement() + 1)
-                            .communityId(community.getCommunityId())
-                            .imgPath(path)
-                            .build())
-                    .collect(Collectors.toList());
+//        if (!uploadFilepath.isEmpty()) {
+//            AtomicInteger atomicInteger = new AtomicInteger(0);
+//            List<CommunityImg> communityImgs = uploadFilepath.stream()
+//                    .map(path -> CommunityImg.builder()
+//                            .seq(atomicInteger.getAndIncrement() + 1)
+//                            .communityId(community.getCommunityId())
+//                            .imgPath(path)
+//                            .build())
+//                    .collect(Collectors.toList());
+//            communityImgMapper.insertMany(communityImgs);
+//        }
+//
+//        System.out.println(uploadFilepath);
+
+        List<MultipartFile> imageFiles = dto.getFiles();
+
+        if (imageFiles != null && !imageFiles.isEmpty()) {
+            List<CommunityImg> communityImgs = new ArrayList<>();
+            int seq = 1;
+
+            for(MultipartFile file : imageFiles) {
+                String imagePath = fileService.uploadFile(file, "community");
+
+                CommunityImg communityImg = CommunityImg.builder()
+                    .communityId(community.getCommunityId())
+                    .seq(seq++)
+                    .imgPath(imagePath)
+                    .build();
+
+                communityImgs.add(communityImg);
+            }
+
             communityImgMapper.insertMany(communityImgs);
         }
+
 
     }
 
@@ -120,8 +147,20 @@ public class CommunityService {
         Integer totalPages = (int) Math.ceil(totalElements.longValue() / size.doubleValue());
         Boolean isLast = page.equals(totalPages);
 
+        List<Community> contentWithUrls = contents.stream()
+            .peek(c -> {
+                List<CommunityImg> imgs = c.getCommunityImgs();
+                if(imgs == null || imgs.isEmpty()) return;
+
+                imgs.sort(Comparator.comparingInt(CommunityImg::getSeq));
+
+                imgs.forEach(img ->
+                    img.setImgUrl(imageUrlUtil.community(img.getImgPath())));
+            })
+            .toList();
+
         return PaginationRespDto.<Community>builder()
-                .content(contents)
+                .content(contentWithUrls)
 //                .categoryId(categoryId)
                 .totalElements(totalElements)
                 .totalPages(totalPages)

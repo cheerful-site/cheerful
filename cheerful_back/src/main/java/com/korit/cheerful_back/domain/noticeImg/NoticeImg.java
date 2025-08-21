@@ -15,5 +15,6 @@ public class NoticeImg {
     private Integer noticeId;
     private Integer seq;
     private String imgPath;
+    private String imgUrl;
 
 }
