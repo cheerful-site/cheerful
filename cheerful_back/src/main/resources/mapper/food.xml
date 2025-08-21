@@ -173,7 +173,7 @@
             fmt.food_id as fmt_food_id,
             fmt.user_id as fmt_user_id,
             fmt.content,
-            fmt.created_at ad fmt_created_at,
+            fmt.created_at as fmt_created_at,
 
             ifnull(flt.food_like_id, 0) as is_like,
             ifnull(flc.like_count, 0) as like_count,
