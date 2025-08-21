@@ -50,7 +50,7 @@ public class CommunityService {
         if (dto.getFiles() != null && !dto.getFiles().isEmpty()) {
             uploadFilepath = dto.getFiles().stream()
                     .filter(file -> file != null && !file.isEmpty()) // 빈 파일 제외
-                    .map(file -> "/community/" + fileService.uploadFile(file, "/community"))
+                    .map(file -> fileService.uploadFile(file, "community"))
                     .peek(newFileName -> System.out.println(newFileName))
                     .collect(Collectors.toList());
         }
@@ -90,7 +90,6 @@ public class CommunityService {
             communityImgMapper.insertMany(communityImgs);
         }
 
-        System.out.println(uploadFilepath);
     }
 
     /*

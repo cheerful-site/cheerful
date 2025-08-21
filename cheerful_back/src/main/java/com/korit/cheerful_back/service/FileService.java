@@ -1,5 +1,7 @@
 package com.korit.cheerful_back.service;
 
+import com.korit.cheerful_back.util.AppProperties;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -11,20 +13,23 @@ import java.nio.file.Paths;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class FileService {
 
-    @Value("${user.dir}")
-    private String rootPath;
+    private final AppProperties appProperties;
 
     /*
         파일 업로드 후 생성된 새 파일명을 반환 (DB에는 새 파일명만 저장하는 패턴)
      */
-    public String uploadFile(MultipartFile file, String dirPath) {
+    public String uploadFile(MultipartFile file, String imageConfigName) {
+        String dirPath = appProperties.getImageConfigs().get(imageConfigName).getDirPath();
+
         String newFileName = generatedRandomFilename(file.getOriginalFilename());
-        // 파일 업로드 경로 생성 -> rootPath - ${user.dir} -> 프로젝트 경로
-        String uploadPath = rootPath + "/upload" + dirPath;
-        mkdirs(uploadPath);
-        Path path = Paths.get(uploadPath + "/" + newFileName);
+
+        mkdirs(dirPath);
+
+        Path path = Paths.get(dirPath + "/" + newFileName);
+
         try {
             Files.write(path, file.getBytes());
         } catch (Exception e) {
@@ -64,13 +69,17 @@ public class FileService {
         업로드 파일 삭제 (기본 이미지 보호)
      */
     public void deletedFile(String path) {
+
+        if (path == null || path.isEmpty()) {
+            return;
+        }
         if (path.substring(path.lastIndexOf("/")).contains("default")) {
             return;
         }
-        File file = new File(rootPath + "/upload/" + path);
-        if (!file.exists()) {
-            return;
-        }
+        File file = new File(path);
+//        if (!file.exists()) {
+//            return;
+//        }
         file.delete();
     }
 

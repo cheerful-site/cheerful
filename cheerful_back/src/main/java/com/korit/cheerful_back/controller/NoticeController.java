@@ -50,8 +50,8 @@ public class NoticeController {
      */
     @GetMapping("/{categoryId}/{noticeId}")
     public ResponseEntity<ResponseDto<?>> getNoticeContent(@PathVariable Integer categoryId, @PathVariable Integer noticeId) {
-        System.out.println(categoryId);
-        System.out.println(noticeId);
+//        System.out.println(categoryId);
+//        System.out.println(noticeId);
         return ResponseEntity.ok(ResponseDto.success(noticeService.getNoticeContent(categoryId, noticeId)));
     }
 
@@ -60,8 +60,8 @@ public class NoticeController {
      */
     @PostMapping("/{categoryId}/{noticeId}")
     public ResponseEntity<ResponseDto<?>> getNoticeViews(@PathVariable Integer categoryId, @PathVariable Integer noticeId) {
-        System.out.println(categoryId);
-        System.out.println(noticeId);
+//        System.out.println(categoryId);
+//        System.out.println(noticeId);
         int views = noticeService.increaseViews(categoryId, noticeId);
         if (views > 0) {
             views = 0;
