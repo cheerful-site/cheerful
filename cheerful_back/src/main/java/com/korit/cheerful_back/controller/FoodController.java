@@ -1,6 +1,7 @@
 package com.korit.cheerful_back.controller;
 
 import com.korit.cheerful_back.dto.food.FoodRegisterReqDto;
+import com.korit.cheerful_back.dto.food.FoodsCommentRegisterReqDto;
 import com.korit.cheerful_back.dto.response.ResponseDto;
 import com.korit.cheerful_back.service.FoodService;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -58,4 +60,12 @@ public class FoodController {
     return ResponseEntity.ok(ResponseDto.success(foodService.getFoodContent(foodId)));
   }
 
+  /*
+    댓글 등록 + 이미지 추가
+   */
+  @PostMapping("/{foodId}/comments")
+  public ResponseEntity<ResponseDto<?>> registerFoodComment(@ModelAttribute FoodsCommentRegisterReqDto dto) {
+    foodService.registerComment(dto);
+    return ResponseEntity.ok(ResponseDto.success("댓글을 등록하였습니다."));
+  }
 }

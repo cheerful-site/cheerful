@@ -6,10 +6,14 @@ import com.korit.cheerful_back.domain.food.FoodMapper;
 import com.korit.cheerful_back.domain.food.FoodSearchOption;
 import com.korit.cheerful_back.domain.foodComment.FoodComment;
 import com.korit.cheerful_back.domain.foodComment.FoodCommentMapper;
+import com.korit.cheerful_back.domain.foodCommentImg.FoodCommentImg;
+import com.korit.cheerful_back.domain.foodCommentImg.FoodCommentImgMapper;
 import com.korit.cheerful_back.domain.foodImg.FoodImg;
 import com.korit.cheerful_back.dto.food.FoodRegisterReqDto;
+import com.korit.cheerful_back.dto.food.FoodsCommentRegisterReqDto;
 import com.korit.cheerful_back.dto.response.PaginationRespDto;
 import com.korit.cheerful_back.security.model.PrincipalUtil;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -25,6 +29,8 @@ public class FoodService {
   private final FoodLikeMapper foodLikeMapper;
   private final FoodCommentMapper foodCommentMapper;
   private final PrincipalUtil principalUtil;
+  private final FileService fileService;
+  private final FoodCommentImgMapper foodCommentImgMapper;
 
   /*
     food 페이징 목록 조회
@@ -77,5 +83,44 @@ public class FoodService {
     food.setFoodComment(comment);
 
     return food;
+  }
+
+  /*
+    댓글 등록 + 이미지 저장
+   */
+  @Transactional(rollbackFor = Exception.class)
+  public void registerComment(FoodsCommentRegisterReqDto dto) {
+    List<String> uploadFilepath = new ArrayList<>();
+
+    if(dto.getFiles() != null && !dto.getFiles().isEmpty()) {
+      uploadFilepath = dto.getFiles().stream()
+          .filter(file -> file != null && !file.isEmpty())
+          .map(file -> "/foodComment/" + fileService.uploadFile(file, "/foodComment"))
+          .peek(newFileName -> System.out.println(newFileName))
+          .collect(Collectors.toList());
+    }
+
+    Integer userId = principalUtil.getPrincipalUser().getUser().getUserId();
+
+    FoodComment comment = FoodComment.builder()
+        .userId(userId)
+        .foodId(dto.getFoodId())
+        .content(dto.getContent())
+        .build();
+    foodCommentMapper.insert(comment);
+
+    if(!uploadFilepath.isEmpty()) {
+      AtomicInteger atomicInteger = new AtomicInteger(0);
+      List<FoodCommentImg> foodCommentImgs = uploadFilepath.stream()
+          .map(path -> FoodCommentImg.builder()
+              .seq(atomicInteger.getAndIncrement() + 1)
+              .foodCommentId(comment.getFoodCommentId())
+              .imgPath(path)
+              .build())
+          .collect(Collectors.toList());
+      foodCommentImgMapper.insertMany(foodCommentImgs);
+    }
+
+    System.out.println(uploadFilepath);
   }
 }
