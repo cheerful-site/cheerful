@@ -22,6 +22,7 @@ import com.korit.cheerful_back.dto.admin.AdminLoginReqDto;
 import com.korit.cheerful_back.dto.admin.TokenDto;
 import com.korit.cheerful_back.dto.food.FoodModifyReqDto;
 import com.korit.cheerful_back.dto.food.FoodRegisterReqDto;
+import com.korit.cheerful_back.dto.notice.NoticeModifyReqDto;
 import com.korit.cheerful_back.dto.notice.NoticeRegisterReqDto;
 import com.korit.cheerful_back.dto.response.PaginationRespDto;
 import com.korit.cheerful_back.exception.auth.LoginException;
@@ -242,7 +243,7 @@ public class AdminService {
      */
     public void modifyFood(FoodModifyReqDto dto) {
         Food food = dto.toEntity();
-
+        foodMapper.update(food);
     }
 
 
@@ -342,6 +343,41 @@ public class AdminService {
             }
 
             noticeImgMapper.insertMany(noticeImgs);
+        }
+    }
+
+    /*
+        notice 수정
+    */
+    @Transactional(rollbackFor = Exception.class)
+    public void modifyNotice(NoticeModifyReqDto dto) {
+        // 글 수정
+        Notice notice = dto.toEntity();
+        noticeMapper.update(notice);
+
+        // 이미지 삭제
+        noticeMapper.deleteNoticeImages(notice.getNoticeId());
+
+        // 이미지 등록
+        List<MultipartFile> imageFiles = dto.getFiles();
+
+        if (imageFiles != null && !imageFiles.isEmpty()) {
+            List<NoticeImg> noticeImgs = new ArrayList<>();
+            int seq = 1;
+
+            for(MultipartFile file : imageFiles) {
+                String imagePath = fileService.uploadFile(file, "notice");
+
+                NoticeImg noticeImg = NoticeImg.builder()
+                        .noticeId(notice.getNoticeId())
+                        .seq(seq++)
+                        .imgPath(imagePath)
+                        .build();
+
+                noticeImgs.add(noticeImg);
+            }
+
+            noticeMapper.insertNoticeImages(noticeImgs);
         }
     }
 

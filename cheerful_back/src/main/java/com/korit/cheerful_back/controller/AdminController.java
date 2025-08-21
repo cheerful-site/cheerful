@@ -1,7 +1,9 @@
 package com.korit.cheerful_back.controller;
 
 import com.korit.cheerful_back.dto.community.CommunityRegisterReqDto;
+import com.korit.cheerful_back.dto.food.FoodModifyReqDto;
 import com.korit.cheerful_back.dto.food.FoodRegisterReqDto;
+import com.korit.cheerful_back.dto.notice.NoticeModifyReqDto;
 import com.korit.cheerful_back.dto.notice.NoticeRegisterReqDto;
 import com.korit.cheerful_back.dto.response.ResponseDto;
 import com.korit.cheerful_back.service.AdminService;
@@ -88,6 +90,15 @@ public class AdminController {
     }
 
     /*
+        food 수정
+     */
+    @PutMapping("/foods")
+    public ResponseEntity<ResponseDto<?>> modifyFood(@RequestBody FoodModifyReqDto dto) {
+        adminService.modifyFood(dto);
+        return ResponseEntity.ok(ResponseDto.success("food 정보를 수정하였습니다."));
+    }
+
+    /*
         notice 조회
      */
     @GetMapping("/notice/{categoryId}")
@@ -112,5 +123,14 @@ public class AdminController {
     public ResponseEntity<ResponseDto<?>> deleteNoticeIds(@RequestParam List<Integer> noticeIds) {
         adminService.deleteNotice(noticeIds);
         return ResponseEntity.ok(ResponseDto.success("notice 정보를 삭제하였습니다."));
+    }
+
+    /*
+        notice 수정
+     */
+    @PutMapping("/notice/{categoryId}")
+    public ResponseEntity<ResponseDto<?>> modifyNotice(@ModelAttribute NoticeModifyReqDto dto) {
+        adminService.modifyNotice(dto);
+        return ResponseEntity.ok(ResponseDto.success("notice 정보를 수정했습니다."));
     }
 }

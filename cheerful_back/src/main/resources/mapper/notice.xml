@@ -50,6 +50,15 @@
         values (default, #{userId}, #{noticeCategoryId}, #{title}, #{content}, now())
     </insert>
 
+    <insert id="insertNoticeImages">
+        insert into
+            notice_img_tb(notice_img_id, notice_id, seq, img_path)
+        values
+        <foreach item="noticeImg" collection="noticeImg" separator=",">
+            (default, #{noticeImg.noticeId}, #{noticeImg.seq}, #{noticeImg.imgPath})
+        </foreach>
+    </insert>
+
     <delete id="deleteByNoticeIds">
         delete from notice_tb
         where
@@ -57,6 +66,12 @@
             <foreach item="noticeId" collection="noticeIds" separator="," open="(" close=")">
                 #{noticeId}
             </foreach>
+    </delete>
+
+    <delete id="deleteNoticeImages">
+        delete from notice_img_tb
+        where
+            notice_id = #{noticeId}
     </delete>
 
     <select id="findAllByOptions" resultMap="NoticeMap">
@@ -220,6 +235,19 @@
         where
             nt.notice_category_id = #{categoryId}
             and nt.notice_id = #{noticeId}
+    </update>
+
+<!--    admin page 글 수정-->
+    <update id="update">
+        update
+            notice_tb
+        set
+            user_id = #{userId},
+            notice_category_id = #{noticeCategoryId},
+            notice_title = #{title},
+            notice_content = #{content}
+        where
+            notice_id = #{noticeId}
     </update>
 
     <select id="selectViews" resultType="java.lang.Integer">

@@ -1,5 +1,6 @@
 package com.korit.cheerful_back.domain.notice;
 
+import com.korit.cheerful_back.domain.noticeImg.NoticeImg;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -20,6 +21,11 @@ public interface NoticeMapper {
     // admin전용 notice
     List<Notice> findAllBySearchOption(NoticeSearchOption searchOption);
     int getCountOfSearchOption(NoticeSearchOption searchOption);
+
+    int update(Notice notice);
+    int deleteNoticeImages(@Param("noticeId") Integer noticeId);
+    int insertNoticeImages(List<NoticeImg> noticeImgs);
+
     int deleteByNoticeIds(List<Integer> noticeIds);
 
     // 게시글 등록
