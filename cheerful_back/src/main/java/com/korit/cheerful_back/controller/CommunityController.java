@@ -47,7 +47,7 @@ public class CommunityController {
 //        System.out.println(page);
 //        System.out.println(size);
 //        System.out.println(categoryId);
-//        System.out.println(communityService.getCommunityList(page, size, categoryId));
+        System.out.println(communityService.getCommunityList(page, size, categoryId));
         return ResponseEntity.ok(ResponseDto.success(communityService.getCommunityList(page, size, categoryId)));
     }
 

@@ -13,13 +13,16 @@ import com.korit.cheerful_back.dto.food.FoodRegisterReqDto;
 import com.korit.cheerful_back.dto.food.FoodsCommentRegisterReqDto;
 import com.korit.cheerful_back.dto.response.PaginationRespDto;
 import com.korit.cheerful_back.security.model.PrincipalUtil;
+import com.korit.cheerful_back.util.ImageUrlUtil;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +34,7 @@ public class FoodService {
   private final PrincipalUtil principalUtil;
   private final FileService fileService;
   private final FoodCommentImgMapper foodCommentImgMapper;
+  private final ImageUrlUtil imageUrlUtil;
 
   /*
     food 페이징 목록 조회
@@ -47,8 +51,19 @@ public class FoodService {
     Integer totalPages = (int) Math.ceil(totalElements.longValue() / size.doubleValue());
     Boolean isLast = page.equals(totalPages);
 
+    List<Food> contentWithUrls = contents.stream()
+        .peek(c -> {
+          List<FoodImg> imgs = c.getFoodImgs();
+
+          imgs.sort(Comparator.comparingInt(FoodImg::getSeq));
+
+          imgs.forEach(img ->
+              img.setImgUrl(imageUrlUtil.food(img.getImgPath())));
+        })
+        .toList();
+
     return PaginationRespDto.<Food>builder()
-        .content(contents)
+        .content(contentWithUrls)
         .totalElements(totalElements)
         .totalPages(totalPages)
         .isLast(isLast)
@@ -90,15 +105,15 @@ public class FoodService {
    */
   @Transactional(rollbackFor = Exception.class)
   public void registerComment(FoodsCommentRegisterReqDto dto) {
-    List<String> uploadFilepath = new ArrayList<>();
-
-    if(dto.getFiles() != null && !dto.getFiles().isEmpty()) {
-      uploadFilepath = dto.getFiles().stream()
-          .filter(file -> file != null && !file.isEmpty())
-          .map(file -> "/foodComment/" + fileService.uploadFile(file, "/foodComment"))
-          .peek(newFileName -> System.out.println(newFileName))
-          .collect(Collectors.toList());
-    }
+//    List<String> uploadFilepath = new ArrayList<>();
+//
+//    if(dto.getFiles() != null && !dto.getFiles().isEmpty()) {
+//      uploadFilepath = dto.getFiles().stream()
+//          .filter(file -> file != null && !file.isEmpty())
+//          .map(file -> "/foodComment/" + fileService.uploadFile(file, "/foodComment"))
+//          .peek(newFileName -> System.out.println(newFileName))
+//          .collect(Collectors.toList());
+//    }
 
     Integer userId = principalUtil.getPrincipalUser().getUser().getUserId();
 
@@ -109,18 +124,39 @@ public class FoodService {
         .build();
     foodCommentMapper.insert(comment);
 
-    if(!uploadFilepath.isEmpty()) {
-      AtomicInteger atomicInteger = new AtomicInteger(0);
-      List<FoodCommentImg> foodCommentImgs = uploadFilepath.stream()
-          .map(path -> FoodCommentImg.builder()
-              .seq(atomicInteger.getAndIncrement() + 1)
-              .foodCommentId(comment.getFoodCommentId())
-              .imgPath(path)
-              .build())
-          .collect(Collectors.toList());
+//    if(!uploadFilepath.isEmpty()) {
+//      AtomicInteger atomicInteger = new AtomicInteger(0);
+//      List<FoodCommentImg> foodCommentImgs = uploadFilepath.stream()
+//          .map(path -> FoodCommentImg.builder()
+//              .seq(atomicInteger.getAndIncrement() + 1)
+//              .foodCommentId(comment.getFoodCommentId())
+//              .imgPath(path)
+//              .build())
+//          .collect(Collectors.toList());
+//      foodCommentImgMapper.insertMany(foodCommentImgs);
+//    }
+//
+//    System.out.println(uploadFilepath);
+
+    List<MultipartFile> imageFiles = dto.getFiles();
+
+    if(imageFiles != null && !imageFiles.isEmpty()) {
+      List<FoodCommentImg> foodCommentImgs = new ArrayList<>();
+      int seq = 1;
+
+      for(MultipartFile file : imageFiles) {
+        String imagePath = fileService.uploadFile(file, "foodComment");
+
+        FoodCommentImg foodCommentImg = FoodCommentImg.builder()
+            .foodCommentId(comment.getFoodCommentId())
+            .seq(seq++)
+            .imgPath(imagePath)
+            .build();
+
+        foodCommentImgs.add(foodCommentImg);
+      }
+
       foodCommentImgMapper.insertMany(foodCommentImgs);
     }
-
-    System.out.println(uploadFilepath);
   }
 }
