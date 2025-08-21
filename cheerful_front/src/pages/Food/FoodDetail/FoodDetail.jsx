@@ -8,6 +8,7 @@ import unlike from "../../../../logo/cheerful_unlike.png";
 import Footer from "../../../components/Footer/Footer";
 import { useState } from "react";
 import { FiPlus, FiX } from "react-icons/fi";
+import { AiFillLike, AiOutlineLike } from "react-icons/ai";
 
 function FoodDetail(props) {
   const params = useParams();
@@ -29,8 +30,6 @@ function FoodDetail(props) {
 
       const filesArray = [...e.target.files];
 
-      //async await의 경우 return을 해줘야기 떄문에 resolve를 사용하지 못함
-      //Promise가 들어가 있는 배열이여야 Promise.all
       Promise.all(
         filesArray.map((file) => {
           return new Promise((resolve) => {
@@ -72,7 +71,7 @@ function FoodDetail(props) {
           <div css={s.foodImgContainer}>
             {/* 여러장일수도 있어서 슬라이드 처리해야됨 */}
             <img
-              src={`${baseURL}/upload/food/${foodDetail?.foodImgs[0].imgPath}`}
+              src={`${baseURL}/upload/food/${foodDetail?.foodImgs[0]?.imgPath}`}
               alt=""
             />
           </div>
@@ -90,7 +89,9 @@ function FoodDetail(props) {
                 </div>
               </div>
               <div css={s.contentUser}>
-                <span>??개의 상품후기가 있어요!</span>
+                <span>
+                  {foodDetail?.foodComment.length}개의 상품후기가 있어요!
+                </span>
                 <span>{foodDetail?.user?.name}</span>
               </div>
             </div>
@@ -101,13 +102,15 @@ function FoodDetail(props) {
           </div>
         </div>
         <div css={s.commentsRegister}>
+          {/* 댓글 등록하기 */}
+          <span>{foodDetail?.user?.name}</span>
           <div css={s.imgListContainer}>
             {/* 이미지파일 등록 */}
             {files.length < 5 && ( //파일 갯수
               <div css={s.imgContainer}>
                 <div css={s.plus} onClick={handlePlusOnClick}>
                   <FiPlus />
-                </div>
+                </div> 
               </div>
             )}
             {files.map(
@@ -138,7 +141,39 @@ function FoodDetail(props) {
             </button>
           </div>
         </div>
-        <div css={s.commentsContainer}></div>
+        <div css={s.commentsContainer}>
+          {/* commentView */}
+          {foodDetail?.foodComment?.map((comment) => (
+            <div key={comment.foodCommentId} css={s.commentContainer}>
+              <div css={s.commentUser}>
+                <img src={comment?.user.profileImgPath} alt="" />
+                <span>{comment?.user.name}</span>
+              </div>
+              <div css={s.imgAndContent}>
+                <div>
+                  <span>{foodDetail?.title}</span>
+                  <span>{comment?.createdAt.slice(0, 10)}</span>
+                </div>
+                <div css={s.commentImgList}>
+                  {comment?.foodCommentImgs?.map((img) => (
+                    <img src={img.imgPath} alt="" />
+                  ))}
+                </div>
+                <div>
+                  <p>{comment?.content}</p>
+                </div>
+                <div css={s.likeSelected}>
+                  <span>이 후기가 도움이 되요!</span>
+                  <div>
+                    <AiFillLike />
+                    <span>{comment?.isLike}</span>
+                  </div>
+                  {/* <AiOutlineLike /> */}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
       <Footer />
     </>

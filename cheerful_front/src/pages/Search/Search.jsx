@@ -43,8 +43,6 @@ function Search(props) {
     setSearchData((prev) => ({ ...prev, categoryId: categoryId }));
   };
 
-  console.log(searchData.headerTag === "community");
-
   return (
     <>
       <div css={s.layout(params.searchword ? true : false)}>

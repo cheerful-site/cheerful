@@ -19,6 +19,9 @@ import {
   communityCategory,
   noticeCategory,
 } from "../../../constants/adminPage/adminPageCategory";
+import { useAdminModalStore } from "../../../stores/useAdminModalStore";
+import AdminModal from "../../../components/AdminModal/AdminModal";
+import { modeButton } from "../../../constants/adminPage/adminPageCategory";
 
 function AdminManage(props) {
   const navigate = useNavigate();
@@ -26,6 +29,8 @@ function AdminManage(props) {
   const queryClient = useQueryClient();
   const principalQuery = usePrincipalQuery();
 
+  const { openModal, setOpenModal } = useAdminModalStore();
+  const [mode, setMode] = useState("");
   const [inputValue, setInputValue] = useState("");
   const [categoryId, setCategoryId] = useState(1);
   const [isOpen, setIsOpen] = useState(false);
@@ -227,8 +232,16 @@ function AdminManage(props) {
     setCategoryId(categoryId);
   };
 
+  const handleOpenModalOnClick = (mode) => {
+    setOpenModal(true);
+    setMode(mode);
+
+    console.log(mode);
+  };
+
   return (
     <div css={s.layout}>
+      <AdminModal mode={mode} />
       <div css={s.manageContainer}>
         <LeftSideBar />
         <div css={s.manageLayout}>
@@ -306,27 +319,39 @@ function AdminManage(props) {
                 <FaSearch />
               </div>
               {params.categoryId === "users" ? (
-                <DataTable
-                  isCheckBoxEnabled={true}
-                  cols={usersCols}
-                  rows={userList}
-                  pagenation={users}
-                />
+                <>
+                  <div css={s.buttonLayout}>
+                    <div css={s.registerAndDel}>
+                      <button>삭제</button>
+                    </div>
+                  </div>
+                  <DataTable
+                    isCheckBoxEnabled={true}
+                    cols={usersCols}
+                    rows={userList}
+                    pagenation={users}
+                  />
+                </>
               ) : params.categoryId === "community" ? (
                 <>
                   <div css={s.category}>
-                    {communityCategory.map((community) => (
-                      <span
-                        key={community.id}
-                        css={s.categorySpan(
-                          categoryId === community.categoryId
-                        )}
-                        onClick={() =>
-                          handleCategoryOnClick(community.categoryId)
-                        }>
-                        {community.categoryName}
-                      </span>
-                    ))}
+                    <div>
+                      {communityCategory.map((community) => (
+                        <span
+                          key={community.id}
+                          css={s.categorySpan(
+                            categoryId === community.categoryId
+                          )}
+                          onClick={() =>
+                            handleCategoryOnClick(community.categoryId)
+                          }>
+                          {community.categoryName}
+                        </span>
+                      ))}
+                    </div>
+                    <div css={s.registerAndDel}>
+                      <button>삭제</button>
+                    </div>
                   </div>
                   <DataTable
                     isCheckBoxEnabled={true}
@@ -336,25 +361,47 @@ function AdminManage(props) {
                   />
                 </>
               ) : params.categoryId === "food" ? (
-                <DataTable
-                  isCheckBoxEnabled={true}
-                  cols={foodCols}
-                  rows={foodList}
-                  pagenation={food}
-                />
+                <>
+                  <div css={s.buttonLayout}>
+                    <div css={s.registerAndDel}>
+                      {modeButton.map((crud) => (
+                        <button
+                          onClick={() => handleOpenModalOnClick(crud.mode)}>
+                          {crud.buttonName}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <DataTable
+                    isCheckBoxEnabled={true}
+                    cols={foodCols}
+                    rows={foodList}
+                    pagenation={food}
+                  />
+                </>
               ) : params.categoryId === "notice" ? (
                 <>
                   <div css={s.category}>
-                    {noticeCategory.map((notice) => (
-                      <span
-                        key={notice.id}
-                        css={s.categorySpan(categoryId === notice.categoryId)}
-                        onClick={() =>
-                          handleCategoryOnClick(notice.categoryId)
-                        }>
-                        {notice.categoryName}
-                      </span>
-                    ))}
+                    <div>
+                      {noticeCategory.map((notice) => (
+                        <span
+                          key={notice.id}
+                          css={s.categorySpan(categoryId === notice.categoryId)}
+                          onClick={() =>
+                            handleCategoryOnClick(notice.categoryId)
+                          }>
+                          {notice.categoryName}
+                        </span>
+                      ))}
+                    </div>
+                    <div css={s.registerAndDel}>
+                      {modeButton.map((crud) => (
+                        <button
+                          onClick={() => handleOpenModalOnClick(crud.mode)}>
+                          {crud.buttonName}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                   <DataTable
                     isCheckBoxEnabled={true}

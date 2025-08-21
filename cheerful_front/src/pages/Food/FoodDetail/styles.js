@@ -116,12 +116,19 @@ export const commentsRegister = css`
   width: 110rem;
   height: 24rem;
   background-color: #ffffff;
+
+  & > span:first-of-type {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #22222280;
+  }
 `;
 
 export const imgListContainer = css`
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  margin-top: 1rem;
   box-sizing: border-box;
   width: 100%;
   height: 5rem;
@@ -184,7 +191,7 @@ export const fixButton = css`
 export const registerTextArea = css`
   margin-top: 1rem;
   width: 100%;
-  height: 10rem;
+  height: 8rem;
 
   & > textarea {
     box-sizing: border-box;
@@ -218,6 +225,95 @@ export const registerButton = css`
 `;
 
 export const commentsContainer = css`
-  width: 100%;
-  height: 110rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 1.5rem;
+  margin-bottom: 15rem;
+  width: 110rem;
+  background-color: #ffffff;
+`;
+
+export const commentContainer = css`
+  padding: 5rem 0;
+  width: 96rem;
+`;
+
+export const commentUser = css`
+  display: flex;
+  align-items: center;
+
+  & > img {
+    margin-right: 0.5rem;
+    border-radius: 50%;
+    width: 3rem;
+    height: 3rem;
+  }
+
+  & > span {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #222222;
+  }
+`;
+
+export const imgAndContent = css`
+  padding-left: 3.5rem;
+
+  & > div:nth-of-type(1) {
+    display: flex;
+    flex-direction: column;
+    & > span {
+      font-size: 1.2rem;
+      font-weight: 400;
+      color: #222222;
+    }
+  }
+`;
+
+export const commentImgList = css`
+  margin-top: 2rem;
+  width: 55rem;
+  height: 10rem;
+
+  & > img {
+    margin-right: 0.5rem;
+    width: 10rem;
+    height: 10rem;
+  }
+`;
+
+export const likeSelected = css`
+  display: flex;
+  align-items: center;
+
+  & > span {
+    margin-right: 1.5rem;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #222222;
+  }
+
+  & > div {
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 0.15rem solid #22222230;
+    border-radius: 1rem;
+    width: 6rem;
+    height: 3rem;
+
+    & > svg {
+      font-size: 1.8rem;
+      margin-right: 1rem;
+      color: #fa4f4fff;
+    }
+
+    & > span {
+      margin-bottom: 0.1rem;
+      font-size: 1.2rem;
+      color: #22222280;
+    }
+  }
 `;

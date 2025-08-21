@@ -35,6 +35,7 @@ function Post({ content, category }) {
               : noImage
           }
           alt=""
+          onClick={handleOnClick}
         />
       ) : (
         <img
