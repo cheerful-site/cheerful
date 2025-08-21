@@ -31,5 +31,5 @@ public class Food {
     private User user;
     private FoodCategory foodCategory;
     private List<FoodImg> foodImgs;
-    private FoodComment foodComment;
+    private List<FoodComment> foodComment;
 }

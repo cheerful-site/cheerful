@@ -47,7 +47,7 @@
       fct.food_id,
       fct.user_id,
       fct.content,
-      fct.created_at
+      fct.created_at,
 
       ut.user_id as ut_user_id,
       ut.username,
@@ -72,7 +72,9 @@
       left outer join user_tb ut on(ut.user_id = fct.user_id)
       left outer join food_comment_img_tb fcit on(fcit.food_comment_id = fct.food_comment_id)
       left outer join food_comment_like_tb fclt on(fclt.food_comment_id = fct.food_comment_id)
-      left outer join (select food_comment_id, count(*) as like_count from food_comment_like_tb group by food_comment_id) fclc on(clc.food_comment_id = fct.food_comment_id)
+      left outer join (select food_comment_id, count(*) as like_count from food_comment_like_tb group by food_comment_id) fclc on(fclc.food_comment_id = fct.food_comment_id)
+    where
+      fct.food_id = #{foodId}
     order by
       like_count desc,
       fct.food_comment_id desc

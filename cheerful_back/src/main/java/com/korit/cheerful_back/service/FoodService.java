@@ -73,7 +73,7 @@ public class FoodService {
   public Food getFoodContent(Integer foodId) {
     Food food = foodMapper.findByOption(foodId);
 
-    FoodComment comment = foodCommentMapper.findAllByFoodId(foodId);
+    List<FoodComment> comment = foodCommentMapper.findAllByFoodId(foodId);
     food.setFoodComment(comment);
 
     return food;
