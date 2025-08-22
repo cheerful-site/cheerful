@@ -301,6 +301,15 @@
         values (default, #{foodCategoryId}, #{userId}, #{title}, #{content}, #{price}, now())
     </insert>
 
+    <insert id="insertFoodImages">
+        insert into
+            food_img_tb(food_img_id, food_id, seq, img_path)
+        values
+            <foreach item="foodImg" collection="foodImg" separator=",">
+                (default, #{foodImg.foodId}, #{foodImg.seq}, #{foodImg.imgPath})
+            </foreach>
+    </insert>
+
     <update id="update">
         update food_tb
         set
@@ -318,5 +327,11 @@
             <foreach item="foodId" collection="foodIds" separator="," open="(" close=")" >
                 #{foodId}
             </foreach>
+    </delete>
+
+    <delete id="deleteFoodImages">
+        delete from food_img_tb
+        where
+            food_id ={foodId}
     </delete>
 </mapper>

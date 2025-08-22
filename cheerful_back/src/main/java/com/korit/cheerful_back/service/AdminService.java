@@ -258,8 +258,33 @@ public class AdminService {
         food 글 수정
      */
     public void modifyFood(FoodModifyReqDto dto) {
+        // 글 수정
         Food food = dto.toEntity();
         foodMapper.update(food);
+
+        // 이미지 삭제
+        foodMapper.deleteFoodImages(food.getFoodId());
+        // 이미지 등록
+        List<MultipartFile> imageFiles = dto.getFiles();
+
+        if (imageFiles != null && !imageFiles.isEmpty()) {
+            List<FoodImg> foodImgs = new ArrayList<>();
+            int seq = 1;
+
+            for (MultipartFile file : imageFiles) {
+                String imagePath = fileService.uploadFile(file, "food");
+
+                FoodImg foodImg = FoodImg.builder()
+                        .foodId(food.getFoodId())
+                        .seq(seq++)
+                        .imgPath(imagePath)
+                        .build();
+
+                foodImgs.add(foodImg);
+            }
+
+            foodMapper.insertFoodImages(foodImgs);
+        }
     }
 
 
