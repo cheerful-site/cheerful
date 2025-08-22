@@ -67,6 +67,7 @@ function Header(props) {
     });
     navigate("/auth/login");
   };
+  // console.log(user?.profileImgPath);
 
   return (
     <div css={s.layout}>
@@ -132,14 +133,7 @@ function Header(props) {
                 appElement={document.getElementById("root")}>
                 <div css={s.modalContainer}>
                   <div css={s.modalProfile}>
-                    <img
-                      src={
-                        user?.role === "ROLE_ADMIN"
-                          ? `${baseURL}/upload/profile/${user?.profileImgPath}`
-                          : user?.profileImgPath
-                      }
-                      alt=""
-                    />
+                    <img src={user?.profileImgPath} alt="" />
                     <span>{user?.name}</span>
                   </div>
 
