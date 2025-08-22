@@ -47,7 +47,7 @@ function Food(props) {
           {foodList?.map((food) => (
             <div key={food.foodId}>
               <img
-                src={`${baseURL}/upload/food/${food.foodImgs[0].imgPath}`}
+                src={`${food.foodImgs[0].imgUrl}`}
                 alt=""
                 onClick={() => handleDetailOnClick(food.foodId)}
               />

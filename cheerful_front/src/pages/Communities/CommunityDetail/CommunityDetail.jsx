@@ -34,7 +34,7 @@ function CommunityDetail(props) {
 
   const handleRecommentRegisterOnClick = () => {};
 
-  console.log();
+  console.log(detailContent);
 
   return (
     <>
@@ -58,13 +58,9 @@ function CommunityDetail(props) {
                 </div>
               </div>
               <div css={s.contentContainer}>{detailContent?.content}</div>
-              {detailContent?.communityImgs ? (
-                detailContent?.communityImgs?.map((img, index) => (
-                  <img key={index} src={img.imgUrl} alt="" />
-                ))
-              ) : (
-                <></>
-              )}
+              {detailContent?.communityImgs?.map((img, index) => (
+                <img key={index} src={img.imgUrl} alt="" />
+              ))}
             </div>
 
             <div css={s.postLike}>

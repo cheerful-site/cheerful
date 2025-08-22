@@ -31,6 +31,7 @@ function DataTable({
   const { page, setPage } = usePageStore();
   const { setOpenModal } = useAdminModalStore();
   const [checkedAll, setCheckedAll] = useState(false);
+  const [Ids, setIds] = useState([]);
 
   useEffect(() => {
     let newRows = [];
@@ -101,6 +102,10 @@ function DataTable({
     setOpenModal(true);
   };
 
+  console.log(
+    newRows.filter((row) => row.checked).map((row) => row.datas[0].value)
+  );
+
   return (
     <>
       <div css={s.category}>
@@ -122,7 +127,7 @@ function DataTable({
           {enabledRegisterButton && (
             <button
               onClick={() => {
-                onRegister();
+                onRegister("");
               }}>
               등록
             </button>

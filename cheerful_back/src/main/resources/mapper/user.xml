@@ -22,7 +22,7 @@
     values (default, #{username}, #{password}, #{name}, #{email}, #{profileImgPath}, #{role}, #{provider}, #{providerId}, now())
   </insert>
 
-  <delete id="deleteByUserIds">
+  <delete id="deleteByUserIds" parameterType="list">
     delete
     from
       user_tb
