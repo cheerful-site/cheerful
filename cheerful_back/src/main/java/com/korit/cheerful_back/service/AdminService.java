@@ -29,7 +29,10 @@ import com.korit.cheerful_back.exception.auth.LoginException;
 import com.korit.cheerful_back.security.jwt.JwtUtil;
 import com.korit.cheerful_back.security.model.PrincipalUtil;
 
+import com.korit.cheerful_back.util.ImageUrlUtil;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -54,6 +57,7 @@ public class AdminService {
     private final NoticeMapper noticeMapper;
     private final FoodImgMapper foodImgMapper;
     private final NoticeImgMapper noticeImgMapper;
+    private final ImageUrlUtil imageUrlUtil;
 
     public TokenDto login(AdminLoginReqDto dto) {
 
@@ -162,9 +166,24 @@ public class AdminService {
                 .build();
 
         List<FoodAdminRow> contents = foodMapper.findAllBySearchOption(searchOption);
+//        List<Food> contents = foodMapper.findAllBySearchOption(searchOption);
         Integer totalElements = foodMapper.getCountOfSearchOption(searchOption);
         Integer totalPages = (int) Math.ceil(totalElements.longValue() / size.doubleValue());
         Boolean isLast = page >= totalPages;
+
+//        List<Food> contentWithUrls = contents.stream()
+//            .peek(c -> {
+//                List<FoodImg> imgs = c.getFoodImgs();
+//                if(imgs == null || imgs.isEmpty()) return;
+//
+//                imgs.sort(Comparator.comparingInt(FoodImg::getSeq));
+//
+//                imgs.forEach(img ->
+//                    img.setImgUrl(imageUrlUtil.food(img.getImgPath())));
+//            })
+//            .toList();
+
+        contents.forEach(this::hydrateImageUrls);
 
         return PaginationRespDto.<FoodAdminRow>builder()
                 .content(contents)
@@ -174,6 +193,21 @@ public class AdminService {
                 .page(page)
                 .size(size)
                 .build();
+    }
+
+    private List<String> splitToUrls(String imgPaths) {
+        if(imgPaths == null || imgPaths.isBlank()) return List.of();
+        return Arrays.stream(imgPaths.split(","))
+            .map(String::trim)
+            .filter(s -> !s.isEmpty())
+            .map(s -> s.replaceFirst("^/+", ""))
+            .map(imageUrlUtil::food)
+            .distinct()
+            .toList();
+    }
+
+    private void hydrateImageUrls(FoodAdminRow r) {
+        r.setImgUrls(splitToUrls(r.getImgPaths()));
     }
 
     /*

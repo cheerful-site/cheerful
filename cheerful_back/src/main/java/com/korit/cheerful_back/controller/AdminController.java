@@ -67,7 +67,7 @@ public class AdminController {
     public ResponseEntity<ResponseDto<?>> managerFood(@RequestParam Integer page, @RequestParam Integer size, @RequestParam(required = false) String searchText) {
 //        System.out.println(page);
 //        System.out.println(size);
-//        System.out.println(adminService.getFoodSearchList(page, size, searchText));
+        System.out.println(adminService.getFoodSearchList(page, size, searchText));
         return ResponseEntity.ok(ResponseDto.success(adminService.getFoodSearchList(page, size, searchText)));
     }
 

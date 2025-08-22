@@ -206,7 +206,8 @@
             ut.user_id as ut_user_id,
             ut.username,
             ut.name,
-            COALESCE(imgs.img_paths, '') as img_paths
+
+            imgs.img_paths
         from (
             select ft1.food_id
             from food_tb ft1

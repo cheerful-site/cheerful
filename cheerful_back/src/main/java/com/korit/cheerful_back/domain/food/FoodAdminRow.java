@@ -1,6 +1,7 @@
 package com.korit.cheerful_back.domain.food;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,4 +23,6 @@ public class FoodAdminRow {
   private String username;
   private String name;
   private String imgPaths;
+
+  private List<String> imgUrls;
 }
