@@ -64,7 +64,7 @@ public class AdminController {
     /*
         community 삭제 (단일)
      */
-    @DeleteMapping("/communities/{categoryId}")
+    @DeleteMapping("/communities/{communityId}")
     public ResponseEntity<ResponseDto<?>> deleteCommunityId(@PathVariable Integer communityId) {
         adminService.deleteCommunity(communityId);
         return ResponseEntity.ok(ResponseDto.success("community 정보를 삭제하였습니다."));
