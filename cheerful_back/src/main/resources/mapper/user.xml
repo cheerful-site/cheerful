@@ -33,6 +33,12 @@
       </foreach>
   </delete>
 
+  <delete id="deleteByUserId">
+    delete from user_tb
+    where
+      user_id = #{userId}
+  </delete>
+
   <select id="findById" resultType="com.korit.cheerful_back.domain.user.User">
     select
       *

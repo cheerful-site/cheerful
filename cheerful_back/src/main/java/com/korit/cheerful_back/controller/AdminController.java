@@ -34,12 +34,21 @@ public class AdminController {
     }
 
     /*
-        사용자 삭제
+        사용자 삭제 (단일)
+     */
+    @DeleteMapping("/users/{userId}")
+    public ResponseEntity<ResponseDto<?>> deleteUserId(@PathVariable Integer userId) {
+        adminService.deleteUser(userId);
+        return ResponseEntity.ok(ResponseDto.success("회원 정보를 삭제하였습니다."));
+    }
+
+    /*
+        사용자 삭제 (다중)
      */
     @DeleteMapping("/users")
     public ResponseEntity<ResponseDto<?>> deleteUserIds(@RequestParam List<Integer> userIds) {
-        adminService.deleteUser(userIds);
-        return ResponseEntity.ok(ResponseDto.success("회원 정보를 삭제하였습니다."));
+        adminService.deleteUsers(userIds);
+        return ResponseEntity.ok(ResponseDto.success("회원 정보들을 삭제하였습니다."));
     }
 
     /*
@@ -51,13 +60,23 @@ public class AdminController {
         return ResponseEntity.ok(ResponseDto.success(adminService.getCommunitySearchList(page, size, categoryId, searchText)));
     }
 
+
     /*
-        community 삭제
+        community 삭제 (단일)
      */
     @DeleteMapping("/communities/{categoryId}")
-    public ResponseEntity<ResponseDto<?>> deleteCommunityIds(@RequestParam List<Integer> communityIds) {
-        adminService.deleteCommunity(communityIds);
+    public ResponseEntity<ResponseDto<?>> deleteCommunityId(@PathVariable Integer communityId) {
+        adminService.deleteCommunity(communityId);
         return ResponseEntity.ok(ResponseDto.success("community 정보를 삭제하였습니다."));
+    }
+
+    /*
+        community 삭제 (다중)
+     */
+    @DeleteMapping("/communities")
+    public ResponseEntity<ResponseDto<?>> deleteCommunityIds(@RequestParam List<Integer> communityIds) {
+        adminService.deleteCommunities(communityIds);
+        return ResponseEntity.ok(ResponseDto.success("community 정보들을 삭제하였습니다."));
     }
 
     /*
