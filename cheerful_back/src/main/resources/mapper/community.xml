@@ -44,6 +44,7 @@
         <result property="communityId" column="cit_community_id" />
         <result property="seq" column="seq" />
         <result property="imgPath" column="img_path" />
+        <result property="imgUrl" column="img_url" />
     </resultMap>
 
     <resultMap id="CommunityCommentMap" type="com.korit.cheerful_back.domain.communityComment.CommunityComment">
@@ -206,6 +207,7 @@
             cit.community_id as cit_community_id,
             cit.seq,
             cit.`img_path`,
+            cit.img_url,
 
             cmt.community_comment_id,
             cmt.community_id as cmt_community_id,
