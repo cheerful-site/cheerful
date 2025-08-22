@@ -67,7 +67,7 @@ public class AdminController {
     public ResponseEntity<ResponseDto<?>> managerFood(@RequestParam Integer page, @RequestParam Integer size, @RequestParam(required = false) String searchText) {
 //        System.out.println(page);
 //        System.out.println(size);
-        System.out.println(adminService.getFoodSearchList(page, size, searchText));
+//        System.out.println(adminService.getFoodSearchList(page, size, searchText));
         return ResponseEntity.ok(ResponseDto.success(adminService.getFoodSearchList(page, size, searchText)));
     }
 
@@ -104,6 +104,7 @@ public class AdminController {
     @GetMapping("/notice/{categoryId}")
     public ResponseEntity<ResponseDto<?>> managerNotice(@RequestParam Integer page, @RequestParam Integer size
         , @PathVariable Integer categoryId, @RequestParam(required = false) String searchText) {
+        System.out.println(adminService.getNoticeSearchList(page, size, categoryId, searchText));
         return ResponseEntity.ok(ResponseDto.success(adminService.getNoticeSearchList(page, size, categoryId, searchText)));
     }
 

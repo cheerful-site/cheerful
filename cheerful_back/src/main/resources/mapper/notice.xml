@@ -44,6 +44,19 @@
         <result property="imgPath" column="img_path" />
     </resultMap>
 
+    <resultMap id="NoticeAdminRowMap" type="com.korit.cheerful_back.domain.notice.NoticeAdminRow">
+        <id property="noticeId" column="notice_id" />
+        <result property="noticeCategoryId"   column="notice_category_id"/>
+        <result property="userId"           column="ft_user_id"/>
+        <result property="title"        column="notice_title"/>
+        <result property="content"      column="notice_content"/>
+        <result property="createdAt"        column="created_at"/>
+        <result property="noticeCategoryName" column="notice_category_name"/>
+        <result property="username"         column="username"/>
+        <result property="name"             column="name"/>
+        <result property="imgPaths"         column="img_paths"/>
+    </resultMap>
+
     <insert id="insert" useGeneratedKeys="true" keyProperty="noticeId">
         insert into
             notice_tb(notice_id, user_id, notice_category_id, notice_title, notice_content, created_at)
@@ -136,7 +149,7 @@
     </select>
 
 <!--    관리자 권한-->
-    <select id="findAllBySearchOption" resultMap="NoticeMap">
+    <select id="findAllBySearchOption" parameterType="com.korit.cheerful_back.domain.notice.NoticeSearchOption" resultMap="NoticeAdminRowMap">
         select
             nt.notice_id,
             nt.user_id as nt_user_id,
@@ -144,44 +157,52 @@
             nt.notice_title,
             nt.notice_content,
             nt.created_at,
-            nt.notice_views,
 
             nct.notice_category_name,
 
-            ut.user_id,
+            ut.user_id as ut_user_id,
             ut.username,
-            ut.password,
             ut.name,
-            ut.email,
-            ut.profile_img_path,
-            ut.role,
-            ut.provider,
-            ut.provider_id,
-            ut.created_at as ut_created_at
-        from
-            notice_tb nt
-            left outer join user_tb ut on(ut.user_id = nt.user_id)
-            left outer join notice_category_tb nct on(nct.notice_category_id = nt.notice_category_id)
-        where
-            nt.notice_category_id = #{categoryId}
-            and (nt.notice_title like concat('%', #{searchText}, '%')
-                or ut.name like concat('%', #{searchText}, '%'))
-        order by
-            nt.notice_id
-        limit #{startIndex}, #{size}
+
+            imgs.img_paths
+        from (
+            select nt1.notice_id
+            from notice_tb nt1
+            left join user_tb ut1 on ut1.user_id = nt1.user_id
+            <where>
+                <if test="searchText != null and searchText != ''">
+                    nt1.notice_title like concat('%', #{searchText}, '%')
+                    or ut1.name like concat('%', #{searchText}, '%')
+                </if>
+                and nt1.notice_category_id = #{categoryId}
+            </where>
+            order by nt1.notice_id
+            limit #{startIndex}, #{size}
+            ) page
+        join notice_tb nt on nt.notice_id = page.notice_id
+        left join user_tb ut on(ut.user_id = nt.user_id)
+        left join notice_category_tb nct on(nct.notice_category_id = nt.notice_category_id)
+        left join (
+            select
+                notice_id,
+                group_concat(img_path order by seq separator ',') as img_paths
+            from notice_img_tb
+            group by notice_id
+        ) imgs on imgs.notice_id = nt.notice_id
+        order by nt.notice_id
     </select>
 
-    <select id="getCountOfSearchOption" resultType="java.lang.Integer">
-        select
-            count(*)
-        from
-            notice_tb nt
-            left outer join user_tb ut on(ut.user_id = nt.user_id)
-            left outer join notice_category_tb nct on(nct.notice_category_id = nt.notice_category_id)
-        where
-            nt.notice_category_id = #{categoryId}
-            and (nt.notice_title like concat('%', #{searchText}, '%')
-                or ut.name like concat('%', #{searchText}, '%'))
+    <select id="getCountOfSearchOption" parameterType="com.korit.cheerful_back.domain.notice.NoticeSearchOption" resultType="java.lang.Integer">
+        select count(DISTINCT nt.notice_id)
+        from notice_tb nt
+        left join user_tb ut on ut.user_id = nt.user_id
+        <where>
+            <if test="searchText != null and searchText != ''">
+                nt.notice_title like concat('%', #{searchText}, '%')
+                or ut.name like concat('%', #{searchText}, '%')
+            </if>
+            and nt.notice_category_id = #{categoryId}
+        </where>
     </select>
 
     <!--    게시글 클릭 시 -->
