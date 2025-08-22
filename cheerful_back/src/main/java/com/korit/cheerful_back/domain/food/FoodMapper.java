@@ -1,6 +1,8 @@
 package com.korit.cheerful_back.domain.food;
 
+import com.korit.cheerful_back.domain.foodImg.FoodImg;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -16,7 +18,10 @@ public interface FoodMapper {
     List<FoodAdminRow> findAllBySearchOption(FoodSearchOption foodSearchOption);
     int getCountOfSearchOption(FoodSearchOption foodSearchOption);
 
-    int insert(Food food);
     int update(Food food);
+    int deleteFoodImages(@Param("foodId") Integer foodId);
+    int insertFoodImages(List<FoodImg> foodImgs);
+
+    int insert(Food food);
     int deleteByFoodIds(List<Integer> foodIds);
 }
