@@ -11,7 +11,7 @@ import { reqNoticeViews } from "../../api/noticeApi/noticeApi";
 function Post({ content, category }) {
   const navigate = useNavigate();
   const location = useLocation();
-  console.log(content);
+  // console.log(content);
   // console.log(location.pathname);
 
   const handleOnClick = () => {
@@ -29,22 +29,14 @@ function Post({ content, category }) {
       {location.pathname.startsWith("/notice") ? (
         <img
           css={s.postImg}
-          src={
-            content?.noticeImgs?.lenght > 0
-              ? `${baseURL}/upload${content?.noticeImgs[0]?.imgPath}`
-              : noImage
-          }
+          src={content?.noticeImgs[0]?.imgUrl || noImage}
           alt=""
           onClick={handleOnClick}
         />
       ) : (
         <img
           css={s.postImg}
-          src={
-            content?.communityImgs?.lenght > 0
-              ? `${baseURL}/upload${content?.communityImgs[0]?.imgPath}`
-              : noImage
-          }
+          src={content?.communityImgs[0]?.imgUrl || noImage}
           alt=""
           onClick={handleOnClick}
         />

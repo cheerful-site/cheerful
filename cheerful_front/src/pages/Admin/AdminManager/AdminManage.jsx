@@ -1,7 +1,7 @@
 /**@jsxImportSource @emotion/react */
-import { FaRegTrashAlt, FaSearch } from "react-icons/fa";
+import { FaSearch } from "react-icons/fa";
 import * as s from "./styles";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
 import ReactModal from "react-modal";
 import { useQueryClient } from "@tanstack/react-query";
@@ -12,16 +12,20 @@ import usePrincipalQuery from "../../../queries/PrincipalQuery/usePrincipalQuery
 import { baseURL } from "../../../api/axios/axios";
 import LeftSideBar from "../../../components/LeftSideBar/LeftSideBar";
 import DataTable from "../../../components/DataTable/DataTable";
-import PageNation from "../../../components/PageNation/PageNation";
 import { usePageStore } from "../../../stores/usePageStore";
 import useAdminNoticeQuery from "../../../queries/AdminQuery/useAdminNoticeQuery";
 import {
   communityCategory,
+  communityCols,
+  foodCols,
   noticeCategory,
+  noticeCols,
+  usersCols,
 } from "../../../constants/adminPage/adminPageCategory";
 import { useAdminModalStore } from "../../../stores/useAdminModalStore";
 import AdminModal from "../../../components/AdminModal/AdminModal";
 import { modeButton } from "../../../constants/adminPage/adminPageCategory";
+import { useIdsCheckedStore } from "../../../stores/useAdminCheckedStore";
 
 function AdminManage(props) {
   const navigate = useNavigate();
@@ -36,7 +40,9 @@ function AdminManage(props) {
   const [isOpen, setIsOpen] = useState(false);
 
   const user = principalQuery?.data?.data?.body?.user || [];
+
   const { page } = usePageStore();
+  const { checkedIds, clearChecked } = useIdsCheckedStore();
 
   const adminUsers = useAdminUsersQuery(page, 10, inputValue);
   const adminCommunity = useAdminCommunityQuery(
@@ -96,138 +102,6 @@ function AdminManage(props) {
   // console.log(notice);
   // console.log(noticeList);
 
-  const usersCols = [
-    {
-      field: "userId",
-      label: "UserId",
-      size: "6rem",
-    },
-    {
-      field: "username",
-      label: "Username",
-      size: "12rem",
-    },
-    {
-      field: "email",
-      label: "Email",
-      size: "20rem",
-    },
-    {
-      field: "profileImgPath",
-      label: "Profile Img Path",
-      size: "20rem",
-    },
-    {
-      field: "provider",
-      label: "Provider",
-      size: "6rem",
-    },
-    {
-      field: "providerId",
-      label: "ProviderId",
-      size: "20rem",
-    },
-  ];
-
-  const communityCols = [
-    {
-      field: "communityId",
-      label: "Id",
-      size: "6rem",
-    },
-    {
-      field: "communityCategoryName",
-      label: "Category",
-      size: "10rem",
-    },
-    {
-      field: "name",
-      label: "Name",
-      size: "6rem",
-    },
-    {
-      field: "title",
-      label: "Title",
-      size: "10rem",
-    },
-    {
-      field: "content",
-      label: "Content",
-      size: "15rem",
-    },
-    {
-      field: "createdAt",
-      label: "CreateAt",
-      size: "7.5rem",
-    },
-  ];
-
-  const foodCols = [
-    {
-      field: "foodId",
-      label: "Id",
-      size: "6rem",
-    },
-    {
-      field: "foodCategoryName",
-      label: "Category",
-      size: "8rem",
-    },
-    {
-      field: "name",
-      label: "Name",
-      size: "6rem",
-    },
-    {
-      field: "title",
-      label: "Title",
-      size: "15rem",
-    },
-    {
-      field: "content",
-      label: "Content",
-      size: "28rem",
-    },
-    {
-      field: "price",
-      label: "Price",
-      size: "8rem",
-    },
-    {
-      field: "createdAt",
-      label: "CreateAt",
-      size: "7.5rem",
-    },
-  ];
-
-  const noticeCols = [
-    {
-      field: "noticeId",
-      label: "Id",
-      size: "6rem",
-    },
-    {
-      field: "noticeCategoryName",
-      label: "Category",
-      size: "10rem",
-    },
-    {
-      field: "name",
-      label: "Name",
-      size: "6rem",
-    },
-    {
-      field: "title",
-      label: "Title",
-      size: "15rem",
-    },
-    {
-      field: "content",
-      label: "Content",
-      size: "28rem",
-    },
-  ];
-
   const handleCategoryOnClick = (categoryId) => {
     setCategoryId(categoryId);
   };
@@ -239,6 +113,10 @@ function AdminManage(props) {
     console.log(mode);
   };
 
+  const handleSelectedDeleteOnClick = (selectedIds) => {
+    clearChecked();
+  };
+
   return (
     <div css={s.layout}>
       <AdminModal mode={mode} />
@@ -247,11 +125,7 @@ function AdminManage(props) {
         <div css={s.manageLayout}>
           <div css={s.manageUser}>
             <div>
-              <img
-                src={`${baseURL}/upload/profile/${user?.profileImgPath}`}
-                alt=""
-                css={s.profileImg}
-              />
+              <img src={`${user?.profileImgPath}`} alt="" css={s.profileImg} />
             </div>
             <div css={s.profileEdit} onClick={handleProfileOnClick}>
               <div>{user?.name}</div>
@@ -320,94 +194,65 @@ function AdminManage(props) {
               </div>
               {params.categoryId === "users" ? (
                 <>
-                  <div css={s.buttonLayout}>
-                    <div css={s.registerAndDel}>
-                      <button>삭제</button>
-                    </div>
-                  </div>
                   <DataTable
                     isCheckBoxEnabled={true}
                     cols={usersCols}
                     rows={userList}
                     pagenation={users}
+                    categoryName={params.categoryId}
+                    categoryId={categoryId}
+                    setCategoryId={setCategoryId}
+                    refetch={adminUsers}
+                    enabledDeleteButton={true}
+                    enabledRegisterButton={false}
                   />
                 </>
               ) : params.categoryId === "community" ? (
                 <>
-                  <div css={s.category}>
-                    <div>
-                      {communityCategory.map((community) => (
-                        <span
-                          key={community.id}
-                          css={s.categorySpan(
-                            categoryId === community.categoryId
-                          )}
-                          onClick={() =>
-                            handleCategoryOnClick(community.categoryId)
-                          }>
-                          {community.categoryName}
-                        </span>
-                      ))}
-                    </div>
-                    <div css={s.registerAndDel}>
-                      <button>삭제</button>
-                    </div>
-                  </div>
                   <DataTable
                     isCheckBoxEnabled={true}
                     cols={communityCols}
                     rows={communityList}
                     pagenation={community}
+                    enabledCategoryList={true}
+                    categoryList={communityCategory}
+                    categoryName={params.categoryId}
+                    categoryId={categoryId}
+                    setCategoryId={setCategoryId}
+                    refetch={adminCommunity}
+                    enabledDeleteButton={true}
+                    enabledRegisterButton={false}
                   />
                 </>
               ) : params.categoryId === "food" ? (
                 <>
-                  <div css={s.buttonLayout}>
-                    <div css={s.registerAndDel}>
-                      {modeButton.map((crud) => (
-                        <button
-                          onClick={() => handleOpenModalOnClick(crud.mode)}>
-                          {crud.buttonName}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
                   <DataTable
                     isCheckBoxEnabled={true}
                     cols={foodCols}
                     rows={foodList}
                     pagenation={food}
+                    categoryName={params.categoryId}
+                    categoryId={categoryId}
+                    setCategoryId={setCategoryId}
+                    enabledDeleteButton={true}
+                    enabledRegisterButton={true}
                   />
                 </>
               ) : params.categoryId === "notice" ? (
                 <>
-                  <div css={s.category}>
-                    <div>
-                      {noticeCategory.map((notice) => (
-                        <span
-                          key={notice.id}
-                          css={s.categorySpan(categoryId === notice.categoryId)}
-                          onClick={() =>
-                            handleCategoryOnClick(notice.categoryId)
-                          }>
-                          {notice.categoryName}
-                        </span>
-                      ))}
-                    </div>
-                    <div css={s.registerAndDel}>
-                      {modeButton.map((crud) => (
-                        <button
-                          onClick={() => handleOpenModalOnClick(crud.mode)}>
-                          {crud.buttonName}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
                   <DataTable
                     isCheckBoxEnabled={true}
                     cols={noticeCols}
                     rows={noticeList}
                     pagenation={notice}
+                    enabledCategoryList={true}
+                    categoryList={noticeCategory}
+                    categoryName={params.categoryId}
+                    categoryId={categoryId}
+                    setCategoryId={setCategoryId}
+                    enabledDeleteButton={true}
+                    enabledRegisterButton={true}
+                    onRegister={() => handleOpenModalOnClick("notice")}
                   />
                 </>
               ) : (

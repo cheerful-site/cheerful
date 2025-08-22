@@ -4,10 +4,33 @@ import * as s from "./styles";
 import { FaRegTrashAlt } from "react-icons/fa";
 import PageNation from "../PageNation/PageNation";
 import { usePageStore } from "../../stores/usePageStore";
+import { LiaEditSolid } from "react-icons/lia";
+import { useAdminModalStore } from "../../stores/useAdminModalStore";
+import {
+  reqAdminOneDeleteCommunity,
+  reqAdminOneDeleteUsers,
+} from "../../api/adminApi/adminApi";
 
-function DataTable({ isCheckBoxEnabled, cols, rows, pagenation }) {
+function DataTable({
+  isCheckBoxEnabled,
+  cols,
+  rows,
+  pagenation,
+  categoryName,
+  categoryId,
+  setCategoryId,
+  refetch,
+  enabledRegisterButton,
+  enabledDeleteButton,
+  enabledCategoryList,
+  categoryList,
+  onRegister,
+  onDelete,
+}) {
   const [newRows, setNewRows] = useState([]);
   const { page, setPage } = usePageStore();
+  const { setOpenModal } = useAdminModalStore();
+  const [checkedAll, setCheckedAll] = useState(false);
 
   useEffect(() => {
     let newRows = [];
@@ -26,25 +49,108 @@ function DataTable({ isCheckBoxEnabled, cols, rows, pagenation }) {
           }
         }
       }
-      newRows = [...newRows, newRow];
+      newRows = [...newRows, { checked: false, datas: newRow }];
     }
     setNewRows(newRows);
   }, [rows]);
 
-  // console.log(newRows);
+  useEffect(() => {
+    setCheckedAll(!newRows.map((row) => row.checked).includes(false));
+  }, [newRows]);
 
-  const handleDeleteOnClick = (id) => {
-    console.log(id);
+  const handleCheckedAllOnChange = (e) => {
+    setCheckedAll(e.target.checked);
+    setNewRows((prev) =>
+      prev.map((row) => ({
+        ...row,
+        checked: e.target.checked,
+      }))
+    );
+  };
+
+  const handleCheckedOnChange = (id, e) => {
+    setNewRows((prev) =>
+      prev.map((row) => {
+        if (row.datas[0].value === id) {
+          return {
+            ...row,
+            checked: e.target.checked,
+          };
+        }
+        return row;
+      })
+    );
+  };
+
+  const handleDeleteOnClick = async (id) => {
+    if (categoryName === "community") {
+      await reqAdminOneDeleteCommunity(id);
+      refetch.refetch();
+      return;
+    }
+    if (categoryName === "users") {
+      await reqAdminOneDeleteUsers(id);
+      refetch.refetch();
+      return;
+    }
+    //단일 삭제 버튼
+    // console.log(id);
+  };
+
+  const handleModifyOnClick = (id) => {
+    setOpenModal(true);
   };
 
   return (
     <>
+      <div css={s.category}>
+        <div>
+          {enabledCategoryList && (
+            <div>
+              {categoryList.map((community) => (
+                <span
+                  key={community.id}
+                  css={s.categorySpan(categoryId === community.categoryId)}
+                  onClick={() => setCategoryId(community.categoryId)}>
+                  {community.categoryName}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+        <div css={s.registerAndDel}>
+          {enabledRegisterButton && (
+            <button
+              onClick={() => {
+                onRegister();
+              }}>
+              등록
+            </button>
+          )}
+          {enabledDeleteButton && (
+            <button
+              onClick={() => {
+                onDelete(
+                  newRows
+                    .filter((row) => row.checked)
+                    .map((row) => row.datas[0].value)
+                );
+              }}>
+              삭제
+            </button>
+          )}
+        </div>
+      </div>
       <table css={s.manageTable}>
         <thead>
           <tr css={s.TableHeader}>
             {isCheckBoxEnabled && (
               <th>
-                <input type="checkbox" name="" id="" />
+                <input
+                  type="checkbox"
+                  checked={checkedAll}
+                  onChange={handleCheckedAllOnChange}
+                />
               </th>
             )}
             {cols.map((col, index) => (
@@ -52,7 +158,11 @@ function DataTable({ isCheckBoxEnabled, cols, rows, pagenation }) {
                 {col.label}
               </th>
             ))}
-            <th css={s.deleteButton}>Del</th>
+            {categoryName === "food" || categoryName === "notice" ? (
+              <th css={s.modifyButton}>Edit</th>
+            ) : (
+              <th css={s.deleteButton}>Del</th>
+            )}
           </tr>
         </thead>
         <tbody>
@@ -60,19 +170,34 @@ function DataTable({ isCheckBoxEnabled, cols, rows, pagenation }) {
             <tr key={index} css={s.rows}>
               {isCheckBoxEnabled && (
                 <td>
-                  <input type="checkbox" name="" id="" value={row.checked} />
+                  <input
+                    type="checkbox"
+                    id=""
+                    checked={row.checked}
+                    onChange={(e) =>
+                      handleCheckedOnChange(row.datas[0].value, e)
+                    }
+                  />
                 </td>
               )}
-              {row.map((row, index) => (
+              {row.datas.map((data, index) => (
                 <td key={index} css={s.thAndTd(cols[index]?.size)}>
-                  {row.value}
+                  {data.value}
                 </td>
               ))}
-              <td
-                css={s.deleteButton}
-                onClick={() => handleDeleteOnClick(row[0].value)}>
-                <FaRegTrashAlt />
-              </td>
+              {categoryName === "food" || categoryName === "notice" ? (
+                <td
+                  css={s.modifyButton}
+                  onClick={() => handleModifyOnClick(row.datas[0].value)}>
+                  <LiaEditSolid />
+                </td>
+              ) : (
+                <td
+                  css={s.deleteButton}
+                  onClick={() => handleDeleteOnClick(row.datas[0].value)}>
+                  <FaRegTrashAlt />
+                </td>
+              )}
             </tr>
           ))}
         </tbody>

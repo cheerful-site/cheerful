@@ -34,6 +34,8 @@ function CommunityDetail(props) {
 
   const handleRecommentRegisterOnClick = () => {};
 
+  console.log();
+
   return (
     <>
       <div css={s.layout}>
@@ -58,11 +60,7 @@ function CommunityDetail(props) {
               <div css={s.contentContainer}>{detailContent?.content}</div>
               {detailContent?.communityImgs ? (
                 detailContent?.communityImgs?.map((img, index) => (
-                  <img
-                    key={index}
-                    src={`${baseURL}/upload${img.imgPath}`}
-                    alt=""
-                  />
+                  <img key={index} src={img.imgUrl} alt="" />
                 ))
               ) : (
                 <></>
