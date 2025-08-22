@@ -46,7 +46,8 @@ public class AdminController {
         사용자 삭제 (다중)
      */
     @DeleteMapping("/users")
-    public ResponseEntity<ResponseDto<?>> deleteUserIds(@RequestParam List<Integer> userIds) {
+    public ResponseEntity<ResponseDto<?>> deleteUserIds(@RequestBody List<Integer> userIds) {
+//        System.out.println(userIds);
         adminService.deleteUsers(userIds);
         return ResponseEntity.ok(ResponseDto.success("회원 정보들을 삭제하였습니다."));
     }
@@ -74,7 +75,7 @@ public class AdminController {
         community 삭제 (다중)
      */
     @DeleteMapping("/communities")
-    public ResponseEntity<ResponseDto<?>> deleteCommunityIds(@RequestParam List<Integer> communityIds) {
+    public ResponseEntity<ResponseDto<?>> deleteCommunityIds(@RequestBody List<Integer> communityIds) {
         adminService.deleteCommunities(communityIds);
         return ResponseEntity.ok(ResponseDto.success("community 정보들을 삭제하였습니다."));
     }
@@ -103,7 +104,7 @@ public class AdminController {
         food 삭제
      */
     @DeleteMapping("/foods")
-    public ResponseEntity<ResponseDto<?>> deleteFoodIds(@RequestParam List<Integer> foodIds) {
+    public ResponseEntity<ResponseDto<?>> deleteFoodIds(@RequestBody List<Integer> foodIds) {
         adminService.deleteFood(foodIds);
         return ResponseEntity.ok(ResponseDto.success("food 정보를 삭제하였습니다."));
     }
@@ -139,8 +140,9 @@ public class AdminController {
     /*
         notice 삭제
      */
-    @DeleteMapping("/notice/{categoryId}")
-    public ResponseEntity<ResponseDto<?>> deleteNoticeIds(@RequestParam List<Integer> noticeIds) {
+    @DeleteMapping("/notice")
+    public ResponseEntity<ResponseDto<?>> deleteNoticeIds(@RequestBody List<Integer> noticeIds) {
+        System.out.println(noticeIds);
         adminService.deleteNotice(noticeIds);
         return ResponseEntity.ok(ResponseDto.success("notice 정보를 삭제하였습니다."));
     }

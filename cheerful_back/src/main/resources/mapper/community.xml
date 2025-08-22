@@ -374,12 +374,12 @@
         </where>
     </select>
 
-    <delete id="deleteByCommunityIds">
+    <delete id="deleteByCommunityIds" parameterType="list">
         delete from community_tb
         where
             community_id in
             <foreach item="communityId" collection="communityIds" separator="," open="(" close=")" >
-                #{community_id}
+                #{communityId}
             </foreach>
     </delete>
 

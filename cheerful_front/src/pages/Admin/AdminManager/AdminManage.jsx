@@ -24,8 +24,12 @@ import {
 } from "../../../constants/adminPage/adminPageCategory";
 import { useAdminModalStore } from "../../../stores/useAdminModalStore";
 import AdminModal from "../../../components/AdminModal/AdminModal";
-import { modeButton } from "../../../constants/adminPage/adminPageCategory";
-import { useIdsCheckedStore } from "../../../stores/useAdminCheckedStore";
+import {
+  reqAdminAllDeleteCommunity,
+  reqAdminAllDeleteFood,
+  reqAdminAllDeleteNotice,
+  reqAdminAllDeleteUsers,
+} from "../../../api/adminApi/adminApi";
 
 function AdminManage(props) {
   const navigate = useNavigate();
@@ -42,7 +46,6 @@ function AdminManage(props) {
   const user = principalQuery?.data?.data?.body?.user || [];
 
   const { page } = usePageStore();
-  const { checkedIds, clearChecked } = useIdsCheckedStore();
 
   const adminUsers = useAdminUsersQuery(page, 10, inputValue);
   const adminCommunity = useAdminCommunityQuery(
@@ -97,29 +100,44 @@ function AdminManage(props) {
   // console.log(users);
   // console.log(communityList);
   // console.log(foodList);
-  // console.log(params);
+  console.log(params);
   // console.log(food);
   // console.log(notice);
   // console.log(noticeList);
 
-  const handleCategoryOnClick = (categoryId) => {
-    setCategoryId(categoryId);
-  };
-
   const handleOpenModalOnClick = (mode) => {
     setOpenModal(true);
     setMode(mode);
-
-    console.log(mode);
   };
 
-  const handleSelectedDeleteOnClick = (selectedIds) => {
-    clearChecked();
+  const handelAllDeleteClick = async (ids) => {
+    if (params.categoryId === "users") {
+      console.log(params.categoryId);
+      console.log(ids);
+      await reqAdminAllDeleteUsers(ids);
+      adminUsers.refetch();
+      return;
+    }
+    if (params.categoryId === "community") {
+      await reqAdminAllDeleteCommunity(ids);
+      adminCommunity.refetch();
+      return;
+    }
+    if (params.categoryId === "food") {
+      await reqAdminAllDeleteFood(ids);
+      adminFood.refetch();
+      return;
+    }
+    if (params.categoryId === "notice") {
+      await reqAdminAllDeleteNotice(ids);
+      adminNotice.refetch();
+      return;
+    }
   };
 
   return (
     <div css={s.layout}>
-      <AdminModal mode={mode} />
+      <AdminModal mode={mode} categoryName={params.categoryId} />
       <div css={s.manageContainer}>
         <LeftSideBar />
         <div css={s.manageLayout}>
@@ -205,6 +223,7 @@ function AdminManage(props) {
                     refetch={adminUsers}
                     enabledDeleteButton={true}
                     enabledRegisterButton={false}
+                    onDelete={handelAllDeleteClick}
                   />
                 </>
               ) : params.categoryId === "community" ? (
@@ -222,6 +241,7 @@ function AdminManage(props) {
                     refetch={adminCommunity}
                     enabledDeleteButton={true}
                     enabledRegisterButton={false}
+                    onDelete={handelAllDeleteClick}
                   />
                 </>
               ) : params.categoryId === "food" ? (
@@ -236,6 +256,8 @@ function AdminManage(props) {
                     setCategoryId={setCategoryId}
                     enabledDeleteButton={true}
                     enabledRegisterButton={true}
+                    onRegister={() => handleOpenModalOnClick("register")}
+                    onDelete={handelAllDeleteClick}
                   />
                 </>
               ) : params.categoryId === "notice" ? (
@@ -252,7 +274,8 @@ function AdminManage(props) {
                     setCategoryId={setCategoryId}
                     enabledDeleteButton={true}
                     enabledRegisterButton={true}
-                    onRegister={() => handleOpenModalOnClick("notice")}
+                    onRegister={() => handleOpenModalOnClick("register")}
+                    onDelete={handelAllDeleteClick}
                   />
                 </>
               ) : (

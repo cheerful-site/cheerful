@@ -5,7 +5,6 @@ import { AiFillLike } from "react-icons/ai";
 import { useLocation, useNavigate } from "react-router-dom";
 import { reqCommunityViews } from "../../api/communityApi/communityApi";
 import { PiEyesFill } from "react-icons/pi";
-import { baseURL } from "../../api/axios/axios";
 import { reqNoticeViews } from "../../api/noticeApi/noticeApi";
 
 function Post({ content, category }) {
@@ -44,23 +43,23 @@ function Post({ content, category }) {
 
       <div css={s.postContainer}>
         <div css={s.postTitle} onClick={handleOnClick}>
-          {content.title}
+          {content?.title}
         </div>
         <div css={s.postContent}>
-          <p>{content.content}</p>
+          <p>{content?.content}</p>
         </div>
         <div css={s.postLike}>
           <div>
-            <span>{content.user.name}</span>
+            <span>{content?.user?.name}</span>
           </div>
           <div css={s.likeAndViews}>
             <div>
               <AiFillLike />
-              <span>{content.likeCount}</span>
+              <span>{content?.likeCount}</span>
             </div>
             <div>
               <PiEyesFill />
-              <span>{content.views}</span>
+              <span>{content?.views}</span>
             </div>
           </div>
         </div>

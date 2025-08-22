@@ -7,7 +7,7 @@ import { useState } from "react";
 import { FiPlus, FiX } from "react-icons/fi";
 import { useParams } from "react-router-dom";
 
-function AdminModal({ mode }) {
+function AdminModal({ mode, categoryName }) {
   const params = useParams();
   const { openModal, setOpenModal } = useAdminModalStore();
   const [inputValue, setInputValue] = useState({
@@ -58,10 +58,15 @@ function AdminModal({ mode }) {
     setFiles(files.filter((file, i) => i !== index));
   };
 
-  const handleRegisterOnClick = () => {};
+  const handleRegisterOnClick = () => {
+    if (categoryName === "food") {
+    }
+    if (categoryName === "notice") {
+    }
+  };
   const handleModifyOnClick = () => {};
 
-  console.log(mode);
+  console.log(categoryName);
 
   return (
     <ReactModal
