@@ -11,6 +11,7 @@ import com.korit.cheerful_back.domain.food.FoodSearchOption;
 import com.korit.cheerful_back.domain.foodImg.FoodImg;
 import com.korit.cheerful_back.domain.foodImg.FoodImgMapper;
 import com.korit.cheerful_back.domain.notice.Notice;
+import com.korit.cheerful_back.domain.notice.NoticeAdminRow;
 import com.korit.cheerful_back.domain.notice.NoticeMapper;
 import com.korit.cheerful_back.domain.notice.NoticeSearchOption;
 import com.korit.cheerful_back.domain.noticeImg.NoticeImg;
@@ -199,7 +200,7 @@ public class AdminService {
 //            })
 //            .toList();
 
-        contents.forEach(this::hydrateImageUrls);
+        contents.forEach(this::hydrateFoodImageUrls);
 
         return PaginationRespDto.<FoodAdminRow>builder()
                 .content(contents)
@@ -211,7 +212,7 @@ public class AdminService {
                 .build();
     }
 
-    private List<String> splitToUrls(String imgPaths) {
+    private List<String> splitToFoodUrls(String imgPaths) {
         if(imgPaths == null || imgPaths.isBlank()) return List.of();
         return Arrays.stream(imgPaths.split(","))
             .map(String::trim)
@@ -222,8 +223,8 @@ public class AdminService {
             .toList();
     }
 
-    private void hydrateImageUrls(FoodAdminRow r) {
-        r.setImgUrls(splitToUrls(r.getImgPaths()));
+    private void hydrateFoodImageUrls(FoodAdminRow r) {
+        r.setImgUrls(splitToFoodUrls(r.getImgPaths()));
     }
 
     /*
@@ -300,7 +301,7 @@ public class AdminService {
     /*
         admin 전용 notice 페이징 목록 조회
      */
-    public PaginationRespDto<Notice> getNoticeSearchList(Integer page, Integer size, Integer categoryId, String searchText) {
+    public PaginationRespDto<NoticeAdminRow> getNoticeSearchList(Integer page, Integer size, Integer categoryId, String searchText) {
         NoticeSearchOption searchOption = NoticeSearchOption.builder()
             .startIndex((page - 1) * size)
             .endIndex(size * page)
@@ -310,12 +311,14 @@ public class AdminService {
             .build();
 
         // 총 건수 / 총 페이지 / 마지막 여부 계산
-        List<Notice> contents = noticeMapper.findAllBySearchOption(searchOption);
+        List<NoticeAdminRow> contents = noticeMapper.findAllBySearchOption(searchOption);
         Integer totalElements = noticeMapper.getCountOfSearchOption(searchOption);
         Integer totalPages = (int) Math.ceil(totalElements.longValue() / size.doubleValue());
         Boolean isLast = page >= totalPages;
 
-        return PaginationRespDto.<Notice>builder()
+        contents.forEach(this::hydrateNoticeImageUrls);
+
+        return PaginationRespDto.<NoticeAdminRow>builder()
             .content(contents)
 //                .categoryId(categoryId)
             .totalElements(totalElements)
@@ -324,6 +327,21 @@ public class AdminService {
             .page(page)
             .size(size)
             .build();
+    }
+
+    private List<String> splitToNoticeUrls(String imgPaths) {
+        if(imgPaths == null || imgPaths.isBlank()) return List.of();
+        return Arrays.stream(imgPaths.split(","))
+            .map(String::trim)
+            .filter(s -> !s.isEmpty())
+            .map(s -> s.replaceFirst("^/+", ""))
+            .map(imageUrlUtil::notice)
+            .distinct()
+            .toList();
+    }
+
+    private void hydrateNoticeImageUrls(NoticeAdminRow r) {
+        r.setImgUrls(splitToNoticeUrls(r.getImgPaths()));
     }
 
     /*

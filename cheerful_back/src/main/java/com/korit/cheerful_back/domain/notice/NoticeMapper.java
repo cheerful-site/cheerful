@@ -19,7 +19,7 @@ public interface NoticeMapper {
     Integer selectViews(@Param("categoryId") Integer categoryId, @Param("noticeId") Integer noticeId);
 
     // admin전용 notice
-    List<Notice> findAllBySearchOption(NoticeSearchOption searchOption);
+    List<NoticeAdminRow> findAllBySearchOption(NoticeSearchOption searchOption);
     int getCountOfSearchOption(NoticeSearchOption searchOption);
 
     int update(Notice notice);
