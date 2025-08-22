@@ -104,10 +104,18 @@ public class AdminService {
     }
 
     /*
-        전달된 사용자 id 목록을 모두 삭제
+        전달된 사용자 id 목록을 삭제 (단일)
      */
     @Transactional(rollbackFor = Exception.class)
-    public void deleteUser(List<Integer> userIds) {
+    public void deleteUser(Integer userId) {
+        userMapper.deleteByUserId(userId);
+    }
+
+    /*
+        전달된 사용자 id 목록을 삭제 (다중)
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteUsers(List<Integer> userIds) {
         userMapper.deleteByUserIds(userIds);
     }
 
@@ -141,14 +149,22 @@ public class AdminService {
                 .build();
     }
 
+
     /*
-        전달된 community id 목록을 모두 삭제
+        전달된 community id 목록 삭제 (단일)
      */
     @Transactional(rollbackFor = Exception.class)
-    public void deleteCommunity(List<Integer> communityIds) {
-        communityMapper.deleteByCommunityIds(communityIds);
+    public void deleteCommunity(Integer communityId) {
+        communityMapper.deleteByCommunityId(communityId);
     }
 
+    /*
+        전달된 community id 목록 삭제 (다중)
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteCommunities(List<Integer> communityIds) {
+        communityMapper.deleteByCommunityIds(communityIds);
+    }
 
     /*
         admin 전용 food 목록 조회

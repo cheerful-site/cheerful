@@ -12,6 +12,7 @@ public interface UserMapper {
 
   List<User> findAllBySearchOption(UserSearchOption option);
   int getCountOfOptions(UserSearchOption option);
+  int deleteByUserId(Integer userId);
   int deleteByUserIds(List<Integer> userIds);
 
   User findByUsername(String username);

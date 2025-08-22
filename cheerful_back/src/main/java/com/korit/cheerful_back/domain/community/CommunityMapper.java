@@ -21,5 +21,6 @@ public interface CommunityMapper {
     // admin전용 community
     List<Community> findAllBySearchOption(CommunitySearchOption communitySearchOption);
     int getCountOfSearchOption(CommunitySearchOption communitySearchOption);
+    int deleteByCommunityId(Integer communityId);
     int deleteByCommunityIds(List<Integer> communityIds);
 }

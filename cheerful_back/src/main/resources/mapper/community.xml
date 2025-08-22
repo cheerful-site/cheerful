@@ -382,4 +382,10 @@
                 #{community_id}
             </foreach>
     </delete>
+
+    <delete id="deleteByCommunityId">
+        delete from community_tb
+        where
+            community_id = #{communityId}
+    </delete>
 </mapper>
