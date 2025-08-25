@@ -4,9 +4,11 @@ import com.korit.cheerful_back.domain.user.User;
 import com.korit.cheerful_back.dto.response.ResponseDto;
 import com.korit.cheerful_back.security.model.PrincipalUser;
 import com.korit.cheerful_back.util.ImageUrlUtil;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,14 +25,22 @@ public class AccountController {
   @GetMapping("/account/principal")
   public ResponseEntity<ResponseDto<?>> principal(@AuthenticationPrincipal PrincipalUser principalUser) {
 //    System.out.println(principalUser.getUser());
-    User user = principalUser.getUser();
 
+    Map<String, Object> body = new LinkedHashMap<>();
+
+    if(principalUser == null) {
+      body.put("authenticated", false);
+      body.put("user", null);
+      return ResponseEntity.ok(ResponseDto.success(body));
+    }
+    User user = principalUser.getUser();
     user.setProfileImgUrl(imageUrlUtil.profile(user.getProfileImgPath()));
 
-    var body = Map.of(
-        "user", user,
-        "role", principalUser.getAuthorities().iterator().next().getAuthority()
-    );
+    String role = principalUser.getAuthorities().stream()
+        .findFirst().map(GrantedAuthority::getAuthority).orElse(null);
+
+    body.put("authenticated", true);
+    body.put("user", user);
 
     return ResponseEntity.ok(ResponseDto.success(body));
 
