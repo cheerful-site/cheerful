@@ -39,6 +39,13 @@ export const reqAdminFood = async (page, size, searchText) =>
     params: { page, size, searchText },
   });
 
+export const reqAdminFoodRegister = async (data) =>
+  await api.post(`admin/foods`, data, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+
 export const reqAdminAllDeleteFood = async (foodIds) =>
   await api.delete(`/admin/foods`, { data: foodIds });
 
