@@ -100,7 +100,7 @@ function AdminManage(props) {
   // console.log(users);
   // console.log(communityList);
   // console.log(foodList);
-  console.log(params);
+  // console.log(params);
   // console.log(food);
   // console.log(notice);
   // console.log(noticeList);

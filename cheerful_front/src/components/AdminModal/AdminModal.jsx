@@ -13,7 +13,6 @@ import {
 
 function AdminModal({ mode, categoryName }) {
   const params = useParams();
-  const navigate = useNavigate();
   const { openModal, setOpenModal } = useAdminModalStore();
   const [inputValue, setInputValue] = useState({
     categoryId: "1",
@@ -66,26 +65,15 @@ function AdminModal({ mode, categoryName }) {
 
   const handleRegisterOnClick = () => {
     const formData = new FormData();
-    // formData.append(
-    //   "communityCategoryId",
-    //   parseInt(inputValue.communityCategoryId)
-    // );
-    // formData.append("title", inputValue.title);
-    // formData.append("content", inputValue.content);
-    // files.forEach((f) => formData.append("files", f.file));
-
-    // reqCommunityRegister(formData);
-    // // console.log(formData);
-    // navigate("/community/1");
     if (categoryName === "food") {
       formData.append("foodCategoryId", inputValue.categoryId);
       formData.append("title", inputValue.title);
       formData.append("content", inputValue.content);
       formData.append("price", inputValue.price);
       files.forEach((f) => formData.append("files", f.file));
+
       reqAdminFoodRegister(formData);
-      navigate("/admin/food");
-      return;
+      setOpenModal(false);
     }
     if (categoryName === "notice") {
       formData.append("noticeCategoryId", inputValue.categoryId);
@@ -94,12 +82,16 @@ function AdminModal({ mode, categoryName }) {
       files.forEach((f) => formData.append("files", f.file));
 
       reqAdminNoticeRegister(formData, inputValue.categoryId);
-      navigate(`/admin/notice`);
-      return;
+      setOpenModal(false);
     }
   };
 
-  const handleModifyOnClick = () => {};
+  const handleModifyOnClick = () => {
+    if (categoryName === "food") {
+    }
+    if (categoryName === "notice") {
+    }
+  };
 
   console.log(categoryName);
 
