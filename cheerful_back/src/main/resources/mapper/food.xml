@@ -336,6 +336,6 @@
     <delete id="deleteFoodImages">
         delete from food_img_tb
         where
-            food_id ={foodId}
+            food_id = #{foodId}
     </delete>
 </mapper>

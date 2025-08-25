@@ -155,6 +155,7 @@ public class AdminController {
      */
     @PutMapping("/notice/{categoryId}")
     public ResponseEntity<ResponseDto<?>> modifyNotice(@ModelAttribute NoticeModifyReqDto dto) {
+        System.out.println(dto);
         adminService.modifyNotice(dto);
         return ResponseEntity.ok(ResponseDto.success("notice 정보를 수정했습니다."));
     }
