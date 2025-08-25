@@ -66,17 +66,6 @@ function AdminModal({ mode, categoryName }) {
 
   const handleRegisterOnClick = () => {
     const formData = new FormData();
-    // formData.append(
-    //   "communityCategoryId",
-    //   parseInt(inputValue.communityCategoryId)
-    // );
-    // formData.append("title", inputValue.title);
-    // formData.append("content", inputValue.content);
-    // files.forEach((f) => formData.append("files", f.file));
-
-    // reqCommunityRegister(formData);
-    // // console.log(formData);
-    // navigate("/community/1");
     if (categoryName === "food") {
       formData.append("foodCategoryId", inputValue.categoryId);
       formData.append("title", inputValue.title);
@@ -84,6 +73,7 @@ function AdminModal({ mode, categoryName }) {
       formData.append("price", inputValue.price);
       files.forEach((f) => formData.append("files", f.file));
       reqAdminFoodRegister(formData);
+      setFiles([]);
       navigate("/admin/food");
       return;
     }
@@ -94,6 +84,7 @@ function AdminModal({ mode, categoryName }) {
       files.forEach((f) => formData.append("files", f.file));
 
       reqAdminNoticeRegister(formData, inputValue.categoryId);
+      setFiles([]);
       navigate(`/admin/notice`);
       return;
     }
