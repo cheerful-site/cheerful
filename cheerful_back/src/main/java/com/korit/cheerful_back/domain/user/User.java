@@ -22,4 +22,6 @@ public class User {
   private String provider;
   private String providerId;
   private LocalDateTime createdAt;
+
+  private transient String profileImgUrl;
 }

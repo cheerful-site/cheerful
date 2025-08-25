@@ -20,8 +20,11 @@ public class PrincipalUser implements UserDetails, OAuth2User {
   private User user;
   private Map<String, Object> attributes;
 
+  private String profileImgUrl;
+
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
+
     return List.of(new SimpleGrantedAuthority(user.getRole()));
   }
 
