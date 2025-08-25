@@ -266,7 +266,8 @@
             user_id = #{userId},
             notice_category_id = #{noticeCategoryId},
             notice_title = #{title},
-            notice_content = #{content}
+            notice_content = #{content},
+            created_at = now()
         where
             notice_id = #{noticeId}
     </update>

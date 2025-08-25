@@ -312,13 +312,17 @@
     </insert>
 
     <update id="update">
-        update food_tb
+        update
+            food_tb
         set
             food_category_id = #{foodCategoryId},
             user_id = #{userId},
             food_title = #{title},
             food_content = #{content},
             food_price = #{price},
+            created_at = now()
+        where
+            food_id = #{foodId}
     </update>
 
     <delete id="deleteByFoodIds">
