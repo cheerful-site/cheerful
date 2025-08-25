@@ -102,9 +102,9 @@ function DataTable({
     setOpenModal(true);
   };
 
-  console.log(
-    newRows.filter((row) => row.checked).map((row) => row.datas[0].value)
-  );
+  // console.log(
+  //   newRows.filter((row) => row.checked).map((row) => row.datas[0].value)
+  // );
 
   return (
     <>

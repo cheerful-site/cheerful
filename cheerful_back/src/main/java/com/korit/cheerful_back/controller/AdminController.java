@@ -96,6 +96,7 @@ public class AdminController {
      */
     @PostMapping("/foods")
     public ResponseEntity<ResponseDto<?>> register(@ModelAttribute FoodRegisterReqDto dto) {
+        System.out.println(dto);
         adminService.registerFood(dto);
         return ResponseEntity.ok(ResponseDto.success("food 글을 등록했습니다."));
     }

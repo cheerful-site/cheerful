@@ -85,6 +85,18 @@ export const registerInputTitle = css`
     font-size: 1.6rem;
     outline: none;
   }
+
+  & > input:nth-of-type(2) {
+    border-left: 0.1rem solid #dbdbdb;
+    padding-left: 1rem;
+    width: 18rem;
+  }
+
+  input::-webkit-inner-spin-button {
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+  }
 `;
 
 export const imgListContainer = css`

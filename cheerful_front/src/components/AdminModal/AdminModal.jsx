@@ -5,15 +5,18 @@ import * as s from "./styles";
 import ReactModal from "react-modal";
 import { useState } from "react";
 import { FiPlus, FiX } from "react-icons/fi";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { reqAdminFoodRegister } from "../../api/adminApi/adminApi";
 
 function AdminModal({ mode, categoryName }) {
   const params = useParams();
+  const navigate = useNavigate();
   const { openModal, setOpenModal } = useAdminModalStore();
   const [inputValue, setInputValue] = useState({
     categoryId: "1",
     title: "",
     content: "",
+    price: "",
   });
   const [files, setFiles] = useState([]);
 
@@ -30,7 +33,7 @@ function AdminModal({ mode, categoryName }) {
     fileInput.setAttribute("multiple", "true");
     fileInput.click();
     fileInput.onchange = async (e) => {
-      if (files.length + e.target.files.length > 10) {
+      if (files.length + e.target.files.length > 5) {
         return;
       }
 
@@ -59,11 +62,32 @@ function AdminModal({ mode, categoryName }) {
   };
 
   const handleRegisterOnClick = () => {
+    const formData = new FormData();
+    // formData.append(
+    //   "communityCategoryId",
+    //   parseInt(inputValue.communityCategoryId)
+    // );
+    // formData.append("title", inputValue.title);
+    // formData.append("content", inputValue.content);
+    // files.forEach((f) => formData.append("files", f.file));
+
+    // reqCommunityRegister(formData);
+    // // console.log(formData);
+    // navigate("/community/1");
     if (categoryName === "food") {
+      formData.append("categoryId", inputValue.categoryId);
+      formData.append("title", inputValue.title);
+      formData.append("content", inputValue.content);
+      formData.append("price", inputValue.price);
+      files.forEach((f) => formData.append("files", f.file));
+      reqAdminFoodRegister(formData);
+      navigate("/admin/food");
+      return;
     }
     if (categoryName === "notice") {
     }
   };
+
   const handleModifyOnClick = () => {};
 
   console.log(categoryName);
@@ -99,24 +123,37 @@ function AdminModal({ mode, categoryName }) {
 
         <div css={s.registerContainer}>
           <div css={s.registerInputTitle}>
-            {params.categoryId === "notice" ? (
-              <select
-                name="communityCategoryId"
-                id=""
-                onChange={handleOnChange}>
-                <option value="1">공지사항</option>
-                <option value="2">매거진</option>
-                <option value="3">이벤트</option>
-              </select>
-            ) : (
-              <></>
-            )}
+            <select name="categoryId" id="" onChange={handleOnChange}>
+              {params.categoryId === "notice" ? (
+                <>
+                  <option value="1">공지사항</option>
+                  <option value="2">매거진</option>
+                  <option value="3">이벤트</option>
+                </>
+              ) : (
+                <>
+                  <option value="1">사료</option>
+                  <option value="2">간식</option>
+                </>
+              )}
+            </select>
+
             <input
               type="text"
               name="title"
               onChange={handleOnChange}
               placeholder="제목을 입력해주세요."
             />
+            {params.categoryId === "food" ? (
+              <input
+                type="number"
+                name="price"
+                onChange={handleOnChange}
+                placeholder="가격을 입력해주세요."
+              />
+            ) : (
+              <></>
+            )}
           </div>
 
           <div css={s.imgListContainer}>
