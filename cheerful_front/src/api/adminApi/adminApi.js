@@ -46,6 +46,13 @@ export const reqAdminFoodRegister = async (data) =>
     },
   });
 
+export const reqAdminFoodModify = async (data) =>
+  await api.put(`admin/foods`, data, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+
 export const reqAdminAllDeleteFood = async (foodIds) =>
   await api.delete(`/admin/foods`, { data: foodIds });
 
@@ -59,6 +66,13 @@ export const reqAdminNotice = async (page, size, categoryId, searchText) =>
 
 export const reqAdminNoticeRegister = async (data, categoryId) =>
   await api.post(`admin/notice/${categoryId}`, data, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+
+export const reqAdminNoticeModify = async (data, categoryId) =>
+  await api.put(`admin/notice/${categoryId}`, data, {
     headers: {
       "Content-Type": "multipart/form-data",
     },

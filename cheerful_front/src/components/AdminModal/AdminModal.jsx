@@ -1,13 +1,18 @@
 /**@jsxImportSource @emotion/react */
 import { IoMdClose } from "react-icons/io";
-import { useAdminModalStore } from "../../stores/useAdminModalStore";
+import {
+  useAdminModalStore,
+  useAdminModifyDataStore,
+} from "../../stores/useAdminModalStore";
 import * as s from "./styles";
 import ReactModal from "react-modal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FiPlus, FiX } from "react-icons/fi";
 import { useNavigate, useParams } from "react-router-dom";
 import {
+  reqAdminFoodModify,
   reqAdminFoodRegister,
+  reqAdminNoticeModify,
   reqAdminNoticeRegister,
 } from "../../api/adminApi/adminApi";
 
@@ -21,11 +26,25 @@ function AdminModal({ mode, categoryName }) {
     price: "",
   });
   const [files, setFiles] = useState([]);
+  const { modifyData, setModifyData } = useAdminModifyDataStore();
+  const [modifyInputValue, setModifyInputValue] = useState({
+    categoryId: "1",
+    title: "",
+    content: "",
+    price: "",
+  });
 
   const handleOnChange = (e) => {
     setInputValue((prev) => ({
       ...prev,
-      [e.target.name]: [e.target.value],
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const handleModifyOnChange = (e) => {
+    setModifyInputValue((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
     }));
   };
 
@@ -41,8 +60,6 @@ function AdminModal({ mode, categoryName }) {
 
       const filesArray = [...e.target.files];
 
-      //async await의 경우 return을 해줘야기 떄문에 resolve를 사용하지 못함
-      //Promise가 들어가 있는 배열이여야 Promise.all
       Promise.all(
         filesArray.map((file) => {
           return new Promise((resolve) => {
@@ -62,6 +79,14 @@ function AdminModal({ mode, categoryName }) {
   const handleImgDeleteOnClick = (index) => {
     setFiles(files.filter((file, i) => i !== index));
   };
+
+  const handleModalCloseOnClick = () => {
+    setOpenModal(false);
+  };
+
+  useEffect(() => {
+    setFiles([]);
+  }, [mode]);
 
   const handleRegisterOnClick = () => {
     const formData = new FormData();
@@ -87,13 +112,113 @@ function AdminModal({ mode, categoryName }) {
   };
 
   const handleModifyOnClick = () => {
+    const formData = new FormData();
     if (categoryName === "food") {
+      formData.append("foodId", modifyData[0]?.value);
+      if (modifyInputValue.categoryId === "사료") {
+        formData.append("foodCategoryId", 1);
+      }
+      if (modifyInputValue.categoryId === "간식") {
+        formData.append("foodCategoryId", 2);
+      }
+      formData.append("title", modifyInputValue.title);
+      formData.append("content", modifyInputValue.content);
+      formData.append("price", modifyInputValue.price);
+
+      const existingImages = [];
+      files.forEach((f) => {
+        if (f.file) {
+          // 새로 업로드된 파일
+          formData.append("files", f.file);
+        } else if (f.dataUrl) {
+          // 기존 이미지 URL은 별도 배열로 서버에 전달
+          existingImages.push(f.dataUrl);
+        }
+      });
+
+      if (existingImages.length > 0) {
+        formData.append("existingFiles", JSON.stringify(existingImages));
+      }
+
+      for (let [key, value] of formData.entries()) {
+        console.log(key, value);
+      }
+
+      reqAdminFoodModify(formData);
+      setOpenModal(false);
+      return;
     }
+
     if (categoryName === "notice") {
+      formData.append("foodId", modifyData[0]?.value);
+      if (modifyInputValue.categoryId === "공지사항") {
+        formData.append("foodCategoryId", 1);
+      }
+      if (modifyInputValue.categoryId === "매거진") {
+        formData.append("foodCategoryId", 2);
+      }
+      if (modifyInputValue.categoryId === "이벤트") {
+        formData.append("foodCategoryId", 3);
+      }
+      formData.append("title", modifyInputValue.title);
+      formData.append("content", modifyInputValue.content);
+
+      const existingImages = [];
+      files.forEach((f) => {
+        if (f.file) {
+          // 새로 업로드된 파일
+          formData.append("files", f.file);
+        } else if (f.dataUrl) {
+          // 기존 이미지 URL은 별도 배열로 서버에 전달
+          existingImages.push(f.dataUrl);
+        }
+      });
+
+      if (existingImages.length > 0) {
+        formData.append("existingFiles", JSON.stringify(existingImages));
+      }
+
+      for (let [key, value] of formData.entries()) {
+        console.log(key, value);
+      }
+
+      console.log(inputValue.categoryId);
+      // reqAdminNoticeModify(formData);
+      setOpenModal(false);
+      return;
     }
   };
 
-  console.log(categoryName);
+  useEffect(() => {
+    if (!modifyData) return;
+
+    // 공통 텍스트 초기값
+    const initialValue = {
+      categoryId: modifyData[1]?.value || "1",
+      title: modifyData[3]?.value || "",
+      content: modifyData[4]?.value || "",
+      price: modifyData[6]?.value || "",
+    };
+
+    // 모드에 따라 값 설정
+    if (mode === "modify") {
+      setModifyInputValue(initialValue);
+    }
+    if (mode !== "register") {
+      setInputValue(initialValue);
+    }
+
+    // 이미지 초기화
+    const imageValues = modifyData[5]?.value;
+    if (imageValues) {
+      const urls = Array.isArray(imageValues) ? imageValues : [imageValues];
+      const formattedFiles = urls.map((url) => ({
+        file: null,
+        dataUrl: url,
+      }));
+      setFiles(formattedFiles);
+    }
+  }, [openModal, mode, modifyData]);
 
   return (
     <ReactModal
@@ -119,87 +244,174 @@ function AdminModal({ mode, categoryName }) {
 
       <div css={s.layout}>
         <div css={s.closeModal}>
-          <span onClick={() => setOpenModal(false)}>
+          <span onClick={handleModalCloseOnClick}>
             <IoMdClose />
           </span>
         </div>
+        {mode === "register" ? (
+          //////////////////////// 등록하기
+          <div css={s.registerContainer}>
+            <div css={s.registerInputTitle}>
+              <select name="categoryId" id="" onChange={handleOnChange}>
+                {params.categoryId === "notice" ? (
+                  <>
+                    <option value="1">공지사항</option>
+                    <option value="2">매거진</option>
+                    <option value="3">이벤트</option>
+                  </>
+                ) : (
+                  <>
+                    <option value="1">사료</option>
+                    <option value="2">간식</option>
+                  </>
+                )}
+              </select>
 
-        <div css={s.registerContainer}>
-          <div css={s.registerInputTitle}>
-            <select name="categoryId" id="" onChange={handleOnChange}>
-              {params.categoryId === "notice" ? (
-                <>
-                  <option value="1">공지사항</option>
-                  <option value="2">매거진</option>
-                  <option value="3">이벤트</option>
-                </>
-              ) : (
-                <>
-                  <option value="1">사료</option>
-                  <option value="2">간식</option>
-                </>
-              )}
-            </select>
-
-            <input
-              type="text"
-              name="title"
-              onChange={handleOnChange}
-              placeholder="제목을 입력해주세요."
-            />
-            {params.categoryId === "food" ? (
               <input
-                type="number"
-                name="price"
+                type="text"
+                name="title"
                 onChange={handleOnChange}
-                placeholder="가격을 입력해주세요."
+                placeholder="제목을 입력해주세요."
               />
-            ) : (
-              <></>
-            )}
-          </div>
+              {params.categoryId === "food" ? (
+                <input
+                  type="number"
+                  name="price"
+                  onChange={handleOnChange}
+                  placeholder="가격을 입력해주세요."
+                />
+              ) : (
+                <></>
+              )}
+            </div>
 
-          <div css={s.imgListContainer}>
-            {files.length < 5 && ( //파일 갯수
-              <div css={s.imgContainer}>
-                <div css={s.plus} onClick={handlePlusOnClick}>
-                  <FiPlus />
-                </div>
-              </div>
-            )}
-            {files.map(
-              (
-                file,
-                index // 파일 미리보기 및 삭제
-              ) => (
+            <div css={s.imgListContainer}>
+              {files.length < 5 && ( //파일 갯수
                 <div css={s.imgContainer}>
-                  <div css={s.imgBox(`${file.dataUrl}`)}>
-                    <div css={s.fixButton}>
-                      <FiX onClick={() => handleImgDeleteOnClick(index)} />
-                    </div>
+                  <div css={s.plus} onClick={handlePlusOnClick}>
+                    <FiPlus />
                   </div>
                 </div>
-              )
+              )}
+              {files.map(
+                (
+                  file,
+                  index // 파일 미리보기 및 삭제
+                ) => (
+                  <div css={s.imgContainer}>
+                    <div css={s.imgBox(`${file.dataUrl}`)}>
+                      <div css={s.fixButton}>
+                        <FiX onClick={() => handleImgDeleteOnClick(index)} />
+                      </div>
+                    </div>
+                  </div>
+                )
+              )}
+            </div>
+
+            <div css={s.registerTextArea}>
+              <textarea
+                name="content"
+                onChange={handleOnChange}
+                placeholder="내용을 작성해 주세요. (최소 5자)"
+              />
+            </div>
+            {mode === "register" ? (
+              <button css={s.modeButton} onClick={handleRegisterOnClick}>
+                등록하기
+              </button>
+            ) : (
+              <button css={s.modeButton} onClick={handleModifyOnClick}>
+                수정하기
+              </button>
             )}
           </div>
+        ) : (
+          //////////////////////// 수정하기
+          <div css={s.registerContainer}>
+            <div css={s.registerInputTitle}>
+              <select
+                name="categoryId"
+                id=""
+                onChange={handleModifyOnChange}
+                value={modifyInputValue.categoryId}>
+                {params.categoryId === "notice" ? (
+                  <>
+                    <option value="1">공지사항</option>
+                    <option value="2">매거진</option>
+                    <option value="3">이벤트</option>
+                  </>
+                ) : (
+                  <>
+                    <option value="1">사료</option>
+                    <option value="2">간식</option>
+                  </>
+                )}
+              </select>
 
-          <div css={s.registerTextArea}>
-            <textarea
-              name="content"
-              onChange={handleOnChange}
-              placeholder="내용을 작성해 주세요. (최소 5자)"
-            />
+              <input
+                type="text"
+                name="title"
+                onChange={handleModifyOnChange}
+                placeholder="제목을 입력해주세요."
+                value={modifyInputValue.title}
+              />
+              {params.categoryId === "food" ? (
+                <input
+                  type="number"
+                  name="price"
+                  onChange={handleModifyOnChange}
+                  placeholder="가격을 입력해주세요."
+                  value={modifyInputValue.price}
+                />
+              ) : (
+                <></>
+              )}
+            </div>
+
+            <div css={s.imgListContainer}>
+              {files.length < 5 && ( //파일 갯수
+                <div css={s.imgContainer}>
+                  <div css={s.plus} onClick={handlePlusOnClick}>
+                    <FiPlus />
+                  </div>
+                </div>
+              )}
+              {files.map(
+                (
+                  file,
+                  index // 파일 미리보기 및 삭제
+                ) => (
+                  <div key={index} css={s.imgContainer}>
+                    <div css={s.imgBox(`${file.dataUrl}`)}>
+                      <div css={s.fixButton}>
+                        <FiX onClick={() => handleImgDeleteOnClick(index)} />
+                      </div>
+                    </div>
+                  </div>
+                )
+              )}
+            </div>
+
+            <div css={s.registerTextArea}>
+              <textarea
+                name="content"
+                onChange={handleModifyOnChange}
+                placeholder="내용을 작성해 주세요. (최소 5자)"
+                value={modifyInputValue.content}
+              />
+            </div>
+            {mode === "register" ? (
+              <button css={s.modeButton} onClick={handleRegisterOnClick}>
+                등록하기
+              </button>
+            ) : (
+              <button css={s.modeButton} onClick={handleModifyOnClick}>
+                수정하기
+              </button>
+            )}
           </div>
-          {mode === "register" ? (
-            <button css={s.modeButton} onClick={handleRegisterOnClick}>
-              등록하기
-            </button>
-          ) : (
-            <button css={s.modeButton} onClick={handleModifyOnClick}>
-              수정하기
-            </button>
-          )}
-        </div>
+        )}
       </div>
     </ReactModal>
   );
