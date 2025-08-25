@@ -53,5 +53,8 @@ public class ImageUrlUtil {
   public String notice(String path) {
     return buildImageUrl(path, "notice");
   }
+  public String noticeComment(String path) {
+    return buildImageUrl(path, "noticeComment");
+  }
 
 }
