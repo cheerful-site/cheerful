@@ -6,7 +6,10 @@ import ReactModal from "react-modal";
 import { useState } from "react";
 import { FiPlus, FiX } from "react-icons/fi";
 import { useNavigate, useParams } from "react-router-dom";
-import { reqAdminFoodRegister } from "../../api/adminApi/adminApi";
+import {
+  reqAdminFoodRegister,
+  reqAdminNoticeRegister,
+} from "../../api/adminApi/adminApi";
 
 function AdminModal({ mode, categoryName }) {
   const params = useParams();
@@ -75,7 +78,7 @@ function AdminModal({ mode, categoryName }) {
     // // console.log(formData);
     // navigate("/community/1");
     if (categoryName === "food") {
-      formData.append("categoryId", inputValue.categoryId);
+      formData.append("foodCategoryId", inputValue.categoryId);
       formData.append("title", inputValue.title);
       formData.append("content", inputValue.content);
       formData.append("price", inputValue.price);
@@ -85,6 +88,14 @@ function AdminModal({ mode, categoryName }) {
       return;
     }
     if (categoryName === "notice") {
+      formData.append("noticeCategoryId", inputValue.categoryId);
+      formData.append("title", inputValue.title);
+      formData.append("content", inputValue.content);
+      files.forEach((f) => formData.append("files", f.file));
+
+      reqAdminNoticeRegister(formData, inputValue.categoryId);
+      navigate(`/admin/notice`);
+      return;
     }
   };
 
