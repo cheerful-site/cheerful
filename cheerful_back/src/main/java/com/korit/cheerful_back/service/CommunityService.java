@@ -197,6 +197,13 @@ public class CommunityService {
         // 게시글 단건 조회
         Community community = communityMapper.findByOption(categoryId, communityId);
 
+        // 이미지 URL 세팅
+        List<CommunityImg> imgs = community.getCommunityImgs();
+        if(imgs != null && !imgs.isEmpty()) {
+            imgs.sort(Comparator.comparingInt(CommunityImg::getSeq));
+            imgs.forEach(img -> img.setImgUrl(imageUrlUtil.community(img.getImgPath())));
+        }
+
         // 댓글도 조회해서 세팅
         List<CommunityComment> comments = communityCommentMapper.findAllByCommunityId(categoryId, communityId);
         community.setCommunityComments(comments);

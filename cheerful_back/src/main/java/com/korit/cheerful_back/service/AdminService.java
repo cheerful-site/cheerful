@@ -250,6 +250,7 @@ public class AdminService {
 
         Food food = Food.builder()
             .userId(userId)
+            .foodCategoryId(dto.getFoodCategoryId())
             .title(dto.getTitle())
             .content(dto.getContent())
             .price(dto.getPrice())

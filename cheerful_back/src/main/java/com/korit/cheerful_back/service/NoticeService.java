@@ -86,7 +86,16 @@ public class NoticeService {
         특정 공지사항 글 클릭해서 내용 확인하기
      */
     public Notice getNoticeContent(Integer categoryId, Integer noticeId) {
-        return noticeMapper.findByOption(categoryId, noticeId);
+        Notice notice = noticeMapper.findByOption(categoryId, noticeId);
+
+        // 이미지 URL 세팅
+        List<NoticeImg> imgs = notice.getNoticeImgs();
+        if(imgs != null && !imgs.isEmpty()) {
+            imgs.sort(Comparator.comparingInt(NoticeImg::getSeq));
+            imgs.forEach(img -> img.setImgUrl(imageUrlUtil.notice(img.getImgPath())));
+        }
+
+        return notice;
     }
 
     /*
