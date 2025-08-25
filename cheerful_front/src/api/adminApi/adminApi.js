@@ -57,5 +57,12 @@ export const reqAdminNotice = async (page, size, categoryId, searchText) =>
     params: { page, size, categoryId, searchText },
   });
 
+export const reqAdminNoticeRegister = async (data, categoryId) =>
+  await api.post(`admin/notice/${categoryId}`, data, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+
 export const reqAdminAllDeleteNotice = async (noticeIds) =>
   await api.delete(`/admin/notice`, { data: noticeIds });
