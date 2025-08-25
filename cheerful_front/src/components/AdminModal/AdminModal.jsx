@@ -150,15 +150,15 @@ function AdminModal({ mode, categoryName }) {
     }
 
     if (categoryName === "notice") {
-      formData.append("foodId", modifyData[0]?.value);
+      formData.append("noticeId", modifyData[0]?.value);
       if (modifyInputValue.categoryId === "공지사항") {
-        formData.append("foodCategoryId", 1);
+        formData.append("noticeCategoryId", 1);
       }
       if (modifyInputValue.categoryId === "매거진") {
-        formData.append("foodCategoryId", 2);
+        formData.append("noticeCategoryId", 2);
       }
       if (modifyInputValue.categoryId === "이벤트") {
-        formData.append("foodCategoryId", 3);
+        formData.append("noticeCategoryId", 3);
       }
       formData.append("title", modifyInputValue.title);
       formData.append("content", modifyInputValue.content);
@@ -183,7 +183,7 @@ function AdminModal({ mode, categoryName }) {
       }
 
       console.log(inputValue.categoryId);
-      // reqAdminNoticeModify(formData);
+      reqAdminNoticeModify(formData);
       setOpenModal(false);
       return;
     }
