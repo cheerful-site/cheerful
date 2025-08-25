@@ -12,7 +12,6 @@ import java.util.List;
 public class NoticeModifyReqDto {
 
     private Integer noticeId;
-    private Integer userId;
     private Integer noticeCategoryId;
     private String title;
     private String content;
@@ -23,7 +22,6 @@ public class NoticeModifyReqDto {
     public Notice toEntity(){
         return Notice.builder()
                 .noticeId(noticeId)
-                .userId(userId)
                 .noticeCategoryId(noticeCategoryId)
                 .title(title)
                 .content(content)
