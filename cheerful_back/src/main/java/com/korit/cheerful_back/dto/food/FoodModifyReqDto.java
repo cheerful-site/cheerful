@@ -12,7 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class FoodModifyReqDto {
   private Integer foodId;
   private Integer foodCategoryId;
-  private Integer userId;
   private String title;
   private String content;
   private Integer price;
@@ -24,7 +23,6 @@ public class FoodModifyReqDto {
     return Food.builder()
         .foodId(foodId)
         .foodCategoryId(foodCategoryId)
-        .userId(userId)
         .title(title)
         .content(content)
         .price(price)

@@ -263,7 +263,6 @@
         update
             notice_tb
         set
-            user_id = #{userId},
             notice_category_id = #{noticeCategoryId},
             notice_title = #{title},
             notice_content = #{content},
