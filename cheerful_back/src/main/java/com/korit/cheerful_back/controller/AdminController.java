@@ -114,7 +114,7 @@ public class AdminController {
         food 수정
      */
     @PutMapping("/foods")
-    public ResponseEntity<ResponseDto<?>> modifyFood(@RequestBody FoodModifyReqDto dto) {
+    public ResponseEntity<ResponseDto<?>> modifyFood(@ModelAttribute FoodModifyReqDto dto) {
         adminService.modifyFood(dto);
         return ResponseEntity.ok(ResponseDto.success("food 정보를 수정하였습니다."));
     }
