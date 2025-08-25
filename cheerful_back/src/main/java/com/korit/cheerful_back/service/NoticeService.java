@@ -1,8 +1,5 @@
 package com.korit.cheerful_back.service;
 
-import com.korit.cheerful_back.domain.community.Community;
-import com.korit.cheerful_back.domain.community.CommunityMapper;
-import com.korit.cheerful_back.domain.communityImg.CommunityImg;
 import com.korit.cheerful_back.domain.notice.Notice;
 import com.korit.cheerful_back.domain.notice.NoticeLikeMapper;
 import com.korit.cheerful_back.domain.notice.NoticeMapper;
@@ -86,7 +83,16 @@ public class NoticeService {
         특정 공지사항 글 클릭해서 내용 확인하기
      */
     public Notice getNoticeContent(Integer categoryId, Integer noticeId) {
-        return noticeMapper.findByOption(categoryId, noticeId);
+        Notice notice = noticeMapper.findByOption(categoryId, noticeId);
+
+        // 이미지 URL 세팅
+        List<NoticeImg> imgs = notice.getNoticeImgs();
+        if(imgs != null && !imgs.isEmpty()) {
+            imgs.sort(Comparator.comparingInt(NoticeImg::getSeq));
+            imgs.forEach(img -> img.setImgUrl(imageUrlUtil.notice(img.getImgPath())));
+        }
+
+        return notice;
     }
 
     /*

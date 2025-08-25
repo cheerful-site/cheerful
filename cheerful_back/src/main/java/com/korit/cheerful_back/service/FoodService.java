@@ -1,5 +1,6 @@
 package com.korit.cheerful_back.service;
 
+import com.korit.cheerful_back.domain.communityImg.CommunityImg;
 import com.korit.cheerful_back.domain.food.Food;
 import com.korit.cheerful_back.domain.food.FoodLikeMapper;
 import com.korit.cheerful_back.domain.food.FoodMapper;
@@ -94,7 +95,23 @@ public class FoodService {
   public Food getFoodContent(Integer foodId) {
     Food food = foodMapper.findByOption(foodId);
 
+    // 이미지 URL 세팅
+    List<FoodImg> imgs = food.getFoodImgs();
+    if(imgs != null && !imgs.isEmpty()) {
+      imgs.sort(Comparator.comparingInt(FoodImg::getSeq));
+      imgs.forEach(img -> img.setImgUrl(imageUrlUtil.food(img.getImgPath())));
+    }
+
     List<FoodComment> comment = foodCommentMapper.findAllByFoodId(foodId);
+
+    comment.forEach(cmt -> {
+      List<FoodCommentImg> cimgs = cmt.getFoodCommentImgs();
+      if(cimgs == null || cimgs.isEmpty()) return;
+
+      cimgs.sort(Comparator.comparingInt(FoodCommentImg::getSeq));
+      cimgs.forEach(ci -> ci.setImgUrl(imageUrlUtil.foodComment(ci.getImgPath())));
+    });
+
     food.setFoodComment(comment);
 
     return food;
