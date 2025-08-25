@@ -1,12 +1,16 @@
 package com.korit.cheerful_back.controller;
 
+import com.korit.cheerful_back.domain.user.User;
+import com.korit.cheerful_back.dto.admin.ProfileImgDto;
 import com.korit.cheerful_back.dto.community.CommunityRegisterReqDto;
 import com.korit.cheerful_back.dto.food.FoodModifyReqDto;
 import com.korit.cheerful_back.dto.food.FoodRegisterReqDto;
 import com.korit.cheerful_back.dto.notice.NoticeModifyReqDto;
 import com.korit.cheerful_back.dto.notice.NoticeRegisterReqDto;
 import com.korit.cheerful_back.dto.response.ResponseDto;
+import com.korit.cheerful_back.security.model.PrincipalUtil;
 import com.korit.cheerful_back.service.AdminService;
+import com.korit.cheerful_back.util.ImageUrlUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +23,20 @@ import java.util.List;
 public class AdminController {
 
     private final AdminService adminService;
+    private final PrincipalUtil principalUtil;
+    private final ImageUrlUtil imageUrlUtil;
+
+    @GetMapping("/profile")
+    public ResponseEntity<ResponseDto<?>> profileImg() {
+        User user = principalUtil.getPrincipalUser().getUser();
+        ProfileImgDto dto = ProfileImgDto.builder()
+            .userId(user.getUserId())
+            .username(user.getUsername())
+            .name(user.getName())
+            .profileImgUrl(imageUrlUtil.profile(user.getProfileImgPath()))
+            .build();
+        return ResponseEntity.ok(ResponseDto.success(dto));
+    }
 
     /*
         사용자 조회
