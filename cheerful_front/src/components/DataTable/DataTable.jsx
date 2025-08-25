@@ -127,7 +127,7 @@ function DataTable({
           {enabledRegisterButton && (
             <button
               onClick={() => {
-                onRegister("");
+                onRegister("register");
               }}>
               등록
             </button>
