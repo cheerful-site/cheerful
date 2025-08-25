@@ -97,6 +97,7 @@ function AdminManage(props) {
     ...notice.user,
   }));
 
+  // console.log(user);
   // console.log(users);
   // console.log(communityList);
   // console.log(foodList);
@@ -143,7 +144,7 @@ function AdminManage(props) {
         <div css={s.manageLayout}>
           <div css={s.manageUser}>
             <div>
-              <img src={`${user?.profileImgPath}`} alt="" css={s.profileImg} />
+              <img src={`${user?.profileImgUrl}`} alt="" css={s.profileImg} />
             </div>
             <div css={s.profileEdit} onClick={handleProfileOnClick}>
               <div>{user?.name}</div>
@@ -168,10 +169,7 @@ function AdminManage(props) {
                   appElement={document.getElementById("root")}>
                   <div css={s.modalContainer}>
                     <div css={s.modalProfile}>
-                      <img
-                        src={`${baseURL}/upload/profile/${user?.profileImgPath}`}
-                        alt=""
-                      />
+                      <img src={user?.profileImgUrl} alt="" />
                       <span>{user?.name}</span>
                     </div>
 
@@ -258,6 +256,7 @@ function AdminManage(props) {
                     enabledRegisterButton={true}
                     onRegister={() => handleOpenModalOnClick("register")}
                     onDelete={handelAllDeleteClick}
+                    setMode={setMode}
                   />
                 </>
               ) : params.categoryId === "notice" ? (
@@ -276,6 +275,7 @@ function AdminManage(props) {
                     enabledRegisterButton={true}
                     onRegister={() => handleOpenModalOnClick("register")}
                     onDelete={handelAllDeleteClick}
+                    setMode={setMode}
                   />
                 </>
               ) : (

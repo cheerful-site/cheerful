@@ -70,10 +70,7 @@ function FoodDetail(props) {
         <div css={s.foodContainer}>
           <div css={s.foodImgContainer}>
             {/* 여러장일수도 있어서 슬라이드 처리해야됨 */}
-            <img
-              src={`${baseURL}/upload/food/${foodDetail?.foodImgs[0]?.imgPath}`}
-              alt=""
-            />
+            <img src={`${foodDetail?.foodImgs[0]?.imgUrl}`} alt="" />
           </div>
           <div css={s.contentContainer}>
             <div css={s.contentLayout}>
@@ -110,7 +107,7 @@ function FoodDetail(props) {
               <div css={s.imgContainer}>
                 <div css={s.plus} onClick={handlePlusOnClick}>
                   <FiPlus />
-                </div> 
+                </div>
               </div>
             )}
             {files.map(
@@ -156,7 +153,7 @@ function FoodDetail(props) {
                 </div>
                 <div css={s.commentImgList}>
                   {comment?.foodCommentImgs?.map((img) => (
-                    <img src={img.imgPath} alt="" />
+                    <img src={img.imgUrl} alt="" />
                   ))}
                 </div>
                 <div>

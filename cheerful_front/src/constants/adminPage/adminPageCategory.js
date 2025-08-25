@@ -164,6 +164,11 @@ export const foodCols = [
     size: "28rem",
   },
   {
+    field: "imgUrls",
+    label: "imgUrl",
+    size: "8rem",
+  },
+  {
     field: "price",
     label: "Price",
     size: "8rem",
@@ -200,5 +205,10 @@ export const noticeCols = [
     field: "content",
     label: "Content",
     size: "28rem",
+  },
+  {
+    field: "imgUrls",
+    label: "imgUrl",
+    size: "8rem",
   },
 ];

@@ -5,7 +5,10 @@ import { FaRegTrashAlt } from "react-icons/fa";
 import PageNation from "../PageNation/PageNation";
 import { usePageStore } from "../../stores/usePageStore";
 import { LiaEditSolid } from "react-icons/lia";
-import { useAdminModalStore } from "../../stores/useAdminModalStore";
+import {
+  useAdminModalStore,
+  useAdminModifyDataStore,
+} from "../../stores/useAdminModalStore";
 import {
   reqAdminOneDeleteCommunity,
   reqAdminOneDeleteUsers,
@@ -26,12 +29,13 @@ function DataTable({
   categoryList,
   onRegister,
   onDelete,
+  setMode,
 }) {
   const [newRows, setNewRows] = useState([]);
   const { page, setPage } = usePageStore();
   const { setOpenModal } = useAdminModalStore();
   const [checkedAll, setCheckedAll] = useState(false);
-  const [Ids, setIds] = useState([]);
+  const { modifyData, setModifyData } = useAdminModifyDataStore();
 
   useEffect(() => {
     let newRows = [];
@@ -98,9 +102,13 @@ function DataTable({
     // console.log(id);
   };
 
-  const handleModifyOnClick = (id) => {
+  const handleModifyOnClick = (data) => {
+    setModifyData(data);
+    setMode("modify");
     setOpenModal(true);
   };
+
+  console.log(modifyData);
 
   // console.log(
   //   newRows.filter((row) => row.checked).map((row) => row.datas[0].value)
@@ -193,7 +201,7 @@ function DataTable({
               {categoryName === "food" || categoryName === "notice" ? (
                 <td
                   css={s.modifyButton}
-                  onClick={() => handleModifyOnClick(row.datas[0].value)}>
+                  onClick={() => handleModifyOnClick(row.datas)}>
                   <LiaEditSolid />
                 </td>
               ) : (

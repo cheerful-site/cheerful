@@ -100,15 +100,7 @@ function Header(props) {
             </Link>
           </div>
           <div css={s.profileImgBox}>
-            <img
-              src={
-                user?.role === "ROLE_ADMIN"
-                  ? `${baseURL}/upload/profile/${user?.profileImgPath}`
-                  : user?.profileImgPath
-              }
-              alt=""
-              css={s.profileImg}
-            />
+            <img src={user?.profileImgUrl} alt="" css={s.profileImg} />
           </div>
           <div css={s.profileEdit} onClick={handleProfileOnClick}>
             <div>{user?.name}</div>
@@ -133,7 +125,7 @@ function Header(props) {
                 appElement={document.getElementById("root")}>
                 <div css={s.modalContainer}>
                   <div css={s.modalProfile}>
-                    <img src={user?.profileImgPath} alt="" />
+                    <img src={user?.profileImgUrl} alt="" />
                     <span>{user?.name}</span>
                   </div>
 
