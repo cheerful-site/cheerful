@@ -84,6 +84,6 @@
     select
       count(*)
     from food_comment_tb
-    where food_id = #{food_id}
+    where food_id = #{foodId}
   </select>
 </mapper>

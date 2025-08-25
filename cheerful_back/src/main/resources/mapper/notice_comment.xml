@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.korit.cheerful_back.domain.noticeComment.NoticeCommentMapper">
+    <resultMap id="NoticeMap" type="com.korit.cheerful_back.domain.noticeComment.NoticeComment">
+        <id property="noticeCommentId" column="notice_comment_id" />
+        <result property="noticeId" column="notice_id" />
+        <result property="userId" column="user_id" />
+        <result property="content" column="content" />
+        <result property="createdAt" column="created_at" />
+        <association property="user" resultMap="UserMap" />
+        <association property="noticeCommentImgs" resultMap="NoticeCommentImgMap" />
+    </resultMap>
+
+    <resultMap id="UserMap" type="com.korit.cheerful_back.domain.user.User">
+        <id property="userId" column="user_id" />
+        <result property="username" column="username" />
+        <result property="password" column="password" />
+        <result property="name" column="name" />
+        <result property="email" column="email" />
+        <result property="profileImgPath" column="profile_img_path" />
+        <result property="role" column="role" />
+        <result property="createdAt" column="created_at" />
+    </resultMap>
+
+    <resultMap id="NoticeCommentImgMap" type="com.korit.cheerful_back.domain.noticeCommentImg.NoticeCommentImg">
+        <id property="noticeCommentImgId" column="notice_comment_img_id" />
+        <result property="noticeCommentId" column="notice_comment_id" />
+        <result property="seq" column="seq" />
+        <result property="imgPath" column="img_path" />
+    </resultMap>
+
+
+    <insert id="insert">
+        insert into notice_comment_tb
+        values (default, #{noticeId}, #{userId}, #{content}, now())
+    </insert>
+
+    <select id="findAllByNoticeId" resultType="com.korit.cheerful_back.domain.noticeComment.NoticeComment">
+        select
+            nct.notice_comment_id,
+            nct.notice_id,
+            nct.user_id,
+            nct.content,
+            nct.created_at,
+
+            ut.user_id as ut_user_id,
+            ut.username,
+            ut.password,
+            ut.name,
+            ut.email,
+            ut.profile_img_path,
+            ut.role,
+            ut.provider,
+            ut.provider_id,
+            ut.created_at as ut_created_at,
+
+            ncit.notice_comment_img_id,
+            ncit.notice_comment_id as ncit_notice_comment_id,
+            ncit.seq,
+            ncit.`img_path`
+        from
+            notice_commnet_tb nct
+            left outer join user_tb ut on(ut.user_id = nct.user_id)
+            left outer join notice_comment_img_tb ncit on(ncit.notice_comment_id = nct.notice_comment_id)
+        where
+            nct.notice_id = #{noticeId}
+        order by
+            nct.notice_comment_id desc
+    </select>
+
+    <select id="getCountByCommentId" resultType="java.lang.Integer">
+        select
+            count(*)
+        front notice_comment_tb
+        where notice_id = #{noticeId}
+    </select>
+
+</mapper>

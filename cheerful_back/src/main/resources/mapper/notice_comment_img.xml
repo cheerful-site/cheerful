@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.korit.cheerful_back.domain.noticeCommentImg.NoticeCommentImgMapper">
+
+    <insert id="insertMany">
+        insert into notice_comment_img_tb
+        values
+        <foreach item="noticeCommentImg" collection="noticeCommentImgs" separator=",">
+            (default, #{noticeCommentImg.noticeCommentId}, #{noticeCommentImg.seq}, #{noticeCommentImg.imgPath})
+        </foreach>
+    </insert>
+
+</mapper>

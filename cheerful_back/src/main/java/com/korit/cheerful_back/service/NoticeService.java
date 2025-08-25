@@ -7,15 +7,23 @@ import com.korit.cheerful_back.domain.notice.Notice;
 import com.korit.cheerful_back.domain.notice.NoticeLikeMapper;
 import com.korit.cheerful_back.domain.notice.NoticeMapper;
 import com.korit.cheerful_back.domain.notice.NoticeSearchOption;
+import com.korit.cheerful_back.domain.noticeComment.NoticeComment;
+import com.korit.cheerful_back.domain.noticeComment.NoticeCommentMapper;
+import com.korit.cheerful_back.domain.noticeCommentImg.NoticeCommentImg;
+import com.korit.cheerful_back.domain.noticeCommentImg.NoticeCommentImgMapper;
 import com.korit.cheerful_back.domain.noticeImg.NoticeImg;
+import com.korit.cheerful_back.dto.notice.NoticeCommentRegisterReqDto;
 import com.korit.cheerful_back.dto.response.PaginationRespDto;
 import com.korit.cheerful_back.security.model.PrincipalUser;
 import com.korit.cheerful_back.security.model.PrincipalUtil;
 import com.korit.cheerful_back.util.ImageUrlUtil;
+
+import java.util.ArrayList;
 import java.util.Comparator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -27,6 +35,9 @@ public class NoticeService {
     private final PrincipalUtil principalUtil;
     private final NoticeLikeMapper noticeLikeMapper;
     private final ImageUrlUtil imageUrlUtil;
+    private final NoticeCommentMapper noticeCommentMapper;
+    private final NoticeCommentImgMapper noticeCommentImgMapper;
+    private final FileService fileService;
 
     /*
         커뮤니티 페이징 목록 조회
@@ -101,13 +112,48 @@ public class NoticeService {
     /*
         특정 공지사항 글 조회수
      */
-    @Transactional
     public int increaseViews(Integer categoryId, Integer noticeId) {
         int updated = noticeMapper.increaseViews(categoryId, noticeId);
         if (updated == 0) {
             return 0;
         }
         return noticeMapper.selectViews(categoryId, noticeId);
+    }
+
+    /*
+        댓글 등록 + 이미지 저장
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void registerComment(NoticeCommentRegisterReqDto dto) {
+        Integer userId = principalUtil.getPrincipalUser().getUser().getUserId();
+
+        NoticeComment comment = NoticeComment.builder()
+                .userId(userId)
+                .noticeId(dto.getNoticeId())
+                .content(dto.getContent())
+                .build();
+        noticeCommentMapper.insert(comment);
+
+        List<MultipartFile> imageFiles = dto.getFiles();
+
+        if (imageFiles != null && !imageFiles.isEmpty()) {
+            List<NoticeCommentImg> noticeCommentImgs = new ArrayList<>();
+            int seq = 1;
+
+            for (MultipartFile file : imageFiles) {
+                String imagePath = fileService.uploadFile(file, "noticeComment");
+
+                NoticeCommentImg noticeCommentImg = NoticeCommentImg.builder()
+                        .noticeCommentId(comment.getNoticeCommentId())
+                        .seq(seq++)
+                        .imgPath(imagePath)
+                        .build();
+
+                noticeCommentImgs.add(noticeCommentImg);
+            }
+
+            noticeCommentImgMapper.insertMany(noticeCommentImgs);
+        }
     }
 
 }

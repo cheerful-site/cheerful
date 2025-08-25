@@ -1,5 +1,6 @@
 package com.korit.cheerful_back.controller;
 
+import com.korit.cheerful_back.dto.notice.NoticeCommentRegisterReqDto;
 import com.korit.cheerful_back.dto.notice.NoticeRegisterReqDto;
 import com.korit.cheerful_back.dto.response.ResponseDto;
 import com.korit.cheerful_back.service.AdminService;
@@ -69,4 +70,14 @@ public class NoticeController {
         }
         return ResponseEntity.ok(ResponseDto.success(views));
     }
+
+      /*
+        댓글 등록 + 이미지 추가
+    */
+    @PostMapping("/{noticeId}/comments")
+    public ResponseEntity<ResponseDto<?>> registerNoticeComment(@ModelAttribute NoticeCommentRegisterReqDto dto) {
+        noticeService.registerComment(dto);
+        return ResponseEntity.ok(ResponseDto.success("댓글 등록을 완료했습니다."));
+    }
+
 }
