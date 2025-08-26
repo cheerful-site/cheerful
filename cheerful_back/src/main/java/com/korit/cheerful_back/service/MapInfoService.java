@@ -1,173 +1,143 @@
 package com.korit.cheerful_back.service;
 
-import com.fasterxml.jackson.core.type.TypeReference;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.korit.cheerful_back.domain.map.MapInfo;
 import com.korit.cheerful_back.domain.map.MapInfoMapper;
-import com.korit.cheerful_back.domain.map.MapInfoRow;
-import com.korit.cheerful_back.dto.map.MapInfoDto;
-import com.korit.cheerful_back.dto.openAi.ChatCompletionDto;
-import com.korit.cheerful_back.dto.openAi.ChatRequestMsgDto;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
+import com.korit.cheerful_back.dto.map.GoogleDetailsRespDto;
+import com.korit.cheerful_back.dto.map.MapInfoRespDto;
+import com.korit.cheerful_back.dto.map.MapSearchReqDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class MapInfoService {
 
-  private final ChatGPTService chatGPTService;
-  private final MapInfoMapper mapInfoMapper;
-  private final ObjectMapper objectMapper;
-  private final MapInfoQueryService mapInfoQueryService;
+    private final MapInfoMapper mapInfoMapper;
+    private final GooglePlacesClient google;
+    private final ObjectMapper om = new ObjectMapper();
 
+    private static final int MIN_RESULTS = 10;
+    private static final int PATCH_TOP_N = 8;  // 즉시 보강할 개수
 
-  // 카테고리명 -> ID 매핑
-  private static final Map<String, Integer> CATEGORY = Map.of(
-      "HOSPITAL", 1,
-      "CAFE",     2,
-      "SHELTER",  3
-  );
+    public List<MapInfoRespDto> search(MapSearchReqDto req) {
+        var first = mapInfoMapper.selectNearby(req.getCategoryId(), req.getLat(), req.getLng(), req.getRadiusMeters(), 100);
+        if (first.size() >= MIN_RESULTS) return map(first);
 
-  public int ingest(String region, String level, String type, int limit) {
-    // type: HOSPITAL|CAFE|SHELTER
-    Integer categoryId = CATEGORY.get(type.toUpperCase(Locale.ROOT));
-    if (categoryId == null) throw new IllegalArgumentException("invalid type: " + type);
+        var api = google.nearby(req.getLat(), req.getLng(), req.getRadiusMeters(), req.getCategoryId());
+        if (api != null && api.getResults() != null) {
+            int patched = 0;
+            for (var r : api.getResults()) {
+                if (r.getGeometry() == null || r.getGeometry().getLocation() == null) continue;
 
-    String system = """
-            You are a data provider that returns **only JSON**.
-            Return places in South Korea strictly in the following JSON schema:
-            {
-              "places":[
-                {
-                  "name": "...",
-                  "address": "...",
-                  "opening_hours": {"mon":"09:00-18:00","tue":"...","wed":"...","thu":"...","fri":"...","sat":"...","sun":"..."},
-                  "operation_time": "24시간/평일9-18 등 요약 가능(없으면 빈문자열)",
-                  "phone": "051-000-0000",
-                  "lat": 35.1234567,
-                  "lng": 129.1234567,
-                  "full_time": false,
-                  "content": ""
+                MapInfo m = new MapInfo();
+                m.setMapInfoName(clean(r.getName()));
+                m.setMapInfoCategoryId(req.getCategoryId());
+                m.setMapInfoAddress(clean(r.getVicinity()));
+                m.setMapInfoOperationTime("");     // 초기값 빈 문자열
+                m.setMapInfoPhoneNumber("");       // 초기값 빈 문자열
+                m.setMapInfoLat(r.getGeometry().getLocation().getLat());
+                m.setMapInfoLng(r.getGeometry().getLocation().getLng());
+                m.setMapInfoFullTime(Boolean.FALSE);
+
+                // ✅ 기본 특이사항: 간단한 휴리스틱 (원하면 더 추가)
+                m.setMapInfoContent(makeDefaultContent(req.getCategoryId(), m.getMapInfoName()));
+
+                int exists = mapInfoMapper.existsByNameAndCoords(m.getMapInfoName(), m.getMapInfoLat(), m.getMapInfoLng());
+                if (exists == 0) mapInfoMapper.insertOne(m);
+                else             mapInfoMapper.updateByNaturalKey(m);
+
+                // 상위 N개만 Details로 전화/영업시간/주소 보강
+                if (patched < PATCH_TOP_N && r.getPlace_id() != null) {
+                    var details = google.details(r.getPlace_id());  // GoogleDetailsResponse
+                    if (details != null && details.getResult() != null) {
+                        var dr = details.getResult();
+                        MapInfo u = new MapInfo();
+                        u.setMapInfoName(m.getMapInfoName());
+                        u.setMapInfoLat(m.getMapInfoLat());
+                        u.setMapInfoLng(m.getMapInfoLng());
+                        u.setMapInfoAddress(defaultIfBlank(dr.getFormatted_address(), m.getMapInfoAddress()));
+                        u.setMapInfoPhoneNumber(defaultIfBlank(dr.getFormatted_phone_number(), m.getMapInfoPhoneNumber()));
+                        u.setMapInfoOperationTime(summarizeWeekdayText(dr.getOpening_hours())); // ✅ 요약
+                        // 24시간 여부 추정
+                        u.setMapInfoFullTime(looks24Hours(dr.getOpening_hours(), m.getMapInfoName()));
+                        mapInfoMapper.updateByNaturalKey(u);
+                    }
+                    patched++;
                 }
-              ]
             }
-            - opening_hours keys must be mon,tue,wed,thu,fri,sat,sun (lowercase).
-            - Omit commentary. Output valid JSON only.
-        """;
+        }
 
-    String user = new StringBuilder()
-            .append("지역: ").append(region != null ? region : "").append(" (")
-            .append(level != null ? level : "").append(")\n")
-            .append("범위설명: ").append(type != null ? type : "").append("\n")
-            .append("개수: ").append(limit).append("개 이내")
-            .toString();
-
-    ChatCompletionDto req = ChatCompletionDto.builder()
-        .model("gpt-4o-mini")   // 사용 모델은 환경에 맞춰 교체
-        .messages(List.of(
-            ChatRequestMsgDto.builder().role("system").content(system).build(),
-            ChatRequestMsgDto.builder().role("user").content(user).build()
-        ))
-        .build();
-
-    Map<String, Object> result = chatGPTService.prompt(req);
-
-    // OpenAI 응답에서 content(JSON)만 추출
-    String json = extractContent(result); // 아래 helper 참고
-
-    // JSON → DTO
-    List<MapInfoDto> places = parsePlaces(json);
-
-    // DTO → Row로 변환 + 검증/정규화
-    List<MapInfoRow> rows = places.stream()
-        .map(p -> toRow(p, categoryId))
-        .filter(Objects::nonNull)
-        .collect(Collectors.toList());
-
-    // 대량 삽입(중복 무시)
-    if (rows.isEmpty()) return 0;
-    return mapInfoMapper.bulkInsertIgnore(rows);
-  }
-
-  private String extractContent(Map<String, Object> result) {
-    // { choices: [ { message: { content: "...json..." } } ] } 형태를 가정
-    try {
-      var choices = (List<Map<String,Object>>) result.get("choices");
-      var msg = (Map<String,Object>) ((Map<String,Object>)choices.get(0)).get("message");
-      return (String) msg.get("content");
-    } catch (Exception e) {
-      throw new IllegalStateException("OpenAI 응답 파싱 실패: " + e.getMessage(), e);
+        var finalList = mapInfoMapper.selectNearby(req.getCategoryId(), req.getLat(), req.getLng(), req.getRadiusMeters(), 100);
+        return map(finalList);
     }
-  }
 
-  private List<MapInfoDto> parsePlaces(String json) {
-    try {
-      Map<String, Object> root = objectMapper.readValue(json, new TypeReference<>() {});
-      var arr = (List<Map<String, Object>>) root.get("places");
-      return objectMapper.convertValue(arr, new TypeReference<List<MapInfoDto>>() {});
-    } catch (Exception e) {
-      // 방어적으로 "그냥 배열"로 내려오는 경우도 대응
-      try {
-        return objectMapper.readValue(json, new TypeReference<List<MapInfoDto>>() {});
-      } catch (Exception ex) {
-        throw new IllegalStateException("장소 JSON 파싱 실패", ex);
-      }
+    private static String clean(String s) { return s == null ? null : s.trim(); }
+
+    private static String defaultIfBlank(String s, String def) {
+        return (s == null || s.isBlank()) ? def : s.trim();
     }
-  }
 
-  private MapInfoRow toRow(MapInfoDto p, Integer categoryId) {
-    if (p.getName() == null || p.getAddress() == null) return null;
+    /** 요일별 텍스트를 한 줄 요약으로 (길이 255 내) */
+    private String summarizeWeekdayText(GoogleDetailsRespDto.OpeningHours oh) {
+        if (oh == null || oh.getWeekday_text() == null || oh.getWeekday_text().isEmpty()) return "";
+        // "월요일: 09:00–18:00" -> "월 09:00–18:00"로 가볍게 치환
+        var sb = new StringBuilder();
+        for (String s : oh.getWeekday_text()) {
+            String shortDay = s.replace("요일", "").replace(" ", ""); // “월요일: 09:00–18:00” -> “월:09:00–18:00”
+            sb.append(shortDay).append(" | ");
+        }
+        String out = sb.substring(0, sb.length() - 3);
+        // 길이 초과 방지
+        if (out.length() > 255) out = out.substring(0, 252) + "...";
+        return out;
+    }
 
-    Double lat = safeDouble(p.getLat());
-    Double lng = safeDouble(p.getLng());
-    // 한국 좌표 간단 검증
-    if (lat != null && (lat < 33.0 || lat > 39.5)) lat = null;
-    if (lng != null && (lng < 124.0 || lng > 132.0)) lng = null;
+    /** 간단한 24시간 추정 */
+    private Boolean looks24Hours(GoogleDetailsRespDto.OpeningHours oh, String name) {
+        if (oh != null && oh.getWeekday_text() != null) {
+            boolean all = oh.getWeekday_text().stream().allMatch(t ->
+                    t.contains("24") || t.contains("24시간") || t.contains("24:00") || t.contains("00:00"));
+            if (all) return Boolean.TRUE;
+        }
+        if (name != null && (name.contains("24시") || name.contains("24시간"))) return Boolean.TRUE;
+        return Boolean.FALSE;
+    }
 
-    // opening_hours → JSON 문자열
-    String ohJson = null;
-    try {
-      if (p.getOpening_hours() != null) {
-        ohJson = new ObjectMapper().writeValueAsString(p.getOpening_hours());
-      }
-    } catch (Exception ignore) { }
+    /** 카테고리별 기본 특이사항 텍스트(초기값) */
+    private String makeDefaultContent(int categoryId, String name) {
+        switch (categoryId) {
+            case 1: // 병원
+                if (name != null && (name.contains("24시") || name.contains("24시간"))) {
+                    return "24시간 응급 진료 가능";
+                }
+                return ""; // 취급 동물은 수동/향후 크롤링으로 보강
+            case 2: // 카페
+                return ""; // 동반 규정/견종 사이즈는 수동/화이트리스트로 보강 권장
+            case 3: // 쉘터
+                return "";
+            default:
+                return "";
+        }
+    }
 
-    return MapInfoRow.builder()
-        .mapInfoName(p.getName().trim())
-        .mapInfoCategoryId(categoryId)
-        .mapInfoAddress(p.getAddress().trim())
-        .mapInfoOpeningHours(ohJson)
-        .mapInfoOperationTime(emptyToNull(p.getOperation_time()))
-        .mapInfoPhoneNumber(emptyToNull(p.getPhone()))
-        .mapInfoLat(lat)
-        .mapInfoLng(lng)
-        .mapInfoFullTime(Boolean.TRUE.equals(p.getFull_time()) ? 1 : 0)
-        .mapInfoContent(emptyToNull(p.getContent()) != null ? p.getContent().trim() : "")
-        .build();
-  }
-
-  private Double safeDouble(Double d) { return (d == null || d.isNaN() || d.isInfinite()) ? null : d; }
-  private String emptyToNull(String s) { return (s == null || s.isBlank()) ? null : s.trim(); }
-
-  public Map<String,Object> search(Integer categoryId, String q,
-      Double swLat, Double swLng, Double neLat, Double neLng,
-      int page, int size) {
-    int offset = (page - 1) * size;
-    List<MapInfoRow> content = mapInfoMapper.search(categoryId, q, swLat, swLng, neLat, neLng, offset, size);
-    int total = mapInfoMapper.count(categoryId, q, swLat, swLng, neLat, neLng);
-    int totalPages = (int)Math.ceil(total / (double)size);
-    return Map.of(
-        "content", content,
-        "totalElements", total,
-        "totalPages", totalPages,
-        "page", page,
-        "size", size,
-        "isLast", page >= totalPages
-    );
-  }
-
+    private static List<MapInfoRespDto> map(List<MapInfo> list) {
+        return list.stream().map(mi -> new MapInfoRespDto(
+                mi.getMapInfoId(),
+                mi.getMapInfoName(),
+                mi.getMapInfoCategoryId(),
+                mi.getMapInfoAddress(),
+                mi.getMapInfoPhoneNumber(),
+                mi.getMapInfoLat(),
+                mi.getMapInfoLng(),
+                mi.getMapInfoOperationTime(),      // ✅ 여기에 최종 요약 저장
+                Boolean.TRUE.equals(mi.getMapInfoFullTime()),
+                mi.getMapInfoContent()
+        )).toList();
+    }
 }

@@ -8,15 +8,14 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MapInfo {
-  private Long   mapInfoId;
+  private Integer mapInfoId;
   private String mapInfoName;
   private Integer mapInfoCategoryId;
   private String mapInfoAddress;
-  private Map<String, String> openingHours;
-  private String operationTime;
-  private String phoneNumber;
-  private Double lat;
-  private Double lng;
-  private Boolean fullTime;
-  private String content;
+  private String mapInfoOperationTime;
+  private String mapInfoPhoneNumber;
+  private Double mapInfoLat;
+  private Double mapInfoLng;
+  private Boolean mapInfoFullTime;
+  private String mapInfoContent;
 }

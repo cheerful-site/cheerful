@@ -7,15 +7,15 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MapInfoDto {
+public class MapInfoRespDto {
+  private Integer mapInfoId;
   private String name;
+  private Integer categoryId;
   private String address;
-  private Map<String, String> opening_hours;
-  private String operation_time;
   private String phone;
   private Double lat;
   private Double lng;
-  private Boolean full_time;
-  private String content;
-
+  private String operationTime;   // 사람이 읽는 영업시간 요약
+  private Boolean fullTime;
+  private String content;         // 특이사항
 }
