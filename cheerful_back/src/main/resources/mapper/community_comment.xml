@@ -88,6 +88,7 @@
             ct.parent_user_id,
             put.username as parent_username,
             ct.user_id as ct_user_id,
+            ct.created_at,
 
             ut.user_id,
             ut.username,
@@ -98,7 +99,6 @@
             ut.role,
             ut.provider,
             ut.provider_id,
-            ut.created_at,
 
             ct.content,
             ct.created_at,
