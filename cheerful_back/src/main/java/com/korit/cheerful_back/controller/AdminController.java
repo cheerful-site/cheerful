@@ -1,5 +1,6 @@
 package com.korit.cheerful_back.controller;
 
+import com.korit.cheerful_back.domain.communityComment.CommunityComment;
 import com.korit.cheerful_back.dto.food.FoodModifyReqDto;
 import com.korit.cheerful_back.dto.food.FoodRegisterReqDto;
 import com.korit.cheerful_back.dto.notice.NoticeModifyReqDto;
@@ -80,6 +81,15 @@ public class AdminController {
         adminService.deleteCommunities(communityIds);
         return ResponseEntity.ok(ResponseDto.success("community 정보들을 삭제하였습니다."));
     }
+
+    /*
+        community 댓글 삭제
+     */
+//    @DeleteMapping("/communities/{communityId}/comments/{userId}")
+//    public ResponseEntity<ResponseDto<?>> deleteComment(@PathVariable Integer communityId, @PathVariable Integer userId) {
+//        adminService.deleteComment(communityId, userId);
+//        return ResponseEntity.ok(ResponseDto.success("community 댓글을 삭제했습니다."));
+//    }
 
     /*
         food 조회
