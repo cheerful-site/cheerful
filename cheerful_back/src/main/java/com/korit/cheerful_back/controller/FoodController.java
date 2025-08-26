@@ -46,7 +46,7 @@ public class FoodController {
   /*
       특정 food 글을 좋아요 취소
    */
-  @DeleteMapping("/{foodId}/disLike")
+  @DeleteMapping("/{foodId}/dislike")
   public ResponseEntity<ResponseDto<?>> getDisLike(@PathVariable Integer foodId) {
     foodService.disLike(foodId);
     return ResponseEntity.ok(ResponseDto.success("좋아요 취소"));
@@ -66,7 +66,7 @@ public class FoodController {
    */
   @PostMapping("/{foodId}/comments")
   public ResponseEntity<ResponseDto<?>> registerFoodComment(@ModelAttribute FoodsCommentRegisterReqDto dto) {
-    System.out.println(dto);
+//    System.out.println(dto);
     foodService.registerComment(dto);
     return ResponseEntity.ok(ResponseDto.success("댓글을 등록하였습니다."));
   }
