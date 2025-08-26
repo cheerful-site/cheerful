@@ -8,28 +8,18 @@ import java.util.List;
 @Mapper
 public interface MapInfoMapper {
 
-  int existsByNameAndAddress(@Param("name") String name,
-      @Param("address") String address);
+    List<MapInfo> selectNearby(@Param("categoryId") int categoryId,
+                               @Param("lat") double lat,
+                               @Param("lng") double lng,
+                               @Param("radius") int radius,
+                               @Param("limit") int limit);
 
-  int insertOne(MapInfoRow row);
+    int existsByNameAndCoords(@Param("name") String name,
+                              @Param("lat") double lat,
+                              @Param("lng") double lng);
 
-  int bulkInsertIgnore(@Param("list") List<MapInfoRow> rows);
+    int insertOne(MapInfo mapInfo);
 
-  // 목록 조회(카테고리/검색/지도영역 + 페이징)
-  List<MapInfoRow> search(@Param("categoryId") Integer categoryId,
-      @Param("q") String q,
-      @Param("swLat") Double swLat,
-      @Param("swLng") Double swLng,
-      @Param("neLat") Double neLat,
-      @Param("neLng") Double neLng,
-      @Param("offset") int offset,
-      @Param("size") int size);
+    int updateByNaturalKey(MapInfo mapInfo); // name+lat+lng 기준 갱신
 
-  // 카운트
-  int count(@Param("categoryId") Integer categoryId,
-      @Param("q") String q,
-      @Param("swLat") Double swLat,
-      @Param("swLng") Double swLng,
-      @Param("neLat") Double neLat,
-      @Param("neLng") Double neLng);
 }
