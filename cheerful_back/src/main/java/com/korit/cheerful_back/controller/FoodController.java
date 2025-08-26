@@ -66,6 +66,7 @@ public class FoodController {
    */
   @PostMapping("/{foodId}/comments")
   public ResponseEntity<ResponseDto<?>> registerFoodComment(@ModelAttribute FoodsCommentRegisterReqDto dto) {
+    System.out.println(dto);
     foodService.registerComment(dto);
     return ResponseEntity.ok(ResponseDto.success("댓글을 등록하였습니다."));
   }

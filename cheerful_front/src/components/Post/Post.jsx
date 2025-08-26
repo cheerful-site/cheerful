@@ -16,8 +16,8 @@ function Post({ content }) {
 
   const handleOnClick = () => {
     if (location.pathname.startsWith("/notice")) {
-      reqNoticeViews(content.communityCategoryId, content.noticeId);
-      navigate(`/notice/${content.communityCategoryId}/${content.noticeId}`);
+      reqNoticeViews(content.noticeCategoryId, content.noticeId);
+      navigate(`/notice/${content.noticeCategoryId}/${content.noticeId}`);
     } else {
       reqCommunityViews(content.communityCategoryId, content.communityId);
       navigate(
