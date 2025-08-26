@@ -6,6 +6,7 @@ import usePrincipalQuery from "../../../queries/PrincipalQuery/usePrincipalQuery
 import Footer from "../../../components/Footer/Footer";
 import { FiPlus, FiX } from "react-icons/fi";
 import { reqCommunityRegister } from "../../../api/communityApi/communityApi";
+import ReactQuill from "react-quill-new";
 
 function CommunityRegister(props) {
   const [inputValue, setInputValue] = useState({
@@ -81,7 +82,7 @@ function CommunityRegister(props) {
       <div css={s.layout}>
         <div css={s.registerContainer}>
           <div css={s.registerUser}>
-            <img src={user?.profileImgPath} alt="" />
+            <img src={user?.profileImgUrl} alt="" />
             <span>{user?.name}</span>
           </div>
 
@@ -133,6 +134,7 @@ function CommunityRegister(props) {
               placeholder="내용을 작성해 주세요. (최소 5자)"
             />
           </div>
+          {/* <ReactQuill></ReactQuill> */}
           <button css={s.registerButton} onClick={handleRegisterOnClick}>
             등록하기
           </button>

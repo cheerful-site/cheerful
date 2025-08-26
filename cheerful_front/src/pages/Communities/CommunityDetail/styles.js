@@ -129,6 +129,47 @@ export const commentRegister = css`
   }
 `;
 
+export const recommentRegister = css`
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  margin-left: 3rem;
+  padding: 2rem;
+  border: 0.1rem solid #22222230;
+  border-radius: 1rem;
+  width: 92rem;
+  height: 15rem;
+
+  & > span {
+    margin-bottom: 1rem;
+    font-size: 1.4rem;
+    font-weight: 700;
+  }
+
+  & > textarea {
+    border: none;
+    width: 100%;
+    height: 6rem;
+    text-decoration: none;
+    outline: none;
+    resize: none;
+  }
+
+  & > div {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+
+    & > button {
+      border: none;
+      font-size: 1.4rem;
+      color: #22222230;
+      background-color: #ffffff;
+      cursor: pointer;
+    }
+  }
+`;
+
 export const commentsLayout = css`
   display: flex;
   flex-direction: column;
@@ -162,17 +203,18 @@ export const commentUser = css`
 `;
 
 export const commentContent = css`
-  border-left: 0.1rem solid #22222230;
   margin-bottom: 2rem;
   padding-left: 3rem;
   width: 100%;
 
   & > span {
+    margin-left: 0.5rem;
     font-size: 1.6rem;
     color: #444444;
   }
 
   & > div {
+    margin-left: 0.5rem;
     margin-top: 0.5rem;
   }
 

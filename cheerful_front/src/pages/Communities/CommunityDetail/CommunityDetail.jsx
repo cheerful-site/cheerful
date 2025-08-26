@@ -7,6 +7,7 @@ import Footer from "../../../components/Footer/Footer";
 import usePrincipalQuery from "../../../queries/PrincipalQuery/usePrincipalQuery";
 import { baseURL } from "../../../api/axios/axios";
 import { FaRegComment } from "react-icons/fa";
+import { reqCommunityRegisterComments } from "../../../api/communityApi/communityApi";
 
 function CommunityDetail(props) {
   const params = useParams();
@@ -16,25 +17,70 @@ function CommunityDetail(props) {
     params.category,
     params.communityId
   );
-  const [inputValue, setInputValue] = useState();
+
+  const [commentInputValue, setCommentInputValue] = useState();
+  const [recomment, setRecomment] = useState(null);
+  const [openCommentId, setOpenCommentId] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
 
   const detailContent = communityDetail?.data?.data?.body;
   const comments = communityDetail?.data?.data?.body?.communityComments;
   const user = principal?.data?.data?.body?.user || [];
+
   // console.log(user);
   // console.log(detailContent);
   // console.log(comments);
 
-  const handleOnChange = (e) => {
-    setInputValue(e.target.value);
-  };
-  const handleCommentsOnClick = () => {
-    console.log(inputValue);
+  const handleCommentOnChange = (e) => {
+    setCommentInputValue(e.target.value);
+    // if (!/^@\w+\s/.test(e.target.value)) {
+    //   setRecomment(null);
+    // }
   };
 
-  const handleRecommentRegisterOnClick = () => {};
+  const handleCommentsOnClick = () => {
+    const content = /^@\w+\s/.test(commentInputValue)
+      ? commentInputValue.substring(commentInputValue.indexOf(" ") + 1)
+      : commentInputValue;
+
+    const comment = {
+      communityId: detailContent?.communityId,
+      content,
+    };
+
+    reqCommunityRegisterComments(comment);
+    communityDetail.refetch();
+  };
+
+  const handleOpenRecommentOnClick = (comment, commentId) => {
+    setRecomment(comment);
+
+    if (openCommentId === commentId) {
+      setOpenCommentId(null);
+    } else {
+      setOpenCommentId(commentId);
+    }
+  };
+
+  const handleRecommentsOnClick = () => {
+    const content = /^@\w+\s/.test(commentInputValue)
+      ? commentInputValue.substring(commentInputValue.indexOf(" ") + 1)
+      : commentInputValue;
+
+    const comment = {
+      communityId: recomment?.communityId,
+      parentCommentId: recomment?.communityCommentId,
+      parentUserId: recomment?.userId,
+      content,
+    };
+
+    reqCommunityRegisterComments(comment);
+    communityDetail.refetch();
+    setOpenCommentId(null);
+  };
 
   console.log(detailContent);
+  // console.log(recomment);
 
   return (
     <>
@@ -75,7 +121,7 @@ function CommunityDetail(props) {
                       name="comment"
                       id=""
                       placeholder="댓글을 남겨주세요..."
-                      onChange={handleOnChange}
+                      onChange={handleCommentOnChange}
                     />
                     <div>
                       <button onClick={handleCommentsOnClick}>등록하기</button>
@@ -89,12 +135,60 @@ function CommunityDetail(props) {
             <div css={s.commentsLayout}>
               <div>댓글 {detailContent?.communityComments.length}</div>
               <div css={s.commentsContainer}>
-                {comments?.map((comment) => {
+                {comments?.map((comment, index) => {
                   if (comment.level === 0) {
                     return (
-                      <>
+                      <div key={index}>
+                        <div>
+                          <div css={s.commentUser}>
+                            <img src={comment?.user?.profileImgUrl} alt="" />
+                            <span>{comment?.user?.name}</span>
+                          </div>
+                          <div css={s.commentContent}>
+                            <span>{comment.content}</span>
+                            <div>
+                              <span>{comment.createdAt.slice(0, 10)}</span>
+                              <span>{comment.createdAt.slice(11, 16)}</span>
+                              <span
+                                onClick={() =>
+                                  handleOpenRecommentOnClick(
+                                    comment,
+                                    comment?.communityCommentId
+                                  )
+                                }>
+                                답글달기 <FaRegComment />
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                        {/* ////  대댓글 Input  //// */}
+                        {openCommentId === comment?.communityCommentId && (
+                          <div>
+                            <div css={s.commentRegisterContainer}>
+                              <div css={s.recommentRegister}>
+                                <span>{user?.name}</span>
+                                <textarea
+                                  name="comment"
+                                  placeholder="댓글을 남겨주세요..."
+                                  onChange={handleCommentOnChange}
+                                />
+                                <div>
+                                  <button onClick={handleRecommentsOnClick}>
+                                    등록하기
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  }
+                  return (
+                    <>
+                      <div css={s.subComments}>
                         <div css={s.commentUser}>
-                          <img src={comment?.user?.profileImgPath} alt="" />
+                          <img src={comment?.user?.profileImgUrl} alt="" />
                           <span>{comment?.user?.name}</span>
                         </div>
                         <div css={s.commentContent}>
@@ -102,34 +196,39 @@ function CommunityDetail(props) {
                           <div>
                             <span>{comment.createdAt.slice(0, 10)}</span>
                             <span>{comment.createdAt.slice(11, 16)}</span>
-                            <span onClick={handleRecommentRegisterOnClick}>
-                              답글달기 <FaRegComment />
+                            <span
+                              onClick={() =>
+                                handleOpenRecommentOnClick(
+                                  comment,
+                                  comment?.communityCommentId
+                                )
+                              }>
+                              답글달기
+                              <FaRegComment />
                             </span>
                           </div>
                         </div>
-                      </>
-                    );
-                  }
-                  return (
-                    <div css={s.subComments}>
-                      <div css={s.commentUser}>
-                        <img src={comment?.user?.profileImgPath} alt="" />
-                        <span>{comment?.user?.name}</span>
                       </div>
-                      <div css={s.commentContent}>
-                        <span>{comment.content}</span>
+                      {openCommentId === comment?.communityCommentId && (
                         <div>
-                          <span>{comment.createdAt.slice(0, 10)}</span>
-                          <span>{comment.createdAt.slice(11, 16)}</span>
-                          <span>
-                            답글달기{" "}
-                            <FaRegComment
-                              onClick={handleRecommentRegisterOnClick}
-                            />
-                          </span>
+                          <div css={s.commentRegisterContainer}>
+                            <div css={s.recommentRegister}>
+                              <span>{user?.name}</span>
+                              <textarea
+                                name="comment"
+                                placeholder="댓글을 남겨주세요..."
+                                onChange={handleCommentOnChange}
+                              />
+                              <div>
+                                <button onClick={handleRecommentsOnClick}>
+                                  등록하기
+                                </button>
+                              </div>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    </div>
+                      )}
+                    </>
                   );
                 })}
               </div>
