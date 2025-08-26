@@ -40,7 +40,7 @@ public class NoticeController {
     /*
         특정 공지사항 글을 좋아요 취소
      */
-    @DeleteMapping("/{noticeId}/disLike")
+    @DeleteMapping("/{noticeId}/dislike")
     public ResponseEntity<ResponseDto<?>> getDisLike(@PathVariable Integer noticeId) {
         noticeService.disLike(noticeId);
         return ResponseEntity.ok(ResponseDto.success("좋아요 취소"));
