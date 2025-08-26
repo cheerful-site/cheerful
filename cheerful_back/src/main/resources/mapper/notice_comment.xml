@@ -62,7 +62,7 @@
             ncit.seq,
             ncit.`img_path`
         from
-            notice_commnet_tb nct
+            notice_comment_tb nct
             left outer join user_tb ut on(ut.user_id = nct.user_id)
             left outer join notice_comment_img_tb ncit on(ncit.notice_comment_id = nct.notice_comment_id)
         where
@@ -74,7 +74,7 @@
     <select id="getCountByCommentId" resultType="java.lang.Integer">
         select
             count(*)
-        front notice_comment_tb
+        from notice_comment_tb
         where notice_id = #{noticeId}
     </select>
 
