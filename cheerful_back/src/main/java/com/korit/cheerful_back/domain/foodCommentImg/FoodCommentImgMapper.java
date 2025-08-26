@@ -5,5 +5,5 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface FoodCommentImgMapper {
-  int insertMany(List<FoodCommentImg> foodImgs);
+  int insertMany(List<FoodCommentImg> foodCommentImgs);
 }

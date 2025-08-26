@@ -7,6 +7,6 @@ import java.util.List;
 @Mapper
 public interface NoticeCommentImgMapper {
 
-    int insertMany(List<NoticeCommentImg> noticeImgs);
+    int insertMany(List<NoticeCommentImg> noticeCommentImgs);
 
 }

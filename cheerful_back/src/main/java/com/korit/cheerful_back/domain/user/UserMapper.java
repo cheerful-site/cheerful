@@ -16,4 +16,6 @@ public interface UserMapper {
   int deleteByUserIds(List<Integer> userIds);
 
   User findByUsername(String username);
+
+//  int getCount
 }
