@@ -194,8 +194,10 @@ public class CommunityService {
 //    }
 
     public Community getCommunityContent(Integer categoryId, Integer communityId) {
+        Integer userId = principalUtil.getPrincipalUser().getUser().getUserId();
+
         // 게시글 단건 조회
-        Community community = communityMapper.findByOption(categoryId, communityId);
+        Community community = communityMapper.findByOption(categoryId, communityId, userId);
 
         // 이미지 URL 세팅
         List<CommunityImg> imgs = community.getCommunityImgs();
@@ -206,6 +208,7 @@ public class CommunityService {
 
         // 댓글도 조회해서 세팅
         List<CommunityComment> comments = communityCommentMapper.findAllByCommunityId(categoryId, communityId);
+
         comments.forEach(c -> {
             var u = c.getUser();
             if(u != null) {
