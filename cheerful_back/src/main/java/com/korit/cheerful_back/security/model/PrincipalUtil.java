@@ -1,5 +1,7 @@
 package com.korit.cheerful_back.security.model;
 
+import com.korit.cheerful_back.domain.user.User;
+import java.util.Map;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
@@ -9,11 +11,38 @@ import org.springframework.stereotype.Component;
 @Component
 public class PrincipalUtil {
 
+    private static final PrincipalUser ANONYMOUS;
+    static {
+        var anonUser = User.builder()
+            .userId(0)
+            .username("anonymous")
+            .name("anonymous")
+            .role("ROLE_ANONYMOUS")
+            .build();
+
+        ANONYMOUS = PrincipalUser.builder()
+            .user(anonUser)
+            .attributes(Map.of())
+            .build();
+    }
+
     /*
         현재 인증된 PrincipalUser 반환
      */
     public PrincipalUser getPrincipalUser() {
-        return (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+//        return (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        var context = SecurityContextHolder.getContext();
+        var auth = context != null ? context.getAuthentication() : null;
+
+        if (auth == null) return ANONYMOUS;
+
+        Object principal = auth.getPrincipal();
+        if (principal instanceof PrincipalUser pu) {
+            return pu;
+        }
+        // anonymousUser(String) 등일 때
+        return ANONYMOUS;
     }
 
 }
