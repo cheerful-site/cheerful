@@ -215,6 +215,7 @@
             cmt.content,
             cmt.created_at as cmt_created_at,
 
+            ifnull(clt.community_like_id, 0) as is_like,
             ifnull(clc.like_count, 0) as like_count,
             ifnull(cc.comments_count, 0) as comments_count
         from
