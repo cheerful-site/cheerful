@@ -161,7 +161,7 @@ function FoodDetail(props) {
                   <p>{comment?.content}</p>
                 </div>
                 <div css={s.likeSelected}>
-                  <span>이 후기가 도움이 되요!</span>
+                  <span>이 후기가 도움이 돼요!</span>
                   <div>
                     <AiFillLike />
                     <span>{comment?.isLike}</span>

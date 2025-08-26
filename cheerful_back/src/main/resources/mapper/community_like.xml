@@ -13,7 +13,7 @@
   <delete id="delete">
     delete from community_like_tb
     where
-      community_id = #{communityId},
+      community_id = #{communityId} and
       user_id = #{userId}
   </delete>
 

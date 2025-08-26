@@ -5,11 +5,16 @@ import { useEffect, useState } from "react";
 import useCommunityDetailQuery from "../../../queries/CommunityQuery/useCommunityDetail";
 import Footer from "../../../components/Footer/Footer";
 import usePrincipalQuery from "../../../queries/PrincipalQuery/usePrincipalQuery";
-import { baseURL } from "../../../api/axios/axios";
 import { FaRegComment } from "react-icons/fa";
-import { reqCommunityRegisterComments } from "../../../api/communityApi/communityApi";
+import {
+  reqCommunitydisLike,
+  reqCommunityLike,
+  reqCommunityRegisterComments,
+} from "../../../api/communityApi/communityApi";
+import { useQueryClient } from "@tanstack/react-query";
 
 function CommunityDetail(props) {
+  const queryClient = useQueryClient();
   const params = useParams();
   const principal = usePrincipalQuery();
   const token = localStorage.getItem("AccessToken");
@@ -21,7 +26,6 @@ function CommunityDetail(props) {
   const [commentInputValue, setCommentInputValue] = useState();
   const [recomment, setRecomment] = useState(null);
   const [openCommentId, setOpenCommentId] = useState(null);
-  const [isOpen, setIsOpen] = useState(false);
 
   const detailContent = communityDetail?.data?.data?.body;
   const comments = communityDetail?.data?.data?.body?.communityComments;
@@ -49,6 +53,7 @@ function CommunityDetail(props) {
     };
 
     reqCommunityRegisterComments(comment);
+    setCommentInputValue("");
     communityDetail.refetch();
   };
 
@@ -76,10 +81,51 @@ function CommunityDetail(props) {
 
     reqCommunityRegisterComments(comment);
     communityDetail.refetch();
+    setCommentInputValue("");
     setOpenCommentId(null);
   };
 
-  const handleLikeDisLikeOnClick = () => {};
+  const handleLikeOnClick = (categoryId, communityId) => {
+    reqCommunityLike(communityId).then((response) => {
+      queryClient.setQueryData(
+        ["communityDetail", categoryId, communityId],
+        (prev) => {
+          return {
+            ...prev,
+            data: {
+              ...prev.data,
+              body: {
+                ...prev.data.body,
+                isLike: 1,
+                likeCount: prev.data.body.likeCount + 1,
+              },
+            },
+          };
+        }
+      );
+    });
+  };
+
+  const handleDislikeOnClick = (categoryId, communityId) => {
+    reqCommunitydisLike(communityId).then((response) => {
+      queryClient.setQueryData(
+        ["communityDetail", categoryId, communityId],
+        (prev) => {
+          return {
+            ...prev,
+            data: {
+              ...prev.data,
+              body: {
+                ...prev.data.body,
+                isLike: 0,
+                likeCount: prev.data.body.likeCount - 1,
+              },
+            },
+          };
+        }
+      );
+    });
+  };
 
   console.log(detailContent);
   // console.log(recomment);
@@ -112,9 +158,29 @@ function CommunityDetail(props) {
             </div>
 
             <div css={s.postLike}>
-              <span onClick={handleLikeDisLikeOnClick}>
-                공감해요 {detailContent?.likeCount}
-              </span>
+              {detailContent?.isLike === 0 ? (
+                <span
+                  css={s.isDislike}
+                  onClick={() =>
+                    handleLikeOnClick(
+                      detailContent?.communityCategoryId.toString(),
+                      detailContent?.communityId.toString()
+                    )
+                  }>
+                  공감해요 {detailContent?.likeCount}
+                </span>
+              ) : (
+                <span
+                  css={s.isLike}
+                  onClick={() =>
+                    handleDislikeOnClick(
+                      detailContent?.communityCategoryId.toString(),
+                      detailContent?.communityId.toString()
+                    )
+                  }>
+                  공감해요 {detailContent?.likeCount}
+                </span>
+              )}
             </div>
             {token ? (
               <>
@@ -126,6 +192,7 @@ function CommunityDetail(props) {
                       id=""
                       placeholder="댓글을 남겨주세요..."
                       onChange={handleCommentOnChange}
+                      value={commentInputValue}
                     />
                     <div>
                       <button onClick={handleCommentsOnClick}>등록하기</button>
@@ -175,6 +242,7 @@ function CommunityDetail(props) {
                                   name="comment"
                                   placeholder="댓글을 남겨주세요..."
                                   onChange={handleCommentOnChange}
+                                  value={commentInputValue}
                                 />
                                 <div>
                                   <button onClick={handleRecommentsOnClick}>
@@ -222,6 +290,7 @@ function CommunityDetail(props) {
                                 name="comment"
                                 placeholder="댓글을 남겨주세요..."
                                 onChange={handleCommentOnChange}
+                                value={commentInputValue}
                               />
                               <div>
                                 <button onClick={handleRecommentsOnClick}>
