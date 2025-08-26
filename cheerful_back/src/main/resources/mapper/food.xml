@@ -175,16 +175,16 @@
             fmt.content,
             fmt.created_at as fmt_created_at,
 
-            ifnull(flt.food_like_id, 0) as is_like,
+            ifnull(fil.is_like, 0) as is_like,
             ifnull(flc.like_count, 0) as like_count,
             ifnull(fcc.comments_count, 0) as comments_count
         from
             food_tb ft
             left outer join user_tb ut on(ut.user_id = ft.user_id)
             left outer join food_img_tb fit on(fit.food_id = ft.food_id)
-            left outer join food_like_tb flt on(flt.food_id = ft.food_id)
             left outer join food_category_tb fct on(fct.food_category_id = ft.food_category_id)
             left outer join food_comment_tb fmt on(fmt.food_id = ft.food_id)
+            left outer join (select distinct food_id, 1 as is_like from food_like_tb where user_id = #{userId}) fil on(fil.food_id = ft.food_id)
             left outer join (select food_id, count(*) as like_count from food_like_tb group by food_id) flc on(flc.food_id = ft.food_id)
             left outer join (select food_id, count(*) as comments_count from food_comment_tb group by food_id) fcc on(fcc.food_id = ft.food_id)
         where

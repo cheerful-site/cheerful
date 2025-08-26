@@ -224,7 +224,6 @@
             left outer join community_img_tb cit on(cit.community_id = ct.community_id)
             left outer join community_category_tb cct on(cct.community_category_id = ct.community_category_id)
             left outer join community_comment_tb cmt on(cmt.community_id = ct.community_id)
-            left outer join community_like_tb clt on(clt.community_id = ct.community_id)
             left outer join (select distinct community_id, 1 as is_like from community_like_tb where user_id = #{userId}) cil on(cil.community_id = ct.community_id)
             left outer join (select community_id, count(*) as like_count from community_like_tb group by community_id) clc on(clc.community_id = ct.community_id)
             left outer join (select community_id, count(*) as comments_count from community_comment_tb group by community_id) cc on(cc.community_id = ct.community_id)

@@ -57,7 +57,7 @@ public class FoodController {
   */
   @GetMapping("/{foodId}")
   public ResponseEntity<ResponseDto<?>> getFoodContent(@PathVariable Integer foodId) {
-    System.out.println(foodService.getFoodContent(foodId));
+//    System.out.println(foodService.getFoodContent(foodId));
     return ResponseEntity.ok(ResponseDto.success(foodService.getFoodContent(foodId)));
   }
 

@@ -92,7 +92,9 @@ public class FoodService {
     특정 글 클릭해서 내용 보기
    */
   public Food getFoodContent(Integer foodId) {
-    Food food = foodMapper.findByOption(foodId);
+    Integer userId = principalUtil.getPrincipalUser().getUser().getUserId();
+
+    Food food = foodMapper.findByOption(foodId, userId);
 
     // 이미지 URL 세팅
     List<FoodImg> imgs = food.getFoodImgs();
@@ -101,7 +103,7 @@ public class FoodService {
       imgs.forEach(img -> img.setImgUrl(imageUrlUtil.food(img.getImgPath())));
     }
 
-    List<FoodComment> comment = foodCommentMapper.findAllByFoodId(foodId);
+    List<FoodComment> comment = foodCommentMapper.findAllByFoodId(foodId, userId);
 
     comment.forEach(c -> {
       var u = c.getUser();

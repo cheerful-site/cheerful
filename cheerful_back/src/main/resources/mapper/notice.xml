@@ -234,15 +234,15 @@
             nit.seq,
             nit.`img_path`,
 
-            ifnull(nlt.notice_like_id, 0) as is_like,
+            ifnull(nil.is_like, 0) as is_like,
             ifnull(nlc.like_count, 0) as like_count
 
         from
             notice_tb nt
             left outer join user_tb ut on(ut.user_id = nt.user_id)
             left outer join notice_img_tb nit on(nit.notice_id = nt.notice_id)
-            left outer join notice_like_tb nlt on(nlt.notice_id = nt.notice_id)
             left outer join notice_category_tb nct on(nct.notice_category_id = nt.notice_category_id)
+            left outer join (select distinct notice_id, 1 as is_like from notice_like_tb where user_id = #{userId}) nil on(nil.notice_id = nt.notice_id)
             left outer join (select notice_id, count(*) as like_count from notice_like_tb group by notice_id) nlc on(nlc.notice_id = nt.notice_id)
         where
             nt.notice_category_id = #{categoryId}
