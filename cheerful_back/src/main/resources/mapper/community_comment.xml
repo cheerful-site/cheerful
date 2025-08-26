@@ -100,11 +100,6 @@
             ut.provider_id,
             ut.created_at,
 
-            cit.community_img_id,
-            cit.community_id as cit_community_id,
-            cit.seq,
-            cit.`img_path`,
-
             ct.content,
             ct.created_at,
             ct.`level`,
@@ -113,7 +108,6 @@
             comment_tb ct
             left outer join user_tb ut on(ut.user_id = ct.user_id)
             left outer join user_tb put on(put.user_id = ct.parent_user_id)
-            left outer join community_img_tb cit on(cit.community_id = ct.community_id)
         order by
             order_number desc,
             `path`;
