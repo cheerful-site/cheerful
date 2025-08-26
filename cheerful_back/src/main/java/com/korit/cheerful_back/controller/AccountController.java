@@ -23,7 +23,7 @@ public class AccountController {
     현재 로그인한 사용자의 PrincipalUser 반환
    */
   @GetMapping("/account/principal")
-  public ResponseEntity<ResponseDto<?>> principal(@AuthenticationPrincipal PrincipalUser principalUser) {
+  public ResponseEntity<ResponseDto<?>> principal(@AuthenticationPrincipal(errorOnInvalidType = false) PrincipalUser principalUser) {
 //    System.out.println(principalUser.getUser());
 
     Map<String, Object> body = new LinkedHashMap<>();
@@ -34,13 +34,23 @@ public class AccountController {
       return ResponseEntity.ok(ResponseDto.success(body));
     }
     User user = principalUser.getUser();
-    user.setProfileImgUrl(imageUrlUtil.profile(user.getProfileImgPath()));
+//    user.setProfileImgUrl(imageUrlUtil.profile(user.getProfileImgPath()));
+//
+//    String role = principalUser.getAuthorities().stream()
+//        .findFirst().map(GrantedAuthority::getAuthority).orElse(null);
+//
+//    body.put("authenticated", true);
+//    body.put("user", user);
 
-    String role = principalUser.getAuthorities().stream()
-        .findFirst().map(GrantedAuthority::getAuthority).orElse(null);
+    Map<String, Object> userView = new LinkedHashMap<>();
+    userView.put("userId", user.getUserId());
+    userView.put("username", user.getUsername());
+    userView.put("name", user.getName());
+    userView.put("role", user.getRole());
+    userView.put("imgUrl", imageUrlUtil.profile(user.getProfileImgPath()));
 
     body.put("authenticated", true);
-    body.put("user", user);
+    body.put("user", userView);
 
     return ResponseEntity.ok(ResponseDto.success(body));
 
