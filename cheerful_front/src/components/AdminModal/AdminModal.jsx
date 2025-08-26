@@ -183,7 +183,7 @@ function AdminModal({ mode, categoryName }) {
       }
 
       console.log(inputValue.categoryId);
-      reqAdminNoticeModify(formData);
+      // reqAdminNoticeModify(formData);
       setOpenModal(false);
       return;
     }

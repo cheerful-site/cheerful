@@ -97,6 +97,7 @@ public class CommunityController {
      */
     @PostMapping("/{communityId}/comments")
     public ResponseEntity<ResponseDto<?>> registerComment(@RequestBody CommunityCommentRegisterReqDto dto) {
+        System.out.println(dto);
         return ResponseEntity.ok(ResponseDto.success(communityService.registerComment(dto)));
     }
 }
