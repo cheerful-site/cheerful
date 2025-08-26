@@ -47,7 +47,7 @@ public class AccountController {
     userView.put("username", user.getUsername());
     userView.put("name", user.getName());
     userView.put("role", user.getRole());
-    userView.put("imgUrl", imageUrlUtil.profile(user.getProfileImgPath()));
+    userView.put("profileImgUrl", imageUrlUtil.profile(user.getProfileImgPath()));
 
     body.put("authenticated", true);
     body.put("user", userView);
