@@ -52,16 +52,17 @@ function FoodDetail(props) {
       [e.target.name]: [e.target.value],
     }));
   };
+
+  const handleImgDeleteOnClick = (index) => {
+    setFiles(files.filter((file, i) => i !== index));
+  };
+
   const handleRegisterOnClick = () => {
     const formData = new FormData();
     formData.append("content", inputValue.content);
     files.forEach((f) => formData.append("files", f.file));
     // console.log(formData);
     // navigate("/food/${params.foodId}");
-  };
-
-  const handleImgDeleteOnClick = (index) => {
-    setFiles(files.filter((file, i) => i !== index));
   };
 
   return (
@@ -143,7 +144,7 @@ function FoodDetail(props) {
           {foodDetail?.foodComment?.map((comment) => (
             <div key={comment.foodCommentId} css={s.commentContainer}>
               <div css={s.commentUser}>
-                <img src={comment?.user.profileImgPath} alt="" />
+                <img src={comment?.user.profileImgUrl} alt="" />
                 <span>{comment?.user.name}</span>
               </div>
               <div css={s.imgAndContent}>

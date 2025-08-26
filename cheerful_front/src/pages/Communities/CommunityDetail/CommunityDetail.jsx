@@ -79,6 +79,8 @@ function CommunityDetail(props) {
     setOpenCommentId(null);
   };
 
+  const handleLikeDisLikeOnClick = () => {};
+
   console.log(detailContent);
   // console.log(recomment);
 
@@ -110,7 +112,9 @@ function CommunityDetail(props) {
             </div>
 
             <div css={s.postLike}>
-              <span>공감해요 {detailContent?.likeCount}</span>
+              <span onClick={handleLikeDisLikeOnClick}>
+                공감해요 {detailContent?.likeCount}
+              </span>
             </div>
             {token ? (
               <>

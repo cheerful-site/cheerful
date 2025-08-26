@@ -63,7 +63,7 @@ public class CommunityController {
     /*
         특정 커뮤니티 글을 좋아요 취소
      */
-    @DeleteMapping("/{communityId}/disLike")
+    @DeleteMapping("/{communityId}/dislike")
     public ResponseEntity<ResponseDto<?>> getDisLike(@PathVariable Integer communityId) {
         communityService.disLike(communityId);
         return ResponseEntity.ok(ResponseDto.success("좋아요 취소"));
