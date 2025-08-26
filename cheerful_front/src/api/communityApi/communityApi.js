@@ -25,3 +25,9 @@ export const reqCommunityViews = async (categoryId, communityId) =>
 
 export const reqCommunityRegisterComments = async (data) =>
   await api.post(`/communities/${data.communityId}/comments`, data);
+
+export const reqCommunityLike = async (communityId) =>
+  await api.post(`/communities/${communityId}/like`);
+
+export const reqCommunitydisLike = async (communityId) =>
+  await api.delete(`/communities/${communityId}/dislike`);
