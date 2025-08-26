@@ -25,21 +25,7 @@ public class MapInfoController {
     return ResponseEntity.ok().body("inserted=" + inserted);
   }
 
-  // 목록/마커 조회(검색어+지도영역 필터링)
-  @GetMapping
-  public ResponseEntity<?> list(@RequestParam Integer categoryId,
-      @RequestParam(required = false) String q,
-      @RequestParam(required = false) Double swLat,
-      @RequestParam(required = false) Double swLng,
-      @RequestParam(required = false) Double neLat,
-      @RequestParam(required = false) Double neLng,
-      @RequestParam(defaultValue = "1") int page,
-      @RequestParam(defaultValue = "20") int size) {
-    return ResponseEntity.ok(
-        mapInfoQueryService.search(categoryId, q, swLat, swLng, neLat, neLng, page, size)
-    );
-  }
-
+  // 지도 관련 정보를 조회
   @GetMapping("/maps")
   public ResponseEntity<ResponseDto<?>> search(
       @RequestParam(required = false) Integer categoryId,
