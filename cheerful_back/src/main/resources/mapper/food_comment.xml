@@ -36,7 +36,7 @@
     <result property="imgPath" column="img_path" />
   </resultMap>
 
-  <insert id="insert">
+  <insert id="insert" useGeneratedKeys="true" keyProperty="foodCommentId">
     insert into food_comment_tb
     values (default, #{foodId}, #{userId}, #{content}, now())
   </insert>
