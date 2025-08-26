@@ -9,6 +9,7 @@ import Footer from "../../../components/Footer/Footer";
 import { useState } from "react";
 import { FiPlus, FiX } from "react-icons/fi";
 import { AiFillLike, AiOutlineLike } from "react-icons/ai";
+import { reqFoodRegisterComment } from "../../../api/foodApi/foodApi";
 
 function FoodDetail(props) {
   const params = useParams();
@@ -61,8 +62,10 @@ function FoodDetail(props) {
     const formData = new FormData();
     formData.append("content", inputValue.content);
     files.forEach((f) => formData.append("files", f.file));
-    // console.log(formData);
-    // navigate("/food/${params.foodId}");
+
+    reqFoodRegisterComment(formData, foodDetail?.foodId);
+    setInputValue("");
+    food.refetch();
   };
 
   return (
@@ -153,8 +156,8 @@ function FoodDetail(props) {
                   <span>{comment?.createdAt.slice(0, 10)}</span>
                 </div>
                 <div css={s.commentImgList}>
-                  {comment?.foodCommentImgs?.map((img) => (
-                    <img src={img.imgUrl} alt="" />
+                  {comment?.foodCommentImgs?.map((img, index) => (
+                    <img key={index} src={img.imgUrl} alt="" />
                   ))}
                 </div>
                 <div>

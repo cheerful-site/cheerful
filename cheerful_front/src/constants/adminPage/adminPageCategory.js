@@ -78,8 +78,8 @@ export const usersCols = [
     size: "6rem",
   },
   {
-    field: "username",
-    label: "Username",
+    field: "name",
+    label: "Name",
     size: "12rem",
   },
   {

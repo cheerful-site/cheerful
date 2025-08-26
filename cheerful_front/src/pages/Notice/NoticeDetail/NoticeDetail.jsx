@@ -34,11 +34,7 @@ function NoticeDetail(props) {
             <div css={s.contentContainer}>{detailContent?.content}</div>
             {detailContent?.noticeImgs ? (
               detailContent?.noticeImgs?.map((img, index) => (
-                <img
-                  key={index}
-                  src={`${baseURL}/upload/${img.imgPath}`}
-                  alt=""
-                />
+                <img key={index} src={img.imgUrl} alt="" />
               ))
             ) : (
               <></>

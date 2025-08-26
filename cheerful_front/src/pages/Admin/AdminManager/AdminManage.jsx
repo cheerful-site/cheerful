@@ -2,7 +2,7 @@
 import { FaSearch } from "react-icons/fa";
 import * as s from "./styles";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ReactModal from "react-modal";
 import { useQueryClient } from "@tanstack/react-query";
 import useAdminUsersQuery from "../../../queries/AdminQuery/useAdminUsersQuery";
@@ -98,7 +98,7 @@ function AdminManage(props) {
   }));
 
   // console.log(user);
-  // console.log(users);
+  console.log(users);
   // console.log(communityList);
   // console.log(foodList);
   // console.log(params);
@@ -135,6 +135,10 @@ function AdminManage(props) {
       return;
     }
   };
+
+  useEffect(() => {
+    //페이지 이동시 1번 페이지로 이동하도록
+  }, [params.categoryId]);
 
   return (
     <div css={s.layout}>

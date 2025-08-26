@@ -81,6 +81,7 @@ function AdminModal({ mode, categoryName }) {
   };
 
   const handleModalCloseOnClick = () => {
+    setFiles([]);
     setOpenModal(false);
   };
 
