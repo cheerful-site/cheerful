@@ -17,3 +17,9 @@ export const reqFoodRegisterComment = async (data, foodId) =>
       "Content-Type": "multipart/form-data",
     },
   });
+
+export const reqFoodLike = async (foodId) =>
+  await api.post(`/foods/${foodId}/like`);
+
+export const reqFoodDislike = async (foodId) =>
+  await api.delete(`/foods/${foodId}/dislike`);

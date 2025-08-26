@@ -9,10 +9,16 @@ import Footer from "../../../components/Footer/Footer";
 import { useState } from "react";
 import { FiPlus, FiX } from "react-icons/fi";
 import { AiFillLike, AiOutlineLike } from "react-icons/ai";
-import { reqFoodRegisterComment } from "../../../api/foodApi/foodApi";
+import {
+  reqFoodDislike,
+  reqFoodLike,
+  reqFoodRegisterComment,
+} from "../../../api/foodApi/foodApi";
+import { useQueryClient } from "@tanstack/react-query";
 
 function FoodDetail(props) {
   const params = useParams();
+  const queryClient = useQueryClient();
   const [files, setFiles] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const food = useFoodDetailQuery(params.foodId);
@@ -48,10 +54,7 @@ function FoodDetail(props) {
   };
 
   const handleOnChange = (e) => {
-    setInputValue((prev) => ({
-      ...prev,
-      [e.target.name]: [e.target.value],
-    }));
+    setInputValue(e.target.value);
   };
 
   const handleImgDeleteOnClick = (index) => {
@@ -60,12 +63,60 @@ function FoodDetail(props) {
 
   const handleRegisterOnClick = () => {
     const formData = new FormData();
-    formData.append("content", inputValue.content);
+
+    formData.append("content", inputValue);
     files.forEach((f) => formData.append("files", f.file));
+
+    // for (let pair of formData.entries()) {
+    //   console.log(pair[0], pair[1]);
+    // }
 
     reqFoodRegisterComment(formData, foodDetail?.foodId);
     setInputValue("");
     food.refetch();
+  };
+
+  const handleLikeOnClick = (foodId) => {
+    console.log(queryClient.setQueriesData());
+    console.log(["foodDetail", foodId]);
+    console.log(queryClient.setQueryData(["foodDetail", foodId]));
+    reqFoodLike(foodId).then((response) => {
+      queryClient.setQueryData(["foodDetail", foodId], (prev) => {
+        return {
+          ...prev,
+          data: {
+            ...prev.data,
+            body: {
+              ...prev.data.body,
+              isLike: 1,
+              likeCount: prev.data.body.likeCount + 1,
+            },
+          },
+        };
+      });
+    });
+  };
+
+  const handleDislikeOnClick = (foodId) => {
+    // console.log(queryClient.setQueriesData());
+    // console.log(["foodDetail", foodId]);
+    // console.log(queryClient.setQueryData(["foodDetail", foodId]));
+
+    reqFoodDislike(foodId).then((response) => {
+      queryClient.setQueryData(["foodDetail", foodId], (prev) => {
+        return {
+          ...prev,
+          data: {
+            ...prev.data,
+            body: {
+              ...prev.data.body,
+              isLike: 0,
+              likeCount: prev.data.body.likeCount - 1,
+            },
+          },
+        };
+      });
+    });
   };
 
   return (
@@ -82,10 +133,20 @@ function FoodDetail(props) {
               <div css={s.contentTitle}>
                 <span>{foodDetail?.title}</span>
                 <div>
-                  {false ? (
-                    <img src={like} alt="" />
+                  {foodDetail?.isLike === 0 ? (
+                    <img
+                      src={unlike}
+                      onClick={() =>
+                        handleLikeOnClick(foodDetail?.foodId.toString())
+                      }
+                    />
                   ) : (
-                    <img src={unlike} alt="" />
+                    <img
+                      src={like}
+                      onClick={() =>
+                        handleDislikeOnClick(foodDetail?.foodId.toString())
+                      }
+                    />
                   )}
                 </div>
               </div>
@@ -133,6 +194,7 @@ function FoodDetail(props) {
             <textarea
               name="content"
               onChange={handleOnChange}
+              value={inputValue}
               placeholder="내용을 작성해 주세요. (최소 5자)"
             />
           </div>
