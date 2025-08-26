@@ -106,6 +106,15 @@ public class NoticeService {
             imgs.forEach(img -> img.setImgUrl(imageUrlUtil.notice(img.getImgPath())));
         }
 
+        List<NoticeComment> comment = noticeCommentMapper.findAllByNoticeId(noticeId);
+        comment.forEach(c -> {
+            var u = c.getUser();
+            if(u != null) {
+                u.setProfileImgUrl(imageUrlUtil.profile(u.getProfileImgPath()));
+            }
+        });
+        notice.setNoticeComment(comment);
+
         return notice;
     }
 

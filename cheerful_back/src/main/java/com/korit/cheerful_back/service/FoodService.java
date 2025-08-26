@@ -103,6 +103,13 @@ public class FoodService {
 
     List<FoodComment> comment = foodCommentMapper.findAllByFoodId(foodId);
 
+    comment.forEach(c -> {
+      var u = c.getUser();
+      if(u != null) {
+        u.setProfileImgUrl(imageUrlUtil.profile(u.getProfileImgPath()));
+      }
+    });
+
     comment.forEach(cmt -> {
       List<FoodCommentImg> cimgs = cmt.getFoodCommentImgs();
       if(cimgs == null || cimgs.isEmpty()) return;

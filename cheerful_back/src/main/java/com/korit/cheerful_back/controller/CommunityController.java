@@ -76,6 +76,7 @@ public class CommunityController {
     public ResponseEntity<ResponseDto<?>> getCommunityContent(@PathVariable Integer categoryId, @PathVariable Integer communityId) {
 //        System.out.println(categoryId);
 //        System.out.println(communityId);
+        System.out.println(communityService.getCommunityContent(categoryId, communityId));
         return ResponseEntity.ok(ResponseDto.success(communityService.getCommunityContent(categoryId, communityId)));
     }
 

@@ -206,6 +206,12 @@ public class CommunityService {
 
         // 댓글도 조회해서 세팅
         List<CommunityComment> comments = communityCommentMapper.findAllByCommunityId(categoryId, communityId);
+        comments.forEach(c -> {
+            var u = c.getUser();
+            if(u != null) {
+                u.setProfileImgUrl(imageUrlUtil.profile(u.getProfileImgPath()));
+            }
+        });
         community.setCommunityComments(comments);
 
         return community;

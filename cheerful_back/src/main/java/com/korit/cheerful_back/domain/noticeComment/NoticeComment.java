@@ -24,5 +24,4 @@ public class NoticeComment {
 
     private User user;
     private List<NoticeCommentImg> noticeCommentImgs;
-
 }

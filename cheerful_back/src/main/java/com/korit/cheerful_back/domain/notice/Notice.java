@@ -1,6 +1,7 @@
 package com.korit.cheerful_back.domain.notice;
 
 import com.korit.cheerful_back.domain.noticeCategory.NoticeCategory;
+import com.korit.cheerful_back.domain.noticeComment.NoticeComment;
 import com.korit.cheerful_back.domain.noticeImg.NoticeImg;
 import com.korit.cheerful_back.domain.user.User;
 import lombok.AllArgsConstructor;
@@ -30,5 +31,6 @@ public class Notice {
     private NoticeCategory noticeCategory;
     private User user;
     private List<NoticeImg> noticeImgs;
+    private List<NoticeComment> noticeComment;
 
 }
