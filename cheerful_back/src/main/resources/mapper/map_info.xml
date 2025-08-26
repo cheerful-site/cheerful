@@ -1,0 +1,103 @@
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.korit.cheerful_back.domain.map.MapInfoMapper">
+
+  <select id="existsByNameAndAddress" resultType="int">
+    SELECT COUNT(*)
+    FROM map_info_tb
+    WHERE map_info_name = #{name}
+    AND map_info_address = #{address}
+  </select>
+
+  <insert id="insertOne">
+    INSERT INTO map_info_tb(
+      map_info_name,
+      map_info_category_id,
+      map_info_address,
+      map_info_opening_hours,
+      map_info_operation_time,
+      map_info_phone_number,
+      map_info_lat,
+      map_info_lng,
+      map_info_full_time,
+      map_info_content
+    ) VALUES (
+      #{mapInfoName},
+      #{mapInfoCategoryId},
+      #{mapInfoAddress},
+      #{mapInfoOpeningHours},
+      #{mapInfoOperationTime},
+      #{mapInfoPhoneNumber},
+      #{mapInfoLat},
+      #{mapInfoLng},
+      #{mapInfoFullTime},
+      #{mapInfoContent}
+    )
+    ON DUPLICATE KEY UPDATE map_info_id = map_info_id
+  </insert>
+
+  <insert id="bulkInsertIgnore">
+    INSERT INTO map_info_tb(
+      map_info_name,
+      map_info_category_id,
+      map_info_address,
+      map_info_opening_hours,
+      map_info_operation_time,
+      map_info_phone_number,
+      map_info_lat,
+      map_info_lng,
+      map_info_full_time,
+      map_info_content
+    )
+    VALUES
+    <foreach collection="list" item="r" separator=",">
+      ( #{r.mapInfoName},
+        #{r.mapInfoCategoryId},
+        #{r.mapInfoAddress},
+        #{r.mapInfoOpeningHours},
+        #{r.mapInfoOperationTime},
+        #{r.mapInfoPhoneNumber},
+        #{r.mapInfoLat},
+        #{r.mapInfoLng},
+        #{r.mapInfoFullTime},
+        #{r.mapInfoContent}
+      )
+    </foreach>
+    ON DUPLICATE KEY UPDATE map_info_id = map_info_id
+  </insert>
+
+  <select id="search" resultType="com.korit.cheerful_back.domain.map.MapInfoRow">
+    SELECT *
+    FROM map_info_tb
+    <where>
+      <if test="categoryId != null">AND map_info_category_id = #{categoryId}</if>
+      <if test="q != null and q != ''">
+        AND (map_info_name LIKE CONCAT('%',#{q},'%')
+        OR map_info_address LIKE CONCAT('%',#{q},'%'))
+      </if>
+      <if test="swLat != null">
+        AND map_info_lat BETWEEN #{swLat} AND #{neLat}
+        AND map_info_lng BETWEEN #{swLng} AND #{neLng}
+      </if>
+    </where>
+    ORDER BY map_info_name
+    LIMIT #{offset}, #{size}
+  </select>
+
+  <select id="count" resultType="int">
+    SELECT COUNT(*)
+    FROM map_info_tb
+    <where>
+      <if test="categoryId != null">AND map_info_category_id = #{categoryId}</if>
+      <if test="q != null and q != ''">
+        AND (map_info_name LIKE CONCAT('%',#{q},'%')
+        OR map_info_address LIKE CONCAT('%',#{q},'%'))
+      </if>
+      <if test="swLat != null">
+        AND map_info_lat BETWEEN #{swLat} AND #{neLat}
+        AND map_info_lng BETWEEN #{swLng} AND #{neLng}
+      </if>
+    </where>
+  </select>
+</mapper>
