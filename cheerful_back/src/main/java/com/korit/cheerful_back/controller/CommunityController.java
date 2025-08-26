@@ -56,6 +56,7 @@ public class CommunityController {
      */
     @PostMapping("/{communityId}/like")
     public ResponseEntity<ResponseDto<?>> getLike(@PathVariable Integer communityId) {
+        System.out.println(communityId);
         communityService.like(communityId);
         return ResponseEntity.ok(ResponseDto.success("좋아요"));
     }
@@ -65,6 +66,7 @@ public class CommunityController {
      */
     @DeleteMapping("/{communityId}/dislike")
     public ResponseEntity<ResponseDto<?>> getDisLike(@PathVariable Integer communityId) {
+        System.out.println(communityId);
         communityService.disLike(communityId);
         return ResponseEntity.ok(ResponseDto.success("좋아요 취소"));
     }

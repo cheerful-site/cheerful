@@ -7,19 +7,22 @@ import { reqCommunityViews } from "../../api/communityApi/communityApi";
 import { PiEyesFill } from "react-icons/pi";
 import { reqNoticeViews } from "../../api/noticeApi/noticeApi";
 
-function Post({ content, category }) {
+function Post({ content }) {
   const navigate = useNavigate();
   const location = useLocation();
   // console.log(content);
+  // console.log(category);
   // console.log(location.pathname);
 
   const handleOnClick = () => {
     if (location.pathname.startsWith("/notice")) {
-      reqNoticeViews(category, content.noticeId);
-      navigate(`/notice/${category}/${content.noticeId}`);
+      reqNoticeViews(content.communityCategoryId, content.noticeId);
+      navigate(`/notice/${content.communityCategoryId}/${content.noticeId}`);
     } else {
-      reqCommunityViews(category, content.communityId);
-      navigate(`/community/${category}/${content.communityId}`);
+      reqCommunityViews(content.communityCategoryId, content.communityId);
+      navigate(
+        `/community/${content.communityCategoryId}/${content.communityId}`
+      );
     }
   };
 

@@ -74,13 +74,24 @@ export const postLike = css`
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 0.15rem solid #22222230;
     border-radius: 1rem;
     width: 13rem;
     height: 4rem;
     font-weight: 500;
     cursor: pointer;
   }
+`;
+
+export const isLike = css`
+  border: none;
+  background-color: #ffc421;
+  color: #ffffff;
+`;
+
+export const isDislike = css`
+  border: 0.15rem solid #22222250;
+  background-color: #ffffff;
+  color: #000000;
 `;
 
 export const commentRegisterContainer = css`

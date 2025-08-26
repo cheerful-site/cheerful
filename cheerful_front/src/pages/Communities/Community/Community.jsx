@@ -40,8 +40,8 @@ function Community(props) {
           <CategoryComponent
             key={cate.id}
             cate={cate}
-            category={category}
             route={"community"}
+            category={category}
           />
         ))}
       </div>
@@ -50,11 +50,7 @@ function Community(props) {
 
       <div css={s.postContainer}>
         {communityContents?.content?.map((content) => (
-          <Post
-            key={content.communityId}
-            content={content}
-            category={category}
-          />
+          <Post key={content.communityId} content={content} />
         ))}
       </div>
 
