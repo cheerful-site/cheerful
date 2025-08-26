@@ -59,13 +59,12 @@ public class MapInfoService {
             - Omit commentary. Output valid JSON only.
         """;
 
-    String user = """
-            지역: %s (%s)
-            범위설명: %s
-            업종: %s
-            개수: %d개 이내
-            한국어 주소/전화/운영시간을 넣어줘. lat/lng는 소수점 6~7자리.
-        """.formatted(region, level, type, limit);
+    String user = new StringBuilder()
+            .append("지역: ").append(region != null ? region : "").append(" (")
+            .append(level != null ? level : "").append(")\n")
+            .append("범위설명: ").append(type != null ? type : "").append("\n")
+            .append("개수: ").append(limit).append("개 이내")
+            .toString();
 
     ChatCompletionDto req = ChatCompletionDto.builder()
         .model("gpt-4o-mini")   // 사용 모델은 환경에 맞춰 교체
@@ -147,7 +146,7 @@ public class MapInfoService {
         .mapInfoLat(lat)
         .mapInfoLng(lng)
         .mapInfoFullTime(Boolean.TRUE.equals(p.getFull_time()) ? 1 : 0)
-        .mapInfoContent(emptyToNull(p.getContent()))
+        .mapInfoContent(emptyToNull(p.getContent()) != null ? p.getContent().trim() : "")
         .build();
   }
 
