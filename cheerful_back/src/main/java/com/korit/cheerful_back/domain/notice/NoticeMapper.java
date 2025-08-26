@@ -11,7 +11,7 @@ public interface NoticeMapper {
 
     // user전용 notice
     List<Notice> findAllByOptions(NoticeSearchOption noticeSearchOption);
-    Notice findByOption(@Param("categoryId") Integer categoryId, @Param("noticeId") Integer noticeId);
+    Notice findByOption(@Param("categoryId") Integer categoryId, @Param("noticeId") Integer noticeId, @Param("userId") Integer userId);
     int getCountOfOptions(NoticeSearchOption noticeSearchOption);
 
     // 조회수

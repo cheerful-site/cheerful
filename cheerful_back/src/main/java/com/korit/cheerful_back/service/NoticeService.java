@@ -97,7 +97,9 @@ public class NoticeService {
         특정 공지사항 글 클릭해서 내용 확인하기
      */
     public Notice getNoticeContent(Integer categoryId, Integer noticeId) {
-        Notice notice = noticeMapper.findByOption(categoryId, noticeId);
+        Integer userId = principalUtil.getPrincipalUser().getUser().getUserId();
+
+        Notice notice = noticeMapper.findByOption(categoryId, noticeId, userId);
 
         // 이미지 URL 세팅
         List<NoticeImg> imgs = notice.getNoticeImgs();

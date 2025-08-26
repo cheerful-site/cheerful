@@ -65,13 +65,13 @@
       fcit.seq,
       fcit.`img_path`,
 
-      ifnull(fclt.food_comment_like_id, 0) as is_like,
+      ifnull(fcil.is_like, 0) as is_like,
       ifnull(fclc.like_count, 0) as like_count
     from
       food_comment_tb fct
       left outer join user_tb ut on(ut.user_id = fct.user_id)
       left outer join food_comment_img_tb fcit on(fcit.food_comment_id = fct.food_comment_id)
-      left outer join food_comment_like_tb fclt on(fclt.food_comment_id = fct.food_comment_id)
+      left outer join (select distinct food_comment_id, 1 as is_like from food_comment_like_tb where user_id = #{userId}) fcil on(fcil.food_comment_id = fct.food_comment_id)
       left outer join (select food_comment_id, count(*) as like_count from food_comment_like_tb group by food_comment_id) fclc on(fclc.food_comment_id = fct.food_comment_id)
     where
       fct.food_id = #{foodId}
