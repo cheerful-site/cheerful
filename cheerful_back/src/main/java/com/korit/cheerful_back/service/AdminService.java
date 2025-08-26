@@ -3,6 +3,8 @@ package com.korit.cheerful_back.service;
 import com.korit.cheerful_back.domain.community.Community;
 import com.korit.cheerful_back.domain.community.CommunityMapper;
 import com.korit.cheerful_back.domain.community.CommunitySearchOption;
+import com.korit.cheerful_back.domain.communityComment.CommunityComment;
+import com.korit.cheerful_back.domain.communityComment.CommunityCommentMapper;
 import com.korit.cheerful_back.domain.communityImg.CommunityImg;
 import com.korit.cheerful_back.domain.food.Food;
 import com.korit.cheerful_back.domain.food.FoodAdminRow;
@@ -59,6 +61,7 @@ public class AdminService {
     private final FoodImgMapper foodImgMapper;
     private final NoticeImgMapper noticeImgMapper;
     private final ImageUrlUtil imageUrlUtil;
+    private final CommunityCommentMapper communityCommentMapper;
 
     public TokenDto login(AdminLoginReqDto dto) {
 
@@ -170,6 +173,13 @@ public class AdminService {
     public void deleteCommunities(List<Integer> communityIds) {
         communityMapper.deleteByCommunityIds(communityIds);
     }
+
+    /*
+        community 댓글 삭제
+     */
+//    public void deleteComment(Integer communityId, Integer userId) {
+//        communityCommentMapper.deleteByCommentId(communityId, userId);
+//    }
 
     /*
         admin 전용 food 목록 조회
