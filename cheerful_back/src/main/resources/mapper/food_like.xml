@@ -13,7 +13,7 @@
   <delete id="delete">
     delete from food_like_tb
     where
-      food_id = #{foodId},
+      food_id = #{foodId} and
       user_id = #{userId}
   </delete>
 

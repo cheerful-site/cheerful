@@ -14,7 +14,7 @@
   <delete id="delete">
     delete from food_comment_like_tb
     where
-      food_comment_id = #{foodCommentId},
+      food_comment_id = #{foodCommentId} and
       user_id = #{userId}
   </delete>
 
