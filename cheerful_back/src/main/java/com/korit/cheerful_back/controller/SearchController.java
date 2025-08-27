@@ -23,7 +23,7 @@ public class SearchController {
   @GetMapping("/communities/{categoryId}")
   public ResponseEntity<ResponseDto<?>> managerCommunity(@RequestParam Integer page, @RequestParam Integer size
       , @PathVariable Integer categoryId, @RequestParam(required = false) String searchText) {
-    System.out.println(page+ " " + size+ " " + categoryId+ " " + searchText );
+//    System.out.println(page+ " " + size+ " " + categoryId+ " " + searchText );
     return ResponseEntity.ok(ResponseDto.success(searchService.getCommunitySearchList(page, size, categoryId, searchText)));
   }
 
@@ -35,7 +35,7 @@ public class SearchController {
 //        System.out.println(page);
 //        System.out.println(size);
 //        System.out.println(adminService.getFoodSearchList(page, size, searchText));
-    System.out.println(page+ " " + size+ " " + searchText );
+//    System.out.println(page+ " " + size+ " " + searchText );
     return ResponseEntity.ok(ResponseDto.success(searchService.getFoodSearchList(page, size, searchText)));
   }
 

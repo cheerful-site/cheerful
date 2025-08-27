@@ -222,7 +222,8 @@ export const commentsContainer = css`
 `;
 
 export const commentContainer = css`
-  padding: 5rem 0;
+  padding-top: 4rem;
+  padding-bottom: 1rem;
   width: 96rem;
 `;
 

@@ -26,3 +26,4 @@ export const reqNoticeLike = (noticeId) => api.post(`/notice/${noticeId}/like`);
 
 export const reqNoticeDislike = (noticeId) =>
   api.delete(`/notice/${noticeId}/dislike`);
+

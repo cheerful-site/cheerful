@@ -9,20 +9,25 @@ import { useState } from "react";
 import { FiPlus, FiX } from "react-icons/fi";
 import { AiFillLike, AiOutlineLike } from "react-icons/ai";
 import {
+  reqFoodCommentDislike,
+  reqFoodCommentLike,
   reqFoodDislike,
   reqFoodLike,
   reqFoodRegisterComment,
 } from "../../../api/foodApi/foodApi";
 import { useQueryClient } from "@tanstack/react-query";
+import usePrincipalQuery from "../../../queries/PrincipalQuery/usePrincipalQuery";
 
 function FoodDetail(props) {
   const params = useParams();
   const token = localStorage.getItem("AccessToken");
+  const principal = usePrincipalQuery();
   const queryClient = useQueryClient();
   const [files, setFiles] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const food = useFoodDetailQuery(params.foodId);
   const foodDetail = food?.data?.data?.body;
+  const user = principal?.data?.data.body.user || [];
   console.log(foodDetail);
 
   const handlePlusOnClick = () => {
@@ -128,6 +133,61 @@ function FoodDetail(props) {
     }
   };
 
+  const handleCommentLikeOnClick = (foodId, foodCommentId) => {
+    // if (!!token) {
+    // }
+    // console.log(foodId, foodCommentId);
+    reqFoodCommentLike(foodId, foodCommentId).then((response) => {
+      queryClient.setQueryData(["foodDetail", foodId], (prev) => {
+        return {
+          ...prev,
+          data: {
+            ...prev.data,
+            body: {
+              ...prev.data.body,
+              foodComment: prev.data.body.foodComment.map((comment) => {
+                console.log(comment);
+                if (comment.foodId === Number(foodId)) {
+                  return {
+                    ...comment,
+                    isLike: 1,
+                    likeCount: comment.likeCount + 1,
+                  };
+                }
+              }),
+            },
+          },
+        };
+      });
+    });
+  };
+
+  const handleCommentDislikeOnClick = (foodId, foodCommentId) => {
+    reqFoodCommentDislike(foodId, foodCommentId).then((response) => {
+      queryClient.setQueryData(["foodDetail", foodId], (prev) => {
+        return {
+          ...prev,
+          data: {
+            ...prev.data,
+            body: {
+              ...prev.data.body,
+              foodComment: prev.data.body.foodComment.map((comment) => {
+                // console.log(comment);
+                if (comment.foodId === Number(foodId)) {
+                  return {
+                    ...comment,
+                    isLike: 0,
+                    likeCount: comment.likeCount - 1,
+                  };
+                }
+              }),
+            },
+          },
+        };
+      });
+    });
+  };
+
   return (
     <>
       <div css={s.layout}>
@@ -175,7 +235,7 @@ function FoodDetail(props) {
         {token ? (
           <div css={s.commentsRegister}>
             {/* 댓글 등록하기 */}
-            <span>{foodDetail?.user?.name}</span>
+            <span>{user?.name}</span>
             <div css={s.imgListContainer}>
               {/* 이미지파일 등록 */}
               {files.length < 5 && ( //파일 갯수
@@ -220,8 +280,8 @@ function FoodDetail(props) {
 
         <div css={s.commentsContainer}>
           {/* commentView */}
-          {foodDetail?.foodComment?.map((comment) => (
-            <div key={comment.foodCommentId} css={s.commentContainer}>
+          {foodDetail?.foodComment?.map((comment, index) => (
+            <div key={index} css={s.commentContainer}>
               <div css={s.commentUser}>
                 <img src={comment?.user.profileImgUrl} alt="" />
                 <span>{comment?.user.name}</span>
@@ -241,11 +301,31 @@ function FoodDetail(props) {
                 </div>
                 <div css={s.likeSelected}>
                   <span>이 후기가 도움이 돼요!</span>
-                  <div>
-                    <AiFillLike />
-                    <span>{comment?.isLike}</span>
-                  </div>
-                  {/* <AiOutlineLike /> */}
+                  {comment?.isLike === 0 ? (
+                    <div
+                      css={s.dislike}
+                      onClick={() =>
+                        handleCommentLikeOnClick(
+                          comment?.foodId.toString(),
+                          comment?.foodCommentId.toString()
+                        )
+                      }>
+                      <AiOutlineLike />
+                      <span>{comment?.likeCount}</span>
+                    </div>
+                  ) : (
+                    <div
+                      css={s.like}
+                      onClick={() =>
+                        handleCommentDislikeOnClick(
+                          comment?.foodId.toString(),
+                          comment?.foodCommentId.toString()
+                        )
+                      }>
+                      <AiFillLike />
+                      <span>{comment?.likeCount}</span>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

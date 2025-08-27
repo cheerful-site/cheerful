@@ -287,34 +287,63 @@ export const commentImgList = css`
 export const likeSelected = css`
   display: flex;
   align-items: center;
-
-  & > span {
+  cursor: pointer;
+  q & > span {
     margin-right: 1.5rem;
     font-size: 1.4rem;
     font-weight: 700;
     color: #222222;
   }
+`;
 
-  & > div {
-    box-sizing: border-box;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 0.15rem solid #22222230;
-    border-radius: 1rem;
-    width: 6rem;
-    height: 3rem;
+export const dislike = css`
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 2rem;
+  border: 0.15rem solid #22222250;
+  border-radius: 1rem;
+  width: 6rem;
+  height: 3rem;
+  background-color: #ffffff;
 
-    & > svg {
-      font-size: 1.8rem;
-      margin-right: 1rem;
-      color: #ffc421;
-    }
+  & > svg {
+    font-size: 1.8rem;
+    margin-right: 1rem;
+    color: #22222250;
+  }
 
-    & > span {
-      margin-bottom: 0.1rem;
-      font-size: 1.2rem;
-      color: #22222280;
-    }
+  & > span {
+    margin-bottom: 0.1rem;
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #22222240;
+  }
+`;
+
+export const like = css`
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 2rem;
+  border: 0.15rem solid #ffc421;
+  border-radius: 1rem;
+  width: 6rem;
+  height: 3rem;
+  background-color: #ffffff;
+
+  & > svg {
+    font-size: 1.8rem;
+    margin-right: 1rem;
+    color: #ffc421;
+  }
+
+  & > span {
+    margin-bottom: 0.1rem;
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #ffc421;
   }
 `;

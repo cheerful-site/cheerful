@@ -23,3 +23,9 @@ export const reqFoodLike = async (foodId) =>
 
 export const reqFoodDislike = async (foodId) =>
   await api.delete(`/foods/${foodId}/dislike`);
+
+export const reqFoodCommentLike = (foodId, foodCommentId) =>
+  api.post(`/foods/${foodId}/${foodCommentId}/like`);
+
+export const reqFoodCommentDislike = (foodId, foodCommentId) =>
+  api.delete(`/foods/${foodId}/${foodCommentId}/dislike`);
