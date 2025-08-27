@@ -1,5 +1,6 @@
 package com.korit.cheerful_back.dto.map;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,6 +17,7 @@ public class GoogleNearbyRespDto {
 
     private List<Result> results;
     private String status;
+    @JsonProperty("next_page_token")
     private String next_page_token;
 
     @Data

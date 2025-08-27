@@ -1,17 +1,17 @@
 package com.korit.cheerful_back.service;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.korit.cheerful_back.domain.map.MapInfo;
 import com.korit.cheerful_back.domain.map.MapInfoMapper;
 import com.korit.cheerful_back.dto.map.GoogleDetailsRespDto;
+import com.korit.cheerful_back.dto.map.GoogleNearbyRespDto;
 import com.korit.cheerful_back.dto.map.MapInfoRespDto;
 import com.korit.cheerful_back.dto.map.MapSearchReqDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -20,112 +20,327 @@ public class MapInfoService {
 
     private final MapInfoMapper mapInfoMapper;
     private final GooglePlacesClient google;
-    private final ObjectMapper om = new ObjectMapper();
 
     private static final int MIN_RESULTS = 10;
-    private static final int PATCH_TOP_N = 8;  // 즉시 보강할 개수
+    private static final int PATCH_TOP_N  = 25;
 
     public List<MapInfoRespDto> search(MapSearchReqDto req) {
-        var first = mapInfoMapper.selectNearby(req.getCategoryId(), req.getLat(), req.getLng(), req.getRadiusMeters(), 100);
-        if (first.size() >= MIN_RESULTS) return map(first);
 
-        var api = google.nearby(req.getLat(), req.getLng(), req.getRadiusMeters(), req.getCategoryId());
-        if (api != null && api.getResults() != null) {
-            int patched = 0;
-            for (var r : api.getResults()) {
-                if (r.getGeometry() == null || r.getGeometry().getLocation() == null) continue;
+        // 0) 캐시 우선
+        var cached = mapInfoMapper.selectNearby(
+                req.getCategoryId(), req.getLat(), req.getLng(), req.getRadiusMeters(), 100);
+        if (cached.size() >= MIN_RESULTS) return map(cached);
 
-                MapInfo m = new MapInfo();
-                m.setMapInfoName(clean(r.getName()));
-                m.setMapInfoCategoryId(req.getCategoryId());
-                m.setMapInfoAddress(clean(r.getVicinity()));
-                m.setMapInfoOperationTime("");     // 초기값 빈 문자열
-                m.setMapInfoPhoneNumber("");       // 초기값 빈 문자열
-                m.setMapInfoLat(r.getGeometry().getLocation().getLat());
-                m.setMapInfoLng(r.getGeometry().getLocation().getLng());
-                m.setMapInfoFullTime(Boolean.FALSE);
+        // 1) 카테고리별 수집
+        List<GoogleNearbyRespDto.Result> results = switch (req.getCategoryId()) {
+            case 1 -> queryForHospital(req);
+            case 2 -> queryForCafe(req);
+            case 3 -> queryForShelter(req);
+            default -> new ArrayList<>();
+        };
 
-                // ✅ 기본 특이사항: 간단한 휴리스틱 (원하면 더 추가)
-                m.setMapInfoContent(makeDefaultContent(req.getCategoryId(), m.getMapInfoName()));
+        // 2) 저장 + 라이트 보강 (업서트 금지: 존재 확인 후 삽입/수정)
+        var seen = new HashSet<String>(); // 배치 중복 방지(place_id 기반으로 이미 합쳐졌지만 방어)
+        for (var r : results) {
+            if (r == null || r.getGeometry() == null || r.getGeometry().getLocation() == null) continue;
 
-                int exists = mapInfoMapper.existsByNameAndCoords(m.getMapInfoName(), m.getMapInfoLat(), m.getMapInfoLng());
-                if (exists == 0) mapInfoMapper.insertOne(m);
-                else             mapInfoMapper.updateByNaturalKey(m);
+            MapInfo m = new MapInfo();
+            m.setMapInfoName(clean(r.getName()));
+            m.setMapInfoCategoryId(req.getCategoryId());
+            m.setMapInfoAddress(defaultIfBlank(clean(r.getVicinity()), "")); // NOT NULL 보호
+            m.setMapInfoOperationTime("");
+            m.setMapInfoPhoneNumber("");
+            m.setMapInfoLat(r.getGeometry().getLocation().getLat());
+            m.setMapInfoLng(r.getGeometry().getLocation().getLng());
+            m.setMapInfoFullTime(Boolean.FALSE);
+            m.setMapInfoContent(buildContent(req.getCategoryId(), m.getMapInfoName(), null, null));
 
-                // 상위 N개만 Details로 전화/영업시간/주소 보강
-                if (patched < PATCH_TOP_N && r.getPlace_id() != null) {
-                    var details = google.details(r.getPlace_id());  // GoogleDetailsResponse
-                    if (details != null && details.getResult() != null) {
-                        var dr = details.getResult();
-                        MapInfo u = new MapInfo();
-                        u.setMapInfoName(m.getMapInfoName());
-                        u.setMapInfoLat(m.getMapInfoLat());
-                        u.setMapInfoLng(m.getMapInfoLng());
-                        u.setMapInfoAddress(defaultIfBlank(dr.getFormatted_address(), m.getMapInfoAddress()));
-                        u.setMapInfoPhoneNumber(defaultIfBlank(dr.getFormatted_phone_number(), m.getMapInfoPhoneNumber()));
-                        u.setMapInfoOperationTime(summarizeWeekdayText(dr.getOpening_hours())); // ✅ 요약
-                        // 24시간 여부 추정
-                        u.setMapInfoFullTime(looks24Hours(dr.getOpening_hours(), m.getMapInfoName()));
-                        mapInfoMapper.updateByNaturalKey(u);
+            String natKey = m.getMapInfoName() + "|" + m.getMapInfoLat() + "|" + m.getMapInfoLng();
+            if (!seen.add(natKey)) continue;
+
+            int exists = mapInfoMapper.existsByNameAndCoords(
+                    m.getMapInfoName(), m.getMapInfoLat(), m.getMapInfoLng());
+            if (exists == 0) mapInfoMapper.insertOne(m);
+            else            mapInfoMapper.updateByNaturalKey(m);
+
+            // 라이트 디테일 보강
+            if (r.getPlace_id() != null) {
+                var d = google.detailsLight(r.getPlace_id());
+                if (d != null && d.getResult() != null) {
+                    var dr = d.getResult();
+
+                    // 영업시간: current_opening_hours 우선
+                    var pref = preferOpeningHours(dr);
+                    String op = summarizeHours(pref);
+                    boolean full = looks24Hours(pref, m.getMapInfoName());
+
+                    // 전화: formatted → international → 기존
+                    String phone = normalizePhoneKR(firstNonBlank(
+                            dr.getFormatted_phone_number(),
+                            dr.getInternational_phone_number(),
+                            m.getMapInfoPhoneNumber()
+                    ));
+
+                    // 주소: formatted → 기존 → 빈 문자열, 국가 prefix 제거
+                    String addr = trimKR(firstNonBlank(
+                            dr.getFormatted_address(),
+                            m.getMapInfoAddress(),
+                            ""
+                    ));
+
+                    MapInfo u = new MapInfo();
+                    u.setMapInfoName(m.getMapInfoName());
+                    u.setMapInfoLat(m.getMapInfoLat());
+                    u.setMapInfoLng(m.getMapInfoLng());
+                    u.setMapInfoOperationTime(op);
+                    u.setMapInfoFullTime(full);
+                    u.setMapInfoPhoneNumber(defaultIfBlank(phone, m.getMapInfoPhoneNumber()));
+                    u.setMapInfoAddress(defaultIfBlank(addr, m.getMapInfoAddress()));
+
+                    // content 비었으면(또는 24시간 새로 판정되면) 재생성
+                    if (m.getMapInfoContent() == null || m.getMapInfoContent().isBlank() || full) {
+                        String c = buildContent(req.getCategoryId(), m.getMapInfoName(), dr, full);
+                        if (c != null) u.setMapInfoContent(c);
                     }
-                    patched++;
+
+                    mapInfoMapper.updateByNaturalKey(u);
                 }
             }
         }
 
-        var finalList = mapInfoMapper.selectNearby(req.getCategoryId(), req.getLat(), req.getLng(), req.getRadiusMeters(), 100);
+        // 3) 콘텐츠 빈 항목 상위 N개만 추가 보강
+        var needEnrich = mapInfoMapper.selectNearby(
+                req.getCategoryId(), req.getLat(), req.getLng(), req.getRadiusMeters(), PATCH_TOP_N);
+
+        int enriched = 0;
+        for (var mi : needEnrich) {
+            if (enriched >= PATCH_TOP_N) break;
+            if (mi.getMapInfoContent() != null && !mi.getMapInfoContent().isBlank()) continue;
+
+            var maybe = results.stream().filter(r ->
+                    r.getPlace_id() != null &&
+                            eq(clean(r.getName()), mi.getMapInfoName()) &&
+                            almostEqual(r.getGeometry().getLocation().getLat(), mi.getMapInfoLat()) &&
+                            almostEqual(r.getGeometry().getLocation().getLng(), mi.getMapInfoLng())
+            ).findFirst();
+
+            if (maybe.isEmpty()) continue;
+
+            var dr = google.detailsEnrich(maybe.get().getPlace_id());
+            if (dr != null && dr.getResult() != null) {
+                String content = buildContent(mi.getMapInfoCategoryId(), mi.getMapInfoName(), dr.getResult(), mi.getMapInfoFullTime());
+                if (content != null && !content.isBlank()) {
+                    MapInfo u = new MapInfo();
+                    u.setMapInfoName(mi.getMapInfoName());
+                    u.setMapInfoLat(mi.getMapInfoLat());
+                    u.setMapInfoLng(mi.getMapInfoLng());
+                    u.setMapInfoContent(content);
+                    mapInfoMapper.updateByNaturalKey(u);
+                }
+            }
+            enriched++;
+        }
+
+        // 4) 최종 반환
+        var finalList = mapInfoMapper.selectNearby(
+                req.getCategoryId(), req.getLat(), req.getLng(), req.getRadiusMeters(), 100);
         return map(finalList);
     }
 
-    private static String clean(String s) { return s == null ? null : s.trim(); }
+    /** opening_hours가 없으면 current_opening_hours를 사용 */
+    private GoogleDetailsRespDto.OpeningHours preferOpeningHours(GoogleDetailsRespDto.Result dr) {
+        if (dr == null) return null;
+        if (dr.getOpening_hours() != null) return dr.getOpening_hours();
+        return dr.getCurrent_opening_hours();
+    }
 
+    // ---------- 카테고리별 조회 ----------
+    private List<GoogleNearbyRespDto.Result> queryForHospital(MapSearchReqDto req) {
+        var r1 = google.nearbyAllPages("veterinary_care", null,
+                req.getLat(), req.getLng(), req.getRadiusMeters());
+        var r2 = google.nearbyAllPages(null, "동물병원|수의과|애견병원|vet",
+                req.getLat(), req.getLng(), req.getRadiusMeters());
+        var r3 = google.nearbyAllPages("hospital", "동물|반려동물|애견",
+                req.getLat(), req.getLng(), req.getRadiusMeters());
+        return mergeByPlaceId(r1, r2, r3);
+    }
+
+    private List<GoogleNearbyRespDto.Result> queryForCafe(MapSearchReqDto req) {
+        var r1 = google.nearbyAllPages("cafe", "반려동물|애견|dog|pet|동반",
+                req.getLat(), req.getLng(), req.getRadiusMeters());
+        var r2 = google.nearbyAllPages(null, "반려동물 동반|애견카페|pet friendly|dog cafe",
+                req.getLat(), req.getLng(), req.getRadiusMeters());
+        return mergeByPlaceId(r1, r2);
+    }
+
+    private List<GoogleNearbyRespDto.Result> queryForShelter(MapSearchReqDto req) {
+        return google.nearbyAllPages(null, "유기견|동물 보호소|animal shelter|rescue",
+                req.getLat(), req.getLng(), req.getRadiusMeters());
+    }
+
+    @SafeVarargs
+    private final List<GoogleNearbyRespDto.Result> mergeByPlaceId(List<GoogleNearbyRespDto.Result>... lists) {
+        var seen = new HashSet<String>();
+        var out  = new ArrayList<GoogleNearbyRespDto.Result>();
+        for (var list : lists) {
+            if (list == null) continue;
+            for (var r : list) {
+                if (r == null || r.getPlace_id() == null) continue;
+                if (seen.add(r.getPlace_id())) out.add(r);
+            }
+        }
+        return out;
+    }
+
+    // ---------- 보조 ----------
+    private static String clean(String s) { return s == null ? null : s.trim(); }
+    private static boolean eq(String a, String b) {
+        return Objects.equals(a == null ? null : a.trim(), b == null ? null : b.trim());
+    }
+    private static boolean almostEqual(Double a, Double b) {
+        if (a == null || b == null) return false;
+        return Math.abs(a - b) < 0.0005; // 약 ±55m
+    }
     private static String defaultIfBlank(String s, String def) {
         return (s == null || s.isBlank()) ? def : s.trim();
     }
 
-    /** 요일별 텍스트를 한 줄 요약으로 (길이 255 내) */
-    private String summarizeWeekdayText(GoogleDetailsRespDto.OpeningHours oh) {
-        if (oh == null || oh.getWeekday_text() == null || oh.getWeekday_text().isEmpty()) return "";
-        // "월요일: 09:00–18:00" -> "월 09:00–18:00"로 가볍게 치환
-        var sb = new StringBuilder();
-        for (String s : oh.getWeekday_text()) {
-            String shortDay = s.replace("요일", "").replace(" ", ""); // “월요일: 09:00–18:00” -> “월:09:00–18:00”
-            sb.append(shortDay).append(" | ");
+    /** 여러 값 중 첫 번째 non-blank */
+    private static String firstNonBlank(String... values) {
+        if (values == null) return null;
+        for (String v : values) {
+            if (v != null && !v.isBlank()) return v.trim();
         }
-        String out = sb.substring(0, sb.length() - 3);
-        // 길이 초과 방지
-        if (out.length() > 255) out = out.substring(0, 252) + "...";
+        return null;
+    }
+
+    /** 전화번호: +82 → 0으로, 공백 정리 */
+    private static String normalizePhoneKR(String p) {
+        if (p == null) return null;
+        String s = p.trim();
+        if (s.startsWith("+82")) {
+            s = "0" + s.substring(3);
+        }
+        s = s.replaceAll("[^0-9]", "");
+        // 간단 포맷팅 (02/지역/휴대폰)
+        if (s.startsWith("02")) {
+            if (s.length() >= 9) return s.replaceFirst("(02)(\\d{3,4})(\\d{4})","$1-$2-$3");
+        } else if (s.startsWith("0")) {
+            if (s.length() >= 10) return s.replaceFirst("(0\\d{2})(\\d{3,4})(\\d{4})","$1-$2-$3");
+        }
+        return p; // 원본 반환(안전)
+    }
+
+    /** 주소에서 '대한민국 ' / 'South Korea ' 제거 */
+    private static String trimKR(String addr) {
+        if (addr == null) return null;
+        String out = addr.trim()
+                .replaceFirst("^대한민국\\s*", "")
+                .replaceFirst("^South Korea\\s*", "");
         return out;
     }
 
-    /** 간단한 24시간 추정 */
-    private Boolean looks24Hours(GoogleDetailsRespDto.OpeningHours oh, String name) {
+    private String summarizeHours(GoogleDetailsRespDto.OpeningHours oh) {
+        if (oh == null || oh.getWeekday_text() == null || oh.getWeekday_text().isEmpty()) return "";
+        var sb = new StringBuilder();
+        for (String line : oh.getWeekday_text()) {
+            String s = line.replace("요일", "").replace(" ", "");
+            sb.append(s).append(" | ");
+        }
+        String out = sb.substring(0, sb.length() - 3);
+        return out.length() > 255 ? out.substring(0, 252) + "..." : out;
+    }
+
+    private boolean looks24Hours(GoogleDetailsRespDto.OpeningHours oh, String name) {
         if (oh != null && oh.getWeekday_text() != null) {
             boolean all = oh.getWeekday_text().stream().allMatch(t ->
                     t.contains("24") || t.contains("24시간") || t.contains("24:00") || t.contains("00:00"));
-            if (all) return Boolean.TRUE;
+            if (all) return true;
         }
-        if (name != null && (name.contains("24시") || name.contains("24시간"))) return Boolean.TRUE;
-        return Boolean.FALSE;
+        String n = name == null ? "" : name;
+        return n.contains("24시") || n.contains("24시간");
     }
 
-    /** 카테고리별 기본 특이사항 텍스트(초기값) */
-    private String makeDefaultContent(int categoryId, String name) {
-        switch (categoryId) {
-            case 1: // 병원
-                if (name != null && (name.contains("24시") || name.contains("24시간"))) {
-                    return "24시간 응급 진료 가능";
-                }
-                return ""; // 취급 동물은 수동/향후 크롤링으로 보강
-            case 2: // 카페
-                return ""; // 동반 규정/견종 사이즈는 수동/화이트리스트로 보강 권장
-            case 3: // 쉘터
-                return "";
-            default:
-                return "";
+    /** content 생성: 카테고리/이름 + (선택)Details 리뷰 기반 */
+    private String buildContent(int categoryId, String name,
+                                GoogleDetailsRespDto.Result dr, Boolean fullTime) {
+        Set<String> tags = new LinkedHashSet<>();
+        String n = (name == null) ? "" : name;
+
+        if (categoryId == 1) { // 병원
+            if (Boolean.TRUE.equals(fullTime) || n.contains("24시") || n.contains("24시간"))
+                tags.add("24시간 응급 진료 가능");
+            if (n.contains("고양이")) tags.add("고양이 전문");
+            if (n.contains("치과")) tags.add("치과 진료");
+            if (n.contains("안과")) tags.add("안과 진료");
+            if (n.contains("피부")) tags.add("피부과 진료");
+            if (n.contains("정형")) tags.add("정형외과");
+        } else if (categoryId == 2) { // 카페
+            if (n.contains("대형")) tags.add("대형견 출입 가능");
+            if (n.contains("중형")) tags.add("중형견 출입 가능");
+            if (n.contains("소형")) tags.add("소형견 출입 가능");
         }
+
+        if (dr != null) {
+            String overview = (dr.getEditorial_summary() != null)
+                    ? dr.getEditorial_summary().getOverview() : "";
+            String reviewsText = gatherReviewText(dr.getReviews());
+            String body = (overview + " " + reviewsText).toLowerCase();
+
+            if (categoryId == 1) {
+                if (containsAny(body, "emergency", "응급", "야간", "심야")) tags.add("야간/응급");
+                if (containsAny(body, "bird","avian","조류","앵무")) tags.add("조류 진료");
+                if (containsAny(body, "reptile","파충","거북","도마뱀","뱀")) tags.add("파충류 진료");
+                if (containsAny(body, "hamster","hedgehog","ferret","토끼","패럿","소동물","exotic"))
+                    tags.add("소동물/특수동물 진료");
+                if (containsAny(body, "derma","dermatology","피부")) tags.add("피부과 진료");
+                if (containsAny(body, "dental","치과")) tags.add("치과 진료");
+                if (containsAny(body, "ophthal","안과")) tags.add("안과 진료");
+                if (containsAny(body, "x-ray","초음파","영상")) tags.add("영상의학/검사");
+                if (containsAny(body, "hospitalize","입원")) tags.add("입원실 보유");
+                if (containsAny(body, "reserve","reservation","예약")) tags.add("예약 우선");
+            } else if (categoryId == 2) {
+                if (containsAny(body, "no kids","노키즈")) tags.add("노키즈존");
+                if (containsAny(body, "large dog","대형견")) tags.add("대형견 출입 가능");
+                if (containsAny(body, "medium dog","중형견")) tags.add("중형견 출입 가능");
+                if (containsAny(body, "small dog","소형견")) tags.add("소형견 출입 가능");
+                if (containsAny(body, "leash","리드줄","목줄")) tags.add("리드줄 필수");
+                if (containsAny(body, "muzzle","케이지","캐리어","입마개","carrier")) tags.add("케이지/입마개 지침");
+                if (containsAny(body, "admission","입장료","입장비")) tags.add("입장료 있음");
+                if (containsAny(body, "playground","play zone","놀이터","운동장")) tags.add("놀이터/운동장");
+                if (containsAny(body, "photo zone","포토존")) tags.add("포토존");
+                if (containsAny(body, "outdoor","terrace","patio","야외","테라스")) tags.add("야외 좌석");
+                if (containsAny(body, "pool","수영장")) tags.add("강아지 수영장");
+                if (containsAny(body, "reserve","reservation","예약")) tags.add("예약 권장");
+            }
+        }
+
+        if (tags.isEmpty()) return "";
+        return String.join(" · ", tags);
     }
 
+    private boolean containsAny(String haystackLower, String... kws) {
+        if (haystackLower == null) return false;
+        for (String k : kws) {
+            if (k != null && !k.isBlank() && haystackLower.contains(k.toLowerCase())) return true;
+        }
+        return false;
+    }
+
+    private String gatherReviewText(List<GoogleDetailsRespDto.Review> reviews) {
+        if (reviews == null) return "";
+        var sb = new StringBuilder();
+        int count = 0;
+        for (var rv : reviews) {
+            if (rv != null && rv.getText() != null && !rv.getText().isBlank()) {
+                sb.append(' ').append(rv.getText());
+                if (++count >= 5) break;
+            }
+        }
+        return sb.toString();
+    }
+
+    // ---------- DTO 변환 ----------
     private static List<MapInfoRespDto> map(List<MapInfo> list) {
         return list.stream().map(mi -> new MapInfoRespDto(
                 mi.getMapInfoId(),
@@ -135,7 +350,7 @@ public class MapInfoService {
                 mi.getMapInfoPhoneNumber(),
                 mi.getMapInfoLat(),
                 mi.getMapInfoLng(),
-                mi.getMapInfoOperationTime(),      // ✅ 여기에 최종 요약 저장
+                mi.getMapInfoOperationTime(),
                 Boolean.TRUE.equals(mi.getMapInfoFullTime()),
                 mi.getMapInfoContent()
         )).toList();

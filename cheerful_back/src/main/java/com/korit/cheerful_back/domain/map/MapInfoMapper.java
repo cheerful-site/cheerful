@@ -20,6 +20,6 @@ public interface MapInfoMapper {
 
     int insertOne(MapInfo mapInfo);
 
-    int updateByNaturalKey(MapInfo mapInfo); // name+lat+lng 기준 갱신
-
+    /** name + lat + lng 기준 부분 갱신 */
+    int updateByNaturalKey(MapInfo mapInfo);
 }

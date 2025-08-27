@@ -39,7 +39,7 @@
     ]]>
     </select>
 
-    <!-- INSERT (opening_hours 제거) -->
+    <!-- INSERT -->
     <insert id="insertOne" useGeneratedKeys="true" keyProperty="mapInfoId" keyColumn="map_info_id">
         <![CDATA[
       INSERT INTO map_info_tb (
@@ -47,29 +47,32 @@
         map_info_operation_time, map_info_phone_number,
         map_info_lat, map_info_lng, map_info_full_time, map_info_content
       ) VALUES (
-        #{mapInfoName}, #{mapInfoCategoryId}, #{mapInfoAddress},
-        COALESCE(#{mapInfoOperationTime}, ''),         -- ✅ 빈 문자열로
+        #{mapInfoName},
+        #{mapInfoCategoryId},
+        COALESCE(#{mapInfoAddress}, ''),
+        COALESCE(#{mapInfoOperationTime}, ''),
         COALESCE(#{mapInfoPhoneNumber}, ''),
-        #{mapInfoLat}, #{mapInfoLng},
+        #{mapInfoLat},
+        #{mapInfoLng},
         COALESCE(#{mapInfoFullTime}, 0),
-        COALESCE(#{mapInfoContent}, '')                -- ✅ 특이사항 없으면 빈 문자열
+        COALESCE(#{mapInfoContent}, '')
       )
     ]]>
     </insert>
 
-    <!-- UPDATE (natural key: name + lat + lng) -->
+    <!-- UPDATE: null 인자는 컬럼의 기존 값을 유지 -->
     <update id="updateByNaturalKey">
         <![CDATA[
       UPDATE map_info_tb
-      SET map_info_address        = #{mapInfoAddress},
-          map_info_operation_time = COALESCE(#{mapInfoOperationTime}, ''),
-          map_info_phone_number   = COALESCE(#{mapInfoPhoneNumber}, ''),
-          map_info_full_time      = COALESCE(#{mapInfoFullTime}, 0),
-          map_info_content        = COALESCE(#{mapInfoContent}, '')
+      SET
+        map_info_address        = COALESCE(#{mapInfoAddress},        map_info_address),
+        map_info_operation_time = COALESCE(#{mapInfoOperationTime},  map_info_operation_time),
+        map_info_phone_number   = COALESCE(#{mapInfoPhoneNumber},    map_info_phone_number),
+        map_info_full_time      = COALESCE(#{mapInfoFullTime},       map_info_full_time),
+        map_info_content        = COALESCE(#{mapInfoContent},        map_info_content)
       WHERE map_info_name = #{mapInfoName}
         AND map_info_lat  = #{mapInfoLat}
         AND map_info_lng  = #{mapInfoLng}
     ]]>
     </update>
-
 </mapper>
