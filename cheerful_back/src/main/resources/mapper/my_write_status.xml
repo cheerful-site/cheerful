@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.korit.cheerful_back.domain.user.MyWriteStatusMapper">
+
+  <resultMap id="StatusMap" type="com.korit.cheerful_back.domain.user.MyWriteStatusRow">
+    <result property="communityPosts" column="communityPosts"/>
+    <result property="foodPosts" column="foodPosts"/>
+    <result property="noticePosts" column="noticePosts"/>
+    <result property="communityComments" column="communityComments"/>
+    <result property="foodComments" column="foodComments"/>
+    <result property="noticeComments" column="noticeComments"/>
+  </resultMap>
+
+  <select id="countMyStatus" parameterType="int" resultMap="StatusMap">
+    SELECT
+    (SELECT COUNT(*) FROM community_tb          WHERE user_id = #{userId}) AS communityPosts,
+    (SELECT COUNT(*) FROM food_tb               WHERE user_id = #{userId}) AS foodPosts,
+    (SELECT COUNT(*) FROM notice_tb             WHERE user_id = #{userId}) AS noticePosts,
+    (SELECT COUNT(*) FROM community_comment_tb  WHERE user_id = #{userId}) AS communityComments,
+    (SELECT COUNT(*) FROM food_comment_tb       WHERE user_id = #{userId}) AS foodComments,
+    (SELECT COUNT(*) FROM notice_comment_tb     WHERE user_id = #{userId}) AS noticeComments
+  </select>
+
+</mapper>
