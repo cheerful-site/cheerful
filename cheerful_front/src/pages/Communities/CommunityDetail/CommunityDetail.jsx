@@ -59,11 +59,14 @@ function CommunityDetail(props) {
 
   const handleOpenRecommentOnClick = (comment, commentId) => {
     setRecomment(comment);
-
-    if (openCommentId === commentId) {
-      setOpenCommentId(null);
+    if (!token) {
+      alert("로그인 후 이용해 주세요");
     } else {
-      setOpenCommentId(commentId);
+      if (openCommentId === commentId) {
+        setOpenCommentId(null);
+      } else {
+        setOpenCommentId(commentId);
+      }
     }
   };
 
@@ -86,45 +89,53 @@ function CommunityDetail(props) {
   };
 
   const handleLikeOnClick = (categoryId, communityId) => {
-    reqCommunityLike(communityId).then((response) => {
-      queryClient.setQueryData(
-        ["communityDetail", categoryId, communityId],
-        (prev) => {
-          return {
-            ...prev,
-            data: {
-              ...prev.data,
-              body: {
-                ...prev.data.body,
-                isLike: 1,
-                likeCount: prev.data.body.likeCount + 1,
+    if (!!token) {
+      reqCommunityLike(communityId).then((response) => {
+        queryClient.setQueryData(
+          ["communityDetail", categoryId, communityId],
+          (prev) => {
+            return {
+              ...prev,
+              data: {
+                ...prev.data,
+                body: {
+                  ...prev.data.body,
+                  isLike: 1,
+                  likeCount: prev.data.body.likeCount + 1,
+                },
               },
-            },
-          };
-        }
-      );
-    });
+            };
+          }
+        );
+      });
+    } else {
+      alert("로그인 후 이용해 주세요.");
+    }
   };
 
   const handleDislikeOnClick = (categoryId, communityId) => {
-    reqCommunitydisLike(communityId).then((response) => {
-      queryClient.setQueryData(
-        ["communityDetail", categoryId, communityId],
-        (prev) => {
-          return {
-            ...prev,
-            data: {
-              ...prev.data,
-              body: {
-                ...prev.data.body,
-                isLike: 0,
-                likeCount: prev.data.body.likeCount - 1,
+    if (!!token) {
+      reqCommunitydisLike(communityId).then((response) => {
+        queryClient.setQueryData(
+          ["communityDetail", categoryId, communityId],
+          (prev) => {
+            return {
+              ...prev,
+              data: {
+                ...prev.data,
+                body: {
+                  ...prev.data.body,
+                  isLike: 0,
+                  likeCount: prev.data.body.likeCount - 1,
+                },
               },
-            },
-          };
-        }
-      );
-    });
+            };
+          }
+        );
+      });
+    } else {
+      alert("로그인 후 이용해 주세요.");
+    }
   };
 
   console.log(detailContent);

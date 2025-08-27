@@ -76,6 +76,7 @@ public class NoticeController {
     */
     @PostMapping("/{noticeId}/comments")
     public ResponseEntity<ResponseDto<?>> registerNoticeComment(@ModelAttribute NoticeCommentRegisterReqDto dto) {
+        System.out.println(dto);
         noticeService.registerComment(dto);
         return ResponseEntity.ok(ResponseDto.success("댓글 등록을 완료했습니다."));
     }

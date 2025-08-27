@@ -15,7 +15,7 @@ function Header(props) {
   const queryClient = useQueryClient();
   const principalQuery = usePrincipalQuery();
   const user = principalQuery?.data?.data?.body?.user || [];
-  console.log(user);
+  // console.log(user);
 
   const MENU = [
     {
