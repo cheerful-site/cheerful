@@ -134,9 +134,6 @@ function FoodDetail(props) {
   };
 
   const handleCommentLikeOnClick = (foodId, foodCommentId) => {
-    // if (!!token) {
-    // }
-    // console.log(foodId, foodCommentId);
     reqFoodCommentLike(foodId, foodCommentId).then((response) => {
       queryClient.setQueryData(["foodDetail", foodId], (prev) => {
         return {
@@ -291,11 +288,15 @@ function FoodDetail(props) {
                   <span>{foodDetail?.title}</span>
                   <span>{comment?.createdAt.slice(0, 10)}</span>
                 </div>
-                <div css={s.commentImgList}>
-                  {comment?.foodCommentImgs?.map((img, index) => (
-                    <img key={index} src={img.imgUrl} alt="" />
-                  ))}
-                </div>
+                {comment?.foodCommentImgs.length === 0 ? (
+                  <></>
+                ) : (
+                  <div css={s.commentImgList}>
+                    {comment?.foodCommentImgs?.map((img, index) => (
+                      <img key={index} src={img.imgUrl} alt="" />
+                    ))}
+                  </div>
+                )}
                 <div>
                   <p>{comment?.content}</p>
                 </div>
