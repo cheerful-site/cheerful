@@ -70,4 +70,23 @@ public class FoodController {
     foodService.registerComment(dto);
     return ResponseEntity.ok(ResponseDto.success("댓글을 등록하였습니다."));
   }
+
+  /*
+    특정 food 댓글에 좋아요 추가
+   */
+  @PostMapping("/{foodId}/{foodCommentId}/like")
+  public ResponseEntity<ResponseDto<?>> getCommentLike(@PathVariable Integer foodId, @PathVariable Integer foodCommentId) {
+    foodService.commentLike(foodCommentId);
+    return ResponseEntity.ok(ResponseDto.success("좋아요"));
+  }
+
+  /*
+      특정 food 댓글을 좋아요 취소
+   */
+  @DeleteMapping("/{foodId}/{foodCommentId}/dislike")
+  public ResponseEntity<ResponseDto<?>> getCommentDisLike(@PathVariable Integer foodId, @PathVariable Integer foodCommentId) {
+    foodService.commentDisLike(foodCommentId);
+    return ResponseEntity.ok(ResponseDto.success("좋아요 취소"));
+  }
+
 }

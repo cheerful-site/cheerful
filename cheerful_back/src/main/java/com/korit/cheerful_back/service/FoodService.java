@@ -5,6 +5,7 @@ import com.korit.cheerful_back.domain.food.FoodLikeMapper;
 import com.korit.cheerful_back.domain.food.FoodMapper;
 import com.korit.cheerful_back.domain.food.FoodSearchOption;
 import com.korit.cheerful_back.domain.foodComment.FoodComment;
+import com.korit.cheerful_back.domain.foodComment.FoodCommentLikeMapper;
 import com.korit.cheerful_back.domain.foodComment.FoodCommentMapper;
 import com.korit.cheerful_back.domain.foodCommentImg.FoodCommentImg;
 import com.korit.cheerful_back.domain.foodCommentImg.FoodCommentImgMapper;
@@ -35,6 +36,7 @@ public class FoodService {
   private final FileService fileService;
   private final FoodCommentImgMapper foodCommentImgMapper;
   private final ImageUrlUtil imageUrlUtil;
+  private final FoodCommentLikeMapper foodCommentLikeMapper;
 
   /*
     food 페이징 목록 조회
@@ -184,4 +186,21 @@ public class FoodService {
       foodCommentImgMapper.insertMany(foodCommentImgs);
     }
   }
+
+  /*
+      댓글 좋아요 추가
+   */
+  public void commentLike(Integer foodCommentId) {
+    Integer userId = principalUtil.getPrincipalUser().getUser().getUserId();
+    foodCommentLikeMapper.insert(foodCommentId, userId);
+  }
+
+  /*
+      댓글 좋아요 취소
+   */
+  public void commentDisLike(Integer foodCommentId) {
+    Integer userId = principalUtil.getPrincipalUser().getUser().getUserId();
+    foodCommentLikeMapper.delete(foodCommentId, userId);
+  }
+
 }
