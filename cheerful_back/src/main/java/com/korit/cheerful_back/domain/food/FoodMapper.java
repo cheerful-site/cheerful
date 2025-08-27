@@ -17,6 +17,9 @@ public interface FoodMapper {
     List<Food> findBySearchOption(FoodSearchOption foodSearchOption);
     int getCountOfFindSearchOption(FoodSearchOption foodSearchOption);
 
+    // Home 화면
+    List<Food> findTopFood(int limit);
+
     // admin전용 food
     List<FoodAdminRow> findAllBySearchOption(FoodSearchOption foodSearchOption);
     int getCountOfSearchOption(FoodSearchOption foodSearchOption);

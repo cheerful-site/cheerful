@@ -323,6 +323,44 @@
         </where>
     </select>
 
+<!--    home 화면-->
+    <select id="findTopFood" resultMap="FoodMap">
+        with top_food as(
+            select
+                ft.food_id,
+                ifnull(lc.cnt, 0) as like_count
+            from
+                food_tb ft
+                left outer join (select food_id, count(*) as cnt from food_like_tb group by food_id) lc on(lc.food_id = ft.food_id)
+            order by like_count desc, ft.created_at desc
+            limit #{limit}
+        )
+        select
+            ft.food_id,
+            ft.food_category_id,
+            ft.user_id as ft_user_id,
+            ft.food_title,
+            ft.food_content,
+            ft.food_price,
+            ft.created_at,
+
+            fct.food_category_name,
+
+            fit.food_img_id,
+            fit.food_id as fit_food_id,
+            fit.seq,
+            fit.`img_path`,
+
+            tf.like_count
+        from
+            top_food tf
+            join food_tb ft on(ft.food_id = tf.food_id)
+            left outer join food_img_tb fit on(fit.food_id = ft.food_id)
+            left outer join food_category_tb fct on(fct.food_category_id = ft.food_category_id)
+        order by
+            tf.like_count desc, ft.created_at desc, fit.seq asc
+    </select>
+
     <!--    admin 전용-->
 <!--    <select id="findAllBySearchOption" resultMap="FoodMap">-->
 <!--        select-->
