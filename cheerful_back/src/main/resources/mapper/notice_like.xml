@@ -15,7 +15,7 @@
         from
             notice_like_tb
         where
-            notice_id = #{noticeId} and
+            notice_id = #{noticeId},
             user_Id = #{userId}
     </delete>
 
