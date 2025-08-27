@@ -53,7 +53,7 @@ public class NoticeController {
     public ResponseEntity<ResponseDto<?>> getNoticeContent(@PathVariable Integer categoryId, @PathVariable Integer noticeId) {
 //        System.out.println(categoryId);
 //        System.out.println(noticeId);
-        System.out.println(noticeService.getNoticeContent(categoryId, noticeId));
+//        System.out.println(noticeService.getNoticeContent(categoryId, noticeId));
         return ResponseEntity.ok(ResponseDto.success(noticeService.getNoticeContent(categoryId, noticeId)));
     }
 
