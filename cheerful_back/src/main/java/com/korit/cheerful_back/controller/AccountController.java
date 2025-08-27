@@ -3,6 +3,7 @@ package com.korit.cheerful_back.controller;
 import com.korit.cheerful_back.domain.user.User;
 import com.korit.cheerful_back.dto.response.ResponseDto;
 import com.korit.cheerful_back.security.model.PrincipalUser;
+import com.korit.cheerful_back.service.UserService;
 import com.korit.cheerful_back.util.ImageUrlUtil;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AccountController {
 
   private final ImageUrlUtil imageUrlUtil;
+  private final UserService userService;
 
   /*
     현재 로그인한 사용자의 PrincipalUser 반환
@@ -54,5 +56,10 @@ public class AccountController {
 
     return ResponseEntity.ok(ResponseDto.success(body));
 
+  }
+
+  @GetMapping
+  public ResponseEntity<ResponseDto<?>> myStatus() {
+    return ResponseEntity.ok(ResponseDto.success(userService.getMyWriteStatus()));
   }
 }
