@@ -6,7 +6,6 @@ import usePrincipalQuery from "../../../queries/PrincipalQuery/usePrincipalQuery
 import Footer from "../../../components/Footer/Footer";
 import { FiPlus, FiX } from "react-icons/fi";
 import { reqCommunityRegister } from "../../../api/communityApi/communityApi";
-import ReactQuill from "react-quill-new";
 
 function CommunityRegister(props) {
   const [inputValue, setInputValue] = useState({
