@@ -3,11 +3,11 @@ import { useParams } from "react-router-dom";
 import useNoticeDetailQuery from "../../../queries/NoticeQuery/useNoticeDetailQuery";
 import * as s from "./styles";
 import Footer from "../../../components/Footer/Footer";
-import { baseURL } from "../../../api/axios/axios";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { FiPlus, FiX } from "react-icons/fi";
 import { reqNoticeRegisterComment } from "../../../api/noticeApi/noticeApi";
+import noImage from "../../../../logo/logo__2.png";
 
 function NoticeDetail(props) {
   const params = useParams();
@@ -125,7 +125,7 @@ function NoticeDetail(props) {
             )}
           </div>
         </div>
-        {token ? (
+        {token && detailContent?.noticeCategoryId === 3 ? (
           <div css={s.commentsRegister}>
             {/* 댓글 등록하기 */}
             <span>{detailContent?.user?.name}</span>
@@ -172,32 +172,28 @@ function NoticeDetail(props) {
         )}
         <div css={s.commentsContainer}>
           {/* commentView */}
-          {detailContent?.foodComment?.map((comment) => (
+          {detailContent?.noticeComment?.map((comment) => (
             <div key={comment.foodCommentId} css={s.commentContainer}>
               <div css={s.commentUser}>
-                <img src={comment?.user.profileImgUrl} alt="" />
-                <span>{comment?.user.name}</span>
+                <img src={noImage} alt="" />
+                <span>{comment?.userId}</span>
               </div>
               <div css={s.imgAndContent}>
                 <div>
-                  <span>{foodDetail?.title}</span>
+                  <span>{detailContent?.title}</span>
                   <span>{comment?.createdAt.slice(0, 10)}</span>
                 </div>
-                <div css={s.commentImgList}>
-                  {comment?.foodCommentImgs?.map((img, index) => (
-                    <img key={index} src={img.imgUrl} alt="" />
-                  ))}
-                </div>
+                {comment?.noticeCommentImgs === null ? (
+                  <></>
+                ) : (
+                  <div css={s.commentImgList}>
+                    {comment?.foodCommentImgs?.map((img, index) => (
+                      <img key={index} src={img.imgUrl} alt="" />
+                    ))}
+                  </div>
+                )}
                 <div>
                   <p>{comment?.content}</p>
-                </div>
-                <div css={s.likeSelected}>
-                  <span>이 후기가 도움이 돼요!</span>
-                  <div>
-                    <AiFillLike />
-                    <span>{comment?.isLike}</span>
-                  </div>
-                  {/* <AiOutlineLike /> */}
                 </div>
               </div>
             </div>

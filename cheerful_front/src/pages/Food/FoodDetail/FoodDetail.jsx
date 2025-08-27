@@ -2,7 +2,6 @@
 import { useParams } from "react-router-dom";
 import useFoodDetailQuery from "../../../queries/FoodQuery/useFoodDetailQuery";
 import * as s from "./styles";
-import { baseURL } from "../../../api/axios/axios";
 import like from "../../../../logo/cheerful_like.png";
 import unlike from "../../../../logo/cheerful_unlike.png";
 import Footer from "../../../components/Footer/Footer";

@@ -4,7 +4,6 @@ import * as s from "./styles";
 import Footer from "../../../components/Footer/Footer";
 import useFoodListQuery from "../../../queries/FoodQuery/useFoodListQuery";
 import PageNation from "../../../components/PageNation/PageNation";
-import { baseURL } from "../../../api/axios/axios";
 import { useNavigate } from "react-router-dom";
 
 function Food(props) {
