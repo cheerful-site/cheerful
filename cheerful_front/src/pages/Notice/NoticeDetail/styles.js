@@ -84,6 +84,7 @@ export const postLike = css`
 
 export const isLike = css`
   border: none;
+  border: 0.15rem solid #ffc42150;
   background-color: #ffc421;
   color: #ffffff;
 `;

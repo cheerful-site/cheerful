@@ -6,7 +6,11 @@ import Footer from "../../../components/Footer/Footer";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { FiPlus, FiX } from "react-icons/fi";
-import { reqNoticeRegisterComment } from "../../../api/noticeApi/noticeApi";
+import {
+  reqNoticeDislike,
+  reqNoticeLike,
+  reqNoticeRegisterComment,
+} from "../../../api/noticeApi/noticeApi";
 import noImage from "../../../../logo/logo__2.png";
 import usePrincipalQuery from "../../../queries/PrincipalQuery/usePrincipalQuery";
 
@@ -24,8 +28,8 @@ function NoticeDetail(props) {
   // console.log(detailContent);
   // console.log(detailContent?.noticeImgs);
 
-  console.log(detailContent);
-  console.log(user);
+  // console.log(detailContent);
+  // console.log(user);
 
   const handlePlusOnClick = () => {
     const fileInput = document.createElement("input");
@@ -63,8 +67,49 @@ function NoticeDetail(props) {
     setFiles(files.filter((file, i) => i !== index));
   };
 
-  const handleLikeOnClick = () => {};
-  const handleDislikeOnClick = () => {};
+  const handleLikeOnClick = (categoryId, noticeId) => {
+    console.log(categoryId, noticeId);
+    console.log(["noticeDetail", categoryId, noticeId]);
+    console.log(queryClient.setQueriesData());
+    reqNoticeLike(noticeId).then((response) => {
+      queryClient.setQueryData(
+        ["noticeDetail", categoryId, noticeId],
+        (prev) => {
+          return {
+            ...prev,
+            data: {
+              ...prev.data,
+              body: {
+                ...prev.data.body,
+                isLike: 1,
+                likeCount: prev.data.body.likeCount + 1,
+              },
+            },
+          };
+        }
+      );
+    });
+  };
+  const handleDislikeOnClick = (categoryId, noticeId) => {
+    reqNoticeDislike(categoryId, noticeId).then((response) => {
+      queryClient.setQueryData(
+        ["noticeDetail", categoryId, noticeId],
+        (prev) => {
+          return {
+            ...prev,
+            data: {
+              ...prev.data,
+              body: {
+                ...prev.data.body,
+                isLike: 0,
+                likeCount: prev.data.body.likeCount - 1,
+              },
+            },
+          };
+        }
+      );
+    });
+  };
 
   const handleRegisterOnClick = () => {
     const formData = new FormData();
@@ -101,12 +146,12 @@ function NoticeDetail(props) {
               </div>
             </div>
             <div css={s.contentContainer}>{detailContent?.content}</div>
-            {detailContent?.noticeImgs ? (
+            {detailContent?.noticeImgs.length === 0 ? (
+              <></>
+            ) : (
               detailContent?.noticeImgs?.map((img, index) => (
                 <img key={index} src={img.imgUrl} alt="" />
               ))
-            ) : (
-              <></>
             )}
           </div>
 
@@ -115,7 +160,10 @@ function NoticeDetail(props) {
               <span
                 css={s.isDislike}
                 onClick={() =>
-                  handleLikeOnClick(detailContent?.noticeId.toString())
+                  handleLikeOnClick(
+                    detailContent?.noticeCategoryId.toString(),
+                    detailContent?.noticeId.toString()
+                  )
                 }>
                 공감해요 {detailContent?.likeCount}
               </span>
@@ -123,7 +171,10 @@ function NoticeDetail(props) {
               <span
                 css={s.isLike}
                 onClick={() =>
-                  handleDislikeOnClick(detailContent?.noticeId.toString())
+                  handleDislikeOnClick(
+                    detailContent?.noticeCategoryId.toString(),
+                    detailContent?.noticeId.toString()
+                  )
                 }>
                 공감해요 {detailContent?.likeCount}
               </span>
@@ -188,7 +239,7 @@ function NoticeDetail(props) {
                   <span>{detailContent?.title}</span>
                   <span>{comment?.createdAt.slice(0, 10)}</span>
                 </div>
-                {comment?.noticeCommentImgs === null ? (
+                {comment?.noticeCommentImgs.length === 0 ? (
                   <></>
                 ) : (
                   <div css={s.commentImgList}>
