@@ -22,7 +22,7 @@ public class CommunityController {
      */
     @PostMapping
     public ResponseEntity<ResponseDto<?>> register(@ModelAttribute CommunityRegisterReqDto dto) {
-        System.out.println(dto);
+//        System.out.println(dto);
         communityService.register(dto);
         return ResponseEntity.ok(ResponseDto.success("community 글을 등록하였습니다."));
     }
@@ -56,7 +56,7 @@ public class CommunityController {
      */
     @PostMapping("/{communityId}/like")
     public ResponseEntity<ResponseDto<?>> getLike(@PathVariable Integer communityId) {
-        System.out.println(communityId);
+//        System.out.println(communityId);
         communityService.like(communityId);
         return ResponseEntity.ok(ResponseDto.success("좋아요"));
     }
@@ -66,7 +66,7 @@ public class CommunityController {
      */
     @DeleteMapping("/{communityId}/dislike")
     public ResponseEntity<ResponseDto<?>> getDisLike(@PathVariable Integer communityId) {
-        System.out.println(communityId);
+//        System.out.println(communityId);
         communityService.disLike(communityId);
         return ResponseEntity.ok(ResponseDto.success("좋아요 취소"));
     }
@@ -87,7 +87,7 @@ public class CommunityController {
      */
     @PostMapping("/{categoryId}/{communityId}")
     public ResponseEntity<ResponseDto<?>> getCommunityViews(@PathVariable Integer categoryId, @PathVariable Integer communityId) {
-        System.out.println(categoryId);
+//        System.out.println(categoryId);
         int views = communityService.increaseViews(categoryId, communityId);
         if (views > 0) {
             views = 0;
@@ -100,7 +100,7 @@ public class CommunityController {
      */
     @PostMapping("/{communityId}/comments")
     public ResponseEntity<ResponseDto<?>> registerComment(@RequestBody CommunityCommentRegisterReqDto dto) {
-        System.out.println(dto);
+//        System.out.println(dto);
         return ResponseEntity.ok(ResponseDto.success(communityService.registerComment(dto)));
     }
 }

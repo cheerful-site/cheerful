@@ -8,20 +8,24 @@ import { useState } from "react";
 import { FiPlus, FiX } from "react-icons/fi";
 import { reqNoticeRegisterComment } from "../../../api/noticeApi/noticeApi";
 import noImage from "../../../../logo/logo__2.png";
+import usePrincipalQuery from "../../../queries/PrincipalQuery/usePrincipalQuery";
 
 function NoticeDetail(props) {
   const params = useParams();
   const notice = useNoticeDetailQuery(params.category, params.noticeId);
+  const principal = usePrincipalQuery();
   const token = localStorage.getItem("AccessToken");
   const queryClient = useQueryClient();
   const [files, setFiles] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const detailContent = notice?.data?.data?.body;
+  const user = principal?.data?.data?.body.user;
 
   // console.log(detailContent);
   // console.log(detailContent?.noticeImgs);
 
   console.log(detailContent);
+  console.log(user);
 
   const handlePlusOnClick = () => {
     const fileInput = document.createElement("input");
@@ -74,6 +78,7 @@ function NoticeDetail(props) {
 
     reqNoticeRegisterComment(formData, detailContent?.noticeId);
     setInputValue("");
+    setFiles([]);
     notice.refetch();
   };
 
@@ -128,7 +133,7 @@ function NoticeDetail(props) {
         {token && detailContent?.noticeCategoryId === 3 ? (
           <div css={s.commentsRegister}>
             {/* 댓글 등록하기 */}
-            <span>{detailContent?.user?.name}</span>
+            <span>{user?.name}</span>
             <div css={s.imgListContainer}>
               {/* 이미지파일 등록 */}
               {files.length < 5 && ( //파일 갯수
@@ -173,10 +178,10 @@ function NoticeDetail(props) {
         <div css={s.commentsContainer}>
           {/* commentView */}
           {detailContent?.noticeComment?.map((comment) => (
-            <div key={comment.foodCommentId} css={s.commentContainer}>
+            <div key={comment.noticeCommentId} css={s.commentContainer}>
               <div css={s.commentUser}>
-                <img src={noImage} alt="" />
-                <span>{comment?.userId}</span>
+                <img src={comment?.user.profileImgUrl} alt="" />
+                <span>{comment?.user.name}</span>
               </div>
               <div css={s.imgAndContent}>
                 <div>
@@ -187,7 +192,7 @@ function NoticeDetail(props) {
                   <></>
                 ) : (
                   <div css={s.commentImgList}>
-                    {comment?.foodCommentImgs?.map((img, index) => (
+                    {comment?.noticeCommentImgs?.map((img, index) => (
                       <img key={index} src={img.imgUrl} alt="" />
                     ))}
                   </div>
