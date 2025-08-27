@@ -70,7 +70,7 @@ function CommunityDetail(props) {
     }
   };
 
-  const handleRecommentsOnClick = () => {
+  const handleRecommentsOnClick = async () => {
     const content = /^@\w+\s/.test(commentInputValue)
       ? commentInputValue.substring(commentInputValue.indexOf(" ") + 1)
       : commentInputValue;
@@ -83,7 +83,7 @@ function CommunityDetail(props) {
     };
 
     reqCommunityRegisterComments(comment);
-    communityDetail.refetch();
+    await communityDetail.refetch();
     setCommentInputValue("");
     setOpenCommentId(null);
   };

@@ -7,6 +7,7 @@ function useSearchCommunityQuery(page, size, searchText, categoryId) {
     queryKey: ["searchCommunityList", page, size, searchText, categoryId],
     queryFn: async () =>
       await reqSearchCommunity(page, size, searchText, categoryId),
+    enabled: !!searchText,
   });
 }
 

@@ -66,7 +66,7 @@ function FoodDetail(props) {
     setFiles(files.filter((file, i) => i !== index));
   };
 
-  const handleRegisterOnClick = () => {
+  const handleRegisterOnClick = async () => {
     const formData = new FormData();
 
     formData.append("content", inputValue);
@@ -78,7 +78,7 @@ function FoodDetail(props) {
 
     reqFoodRegisterComment(formData, foodDetail?.foodId);
     setInputValue("");
-    food.refetch();
+    await food.refetch();
   };
 
   const handleLikeOnClick = (foodId) => {
@@ -134,55 +134,63 @@ function FoodDetail(props) {
   };
 
   const handleCommentLikeOnClick = (foodId, foodCommentId) => {
-    reqFoodCommentLike(foodId, foodCommentId).then((response) => {
-      queryClient.setQueryData(["foodDetail", foodId], (prev) => {
-        return {
-          ...prev,
-          data: {
-            ...prev.data,
-            body: {
-              ...prev.data.body,
-              foodComment: prev.data.body.foodComment.map((comment) => {
-                console.log(comment);
-                if (comment.foodId === Number(foodId)) {
-                  return {
-                    ...comment,
-                    isLike: 1,
-                    likeCount: comment.likeCount + 1,
-                  };
-                }
-              }),
+    if (!!token) {
+      reqFoodCommentLike(foodId, foodCommentId).then((response) => {
+        queryClient.setQueryData(["foodDetail", foodId], (prev) => {
+          return {
+            ...prev,
+            data: {
+              ...prev.data,
+              body: {
+                ...prev.data.body,
+                foodComment: prev.data.body.foodComment.map((comment) => {
+                  console.log(comment);
+                  if (comment.foodId === Number(foodId)) {
+                    return {
+                      ...comment,
+                      isLike: 1,
+                      likeCount: comment.likeCount + 1,
+                    };
+                  }
+                }),
+              },
             },
-          },
-        };
+          };
+        });
       });
-    });
+    } else {
+      alert("로그인 후 이용해 주세요");
+    }
   };
 
   const handleCommentDislikeOnClick = (foodId, foodCommentId) => {
-    reqFoodCommentDislike(foodId, foodCommentId).then((response) => {
-      queryClient.setQueryData(["foodDetail", foodId], (prev) => {
-        return {
-          ...prev,
-          data: {
-            ...prev.data,
-            body: {
-              ...prev.data.body,
-              foodComment: prev.data.body.foodComment.map((comment) => {
-                // console.log(comment);
-                if (comment.foodId === Number(foodId)) {
-                  return {
-                    ...comment,
-                    isLike: 0,
-                    likeCount: comment.likeCount - 1,
-                  };
-                }
-              }),
+    if (!!token) {
+      reqFoodCommentDislike(foodId, foodCommentId).then((response) => {
+        queryClient.setQueryData(["foodDetail", foodId], (prev) => {
+          return {
+            ...prev,
+            data: {
+              ...prev.data,
+              body: {
+                ...prev.data.body,
+                foodComment: prev.data.body.foodComment.map((comment) => {
+                  // console.log(comment);
+                  if (comment.foodId === Number(foodId)) {
+                    return {
+                      ...comment,
+                      isLike: 0,
+                      likeCount: comment.likeCount - 1,
+                    };
+                  }
+                }),
+              },
             },
-          },
-        };
+          };
+        });
       });
-    });
+    } else {
+      alert("로그인 후 이용해 주세요");
+    }
   };
 
   return (

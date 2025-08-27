@@ -38,7 +38,11 @@ function Post({ content }) {
       ) : (
         <img
           css={s.postImg}
-          src={content?.communityImgs[0]?.imgUrl || noImage}
+          src={
+            content?.communityImgs.length === 0
+              ? noImage
+              : content?.communityImgs[0]?.imgUrl
+          }
           alt=""
           onClick={handleOnClick}
         />

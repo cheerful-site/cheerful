@@ -2,22 +2,28 @@
 import * as s from "./styles";
 import Footer from "../../components/Footer/Footer";
 import SearchBar from "../../components/SearchBar/SearchBar";
-import { useParams } from "react-router-dom";
-import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 import useSearchFoodQuery from "../../queries/SearchQuery/useSearchFoodQuery";
 import useSearchCommunityQuery from "../../queries/SearchQuery/useSearchCommunityQuery";
+import { useSearchTextStore } from "../../stores/useSearchTextStore";
+import Post from "../../components/Post/Post";
+import PageNation from "../../components/PageNation/PageNation";
 
 function Search(props) {
   const params = useParams();
+  const navigate = useNavigate();
+  const { searchText, setSearchText } = useSearchTextStore();
+  const [page, setPage] = useState(1);
   const [searchData, setSearchData] = useState({
-    searchWord: "",
+    searchWord: searchText,
     headerTag: "community",
     categoryId: 1,
   });
 
-  const searchFood = useSearchFoodQuery(1, 12, searchData.searchWord);
+  const searchFood = useSearchFoodQuery(page, 12, searchData.searchWord);
   const searchCommunity = useSearchCommunityQuery(
-    1,
+    page,
     5,
     searchData.searchWord,
     searchData.categoryId
@@ -26,8 +32,9 @@ function Search(props) {
   const searchCommunityList = searchCommunity?.data?.data?.body || [];
   const searchFoodList = searchFood?.data?.data?.body || [];
 
-  console.log(searchFoodList);
-  console.log(searchCommunityList);
+  console.log(searchFoodList?.content?.length);
+  console.log(searchCommunityList?.content?.length);
+  // console.log(params.searchword);
 
   const communityCategory = [
     { id: 1, title: "전체", category: 1 },
@@ -39,9 +46,17 @@ function Search(props) {
     { id: 7, title: "임보 / 입양", category: 7 },
   ];
 
+  useEffect(() => {
+    setSearchData({
+      searchWord: searchText,
+      headerTag: "community",
+      categoryId: 1,
+    });
+  }, [searchText]);
+
   const handleCommunityOnClick = () => {
     setSearchData({
-      searchWord: params.searchword,
+      searchWord: searchText,
       headerTag: "community",
       categoryId: 1,
     });
@@ -49,9 +64,9 @@ function Search(props) {
 
   const handleFoodOnClick = () => {
     setSearchData({
-      searchWord: params.searchword,
+      searchWord: searchText,
       headerTag: "food",
-      categoryId: "",
+      categoryId: 1,
     });
   };
 
@@ -59,14 +74,18 @@ function Search(props) {
     setSearchData((prev) => ({ ...prev, categoryId: categoryId }));
   };
 
+  const handleDetailOnClick = (foodId) => {
+    navigate(`/food/${foodId}`);
+  };
+
   return (
     <>
-      <div css={s.layout(params.searchword ? true : false)}>
+      <div css={s.layout(!!searchText ? true : false)}>
         <div>
           <SearchBar />
           <span css={s.text}>관심있는 내용을 검색해보세요!</span>
         </div>
-        {params.searchword ? (
+        {!!searchText ? (
           <>
             <div css={s.communityOrFood(searchData.headerTag === "community")}>
               <div onClick={handleCommunityOnClick}>
@@ -77,21 +96,78 @@ function Search(props) {
               </div>
             </div>
             {searchData.headerTag === "food" ? (
-              <></>
+              <>
+                {/* food Search Result */}
+                <div css={s.searchResult}>
+                  {searchFoodList?.content?.length === 0 ? (
+                    <div css={s.searchTextNotFound}>
+                      <span>검색 결과를 찾을 수 없습니다.</span>
+                    </div>
+                  ) : (
+                    <div css={s.foodContainer}>
+                      {searchFoodList?.content?.map((food) => (
+                        <div key={food.foodId}>
+                          <img
+                            src={`${food.foodImgs[0].imgUrl}`}
+                            alt=""
+                            onClick={() => handleDetailOnClick(food.foodId)}
+                          />
+                          <div>
+                            <span
+                              onClick={() => handleDetailOnClick(food.foodId)}>
+                              {food.title}
+                            </span>
+                            <span>{food.price.toLocaleString()}원</span>
+                            <span>{food.foodCategory?.foodCategoryName}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                <PageNation
+                  page={page}
+                  setPage={setPage}
+                  size={searchFoodList?.size}
+                  totalElements={searchFoodList?.totalElements}
+                  totalPage={searchFoodList?.totalPages}
+                />
+              </>
             ) : (
-              <div css={s.categoryList}>
-                {communityCategory.map((cate) => (
-                  <div
-                    key={cate.id}
-                    css={s.category(searchData.categoryId === cate.category)}
-                    onClick={() => handleCategoryOnClick(cate.category)}>
-                    {cate.title}
+              <>
+                <div css={s.categoryList}>
+                  {communityCategory.map((cate) => (
+                    <div
+                      key={cate.id}
+                      css={s.category(searchData.categoryId === cate.category)}
+                      onClick={() => handleCategoryOnClick(cate.category)}>
+                      {cate.title}
+                    </div>
+                  ))}
+                </div>
+                {/* Community Search Result */}
+                {searchCommunityList?.content?.length === 0 ? (
+                  <div css={s.searchTextNotFound}>
+                    <span>검색 결과를 찾을 수 없습니다.</span>
                   </div>
-                ))}
-              </div>
+                ) : (
+                  <>
+                    <div css={s.searchResult}>
+                      {searchCommunityList?.content?.map((community) => (
+                        <Post content={community} />
+                      ))}
+                    </div>
+                    <PageNation
+                      page={page}
+                      setPage={setPage}
+                      size={searchCommunityList?.size}
+                      totalElements={searchCommunityList?.totalElements}
+                      totalPage={searchCommunityList?.totalPages}
+                    />
+                  </>
+                )}
+              </>
             )}
-            <div css={s.searchResult}></div>
-            <div>pagenation</div>
           </>
         ) : (
           <></>

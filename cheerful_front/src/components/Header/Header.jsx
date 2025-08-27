@@ -15,7 +15,9 @@ function Header(props) {
   const queryClient = useQueryClient();
   const principalQuery = usePrincipalQuery();
   const user = principalQuery?.data?.data?.body?.user || [];
+  const userStatus = principalQuery?.data?.data?.body.myStatus || [];
   // console.log(user);
+  // console.log(userStatus);
 
   const MENU = [
     {
@@ -144,11 +146,11 @@ function Header(props) {
                   <div css={s.modalContent}>
                     <div>
                       <span>내가 쓴 글</span>
-                      <span>10개</span>
+                      <span>{userStatus?.postCount}개</span>
                     </div>
                     <div>
                       <span>내가 쓴 댓글</span>
-                      <span>10개</span>
+                      <span>{userStatus?.commentCount}개</span>
                     </div>
                   </div>
                 </div>
