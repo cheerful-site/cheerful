@@ -109,12 +109,22 @@ public class NoticeService {
         }
 
         List<NoticeComment> comment = noticeCommentMapper.findAllByNoticeId(noticeId);
+
         comment.forEach(c -> {
             var u = c.getUser();
             if(u != null) {
                 u.setProfileImgUrl(imageUrlUtil.profile(u.getProfileImgPath()));
             }
         });
+
+        comment.forEach(cmt -> {
+            List<NoticeCommentImg> cimgs = cmt.getNoticeCommentImgs();
+            if(cimgs == null || cimgs.isEmpty()) return;
+
+            cimgs.sort(Comparator.comparingInt(NoticeCommentImg::getSeq));
+            cimgs.forEach(ci -> ci.setImgUrl(imageUrlUtil.noticeComment(ci.getImgPath())));
+        });
+
         notice.setNoticeComment(comment);
 
         return notice;

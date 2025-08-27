@@ -14,6 +14,9 @@ public interface FoodMapper {
     Food findByOption(Integer foodId, Integer userId);
     int getCountOfOptions(FoodSearchOption option);
 
+    List<Food> findBySearchOption(FoodSearchOption foodSearchOption);
+    int getCountOfFindSearchOption(FoodSearchOption foodSearchOption);
+
     // admin전용 food
     List<FoodAdminRow> findAllBySearchOption(FoodSearchOption foodSearchOption);
     int getCountOfSearchOption(FoodSearchOption foodSearchOption);

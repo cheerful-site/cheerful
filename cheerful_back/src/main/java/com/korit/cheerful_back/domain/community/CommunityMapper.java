@@ -13,6 +13,9 @@ public interface CommunityMapper {
     Community findByOption(@Param("categoryId") Integer categoryId, @Param("communityId") Integer communityId, @Param("userId") Integer userId);
     int getCountOfOptions(CommunitySearchOption communitySearchOption);
 
+    List<Community> findBySearchOption(CommunitySearchOption communitySearchOption);
+    int getCountOfFindSearchOption(CommunitySearchOption communitySearchOption);
+
     // 조회수
     int increaseViews(@Param("categoryId") Integer categoryId, @Param("communityId") Integer communityId);
 

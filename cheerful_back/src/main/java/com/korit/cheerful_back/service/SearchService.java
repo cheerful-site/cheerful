@@ -36,8 +36,8 @@ public class SearchService {
         .build();
 
     // 총 건수 / 총 페이지 / 마지막 여부 계산
-    List<Community> contents = communityMapper.findAllByOptions(searchOption);
-    Integer totalElements = communityMapper.getCountOfOptions(searchOption);
+    List<Community> contents = communityMapper.findBySearchOption(searchOption);
+    Integer totalElements = communityMapper.getCountOfFindSearchOption(searchOption);
     Integer totalPages = (int) Math.ceil(totalElements.longValue() / size.doubleValue());
     Boolean isLast = page.equals(totalPages);
 
@@ -76,8 +76,8 @@ public class SearchService {
         .searchText(searchText)
         .build();
 
-    List<Food> contents = foodMapper.findAllByOptions(searchOption);
-    Integer totalElements = foodMapper.getCountOfOptions(searchOption);
+    List<Food> contents = foodMapper.findBySearchOption(searchOption);
+    Integer totalElements = foodMapper.getCountOfFindSearchOption(searchOption);
     Integer totalPages = (int) Math.ceil(totalElements.longValue() / size.doubleValue());
     Boolean isLast = page.equals(totalPages);
 
