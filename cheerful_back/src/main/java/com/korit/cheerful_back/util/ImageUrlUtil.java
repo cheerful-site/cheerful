@@ -14,7 +14,11 @@ public class ImageUrlUtil {
 
   private final AppProperties appProperties;
 
-  public String buildImageUrl(String imageUrl, String imageConfigName) {
+  public String buildImageUrl(String imgaeUrl, String imageConfigName) {
+    return buildImageUrl(imgaeUrl, imageConfigName, true);
+  }
+
+  public String buildImageUrl(String imageUrl, String imageConfigName, boolean defaultOnNull) {
     if(imageConfigName == null) {
       return null;
     }
@@ -26,8 +30,8 @@ public class ImageUrlUtil {
     String prefix = appProperties.getImageConfigs().get(imageConfigName).getPrefix();
     String defaultImg = appProperties.getImageConfigs().get(imageConfigName).getDefaultImg();
 
-    if(imageUrl == null) {
-      return prefix + "/" + defaultImg;
+    if(imageUrl == null || imageUrl.isBlank()) {
+      return defaultOnNull ? prefix + "/" + defaultImg : null;
     }
 
     if(imageUrl.startsWith("http")) {
@@ -48,13 +52,13 @@ public class ImageUrlUtil {
     return buildImageUrl(path, "food");
   }
   public String foodComment(String path) {
-    return buildImageUrl(path, "foodComment");
+    return buildImageUrl(path, "foodComment", false);
   }
   public String notice(String path) {
     return buildImageUrl(path, "notice");
   }
   public String noticeComment(String path) {
-    return buildImageUrl(path, "noticeComment");
+    return buildImageUrl(path, "noticeComment", false);
   }
 
 }
