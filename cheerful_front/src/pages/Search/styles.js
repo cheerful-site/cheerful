@@ -49,10 +49,48 @@ export const communityOrFood = (isSelected) => css`
   }
 `;
 
+export const foodContainer = css`
+  display: grid;
+  grid-template-columns: repeat(4, 2fr);
+  grid-template-rows: repeat(3, 30rem);
+  justify-items: center;
+  align-items: center;
+  margin-top: 4rem;
+
+  & > div > img {
+    border-radius: 1rem;
+    width: 15rem;
+    height: 15rem;
+    cursor: pointer;
+  }
+
+  & > div > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    & > span:nth-of-type(1) {
+      font-size: 1.8rem;
+      font-weight: 700;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    & > span:nth-of-type(2),
+    span:nth-of-type(3) {
+      font-size: 1.4rem;
+      font-weight: 400;
+    }
+  }
+`;
+
 export const categoryList = css`
   display: flex;
   justify-content: space-between;
-  margin-bottom: 10rem;
+  margin-bottom: 5rem;
   width: 94rem;
   height: 4rem;
 `;
@@ -73,4 +111,17 @@ export const category = (isSeleted) => css`
 
 export const searchResult = css`
   margin-bottom: 7rem;
+`;
+
+export const searchTextNotFound = css`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 30rem;
+  & > span {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #22222260;
+  }
 `;

@@ -44,6 +44,7 @@ function AdminManage(props) {
   const [isOpen, setIsOpen] = useState(false);
 
   const user = principalQuery?.data?.data?.body?.user || [];
+  const userStatus = principalQuery?.data?.data?.body?.myStatus || [];
 
   const { page } = usePageStore();
 
@@ -97,8 +98,9 @@ function AdminManage(props) {
     ...notice.user,
   }));
 
+  console.log(userStatus);
   // console.log(user);
-  console.log(users);
+  // console.log(users);
   // console.log(communityList);
   // console.log(foodList);
   // console.log(params);
@@ -188,11 +190,11 @@ function AdminManage(props) {
                     <div css={s.modalContent}>
                       <div>
                         <span>내가 쓴 글</span>
-                        <span>10개</span>
+                        <span>{userStatus?.postCount}개</span>
                       </div>
                       <div>
                         <span>내가 쓴 댓글</span>
-                        <span>10개</span>
+                        <span>{userStatus?.commentCount}개</span>
                       </div>
                     </div>
                   </div>

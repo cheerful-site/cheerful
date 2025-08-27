@@ -28,7 +28,6 @@ function NoticeDetail(props) {
   // console.log(detailContent);
   // console.log(detailContent?.noticeImgs);
 
-  // console.log(detailContent);
   // console.log(user);
 
   const handlePlusOnClick = () => {
@@ -68,50 +67,59 @@ function NoticeDetail(props) {
   };
 
   const handleLikeOnClick = (categoryId, noticeId) => {
-    console.log(categoryId, noticeId);
-    console.log(["noticeDetail", categoryId, noticeId]);
-    console.log(queryClient.setQueriesData());
-    reqNoticeLike(noticeId).then((response) => {
-      queryClient.setQueryData(
-        ["noticeDetail", categoryId, noticeId],
-        (prev) => {
-          return {
-            ...prev,
-            data: {
-              ...prev.data,
-              body: {
-                ...prev.data.body,
-                isLike: 1,
-                likeCount: prev.data.body.likeCount + 1,
+    // console.log(categoryId, noticeId);
+    // console.log(["noticeDetail", categoryId, noticeId]);
+    // console.log(queryClient.setQueriesData());
+
+    if (!!token) {
+      reqNoticeLike(noticeId).then((response) => {
+        queryClient.setQueryData(
+          ["noticeDetail", categoryId, noticeId],
+          (prev) => {
+            return {
+              ...prev,
+              data: {
+                ...prev.data,
+                body: {
+                  ...prev.data.body,
+                  isLike: 1,
+                  likeCount: prev.data.body.likeCount + 1,
+                },
               },
-            },
-          };
-        }
-      );
-    });
+            };
+          }
+        );
+      });
+    } else {
+      alert("로그인 후 이용해 주세요.");
+    }
   };
   const handleDislikeOnClick = (categoryId, noticeId) => {
-    reqNoticeDislike(categoryId, noticeId).then((response) => {
-      queryClient.setQueryData(
-        ["noticeDetail", categoryId, noticeId],
-        (prev) => {
-          return {
-            ...prev,
-            data: {
-              ...prev.data,
-              body: {
-                ...prev.data.body,
-                isLike: 0,
-                likeCount: prev.data.body.likeCount - 1,
+    if (!!token) {
+      reqNoticeDislike(categoryId, noticeId).then((response) => {
+        queryClient.setQueryData(
+          ["noticeDetail", categoryId, noticeId],
+          (prev) => {
+            return {
+              ...prev,
+              data: {
+                ...prev.data,
+                body: {
+                  ...prev.data.body,
+                  isLike: 0,
+                  likeCount: prev.data.body.likeCount - 1,
+                },
               },
-            },
-          };
-        }
-      );
-    });
+            };
+          }
+        );
+      });
+    } else {
+      alert("로그인 후 이용해 주세요.");
+    }
   };
 
-  const handleRegisterOnClick = () => {
+  const handleRegisterOnClick = async () => {
     const formData = new FormData();
 
     formData.append("content", inputValue);
@@ -124,7 +132,7 @@ function NoticeDetail(props) {
     reqNoticeRegisterComment(formData, detailContent?.noticeId);
     setInputValue("");
     setFiles([]);
-    notice.refetch();
+    await notice.refetch();
   };
 
   return (
