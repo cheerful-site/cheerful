@@ -33,7 +33,7 @@
     </resultMap>
 
 
-    <insert id="insert">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="noticeCommentId">
         insert into notice_comment_tb
         values (default, #{noticeId}, #{userId}, #{content}, now())
     </insert>
