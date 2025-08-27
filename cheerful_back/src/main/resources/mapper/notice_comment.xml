@@ -4,18 +4,18 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.korit.cheerful_back.domain.noticeComment.NoticeCommentMapper">
-    <resultMap id="NoticeMap" type="com.korit.cheerful_back.domain.noticeComment.NoticeComment">
+    <resultMap id="NoticeCommentMap" type="com.korit.cheerful_back.domain.noticeComment.NoticeComment">
         <id property="noticeCommentId" column="notice_comment_id" />
         <result property="noticeId" column="notice_id" />
         <result property="userId" column="user_id" />
         <result property="content" column="content" />
         <result property="createdAt" column="created_at" />
         <association property="user" resultMap="UserMap" />
-        <association property="noticeCommentImgs" resultMap="NoticeCommentImgMap" />
+        <collection property="noticeCommentImgs" resultMap="NoticeCommentImgMap" />
     </resultMap>
 
     <resultMap id="UserMap" type="com.korit.cheerful_back.domain.user.User">
-        <id property="userId" column="user_id" />
+        <id property="userId" column="ut_user_id" />
         <result property="username" column="username" />
         <result property="password" column="password" />
         <result property="name" column="name" />
@@ -38,7 +38,7 @@
         values (default, #{noticeId}, #{userId}, #{content}, now())
     </insert>
 
-    <select id="findAllByNoticeId" resultType="com.korit.cheerful_back.domain.noticeComment.NoticeComment">
+    <select id="findAllByNoticeId" resultMap="NoticeCommentMap">
         select
             nct.notice_comment_id,
             nct.notice_id,
