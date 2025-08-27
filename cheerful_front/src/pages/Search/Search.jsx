@@ -4,14 +4,30 @@ import Footer from "../../components/Footer/Footer";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
+import useSearchFoodQuery from "../../queries/SearchQuery/useSearchFoodQuery";
+import useSearchCommunityQuery from "../../queries/SearchQuery/useSearchCommunityQuery";
 
 function Search(props) {
   const params = useParams();
   const [searchData, setSearchData] = useState({
-    searchWrod: "",
+    searchWord: "",
     headerTag: "community",
     categoryId: 1,
   });
+
+  const searchFood = useSearchFoodQuery(1, 12, searchData.searchWord);
+  const searchCommunity = useSearchCommunityQuery(
+    1,
+    5,
+    searchData.searchWord,
+    searchData.categoryId
+  );
+
+  const searchCommunityList = searchCommunity?.data?.data?.body || [];
+  const searchFoodList = searchFood?.data?.data?.body || [];
+
+  console.log(searchFoodList);
+  console.log(searchCommunityList);
 
   const communityCategory = [
     { id: 1, title: "전체", category: 1 },
@@ -25,7 +41,7 @@ function Search(props) {
 
   const handleCommunityOnClick = () => {
     setSearchData({
-      searchWrod: params.searchword,
+      searchWord: params.searchword,
       headerTag: "community",
       categoryId: 1,
     });
@@ -33,7 +49,7 @@ function Search(props) {
 
   const handleFoodOnClick = () => {
     setSearchData({
-      searchWrod: params.searchword,
+      searchWord: params.searchword,
       headerTag: "food",
       categoryId: "",
     });
@@ -53,8 +69,12 @@ function Search(props) {
         {params.searchword ? (
           <>
             <div css={s.communityOrFood(searchData.headerTag === "community")}>
-              <div onClick={handleCommunityOnClick}>Community(99)</div>
-              <div onClick={handleFoodOnClick}>Food(99)</div>
+              <div onClick={handleCommunityOnClick}>
+                Community({searchCommunityList?.totalElements})
+              </div>
+              <div onClick={handleFoodOnClick}>
+                Food({searchFoodList?.totalElements})
+              </div>
             </div>
             {searchData.headerTag === "food" ? (
               <></>
@@ -71,7 +91,7 @@ function Search(props) {
               </div>
             )}
             <div css={s.searchResult}></div>
-            <div>pagenation</div>{" "}
+            <div>pagenation</div>
           </>
         ) : (
           <></>

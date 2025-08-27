@@ -111,7 +111,7 @@ export const foodPrice = css`
 export const commentsRegister = css`
   box-sizing: border-box;
   border-radius: 1.5rem;
-  margin: 3rem 0;
+  margin-top: 3rem;
   padding: 3rem;
   width: 110rem;
   height: 24rem;
@@ -229,6 +229,7 @@ export const commentsContainer = css`
   flex-direction: column;
   align-items: center;
   border-radius: 1.5rem;
+  margin-top: 3rem;
   margin-bottom: 15rem;
   width: 110rem;
   background-color: #ffffff;
@@ -307,7 +308,7 @@ export const likeSelected = css`
     & > svg {
       font-size: 1.8rem;
       margin-right: 1rem;
-      color: #fa4f4fff;
+      color: #ffc421;
     }
 
     & > span {

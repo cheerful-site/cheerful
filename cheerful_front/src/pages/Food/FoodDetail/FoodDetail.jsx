@@ -18,6 +18,7 @@ import { useQueryClient } from "@tanstack/react-query";
 
 function FoodDetail(props) {
   const params = useParams();
+  const token = localStorage.getItem("AccessToken");
   const queryClient = useQueryClient();
   const [files, setFiles] = useState([]);
   const [inputValue, setInputValue] = useState("");
@@ -77,24 +78,29 @@ function FoodDetail(props) {
   };
 
   const handleLikeOnClick = (foodId) => {
-    console.log(queryClient.setQueriesData());
-    console.log(["foodDetail", foodId]);
-    console.log(queryClient.setQueryData(["foodDetail", foodId]));
-    reqFoodLike(foodId).then((response) => {
-      queryClient.setQueryData(["foodDetail", foodId], (prev) => {
-        return {
-          ...prev,
-          data: {
-            ...prev.data,
-            body: {
-              ...prev.data.body,
-              isLike: 1,
-              likeCount: prev.data.body.likeCount + 1,
+    // console.log(queryClient.setQueriesData());
+    // console.log(["foodDetail", foodId]);
+    // console.log(queryClient.setQueryData(["foodDetail", foodId]));
+
+    if (!!token) {
+      reqFoodLike(foodId).then((response) => {
+        queryClient.setQueryData(["foodDetail", foodId], (prev) => {
+          return {
+            ...prev,
+            data: {
+              ...prev.data,
+              body: {
+                ...prev.data.body,
+                isLike: 1,
+                likeCount: prev.data.body.likeCount + 1,
+              },
             },
-          },
-        };
+          };
+        });
       });
-    });
+    } else {
+      alert("로그인 후 이용해 주세요.");
+    }
   };
 
   const handleDislikeOnClick = (foodId) => {
@@ -102,21 +108,25 @@ function FoodDetail(props) {
     // console.log(["foodDetail", foodId]);
     // console.log(queryClient.setQueryData(["foodDetail", foodId]));
 
-    reqFoodDislike(foodId).then((response) => {
-      queryClient.setQueryData(["foodDetail", foodId], (prev) => {
-        return {
-          ...prev,
-          data: {
-            ...prev.data,
-            body: {
-              ...prev.data.body,
-              isLike: 0,
-              likeCount: prev.data.body.likeCount - 1,
+    if (!!token) {
+      reqFoodDislike(foodId).then((response) => {
+        queryClient.setQueryData(["foodDetail", foodId], (prev) => {
+          return {
+            ...prev,
+            data: {
+              ...prev.data,
+              body: {
+                ...prev.data.body,
+                isLike: 0,
+                likeCount: prev.data.body.likeCount - 1,
+              },
             },
-          },
-        };
+          };
+        });
       });
-    });
+    } else {
+      alert("로그인 후 이용해 주세요.");
+    }
   };
 
   return (
@@ -163,47 +173,52 @@ function FoodDetail(props) {
             </div>
           </div>
         </div>
-        <div css={s.commentsRegister}>
-          {/* 댓글 등록하기 */}
-          <span>{foodDetail?.user?.name}</span>
-          <div css={s.imgListContainer}>
-            {/* 이미지파일 등록 */}
-            {files.length < 5 && ( //파일 갯수
-              <div css={s.imgContainer}>
-                <div css={s.plus} onClick={handlePlusOnClick}>
-                  <FiPlus />
-                </div>
-              </div>
-            )}
-            {files.map(
-              (
-                file,
-                index // 파일 미리보기 및 삭제
-              ) => (
+        {token ? (
+          <div css={s.commentsRegister}>
+            {/* 댓글 등록하기 */}
+            <span>{foodDetail?.user?.name}</span>
+            <div css={s.imgListContainer}>
+              {/* 이미지파일 등록 */}
+              {files.length < 5 && ( //파일 갯수
                 <div css={s.imgContainer}>
-                  <div css={s.imgBox(`${file.dataUrl}`)}>
-                    <div css={s.fixButton}>
-                      <FiX onClick={() => handleImgDeleteOnClick(index)} />
-                    </div>
+                  <div css={s.plus} onClick={handlePlusOnClick}>
+                    <FiPlus />
                   </div>
                 </div>
-              )
-            )}
+              )}
+              {files.map(
+                (
+                  file,
+                  index // 파일 미리보기 및 삭제
+                ) => (
+                  <div css={s.imgContainer}>
+                    <div css={s.imgBox(`${file.dataUrl}`)}>
+                      <div css={s.fixButton}>
+                        <FiX onClick={() => handleImgDeleteOnClick(index)} />
+                      </div>
+                    </div>
+                  </div>
+                )
+              )}
+            </div>
+            <div css={s.registerTextArea}>
+              <textarea
+                name="content"
+                onChange={handleOnChange}
+                value={inputValue}
+                placeholder="내용을 작성해 주세요. (최소 5자)"
+              />
+            </div>
+            <div css={s.buttonLayout}>
+              <button css={s.registerButton} onClick={handleRegisterOnClick}>
+                등록하기
+              </button>
+            </div>
           </div>
-          <div css={s.registerTextArea}>
-            <textarea
-              name="content"
-              onChange={handleOnChange}
-              value={inputValue}
-              placeholder="내용을 작성해 주세요. (최소 5자)"
-            />
-          </div>
-          <div css={s.buttonLayout}>
-            <button css={s.registerButton} onClick={handleRegisterOnClick}>
-              등록하기
-            </button>
-          </div>
-        </div>
+        ) : (
+          <></>
+        )}
+
         <div css={s.commentsContainer}>
           {/* commentView */}
           {foodDetail?.foodComment?.map((comment) => (

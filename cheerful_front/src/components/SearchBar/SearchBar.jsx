@@ -3,6 +3,7 @@ import { FaSearch } from "react-icons/fa";
 import * as s from "./styles";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { reqSearchCommunity } from "../../api/searchApi/searchApi";
 
 function SearchBar(props) {
   const navigate = useNavigate();
@@ -13,7 +14,6 @@ function SearchBar(props) {
   };
 
   const handleSearchOnClick = () => {
-    console.log(inputValue);
     navigate(`/search/${inputValue}`);
   };
 
