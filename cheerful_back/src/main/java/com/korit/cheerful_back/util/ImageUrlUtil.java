@@ -55,7 +55,7 @@ public class ImageUrlUtil {
     return buildImageUrl(path, "foodComment", false);
   }
   public String notice(String path) {
-    return buildImageUrl(path, "notice");
+    return buildImageUrl(path, "notice", false);
   }
   public String noticeComment(String path) {
     return buildImageUrl(path, "noticeComment", false);

@@ -16,7 +16,7 @@
         <result property="likeCount" column="like_count" />
         <association property="user" resultMap="UserMap" />
         <association property="noticeCategory" resultMap="NoticeCategoryMap" />
-        <collection property="noticeImgs" javaType="list" resultMap="NoticeImgMap" />
+        <collection property="noticeImgs" javaType="list" resultMap="NoticeImgMap" notNullColumn="notice_img_id" />
     </resultMap>
 
     <resultMap id="UserMap" type="com.korit.cheerful_back.domain.user.User">
