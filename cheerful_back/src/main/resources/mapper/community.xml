@@ -494,4 +494,63 @@
             </if>
         </where>
     </select>
+
+<!--    홈화면에서 띄우는 card-->
+    <select id="findTopCommunity" resultMap="CommunityMap">
+        select
+            ct.community_id,
+            ct.community_category_id,
+            ct.user_id,
+            ct.community_title,
+            ct.community_content,
+            ct.created_at,
+            ct.community_views,
+
+            ut.user_id as ut_user_id,
+            ut.username,
+            ut.password,
+            ut.name,
+            ut.email,
+            ut.profile_img_path,
+            ut.role,
+            ut.provider,
+            ut.provider_id,
+            ut.created_at as ut_created_at,
+
+            cct.community_category_name,
+
+            ifnull(clc.like_count, 0) as like_count
+        from
+            community_tb ct
+            left outer join user_tb ut on(ut.user_id = ct.user_id)
+            left outer join community_category_tb cct on(cct.community_category_id = ct.community_category_id)
+            left outer join (select community_id, count(*) as like_count from community_like_tb group by community_id) clc on(clc.community_id = ct.community_id)
+        <where>
+            <choose>
+                <!-- categoryId == 1 이면 전체 -->
+                <when test="categoryId == 1">
+                    1 = 1
+                </when>
+                <otherwise>
+                    ct.community_category_id = #{categoryId}
+                </otherwise>
+            </choose>
+            <if test="excludeId != null">
+                and ct.community_id != #{excludeId}
+            </if>
+        </where>
+        order by
+            <choose>
+                <when test="orderBy == 'likes'">
+                    like_count desc, ct.community_views desc, ct.created_at desc
+                </when>
+                <when test="orderBy == 'views'">
+                    ct.community_views desc, like_count desc, ct.created_at desc
+                </when>
+                <otherwise>
+                    ct.community_views desc, like_count desc, ct.created_at desc
+                </otherwise>
+            </choose>
+        LIMIT #{limit}
+    </select>
 </mapper>

@@ -21,6 +21,9 @@ public interface CommunityMapper {
 
     Integer selectViews(@Param("categoryId") Integer categoryId, @Param("communityId") Integer communityId);
 
+    // Home 화면
+    List<Community> findTopCommunity(Integer categoryId, String orderBy, int limit, Integer excludeId);
+
     // admin전용 community
     List<Community> findAllBySearchOption(CommunitySearchOption communitySearchOption);
     int getCountOfSearchOption(CommunitySearchOption communitySearchOption);
