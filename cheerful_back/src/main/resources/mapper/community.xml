@@ -375,6 +375,7 @@
         </where>
     </select>
 
+
     <delete id="deleteByCommunityIds" parameterType="list">
         delete from community_tb
         where
@@ -389,4 +390,108 @@
         where
             community_id = #{communityId}
     </delete>
+
+
+    <select id="findBySearchOption" resultMap="CommunityMap">
+        select
+            *
+        from
+            (select
+                dense_rank() over(order by ct.created_at desc, ct.community_id desc) as community_number,
+                ct.community_id,
+                ct.community_category_id,
+                ct.user_id as ct_user_id,
+                ct.community_title,
+                ct.community_content,
+                ct.created_at as ct_created_at,
+                ct.community_views,
+
+                ut.user_id as ut_user_id,
+                ut.username,
+                ut.password,
+                ut.name,
+                ut.email,
+                ut.profile_img_path,
+                ut.role,
+                ut.provider,
+                ut.provider_id,
+                ut.created_at as ut_created_at,
+
+                cit.community_img_id,
+                cit.community_id as cit_community_id,
+                cit.seq,
+                cit.`img_path`,
+
+                cmt.community_comment_id,
+                cmt.community_id as cmt_community_id,
+                cmt.parent_comment_id,
+                cmt.parent_user_id,
+                cmt.user_id as cmt_user_id,
+                cmt.content,
+                cmt.created_at as cmt_created_at,
+
+                ifnull(clt.community_like_id, 0) as is_like,
+                ifnull(clc.like_count, 0) as like_count,
+                ifnull(cc.comments_count, 0) as comments_count
+            from
+                community_tb ct
+                left outer join user_tb ut on(ut.user_id = ct.user_id)
+                left outer join community_img_tb cit on(cit.community_id = ct.community_id)
+                left outer join community_like_tb clt on(clt.community_id = ct.community_id)
+                left outer join community_category_tb cct on(cct.community_category_id = ct.community_category_id)
+                left outer join (select community_id, count(*) as like_count from community_like_tb group by community_id) clc on(clc.community_id = ct.community_id)
+                left outer join (select community_id, count(*) as comments_count from community_comment_tb group by community_id) cc on(cc.community_id = ct.community_id)
+                left outer join community_comment_tb cmt on(cmt.community_id = ct.community_id)
+            <where>
+                <choose>
+                    <!-- categoryId == 1 이면 전체 -->
+                    <when test="categoryId == 1">
+                        1 = 1
+                    </when>
+                    <otherwise>
+                        ct.community_category_id = #{categoryId}
+                    </otherwise>
+                </choose>
+
+                <if test="searchText != null and searchText != ''">
+                    and (
+                    ct.community_title like concat('%', #{searchText}, '%')
+                    or ut.name like concat('%', #{searchText}, '%')
+                    )
+                </if>
+            </where>
+            order by
+            ct.created_at desc,
+            ct.community_id desc,
+            cit.seq) communities
+        where
+            community_number between #{startIndex} + 1 and #{endIndex}
+    </select>
+
+    <select id="getCountOfFindSearchOption" resultType="java.lang.Integer">
+        select
+            count(*)
+        from
+            community_tb ct
+            left outer join user_tb ut on(ut.user_id = ct.user_id)
+            left outer join community_category_tb cct on(cct.community_category_id = ct.community_category_id)
+        <where>
+            <choose>
+                <!-- categoryId == 1 이면 전체 -->
+                <when test="categoryId == 1">
+                    1 = 1
+                </when>
+                <otherwise>
+                    ct.community_category_id = #{categoryId}
+                </otherwise>
+            </choose>
+
+            <if test="searchText != null and searchText != ''">
+                and (
+                ct.community_title like concat('%', #{searchText}, '%')
+                or ut.name like concat('%', #{searchText}, '%')
+                )
+            </if>
+        </where>
+    </select>
 </mapper>
