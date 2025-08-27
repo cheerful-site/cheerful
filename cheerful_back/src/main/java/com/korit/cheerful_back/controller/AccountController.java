@@ -33,6 +33,7 @@ public class AccountController {
     if(principalUser == null) {
       body.put("authenticated", false);
       body.put("user", null);
+      body.put("myStatus", null);
       return ResponseEntity.ok(ResponseDto.success(body));
     }
     User user = principalUser.getUser();
@@ -53,13 +54,10 @@ public class AccountController {
 
     body.put("authenticated", true);
     body.put("user", userView);
+    body.put("myStatus", userService.getMyWriteStatus());
 
     return ResponseEntity.ok(ResponseDto.success(body));
 
   }
 
-  @GetMapping
-  public ResponseEntity<ResponseDto<?>> myStatus() {
-    return ResponseEntity.ok(ResponseDto.success(userService.getMyWriteStatus()));
-  }
 }
