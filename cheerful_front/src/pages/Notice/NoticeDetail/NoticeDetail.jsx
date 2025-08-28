@@ -129,7 +129,7 @@ function NoticeDetail(props) {
     //   console.log(pair[0], pair[1]);
     // }
 
-    reqNoticeRegisterComment(formData, detailContent?.noticeId);
+    await reqNoticeRegisterComment(formData, detailContent?.noticeId);
     setInputValue("");
     setFiles([]);
     await notice.refetch();

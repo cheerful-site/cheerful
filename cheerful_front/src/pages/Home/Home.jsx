@@ -7,43 +7,29 @@ import { GoogleMap, MarkerF } from "@react-google-maps/api";
 import Footer from "../../components/Footer/Footer";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import usePrincipalQuery from "../../queries/PrincipalQuery/usePrincipalQuery";
+import useHomeBestFoodQuery from "../../queries/HomeQuery/useHomeBestFoodQuery";
+import useHomeBestCommunityQuery from "../../queries/HomeQuery/useHomeBestCommunityQuery";
+import { useNavigate } from "react-router-dom";
+import noImage from "../../icons/Frame2.png";
 
 function Home(props) {
   const principal = usePrincipalQuery();
-  console.log(principal?.data?.data?.body);
+  const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
-  const foodImg = [
-    {
-      id: 1,
-      img: "https://thumbnail8.coupangcdn.com/thumbnails/remote/320x320ex/image/retail/images/148035108744683-13d569be-dfc6-4f40-b2f0-2331719e0063.jpg",
-      foodName: "덴탈헬스 강아지 덴탈껌",
-      category: "간식",
-      price: "12,000원",
-    },
-    {
-      id: 2,
-      img: "https://thumbnail6.coupangcdn.com/thumbnails/remote/320x320ex/image/retail/images/70337949887090-67ae0e15-ff23-4ec0-a34f-ba33a635c1a4.jpg",
-      foodName: "탐사 강아지 간식 리얼 촉촉 큐브 져키",
-      category: "간식",
-      price: "25,000원",
-    },
-    {
-      id: 3,
-      img: "https://thumbnail10.coupangcdn.com/thumbnails/remote/320x320ex/image/retail/images/2020/10/21/0/5/1f9eb328-ba16-496d-9591-2aecdf5b6f0a.jpg",
-      foodName: "청담닥터스랩 강아지 데일리 솔루션 기능성 사료",
-      category: "사료",
-      price: "50,000원",
-    },
-    {
-      id: 4,
-      img: "https://thumbnail7.coupangcdn.com/thumbnails/remote/320x320ex/image/retail/images/1196781072401681-b8373db1-89b4-4fbd-9c9a-0e1776839bd3.jpg",
-      foodName: "마이펫닥터 강아지 시그니처 유기농 기능성 사료",
-      category: "사료",
-      price: "45,000원",
-    },
-  ];
+  const bestFood = useHomeBestFoodQuery();
+  const bestCommunity = useHomeBestCommunityQuery();
+
+  const foodImg = bestFood?.data?.data?.body;
   const visibleCount = 3;
-  const arrays = [1, 2, 3, 4];
+  const journal = [
+    bestCommunity?.data?.data?.body.mostLiked,
+    bestCommunity?.data?.data?.body.mostViewed,
+    bestCommunity?.data?.data?.body.bestFoster,
+    bestCommunity?.data?.data?.body.bestMissing,
+  ];
+
+  console.log(foodImg);
+  // console.log(journal);
 
   const slideNext = () => {
     if (currentIndex < foodImg.length - visibleCount) {
@@ -65,6 +51,14 @@ function Home(props) {
       setCenter({ lat: latitude, lng: longitude });
     });
   }, []);
+
+  const handleGotoCommunityOnClick = (categoryId, id) => {
+    navigate(`/community/${categoryId}/${id}`);
+  };
+
+  const handleGoToFoodOnClick = (id) => {
+    navigate(`/food/${id}`);
+  };
 
   return (
     <>
@@ -96,34 +90,69 @@ function Home(props) {
             <div css={s.reviewContainer}>
               <span>똥꼬발랄 탐방일지</span>
               <div css={s.foodReviewContainer}>
-                {arrays.map((r, index) => {
-                  return (
-                    <div css={s.foodReview} key={index}>
-                      <span>Food Name</span>
-                      <span>⭐️ ⭐️ ⭐️ ⭐️ ⭐️</span>
-                      <span>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                        sed do eiusmod tempor
-                      </span>
-                      <span>xxxx.xx.xx</span>
+                {/* best 글 표시 */}
+                {journal.map((popular, index) => (
+                  <div css={s.foodReview} key={popular?.communityId}>
+                    <div
+                      onClick={() =>
+                        handleGotoCommunityOnClick(
+                          popular?.communityCategoryId,
+                          popular?.communityId
+                        )
+                      }>
+                      <img
+                        src={
+                          popular?.communityImgs?.length === 0
+                            ? noImage
+                            : popular?.communityImgs[0]?.imgUrl
+                        }
+                        alt=""
+                      />
                     </div>
-                  );
-                })}
+                    <div>
+                      <div>
+                        <span
+                          onClick={() =>
+                            handleGotoCommunityOnClick(
+                              popular?.communityCategoryId,
+                              popular?.communityId
+                            )
+                          }>
+                          {popular?.title}
+                        </span>
+                        <span>{popular?.user?.name}</span>
+                      </div>
+                      <span>{popular?.content}</span>
+                      <span>{popular?.createdAt.slice(0, 10)}</span>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
 
           <div css={s.foodImgContainer}>
+            {/* 인기 푸드 표시  */}
             {foodImg
-              .slice(currentIndex, currentIndex + visibleCount)
-              .map((info) => {
+              ?.slice(currentIndex, currentIndex + visibleCount)
+              ?.map((food) => {
                 return (
-                  <div key={info.id}>
-                    <img src={info.img} alt="" />
+                  <div key={food?.foodId}>
+                    <img
+                      src={
+                        food?.foodImgs.lenght === 0
+                          ? noImage
+                          : food?.foodImgs[0].imgUrl
+                      }
+                      alt=""
+                      onClick={() => handleGoToFoodOnClick(food?.foodId)}
+                    />
                     <div css={s.foodImgInfo}>
-                      <span>{info.foodName}</span>
-                      <span>{info.category}</span>
-                      <span>{info.price}</span>
+                      <span onClick={() => handleGoToFoodOnClick(food?.foodId)}>
+                        {food?.title}
+                      </span>
+                      <span>{food?.foodCategoryId?.foodCategoryName}</span>
+                      <span>{food?.price.toLocaleString()}원</span>
                     </div>
                   </div>
                 );
