@@ -1,6 +1,7 @@
 package com.korit.cheerful_back.service;
 
 import com.korit.cheerful_back.util.AppProperties;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -83,4 +84,18 @@ public class FileService {
         file.delete();
     }
 
+
+//    private static final Set<String> DEFAULT_NAMES = Set.of(
+//        "default.png", "default.jpg", "default_profile.png", "default_profile.jpg"
+//    );
+//
+//    public boolean deleteFile(String imageConfigName, String fileName) {
+//        if(fileName == null || fileName.isBlank()) return false;
+//        String lower = fileName.toLowerCase();
+//        if(DEFAULT_NAMES.contains(lower) || lower.startsWith("default")) return false;
+//
+////        try {
+////            Path base =
+////        }
+//    }
 }

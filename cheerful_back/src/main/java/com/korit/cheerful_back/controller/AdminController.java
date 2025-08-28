@@ -9,6 +9,7 @@ import com.korit.cheerful_back.dto.response.ResponseDto;
 import com.korit.cheerful_back.security.model.PrincipalUtil;
 import com.korit.cheerful_back.service.AdminService;
 import com.korit.cheerful_back.util.ImageUrlUtil;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -106,7 +107,7 @@ public class AdminController {
         food 글 등록
      */
     @PostMapping("/foods")
-    public ResponseEntity<ResponseDto<?>> register(@ModelAttribute FoodRegisterReqDto dto) {
+    public ResponseEntity<ResponseDto<?>> register(@Valid @ModelAttribute FoodRegisterReqDto dto) {
         System.out.println(dto);
         adminService.registerFood(dto);
         return ResponseEntity.ok(ResponseDto.success("food 글을 등록했습니다."));
@@ -145,7 +146,7 @@ public class AdminController {
         notice 글 등록
      */
     @PostMapping("/notice/{categoryId}")
-    public ResponseEntity<ResponseDto<?>> register(@ModelAttribute NoticeRegisterReqDto dto) {
+    public ResponseEntity<ResponseDto<?>> register(@Valid @ModelAttribute NoticeRegisterReqDto dto) {
         adminService.registerNotice(dto);
         return ResponseEntity.ok(ResponseDto.success("notice 글을 등록하였습니다."));
     }
