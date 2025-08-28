@@ -46,7 +46,7 @@ function AdminManage(props) {
   const user = principalQuery?.data?.data?.body?.user || [];
   const userStatus = principalQuery?.data?.data?.body?.myStatus || [];
 
-  const { page } = usePageStore();
+  const { page, setPage } = usePageStore();
 
   const adminUsers = useAdminUsersQuery(page, 10, inputValue);
   const adminCommunity = useAdminCommunityQuery(
@@ -139,7 +139,7 @@ function AdminManage(props) {
   };
 
   useEffect(() => {
-    //페이지 이동시 1번 페이지로 이동하도록
+    setPage(1);
   }, [params.categoryId]);
 
   return (

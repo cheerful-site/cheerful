@@ -9,6 +9,7 @@ import useSearchCommunityQuery from "../../queries/SearchQuery/useSearchCommunit
 import { useSearchTextStore } from "../../stores/useSearchTextStore";
 import Post from "../../components/Post/Post";
 import PageNation from "../../components/PageNation/PageNation";
+import notFound from "../../../logo/cheerful_searchNotfound.png";
 
 function Search(props) {
   const params = useParams();
@@ -78,6 +79,7 @@ function Search(props) {
     navigate(`/food/${foodId}`);
   };
 
+  console.log(searchData.headerTag === "food");
   return (
     <>
       <div css={s.layout(!!searchText ? true : false)}>
@@ -100,8 +102,9 @@ function Search(props) {
                 {/* food Search Result */}
                 <div css={s.searchResult}>
                   {searchFoodList?.content?.length === 0 ? (
-                    <div css={s.searchTextNotFound}>
-                      <span>검색 결과를 찾을 수 없습니다.</span>
+                    <div css={s.searchFoodTextNotFound}>
+                      <img src={notFound} alt="" />
+                      <span>게시물을 찾을 수 없습니다.</span>
                     </div>
                   ) : (
                     <div css={s.foodContainer}>
@@ -148,7 +151,8 @@ function Search(props) {
                 {/* Community Search Result */}
                 {searchCommunityList?.content?.length === 0 ? (
                   <div css={s.searchTextNotFound}>
-                    <span>검색 결과를 찾을 수 없습니다.</span>
+                    <img src={notFound} alt="" />
+                    <span>게시물을 찾을 수 없습니다.</span>
                   </div>
                 ) : (
                   <>

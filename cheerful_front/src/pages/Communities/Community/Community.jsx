@@ -24,6 +24,10 @@ function Community(props) {
     { id: 7, title: "임보 / 입양", category: 7 },
   ];
 
+  useEffect(() => {
+    setPage(1);
+  }, [category]);
+
   console.log(communityList.data?.data.body);
 
   return (
