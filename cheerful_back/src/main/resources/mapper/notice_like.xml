@@ -16,7 +16,7 @@
             notice_like_tb
         where
             notice_id = #{noticeId}
-            and user_Id = #{userId}
+            and user_id = #{userId}
     </delete>
 
     <select id="getLikeCount" resultType="java.lang.Integer">
