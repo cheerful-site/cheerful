@@ -26,7 +26,7 @@ export const communityOrFood = (isSelected) => css`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 6rem;
+  margin-bottom: 4rem;
   width: 94rem;
 
   & > div {
@@ -90,7 +90,7 @@ export const foodContainer = css`
 export const categoryList = css`
   display: flex;
   justify-content: space-between;
-  margin-bottom: 5rem;
+  margin-bottom: 4rem;
   width: 94rem;
   height: 4rem;
 `;
@@ -100,6 +100,7 @@ export const category = (isSeleted) => css`
   justify-content: center;
   align-items: center;
   border: 0.1rem solid ${isSeleted ? "#ffc421" : "#f5f6f8"};
+  box-sizing: border-box;
   border-radius: 1rem;
   width: 10rem;
   height: 4rem;
@@ -115,13 +116,43 @@ export const searchResult = css`
 
 export const searchTextNotFound = css`
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin-bottom: 20rem;
   width: 100%;
-  height: 30rem;
+  height: 50rem;
+
+  & > img {
+    width: 55rem;
+    height: 46rem;
+  }
+
   & > span {
-    font-size: 2rem;
-    font-weight: 800;
-    color: #22222260;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #222222;
+  }
+`;
+
+export const searchFoodTextNotFound = css`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 8rem;
+  margin-bottom: 20rem;
+  width: 100%;
+  height: 50rem;
+
+  & > img {
+    width: 55rem;
+    height: 46rem;
+  }
+
+  & > span {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #222222;
   }
 `;

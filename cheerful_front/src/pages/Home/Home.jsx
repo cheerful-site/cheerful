@@ -28,7 +28,7 @@ function Home(props) {
     bestCommunity?.data?.data?.body.bestMissing,
   ];
 
-  console.log(foodImg);
+  // console.log(foodImg);
   // console.log(journal);
 
   const slideNext = () => {
@@ -100,6 +100,7 @@ function Home(props) {
                           popular?.communityId
                         )
                       }>
+                      {/* 111 */}
                       <img
                         src={
                           popular?.communityImgs?.length === 0
@@ -110,6 +111,7 @@ function Home(props) {
                       />
                     </div>
                     <div>
+                      {/* 222 */}
                       <div>
                         <span
                           onClick={() =>
@@ -120,10 +122,12 @@ function Home(props) {
                           }>
                           {popular?.title}
                         </span>
-                        <span>{popular?.user?.name}</span>
                       </div>
                       <span>{popular?.content}</span>
-                      <span>{popular?.createdAt.slice(0, 10)}</span>
+                      <div>
+                        <span>{popular?.user?.name}</span>
+                        <span>{popular?.createdAt.slice(0, 10)}</span>
+                      </div>
                     </div>
                   </div>
                 ))}

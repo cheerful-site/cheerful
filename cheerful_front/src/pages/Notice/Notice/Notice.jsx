@@ -1,7 +1,7 @@
 /**@jsxImportSource @emotion/react */
 import { Link, useNavigate, useParams } from "react-router-dom";
 import * as s from "./styles";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Footer from "../../../components/Footer/Footer";
 import useNoticeListQuery from "../../../queries/NoticeQuery/useNoticeListQuery";
 import CategoryComponent from "../../../components/CategoryComponent/CategoryComponent";
@@ -24,6 +24,10 @@ function Notice(props) {
     { id: 2, title: "매거진", category: 2 },
     { id: 3, title: "이벤트", category: 3 },
   ];
+
+  useEffect(() => {
+    setPage(1);
+  }, [category]);
 
   const handleOnClick = (categoryId, noticeId) => {
     console.log(categoryId, noticeId);

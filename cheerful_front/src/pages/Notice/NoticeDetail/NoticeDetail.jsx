@@ -96,7 +96,7 @@ function NoticeDetail(props) {
   };
   const handleDislikeOnClick = (categoryId, noticeId) => {
     if (!!token) {
-      reqNoticeDislike(categoryId, noticeId).then((response) => {
+      reqNoticeDislike(noticeId).then((response) => {
         queryClient.setQueryData(
           ["noticeDetail", categoryId, noticeId],
           (prev) => {

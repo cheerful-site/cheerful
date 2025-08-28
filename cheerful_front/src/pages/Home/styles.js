@@ -169,28 +169,9 @@ export const foodReview = css`
     flex-direction: column;
     flex-grow: 1;
 
-    & > span:nth-of-type(1) {
-      margin: 1rem 0;
-      height: 5rem;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    & > span:nth-of-type(2) {
-      text-align: right;
-    }
-  }
-
-  & > div:nth-of-type(2) > div {
-    display: flex;
-    justify-content: space-between;
-
-    & > span:nth-of-type(1) {
+    & > div:nth-of-type(1) {
       font-size: 1.6rem;
       font-weight: 700;
-      color: #222222;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -200,9 +181,30 @@ export const foodReview = css`
       }
     }
 
+    & > span {
+      margin: 1rem 0;
+      width: 100%;
+      height: 4rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  & > div:nth-of-type(2) > div:nth-of-type(2) {
+    display: flex;
+    justify-content: space-between;
+
+    & > span:nth-of-type(1) {
+      font-size: 1.2rem;
+      color: #000000;
+    }
+
     & > span:nth-of-type(2) {
-      font-size: 1.4rem;
-      font-weight: 350;
+      font-size: 1.2rem;
+      font-weight: 400;
       color: #222222;
     }
   }
