@@ -85,11 +85,11 @@ public class AdminController {
     /*
         community 댓글 삭제
      */
-//    @DeleteMapping("/communities/{communityId}/comments/{userId}")
-//    public ResponseEntity<ResponseDto<?>> deleteComment(@PathVariable Integer communityId, @PathVariable Integer userId) {
-//        adminService.deleteComment(communityId, userId);
-//        return ResponseEntity.ok(ResponseDto.success("community 댓글을 삭제했습니다."));
-//    }
+    @DeleteMapping("/communities/{commentId}/{userId}")
+    public ResponseEntity<ResponseDto<?>> deleteCommunityComment(@PathVariable Integer commentId, @PathVariable Integer userId) {
+        adminService.deleteCommunityComment(commentId, userId);
+        return ResponseEntity.ok(ResponseDto.success("community 댓글을 삭제했습니다."));
+    }
 
     /*
         food 조회
@@ -132,6 +132,15 @@ public class AdminController {
     }
 
     /*
+        food 댓글 삭제
+     */
+    @DeleteMapping("/foods/{commentId}/{userId}")
+    public ResponseEntity<ResponseDto<?>> deleteFoodComment(@PathVariable Integer commentId, @PathVariable Integer userId) {
+        adminService.deleteFoodComment(commentId, userId);
+        return ResponseEntity.ok(ResponseDto.success("food 댓글을 삭제했습니다."));
+    }
+
+    /*
         notice 조회
      */
     @GetMapping("/notice/{categoryId}")
@@ -168,5 +177,14 @@ public class AdminController {
         System.out.println(dto);
         adminService.modifyNotice(dto);
         return ResponseEntity.ok(ResponseDto.success("notice 정보를 수정했습니다."));
+    }
+
+    /*
+        notice event 댓글 삭제
+     */
+    @DeleteMapping("/notice/{commentId}/{userId}")
+    public ResponseEntity<ResponseDto<?>> deleteNoticeComment(@PathVariable Integer commentId, @PathVariable Integer userId) {
+        adminService.deleteNoticeComment(commentId, userId);
+        return ResponseEntity.ok(ResponseDto.success("notice 댓글을 삭제했습니다."));
     }
 }

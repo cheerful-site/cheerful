@@ -14,5 +14,5 @@ public interface CommunityCommentMapper {
     int getCountByCommentId(Integer communityId);
 
 //    // admin전용 기능
-//    int deleteByCommentId(Integer communityId, Integer userId);
+    int deleteByCommentId(Integer commentId, Integer userId);
 }

@@ -10,12 +10,16 @@ import com.korit.cheerful_back.domain.food.Food;
 import com.korit.cheerful_back.domain.food.FoodAdminRow;
 import com.korit.cheerful_back.domain.food.FoodMapper;
 import com.korit.cheerful_back.domain.food.FoodSearchOption;
+import com.korit.cheerful_back.domain.foodComment.FoodCommentMapper;
+import com.korit.cheerful_back.domain.foodCommentImg.FoodCommentImg;
+import com.korit.cheerful_back.domain.foodCommentImg.FoodCommentImgMapper;
 import com.korit.cheerful_back.domain.foodImg.FoodImg;
 import com.korit.cheerful_back.domain.foodImg.FoodImgMapper;
 import com.korit.cheerful_back.domain.notice.Notice;
 import com.korit.cheerful_back.domain.notice.NoticeAdminRow;
 import com.korit.cheerful_back.domain.notice.NoticeMapper;
 import com.korit.cheerful_back.domain.notice.NoticeSearchOption;
+import com.korit.cheerful_back.domain.noticeComment.NoticeCommentMapper;
 import com.korit.cheerful_back.domain.noticeImg.NoticeImg;
 import com.korit.cheerful_back.domain.noticeImg.NoticeImgMapper;
 import com.korit.cheerful_back.domain.user.User;
@@ -62,6 +66,9 @@ public class AdminService {
     private final NoticeImgMapper noticeImgMapper;
     private final ImageUrlUtil imageUrlUtil;
     private final CommunityCommentMapper communityCommentMapper;
+    private final FoodCommentMapper foodCommentMapper;
+    private final FoodCommentImgMapper foodCommentImgMapper;
+    private final NoticeCommentMapper noticeCommentMapper;
 
     public TokenDto login(AdminLoginReqDto dto) {
 
@@ -177,9 +184,9 @@ public class AdminService {
     /*
         community 댓글 삭제
      */
-//    public void deleteComment(Integer communityId, Integer userId) {
-//        communityCommentMapper.deleteByCommentId(communityId, userId);
-//    }
+    public void deleteCommunityComment(Integer commentId, Integer userId) {
+        communityCommentMapper.deleteByCommentId(commentId, userId);
+    }
 
     /*
         admin 전용 food 목록 조회
@@ -333,6 +340,15 @@ public class AdminService {
         }
     }
 
+    /*
+        food 댓글 삭제
+     */
+    public void deleteFoodComment(Integer commentId, Integer userId) {
+
+        foodCommentMapper.deleteByCommentId(commentId, userId);
+
+    }
+
 
     /*
         admin 전용 notice 페이징 목록 조회
@@ -483,6 +499,13 @@ public class AdminService {
 
             noticeMapper.insertNoticeImages(noticeImgs);
         }
+    }
+
+    /*
+        notice 댓글 삭제
+     */
+    public void deleteNoticeComment(Integer commentId, Integer userId) {
+        noticeCommentMapper.deleteByCommentId(commentId, userId);
     }
 
 }

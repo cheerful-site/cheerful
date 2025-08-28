@@ -235,6 +235,7 @@ public class CommunityService {
     /*
         댓글 작성
      */
+    @Transactional(rollbackFor = Exception.class)
     public Integer registerComment(CommunityCommentRegisterReqDto dto) {
         Integer userId = principalUtil.getPrincipalUser().getUser().getUserId();
         communityCommentMapper.insert(dto.toEntity(userId));

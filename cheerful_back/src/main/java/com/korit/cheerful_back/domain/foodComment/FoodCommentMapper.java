@@ -10,4 +10,6 @@ public interface FoodCommentMapper {
   List<FoodComment> findAllByFoodId(Integer foodId, Integer userId);
 
   int getCountByCommentId(Integer foodId);
+
+  int deleteByCommentId(Integer commentId, Integer userId);
 }

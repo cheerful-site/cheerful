@@ -121,9 +121,9 @@
     </select>
 
 <!--    admin comment delete-->
-<!--    <delete id="deleteByCommentId">-->
-<!--        delete from community_comment_tb-->
-<!--        where community_id = #{communityId}-->
-<!--    </delete>-->
+    <delete id="deleteByCommentId">
+        delete from community_comment_tb
+        where community_comment_id = #{commentId}
+    </delete>
 
 </mapper>
