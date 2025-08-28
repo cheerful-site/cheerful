@@ -99,7 +99,7 @@ export const imgContainer = css`
   width: 84rem;
   height: 28rem;
 
-  & > img {
+  & > a > img {
     border: 0.4rem solid #ffc421;
     border-radius: 1.5rem;
     width: 25rem;
@@ -303,33 +303,6 @@ export const mapContainer = css`
   justify-content: center;
   align-items: center;
   margin-top: 10rem;
-`;
-
-export const mapCategory = css`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  & > div {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 0.2rem solid #f5f6f8;
-    border-radius: 1.5rem;
-    width: 11rem;
-    height: 4rem;
-
-    &:hover {
-      border: 0.2rem solid #ffc421;
-      transition: 0.2s ease-in-out;
-      color: #ffc421;
-      cursor: pointer;
-    }
-  }
-
-  & > div:nth-of-type(2) {
-    margin: 0 10rem;
-  }
 `;
 
 export const googleMap = css`
