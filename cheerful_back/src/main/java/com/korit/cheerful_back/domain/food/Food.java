@@ -24,6 +24,7 @@ public class Food {
     private String content;
     private Integer price;
     private LocalDateTime createdAt;
+    private String foodAddress;
     private Integer isLike;
     private Integer likeCount;
     private Integer commentCount;

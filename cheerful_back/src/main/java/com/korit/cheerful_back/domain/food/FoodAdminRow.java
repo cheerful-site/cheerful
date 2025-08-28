@@ -19,6 +19,7 @@ public class FoodAdminRow {
   private String content;
   private Integer price;
   private LocalDateTime createdAt;
+  private String foodAddress;
   private String foodCategoryName;
   private String username;
   private String name;

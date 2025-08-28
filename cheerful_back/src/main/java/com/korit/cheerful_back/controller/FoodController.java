@@ -89,4 +89,12 @@ public class FoodController {
     return ResponseEntity.ok(ResponseDto.success("좋아요 취소"));
   }
 
+  /*
+    food 구매 링크
+   */
+  @GetMapping("/{foodId}/purchase")
+  public ResponseEntity<ResponseDto<?>> getAddressLink(@PathVariable Integer foodId) {
+    return ResponseEntity.ok(ResponseDto.success(foodService.getFoodContent(foodId)));
+  }
+
 }
