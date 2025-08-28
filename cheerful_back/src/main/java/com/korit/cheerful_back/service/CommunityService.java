@@ -147,6 +147,7 @@ public class CommunityService {
         Integer totalPages = (int) Math.ceil(totalElements.longValue() / size.doubleValue());
         Boolean isLast = page.equals(totalPages);
 
+        // 이미지
         List<Community> contentWithUrls = contents.stream()
             .peek(c -> {
                 List<CommunityImg> imgs = c.getCommunityImgs();

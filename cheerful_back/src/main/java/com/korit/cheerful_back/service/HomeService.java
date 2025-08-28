@@ -2,6 +2,7 @@ package com.korit.cheerful_back.service;
 
 import com.korit.cheerful_back.domain.community.Community;
 import com.korit.cheerful_back.domain.community.CommunityMapper;
+import com.korit.cheerful_back.domain.communityImg.CommunityImg;
 import com.korit.cheerful_back.domain.food.Food;
 import com.korit.cheerful_back.domain.food.FoodMapper;
 import com.korit.cheerful_back.domain.foodImg.FoodImg;
@@ -25,15 +26,31 @@ public class HomeService {
 
   public CommunityHomeDto getCommunityCards() {
     var mostLiked = one(communityMapper.findTopCommunity(1, "likes", 1, null));
+    setCommunityImgs(mostLiked);
+
     var mostViewed = one(communityMapper.findTopCommunity(1, "views", 1, mostLiked != null ? mostLiked.getCommunityId() : null));
+    setCommunityImgs(mostViewed);
+
     var bestMissing = one(communityMapper.findTopCommunity(MISSING_ID, "mix", 1, null));
+    setCommunityImgs(bestMissing);
+
     var bestFoster = one(communityMapper.findTopCommunity(FOSTER_ID, "mix", 1, null));
+    setCommunityImgs(bestFoster);
 
     return new CommunityHomeDto(mostLiked, mostViewed, bestMissing, bestFoster);
   }
 
   private Community one(List<Community> list) {
     return list.isEmpty() ? null : list.getFirst();
+  }
+
+  private void setCommunityImgs(Community community) {
+    if(community == null) return;
+    List<CommunityImg> imgs = community.getCommunityImgs();
+    if(imgs != null && !imgs.isEmpty()) {
+      imgs.sort(Comparator.comparingInt(CommunityImg::getSeq));
+      imgs.forEach(img -> img.setImgUrl(imageUrlUtil.community(img.getImgPath())));
+    }
   }
 
   public List<Food> getFoodCards() {
