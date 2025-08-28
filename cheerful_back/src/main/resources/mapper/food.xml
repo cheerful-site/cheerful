@@ -12,6 +12,7 @@
         <result property="content" column="food_content" />
         <result property="price" column="food_price" />
         <result property="createdAt" column="created_at" />
+        <result property="foodAddress" column="food_address" />
         <result property="isLike" column="is_like" />
         <result property="likeCount" column="like_count" />
         <result property="commentCount" column="comments_count" />
@@ -54,6 +55,7 @@
         <result property="content"      column="food_content"/>
         <result property="price"        column="food_price"/>
         <result property="createdAt"        column="created_at"/>
+        <result property="foodAddress"      column="food_address" />
         <result property="foodCategoryName" column="food_category_name"/>
         <result property="username"         column="username"/>
         <result property="name"             column="name"/>
@@ -85,6 +87,7 @@
                 ft.food_title,
                 ft.food_content,
                 ft.food_price,
+                ft.food_address,
                 ft.created_at,
 
                 fct.food_category_name,
@@ -149,6 +152,7 @@
             ft.food_title,
             ft.food_content,
             ft.food_price,
+            ft.food_address,
             ft.created_at,
 
             fct.food_category_name,
@@ -200,6 +204,7 @@
             ft.food_title,
             ft.food_content,
             ft.food_price,
+            ft.food_address,
             ft.created_at,
             fct.food_category_name,
 
@@ -342,6 +347,7 @@
             ft.food_title,
             ft.food_content,
             ft.food_price,
+            ft.food_address,
             ft.created_at,
 
             fct.food_category_name,
