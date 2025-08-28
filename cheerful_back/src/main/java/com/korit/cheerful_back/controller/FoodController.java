@@ -4,6 +4,7 @@ import com.korit.cheerful_back.dto.food.FoodRegisterReqDto;
 import com.korit.cheerful_back.dto.food.FoodsCommentRegisterReqDto;
 import com.korit.cheerful_back.dto.response.ResponseDto;
 import com.korit.cheerful_back.service.FoodService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -65,7 +66,7 @@ public class FoodController {
     댓글 등록 + 이미지 추가
    */
   @PostMapping("/{foodId}/comments")
-  public ResponseEntity<ResponseDto<?>> registerFoodComment(@ModelAttribute FoodsCommentRegisterReqDto dto) {
+  public ResponseEntity<ResponseDto<?>> registerFoodComment(@Valid @ModelAttribute FoodsCommentRegisterReqDto dto) {
 //    System.out.println(dto);
     foodService.registerComment(dto);
     return ResponseEntity.ok(ResponseDto.success("댓글을 등록하였습니다."));

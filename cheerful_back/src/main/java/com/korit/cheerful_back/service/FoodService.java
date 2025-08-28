@@ -144,6 +144,11 @@ public class FoodService {
 
     Integer userId = principalUtil.getPrincipalUser().getUser().getUserId();
 
+    // content 유효성 검사
+    if (dto.getContent() == null || dto.getContent().trim().isEmpty()) {
+      throw new IllegalArgumentException("내용이 없습니다.");
+    }
+
     FoodComment comment = FoodComment.builder()
         .userId(userId)
         .foodId(dto.getFoodId())
