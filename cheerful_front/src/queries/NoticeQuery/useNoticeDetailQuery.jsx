@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import React from "react";
 import { reqNoticeDetail } from "../../api/noticeApi/noticeApi";
 
 function useNoticeDetailQuery(categoryId, noticeId) {

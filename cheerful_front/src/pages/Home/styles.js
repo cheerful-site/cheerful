@@ -145,29 +145,66 @@ export const foodReviewContainer = css`
 
 export const foodReview = css`
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 0.5rem 3rem;
+  align-items: center;
+  padding: 0.5rem 1.5rem;
   border: 0.2rem solid #22222230;
   border-radius: 1.5rem;
 
-  & > span {
-    margin-bottom: 0.5rem;
+  & > div:nth-of-type(1) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 2rem;
+    cursor: pointer;
+
+    & > img {
+      border-radius: 1rem;
+      width: 12rem;
+      height: 12rem;
+    }
   }
 
-  & > span:nth-of-type(1) {
-    font-size: 1.6rem;
-    font-weight: 700;
+  & > div:nth-of-type(2) {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+
+    & > span:nth-of-type(1) {
+      margin: 1rem 0;
+      height: 5rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    & > span:nth-of-type(2) {
+      text-align: right;
+    }
   }
 
-  & > span:nth-of-type(3) {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
+  & > div:nth-of-type(2) > div {
+    display: flex;
+    justify-content: space-between;
 
-  & > span:nth-of-type(4) {
-    text-align: end;
+    & > span:nth-of-type(1) {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #222222;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      &:hover {
+        text-decoration: underline;
+        cursor: pointer;
+      }
+    }
+
+    & > span:nth-of-type(2) {
+      font-size: 1.4rem;
+      font-weight: 350;
+      color: #222222;
+    }
   }
 `;
 
@@ -191,6 +228,7 @@ export const foodImgContainer = css`
     & > img {
       width: 100%;
       height: 18rem;
+      cursor: pointer;
     }
   }
 
@@ -236,6 +274,11 @@ export const foodImgInfo = css`
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 
   & > span:nth-of-type(2) {

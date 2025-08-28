@@ -76,7 +76,7 @@ function FoodDetail(props) {
     //   console.log(pair[0], pair[1]);
     // }
 
-    reqFoodRegisterComment(formData, foodDetail?.foodId);
+    await reqFoodRegisterComment(formData, foodDetail?.foodId);
     setInputValue("");
     await food.refetch();
   };
@@ -144,14 +144,15 @@ function FoodDetail(props) {
               body: {
                 ...prev.data.body,
                 foodComment: prev.data.body.foodComment.map((comment) => {
-                  console.log(comment);
-                  if (comment.foodId === Number(foodId)) {
+                  console.log(comment?.foodCommentId === Number(foodCommentId));
+                  if (comment.foodCommentId === Number(foodCommentId)) {
                     return {
                       ...comment,
                       isLike: 1,
                       likeCount: comment.likeCount + 1,
                     };
                   }
+                  return comment;
                 }),
               },
             },
@@ -174,14 +175,15 @@ function FoodDetail(props) {
               body: {
                 ...prev.data.body,
                 foodComment: prev.data.body.foodComment.map((comment) => {
-                  // console.log(comment);
-                  if (comment.foodId === Number(foodId)) {
+                  console.log(comment?.foodCommentId === Number(foodCommentId));
+                  if (comment.foodCommentId === Number(foodCommentId)) {
                     return {
                       ...comment,
                       isLike: 0,
                       likeCount: comment.likeCount - 1,
                     };
                   }
+                  return comment;
                 }),
               },
             },

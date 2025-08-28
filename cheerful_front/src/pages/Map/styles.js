@@ -8,7 +8,7 @@ export const layout = css`
   background-color: #f2f4f8;
 `;
 
-export const noticeTitle = css`
+export const mapTitle = css`
   display: flex;
   flex-direction: column;
   align-items: center;

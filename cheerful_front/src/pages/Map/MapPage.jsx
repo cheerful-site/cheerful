@@ -27,7 +27,7 @@ function MapPage(props) {
   console.log(category);
   return (
     <div css={s.layout}>
-      <div css={s.noticeTitle}>
+      <div css={s.mapTitle}>
         <div>
           우리 동네, <span>반려 생활 지킴</span>이 지도
         </div>
