@@ -28,11 +28,11 @@ public class FoodController {
     food 페이징 목록 조회
    */
   @GetMapping
-  public ResponseEntity<ResponseDto<?>> getFoods(@RequestParam Integer page, @RequestParam Integer size) {
+  public ResponseEntity<ResponseDto<?>> getFoods(@RequestParam(defaultValue = "rank") String sort, @RequestParam Integer page, @RequestParam Integer size) {
 //    System.out.println(page);
 //    System.out.println(size);
 //    System.out.println(foodService.getFoodList(page, size));
-    return ResponseEntity.ok(ResponseDto.success(foodService.getFoodList(page, size)));
+    return ResponseEntity.ok(ResponseDto.success(foodService.getFoodList(sort, page, size)));
   }
 
   /*

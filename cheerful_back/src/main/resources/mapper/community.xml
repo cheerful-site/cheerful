@@ -66,7 +66,21 @@
             *
         from
             (select
-                dense_rank() over(order by ct.created_at desc, ct.community_id desc) as community_number,
+                dense_rank() over(
+                    order by
+                    <choose>
+                        <when test="sort == 'popular'">
+                            COALESCE(clc.like_count, 0) desc, ct.created_at desc, ct.community_id desc
+                        </when>
+                        <when test="sort == 'new'">
+                            ct.created_at desc, ct.community_id desc
+                        </when>
+                        <otherwise>
+                            ct.created_at desc, ct.community_id desc
+                        </otherwise>
+                    </choose>
+                ) as community_number,
+
                 ct.community_id,
                 ct.community_category_id,
                 ct.user_id as ct_user_id,
@@ -122,13 +136,23 @@
                     </otherwise>
                 </choose>
             </where>
-            order by
-                ct.created_at desc,
-                ct.community_id desc,
-                cit.seq) communities
+            ) communities
         where
             community_number between #{startIndex} + 1 and #{endIndex}
 <!--        limit #{startIndex}, #{size}-->
+        order by
+            <choose>
+                <when test="sort == 'popular'">
+                    like_count desc, ct_created_at desc, community_id desc
+                </when>
+                <when test="sort == 'new'">
+                    ct_created_at desc, community_id desc
+                </when>
+                <otherwise>
+                    ct_created_at desc, community_id desc
+                </otherwise>
+            </choose>
+            , seq
     </select>
 
 <!--    <select id="findByCategoryId" resultMap="CommunityMap">-->

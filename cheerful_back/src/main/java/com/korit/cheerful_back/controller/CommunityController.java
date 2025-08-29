@@ -43,12 +43,12 @@ public class CommunityController {
      */
     @GetMapping("/{categoryId}")
     //페이지네이션
-    public ResponseEntity<ResponseDto<?>> getCommunities(@RequestParam Integer page, @RequestParam Integer size, @PathVariable Integer categoryId) {
+    public ResponseEntity<ResponseDto<?>> getCommunities(@RequestParam(defaultValue = "new") String sort, @RequestParam Integer page, @RequestParam Integer size, @PathVariable Integer categoryId) {
 //        System.out.println(page);
 //        System.out.println(size);
 //        System.out.println(categoryId);
 //        System.out.println(communityService.getCommunityList(page, size, categoryId));
-        return ResponseEntity.ok(ResponseDto.success(communityService.getCommunityList(page, size, categoryId)));
+        return ResponseEntity.ok(ResponseDto.success(communityService.getCommunityList(sort, page, size, categoryId)));
     }
 
     /*
