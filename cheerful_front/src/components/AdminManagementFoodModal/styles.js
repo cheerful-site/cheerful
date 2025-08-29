@@ -163,9 +163,30 @@ export const fixButton = css`
   }
 `;
 
+export const urlAddress = css`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+
+  margin-bottom: 1rem;
+  padding: 1rem;
+  width: 100%;
+  height: 5rem;
+  background-color: #ffffff;
+  overflow: hidden;
+
+  & > input {
+    width: 90%;
+    height: 2rem;
+    border: none;
+    outline: none;
+  }
+`;
+
 export const registerTextArea = css`
   width: 100%;
-  height: 50rem;
+  height: 44rem;
 
   & > textarea {
     box-sizing: border-box;

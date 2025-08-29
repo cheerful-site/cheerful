@@ -14,6 +14,7 @@ function AdminManagementFoodRegisterModal({ isOpen, setOpen }) {
     title: "",
     content: "",
     price: "",
+    foodAddress: "",
   });
 
   const handleOnChange = (e) => {
@@ -61,14 +62,15 @@ function AdminManagementFoodRegisterModal({ isOpen, setOpen }) {
   };
 
   const handleRegisterOnClick = () => {
-    const register = confirm("등록하시겠습니까?");
     const formData = new FormData();
 
-    if (register) {
+    if (confirm("등록하시겠습니까?")) {
       try {
         formData.append("foodCategoryId", inputValue.categoryId);
         formData.append("title", inputValue.title);
         formData.append("content", inputValue.content);
+        formData.append("price", inputValue.price);
+        formData.append("foodAddress", inputValue.foodAddress);
         files.forEach((f) => formData.append("files", f.file));
 
         reqAdminFoodRegister(formData, inputValue.categoryId);
@@ -150,6 +152,15 @@ function AdminManagementFoodRegisterModal({ isOpen, setOpen }) {
                 </div>
               )
             )}
+          </div>
+
+          <div css={s.urlAddress}>
+            <input
+              type="text"
+              name="foodAddress"
+              onChange={handleOnChange}
+              placeholder="상품 URL을 입력해 주세요."
+            />
           </div>
 
           <div css={s.registerTextArea}>

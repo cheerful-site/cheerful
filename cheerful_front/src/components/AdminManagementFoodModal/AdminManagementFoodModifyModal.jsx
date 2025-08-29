@@ -11,6 +11,7 @@ function AdminManagementFoodModifyModal({ isOpen, setOpen }) {
     title: "",
     content: "",
     price: "",
+    foodAddress: "",
   });
 
   const handleOnChange = (e) => {
@@ -59,13 +60,22 @@ function AdminManagementFoodModifyModal({ isOpen, setOpen }) {
 
   const handleModifyOnClick = () => {
     const formData = new FormData();
-    formData.append("noticeCategoryId", inputValue.categoryId);
-    formData.append("title", inputValue.title);
-    formData.append("content", inputValue.content);
-    files.forEach((f) => formData.append("files", f.file));
+    if (confirm("등록하시겠습니까?")) {
+      try {
+        console.log(inputValue);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    // formData.append("noticeCategoryId", inputValue.categoryId);
+    // formData.append("title", inputValue.title);
+    // formData.append("content", inputValue.content);
+    // formData.append("price", inputValue.price);
+    // formData.append("foodAddress", inputValue.foodAddress);
+    // files.forEach((f) => formData.append("files", f.file));
 
-    reqAdminFoodModify(formData, inputValue.categoryId);
-    setOpen(false);
+    // reqAdminFoodModify(formData, inputValue.categoryId);
+    // setOpen(false);
   };
 
   return (
@@ -132,6 +142,15 @@ function AdminManagementFoodModifyModal({ isOpen, setOpen }) {
                 </div>
               )
             )}
+          </div>
+
+          <div css={s.urlAddress}>
+            <input
+              type="text"
+              name="foodAddress"
+              onChange={handleOnChange}
+              placeholder="상품 URL을 입력해 주세요."
+            />
           </div>
 
           <div css={s.registerTextArea}>
