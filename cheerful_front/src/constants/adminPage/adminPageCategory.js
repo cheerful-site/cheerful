@@ -161,12 +161,12 @@ export const foodCols = [
   {
     field: "content",
     label: "Content",
-    size: "28rem",
+    size: "20rem",
   },
   {
-    field: "imgUrls",
-    label: "imgUrl",
-    size: "8rem",
+    field: "foodAddress",
+    label: "foodAddress",
+    size: "15rem",
   },
   {
     field: "price",

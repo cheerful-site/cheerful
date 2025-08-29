@@ -9,6 +9,7 @@ import DataTable from "../../../components/DataTable/DataTable";
 import PageNation from "../../../components/PageNation/PageNation";
 import AdminManagementFoodRegisterModal from "../../../components/AdminManagementFoodModal/AdminManagementFoodRegisterModal";
 import { useAdminModifyDataStore } from "../../../stores/useAdminModalStore";
+import AdminManagementFoodModifyModal from "../../../components/AdminManagementFoodModal/AdminManagementFoodModifyModal";
 
 function FoodManagement(props) {
   const [openRegisterModal, setOpenRegisterModal] = useState(false);
@@ -53,7 +54,8 @@ function FoodManagement(props) {
   };
 
   const handleModifyOnClick = (row) => {
-    // setOpenModal(true);
+    setOpenModifyModal(true);
+    setModifyData(row);
   };
 
   const handelAllDeleteClick = async (selectedIds) => {
@@ -73,6 +75,11 @@ function FoodManagement(props) {
       <AdminManagementFoodRegisterModal
         isOpen={openRegisterModal}
         setOpen={setOpenRegisterModal}
+      />
+      <AdminManagementFoodModifyModal
+        isOpen={openModifyModal}
+        setOpen={setOpenModifyModal}
+        modifyData={modifyData}
       />
       <div>
         <div css={s.manageSearch}>

@@ -6,24 +6,23 @@ import { useEffect, useState } from "react";
 import { FiPlus, FiX } from "react-icons/fi";
 import { reqAdminNoticeModify } from "../../api/adminApi/adminApi";
 
-function AdminManagementNoticeModifyModal({
-  isOpen,
-  setOpen,
-  modifyData,
-}) {
+function AdminManagementNoticeModifyModal({ isOpen, setOpen, modifyData }) {
   const [files, setFiles] = useState([]);
 
   const [inputValue, setInputValue] = useState({
     noticeId: "",
-    categoryId: "",
+    categoryName: "",
     title: "",
     content: "",
   });
 
+  // console.log(modifyData);
+  // console.log(inputValue.categoryName);
+
   useEffect(() => {
     setInputValue({
       noticeId: modifyData[0]?.value,
-      categoryId: modifyData[1]?.value,
+      categoryName: categoryNameToId(modifyData[1]?.value),
       title: modifyData[3]?.value,
       content: modifyData[4]?.value,
     });
@@ -76,33 +75,36 @@ function AdminManagementNoticeModifyModal({
     setOpen(false);
   };
 
-  const handleModifyOnClick = () => {
-    try {
-      const formData = new FormData();
-      formData.append("noticeId", inputValue.noticeId);
-
-      if (inputValue.categoryId === "공지사항") {
-        formData.append("noticeCategoryId", 1);
-      }
-      if (inputValue.categoryId === "매거진") {
-        formData.append("noticeCategoryId", 2);
-      }
-      if (inputValue.categoryId === "이벤트") {
-        formData.append("noticeCategoryId", 3);
-      }
-
-      formData.append("title", inputValue.title);
-      formData.append("content", inputValue.content);
-      files.forEach((f) => formData.append("files", f.file));
-
-      reqAdminNoticeModify(formData);
-      setOpen(false);
-    } catch (e) {
-      console.log(e);
-    }
+  const categoryNameToId = (value) => {
+    if (value === "공지사항") return 1;
+    if (value === "매거진") return 2;
+    if (value === "이벤트") return 3;
   };
 
-  
+  console.log(inputValue.categoryName);
+
+  const handleModifyOnClick = () => {
+    if (confirm("수정하시겠습니까?")) {
+      try {
+        const formData = new FormData();
+        formData.append("noticeId", inputValue.noticeId);
+        formData.append("noticeCategoryId", inputValue.categoryName);
+        formData.append("title", inputValue.title);
+        formData.append("content", inputValue.content);
+        files.forEach((f) => formData.append("files", f.file));
+
+        // for (const [key, value] of formData.entries()) {
+        //   console.log(key, value);
+        // }
+
+        reqAdminNoticeModify(formData);
+        // setOpen(false);
+      } catch (e) {
+        console.log(e);
+        alert("게시물 수정이 실패했습니다.");
+      }
+    }
+  };
 
   return (
     <ReactModal
@@ -134,10 +136,10 @@ function AdminManagementNoticeModifyModal({
         <div css={s.registerContainer}>
           <div css={s.registerInputTitle}>
             <select
-              name="categoryId"
+              name="categoryName"
               id=""
               onChange={handleOnChange}
-              value={inputValue.categoryId}>
+              value={inputValue.categoryName}>
               <option value="1">공지사항</option>
               <option value="2">매거진</option>
               <option value="3">이벤트</option>
