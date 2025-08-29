@@ -496,4 +496,13 @@
         where
             food_id = #{foodId}
     </delete>
+
+    <select id="getImagePathsByCommentIds" resultType="string">
+        select img_path
+        from food_img_tb
+        where food_id in
+        <foreach item="foodId" collection="foodIds" separator="," open="(" close=")" >
+            #{foodId}
+        </foreach>
+    </select>
 </mapper>

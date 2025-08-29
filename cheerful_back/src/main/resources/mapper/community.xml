@@ -422,6 +422,21 @@
             and user_id = #{userId}
     </delete>
 
+    <select id="getImagePathsByCommunityId" resultType="string">
+        select img_path
+        from community_img_tb
+        where community_id = #{communityId}
+    </select>
+
+    <select id="getImagePathByCommunityIds" resultType="string">
+        select img_path
+        from community_img_tb
+        where community_id in
+        <foreach item="communityId" collection="communityIds" separator="," open="(" close=")" >
+            #{communityId}
+        </foreach>
+    </select>
+
 
     <select id="findBySearchOption" resultMap="CommunityMap">
         select

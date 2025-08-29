@@ -27,6 +27,7 @@ public interface NoticeMapper {
     int insertNoticeImages(List<NoticeImg> noticeImgs);
 
     int deleteByNoticeIds(List<Integer> noticeIds);
+    List<String> getImagePathsByCommentIds(List<Integer> noticeIds);
 
     // 게시글 등록
     int insert(Notice notice);

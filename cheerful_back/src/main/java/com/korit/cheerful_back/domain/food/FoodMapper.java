@@ -30,4 +30,5 @@ public interface FoodMapper {
 
     int insert(Food food);
     int deleteByFoodIds(List<Integer> foodIds);
+    List<String> getImagePathsByCommentIds(List<Integer> foodIds);
 }

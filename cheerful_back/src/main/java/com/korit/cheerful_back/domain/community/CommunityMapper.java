@@ -32,4 +32,6 @@ public interface CommunityMapper {
     int getCountOfSearchOption(CommunitySearchOption communitySearchOption);
     int deleteByCommunityId(Integer communityId);
     int deleteByCommunityIds(List<Integer> communityIds);
+    List<String> getImagePathsByCommunityId(Integer communityId);
+    List<String> getImagePathByCommunityIds(List<Integer> communityIds);
 }
