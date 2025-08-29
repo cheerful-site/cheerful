@@ -265,6 +265,16 @@ public class AdminService {
 
         Integer userId = principalUtil.getPrincipalUser().getUser().getUserId();
 
+        // title 유효성 검사
+        if (dto.getTitle() == null || dto.getTitle().trim().isEmpty()) {
+            throw new IllegalArgumentException("제목이 없습니다.");
+        }
+
+        // content 유효성 검사
+        if (dto.getContent() == null || dto.getContent().trim().isEmpty()) {
+            throw new IllegalArgumentException("내용이 없습니다.");
+        }
+
         Food food = Food.builder()
             .userId(userId)
             .foodCategoryId(dto.getFoodCategoryId())
@@ -422,6 +432,16 @@ public class AdminService {
 
         // 2) 사용자 식별
         Integer userId = principalUtil.getPrincipalUser().getUser().getUserId();
+
+        // title 유효성 검사
+        if (dto.getTitle() == null || dto.getTitle().trim().isEmpty()) {
+            throw new IllegalArgumentException("제목이 없습니다.");
+        }
+
+        // content 유효성 검사
+        if (dto.getContent() == null || dto.getContent().trim().isEmpty()) {
+            throw new IllegalArgumentException("내용이 없습니다.");
+        }
 
         // 3) 게시글 저장
         Notice notice = Notice.builder()

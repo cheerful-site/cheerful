@@ -148,6 +148,11 @@ public class NoticeService {
     public void registerComment(NoticeCommentRegisterReqDto dto) {
         Integer userId = principalUtil.getPrincipalUser().getUser().getUserId();
 
+        // content 유효성 검사
+        if (dto.getContent() == null || dto.getContent().trim().isEmpty()) {
+            throw new IllegalArgumentException("내용이 없습니다.");
+        }
+
         NoticeComment comment = NoticeComment.builder()
                 .userId(userId)
                 .noticeId(dto.getNoticeId())

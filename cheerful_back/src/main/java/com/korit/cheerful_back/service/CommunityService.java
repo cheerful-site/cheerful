@@ -61,6 +61,16 @@ public class CommunityService {
         // 2) 사용자 식별
         Integer userId = principalUtil.getPrincipalUser().getUser().getUserId();
 
+        // title 유효성 검사
+        if (dto.getTitle() == null || dto.getTitle().trim().isEmpty()) {
+            throw new IllegalArgumentException("제목이 없습니다.");
+        }
+
+        // content 유효성 검사
+        if (dto.getContent() == null || dto.getContent().trim().isEmpty()) {
+            throw new IllegalArgumentException("내용이 없습니다.");
+        }
+
         // 3) 게시글 저장
         Community community = Community.builder()
                 .userId(userId)
@@ -238,6 +248,12 @@ public class CommunityService {
     @Transactional(rollbackFor = Exception.class)
     public Integer registerComment(CommunityCommentRegisterReqDto dto) {
         Integer userId = principalUtil.getPrincipalUser().getUser().getUserId();
+
+        // content 유효성 검사
+        if (dto.getContent() == null || dto.getContent().trim().isEmpty()) {
+            throw new IllegalArgumentException("내용이 없습니다.");
+        }
+
         communityCommentMapper.insert(dto.toEntity(userId));
         return communityCommentMapper.getCountByCommentId(dto.getCommunityId());
     }

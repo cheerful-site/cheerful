@@ -5,6 +5,7 @@ import com.korit.cheerful_back.dto.notice.NoticeRegisterReqDto;
 import com.korit.cheerful_back.dto.response.ResponseDto;
 import com.korit.cheerful_back.service.AdminService;
 import com.korit.cheerful_back.service.NoticeService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -75,7 +76,7 @@ public class NoticeController {
         댓글 등록 + 이미지 추가
     */
     @PostMapping("/{noticeId}/comments")
-    public ResponseEntity<ResponseDto<?>> registerNoticeComment(@ModelAttribute NoticeCommentRegisterReqDto dto) {
+    public ResponseEntity<ResponseDto<?>> registerNoticeComment(@Valid @ModelAttribute NoticeCommentRegisterReqDto dto) {
 //        System.out.println(dto);
         noticeService.registerComment(dto);
         return ResponseEntity.ok(ResponseDto.success("댓글 등록을 완료했습니다."));
