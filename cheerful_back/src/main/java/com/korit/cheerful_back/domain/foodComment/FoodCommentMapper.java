@@ -1,8 +1,6 @@
 package com.korit.cheerful_back.domain.foodComment;
 
 import java.util.List;
-
-import com.korit.cheerful_back.domain.foodCommentImg.FoodCommentImg;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
@@ -17,4 +15,6 @@ public interface FoodCommentMapper {
   int adminDeleteByCommentId(Integer commentId);
   List<String> getImagePathsByCommentId(Integer commentId);
 
+  // 등록한 user일 경우 댓글 삭제
+  int deleteUserFoodCommentId(Integer commentId, Integer userId);
 }

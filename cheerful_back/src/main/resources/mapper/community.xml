@@ -391,6 +391,13 @@
             community_id = #{communityId}
     </delete>
 
+    <delete id="deleteUserCommunityId">
+        delete from community_tb
+        where
+            community_id = #{communityId}
+            and user_id = #{userId}
+    </delete>
+
 
     <select id="findBySearchOption" resultMap="CommunityMap">
         select

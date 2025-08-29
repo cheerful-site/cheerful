@@ -44,6 +44,13 @@
         values (default, #{communityId}, #{parentCommentId}, #{parentUserId}, #{userId}, #{content}, now())
     </insert>
 
+    <delete id="deleteUserCommunityCommentId">
+        delete from community_comment_tb
+        where
+            community_comment_id = #{commentId}
+            and user_id = #{userId}
+    </delete>
+
     <select id="findAllByCommunityId" resultMap="CommentMap">
         with recursive comment_tb as (
             select

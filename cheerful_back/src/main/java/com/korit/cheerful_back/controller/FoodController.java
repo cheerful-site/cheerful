@@ -98,4 +98,13 @@ public class FoodController {
     return ResponseEntity.ok(ResponseDto.success(foodService.getFoodContent(foodId)));
   }
 
+  /*
+      등록한 user일 경우 댓글 삭제
+   */
+  @DeleteMapping("/comments/{commentId}/{userId}")
+  public ResponseEntity<ResponseDto<?>> deleteUserComment(@PathVariable Integer commentId, @PathVariable Integer userId) {
+    foodService.deleteUserComment(commentId, userId);
+    return ResponseEntity.ok(ResponseDto.success("댓글이 삭제되었습니다."));
+  }
+
 }

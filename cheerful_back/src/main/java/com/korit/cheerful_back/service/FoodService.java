@@ -208,4 +208,15 @@ public class FoodService {
     foodCommentLikeMapper.delete(foodCommentId, userId);
   }
 
+  /*
+      등록한 user일 경우 댓글 삭제
+   */
+  @Transactional(rollbackFor = Exception.class)
+  public void deleteUserComment(Integer commentId, Integer userId) {
+    List<String> imgFile = foodCommentMapper.getImagePathsByCommentId(commentId);
+    for(String file: imgFile) {
+      fileService.deletedFile(file, "foodComment");
+    }
+    foodCommentMapper.deleteUserFoodCommentId(commentId, userId);
+  }
 }

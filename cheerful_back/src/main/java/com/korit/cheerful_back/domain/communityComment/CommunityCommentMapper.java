@@ -16,4 +16,8 @@ public interface CommunityCommentMapper {
     // admin전용 기능
     // 댓글 삭제
     int adminDeleteByCommentId(Integer commentId);
+
+    // 등록한 user일 경우 댓글 삭제
+    int deleteUserCommunityCommentId(Integer commentId, Integer userId);
+
 }
