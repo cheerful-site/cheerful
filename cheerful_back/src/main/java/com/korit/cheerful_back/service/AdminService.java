@@ -294,12 +294,28 @@ public class AdminService {
             throw new IllegalArgumentException("내용이 없습니다.");
         }
 
+        // price 유효성 검사
+        if (dto.getPrice() == null) {
+            throw new IllegalArgumentException("가격이 없습니다.");
+        }
+
+        // address 유효성 검사
+        if (dto.getFoodAddress() == null || dto.getFoodAddress().trim().isEmpty()) {
+            throw new IllegalArgumentException("주소가 없습니다.");
+        }
+
+        // file 유효성 검사
+        if (dto.getFiles() == null) {
+            throw new IllegalArgumentException("내용이 없습니다.");
+        }
+
         Food food = Food.builder()
             .userId(userId)
             .foodCategoryId(dto.getFoodCategoryId())
             .title(dto.getTitle())
             .content(dto.getContent())
             .price(dto.getPrice())
+            .foodAddress(dto.getFoodAddress())
             .build();
         foodMapper.insert(food);
 

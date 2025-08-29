@@ -14,7 +14,13 @@ public class FoodRegisterReqDto {
 
   @NotBlank(message = "내용이 없습니다.")
   private String content;
+
+  @NotBlank(message = "가격이 없습니다.")
   private Integer price;
+
+  @NotBlank(message = "주소가 없습니다.")
   private String foodAddress;
+
+  @NotBlank(message = "사진이 없습니다.")
   private List<MultipartFile> files;
 }
