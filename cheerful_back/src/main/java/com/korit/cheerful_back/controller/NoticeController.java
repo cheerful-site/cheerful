@@ -26,6 +26,7 @@ public class NoticeController {
 //        System.out.println(page);
 //        System.out.println(size);
 //        System.out.println(categoryId);
+//        System.out.println(noticeService.getNoticeList(page, size, categoryId));
         return ResponseEntity.ok(ResponseDto.success(noticeService.getNoticeList(page, size, categoryId)));
     }
 
@@ -80,6 +81,15 @@ public class NoticeController {
 //        System.out.println(dto);
         noticeService.registerComment(dto);
         return ResponseEntity.ok(ResponseDto.success("댓글 등록을 완료했습니다."));
+    }
+
+    /*
+        등록한 user일 경우 댓글 삭제
+     */
+    @DeleteMapping("/comments/{commentId}/{userId}")
+    public ResponseEntity<ResponseDto<?>> deleteUserComment(@PathVariable Integer commentId, @PathVariable Integer userId) {
+        noticeService.deleteUserComment(commentId, userId);
+        return ResponseEntity.ok(ResponseDto.success("댓글이 삭제되었습니다."));
     }
 
 }

@@ -99,4 +99,11 @@
     from food_comment_img_tb
     where food_comment_id = #{commentId}
   </select>
+
+  <delete id="deleteUserFoodCommentId">
+    delete from food_comment_tb
+    where
+      food_comment_id = #{commentId}
+      and user_id = #{userId}
+  </delete>
 </mapper>

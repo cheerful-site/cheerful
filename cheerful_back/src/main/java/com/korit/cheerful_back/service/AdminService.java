@@ -353,6 +353,7 @@ public class AdminService {
     /*
         food 댓글 삭제
      */
+    @Transactional(rollbackFor = Exception.class)
     public void deleteFoodComment(Integer commentId) {
 
         List<String> imgFile = foodCommentMapper.getImagePathsByCommentId(commentId);
@@ -529,6 +530,7 @@ public class AdminService {
     /*
         notice 댓글 삭제
      */
+    @Transactional(rollbackFor = Exception.class)
     public void deleteNoticeComment(Integer commentId) {
         List<String> imgFile = noticeCommentMapper.getImagePathsByCommentId(commentId);
         for (String file : imgFile) {

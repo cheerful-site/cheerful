@@ -16,6 +16,9 @@ public interface CommunityMapper {
     List<Community> findBySearchOption(CommunitySearchOption communitySearchOption);
     int getCountOfFindSearchOption(CommunitySearchOption communitySearchOption);
 
+    // 작성한 user일 경우 삭제
+    int deleteUserCommunityId(Integer communityId, Integer userId);
+
     // 조회수
     int increaseViews(@Param("categoryId") Integer categoryId, @Param("communityId") Integer communityId);
 

@@ -257,4 +257,20 @@ public class CommunityService {
         communityCommentMapper.insert(dto.toEntity(userId));
         return communityCommentMapper.getCountByCommentId(dto.getCommunityId());
     }
+
+    /*
+        등록한 user일 경우 게시물 삭제
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteUserCommunity(Integer communityId, Integer userId) {
+        communityMapper.deleteUserCommunityId(communityId, userId);
+    }
+
+    /*
+        등록한 user일 경우 댓글 삭제
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteUserComment(Integer commentId, Integer userId) {
+        communityCommentMapper.deleteUserCommunityCommentId(commentId, userId);
+    }
 }

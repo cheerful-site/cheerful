@@ -182,4 +182,15 @@ public class NoticeService {
         }
     }
 
+    /*
+        등록한 user일 경우 댓글 삭제
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteUserComment(Integer commentId, Integer userId) {
+        List<String> imgFile = noticeCommentMapper.getImagePathsByCommentId(commentId);
+        for(String file: imgFile) {
+            fileService.deletedFile(file, "noticeComment");
+        }
+        noticeCommentMapper.deleteUserNoticeCommentId(commentId, userId);
+    }
 }

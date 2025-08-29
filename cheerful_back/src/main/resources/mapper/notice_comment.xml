@@ -90,4 +90,11 @@
         where notice_comment_id = #{commentId}
     </select>
 
+    <delete id="deleteUserNoticeCommentId">
+        delete from notice_comment_tb
+        where
+            notice_comment_id = #{commentId}
+            and user_id = #{userId}
+    </delete>
+
 </mapper>

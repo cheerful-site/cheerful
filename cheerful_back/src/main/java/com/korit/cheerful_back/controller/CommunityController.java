@@ -103,4 +103,22 @@ public class CommunityController {
 //        System.out.println(dto);
         return ResponseEntity.ok(ResponseDto.success(communityService.registerComment(dto)));
     }
+
+    /*
+        등록한 user일 경우 게시물 삭제
+     */
+    @DeleteMapping("/{communityId}/{userId}")
+    public ResponseEntity<ResponseDto<?>> deleteUserCommunity(@PathVariable Integer communityId, @PathVariable Integer userId) {
+        communityService.deleteUserCommunity(communityId, userId);
+        return ResponseEntity.ok(ResponseDto.success("게시물이 삭제되었습니다."));
+    }
+
+    /*
+        등록한 user일 경우 댓글 삭제
+     */
+    @DeleteMapping("/comments/{commentId}/{userId}")
+    public ResponseEntity<ResponseDto<?>> deleteUserComment(@PathVariable Integer commentId, @PathVariable Integer userId) {
+        communityService.deleteUserComment(commentId, userId);
+        return ResponseEntity.ok(ResponseDto.success("댓글이 삭제되었습니다."));
+    }
 }

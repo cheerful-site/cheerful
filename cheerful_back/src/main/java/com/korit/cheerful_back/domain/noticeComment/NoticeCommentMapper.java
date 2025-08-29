@@ -15,4 +15,6 @@ public interface NoticeCommentMapper {
     int adminDeleteByCommentId(Integer commentId);
     List<String> getImagePathsByCommentId(Integer commentId);
 
+    // 등록한 user일 경우 댓글 삭제
+    int deleteUserNoticeCommentId(Integer commentId, Integer userId);
 }
