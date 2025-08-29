@@ -11,7 +11,7 @@ function AdminRoute(props) {
   if (user?.role === "ROLE_ADMIN") {
     return (
       <Routes>
-        <Route path="/:categoryId" element={<AdminManage />} />
+        <Route path="/*" element={<AdminManage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     );

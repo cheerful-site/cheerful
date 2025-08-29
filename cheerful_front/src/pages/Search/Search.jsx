@@ -12,9 +12,8 @@ import PageNation from "../../components/PageNation/PageNation";
 import notFound from "../../../logo/cheerful_searchNotfound.png";
 
 function Search(props) {
-  const params = useParams();
   const navigate = useNavigate();
-  const { searchText, setSearchText } = useSearchTextStore();
+  const { searchText } = useSearchTextStore();
   const [page, setPage] = useState(1);
   const [searchData, setSearchData] = useState({
     searchWord: searchText,

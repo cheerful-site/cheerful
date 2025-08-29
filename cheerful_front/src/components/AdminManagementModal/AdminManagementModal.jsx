@@ -16,9 +16,7 @@ import {
   reqAdminNoticeRegister,
 } from "../../api/adminApi/adminApi";
 
-function AdminModal({ isOpen, setOpen, mode, categoryName }) {
-  const params = useParams();
-  const { openModal, setOpenModal } = useAdminModalStore();
+function AdminManagementModal({ isOpen, setOpen, mode, menuName }) {
   const [inputValue, setInputValue] = useState({
     categoryId: "1",
     title: "",
@@ -91,66 +89,85 @@ function AdminModal({ isOpen, setOpen, mode, categoryName }) {
 
   const handleRegisterOnClick = () => {
     const formData = new FormData();
-    if (categoryName === "food") {
-      formData.append("foodCategoryId", inputValue.categoryId);
-      formData.append("title", inputValue.title);
-      formData.append("content", inputValue.content);
-      formData.append("price", inputValue.price);
-      files.forEach((f) => formData.append("files", f.file));
+    formData.append("noticeCategoryId", inputValue.categoryId);
+    formData.append("title", inputValue.title);
+    formData.append("content", inputValue.content);
+    files.forEach((f) => formData.append("files", f.file));
 
-      reqAdminFoodRegister(formData);
-      setOpenModal(false);
-    }
-    if (categoryName === "notice") {
-      formData.append("noticeCategoryId", inputValue.categoryId);
-      formData.append("title", inputValue.title);
-      formData.append("content", inputValue.content);
-      files.forEach((f) => formData.append("files", f.file));
-
-      reqAdminNoticeRegister(formData, inputValue.categoryId);
-      setOpenModal(false);
-    }
+    reqAdminNoticeRegister(formData, inputValue.categoryId);
+    setOpenModal(false);
   };
 
   const handleModifyOnClick = () => {
     const formData = new FormData();
-    if (categoryName === "food") {
-      formData.append("foodId", modifyData[0]?.value);
-      if (modifyInputValue.categoryId === "사료") {
-        formData.append("foodCategoryId", 1);
-      }
-      if (modifyInputValue.categoryId === "간식") {
-        formData.append("foodCategoryId", 2);
-      }
-      formData.append("title", modifyInputValue.title);
-      formData.append("content", modifyInputValue.content);
-      formData.append("price", modifyInputValue.price);
 
-      const existingImages = [];
-      files.forEach((f) => {
-        if (f.file) {
-          // 새로 업로드된 파일
-          formData.append("files", f.file);
-        } else if (f.dataUrl) {
-          // 기존 이미지 URL은 별도 배열로 서버에 전달
-          existingImages.push(f.dataUrl);
-        }
-      });
-
-      if (existingImages.length > 0) {
-        formData.append("existingFiles", JSON.stringify(existingImages));
-      }
-
-      for (let [key, value] of formData.entries()) {
-        console.log(key, value);
-      }
-
-      reqAdminFoodModify(formData);
-      setOpenModal(false);
-      return;
+    formData.append("noticeId", modifyData[0]?.value);
+    if (modifyInputValue.categoryId === "공지사항") {
+      formData.append("noticeCategoryId", 1);
     }
+    if (modifyInputValue.categoryId === "매거진") {
+      formData.append("noticeCategoryId", 2);
+    }
+    if (modifyInputValue.categoryId === "이벤트") {
+      formData.append("noticeCategoryId", 3);
+    }
+    formData.append("title", modifyInputValue.title);
+    formData.append("content", modifyInputValue.content);
+
+    const existingImages = [];
+    files.forEach((f) => {
+      if (f.file) {
+        // 새로 업로드된 파일
+        formData.append("files", f.file);
+      } else if (f.dataUrl) {
+        // 기존 이미지 URL은 별도 배열로 서버에 전달
+        existingImages.push(f.dataUrl);
+      }
+    });
+
+    if (existingImages.length > 0) {
+      formData.append("existingFiles", JSON.stringify(existingImages));
+    }
+
+    for (let [key, value] of formData.entries()) {
+      console.log(key, value);
+    }
+
+    console.log(inputValue.categoryId);
+    // reqAdminNoticeModify(formData);
+    setOpenModal(false);
   };
 
+  useEffect(() => {
+    if (!modifyData) return;
+
+    // 공통 텍스트 초기값
+    const initialValue = {
+      categoryId: modifyData[1]?.value || "1",
+      title: modifyData[3]?.value || "",
+      content: modifyData[4]?.value || "",
+      price: modifyData[6]?.value || "",
+    };
+
+    // 모드에 따라 값 설정
+    if (mode === "modify") {
+      setModifyInputValue(initialValue);
+    }
+    if (mode !== "register") {
+      setInputValue(initialValue);
+    }
+
+    // 이미지 초기화
+    const imageValues = modifyData[5]?.value;
+    if (imageValues) {
+      const urls = Array.isArray(imageValues) ? imageValues : [imageValues];
+      const formattedFiles = urls.map((url) => ({
+        file: null,
+        dataUrl: url,
+      }));
+      setFiles(formattedFiles);
+    }
+  }, [openModal, mode, modifyData]);
 
   return (
     <ReactModal
@@ -186,18 +203,9 @@ function AdminModal({ isOpen, setOpen, mode, categoryName }) {
           <div css={s.registerContainer}>
             <div css={s.registerInputTitle}>
               <select name="categoryId" id="" onChange={handleOnChange}>
-                {params.categoryId === "notice" ? (
-                  <>
-                    <option value="1">공지사항</option>
-                    <option value="2">매거진</option>
-                    <option value="3">이벤트</option>
-                  </>
-                ) : (
-                  <>
-                    <option value="1">사료</option>
-                    <option value="2">간식</option>
-                  </>
-                )}
+                <option value="1">공지사항</option>
+                <option value="2">매거진</option>
+                <option value="3">이벤트</option>
               </select>
 
               <input
@@ -206,16 +214,6 @@ function AdminModal({ isOpen, setOpen, mode, categoryName }) {
                 onChange={handleOnChange}
                 placeholder="제목을 입력해주세요."
               />
-              {params.categoryId === "food" ? (
-                <input
-                  type="number"
-                  name="price"
-                  onChange={handleOnChange}
-                  placeholder="가격을 입력해주세요."
-                />
-              ) : (
-                <></>
-              )}
             </div>
 
             <div css={s.imgListContainer}>
@@ -249,18 +247,11 @@ function AdminModal({ isOpen, setOpen, mode, categoryName }) {
                 placeholder="내용을 작성해 주세요. (최소 5자)"
               />
             </div>
-            {mode === "register" ? (
-              <button css={s.modeButton} onClick={handleRegisterOnClick}>
-                등록하기
-              </button>
-            ) : (
-              <button css={s.modeButton} onClick={handleModifyOnClick}>
-                수정하기
-              </button>
-            )}
+            <button css={s.modeButton} onClick={handleRegisterOnClick}>
+              등록하기
+            </button>
           </div>
         ) : (
-          //////////////////////// 수정하기
           <div css={s.registerContainer}>
             <div css={s.registerInputTitle}>
               <select
@@ -268,18 +259,9 @@ function AdminModal({ isOpen, setOpen, mode, categoryName }) {
                 id=""
                 onChange={handleModifyOnChange}
                 value={modifyInputValue.categoryId}>
-                {params.categoryId === "notice" ? (
-                  <>
-                    <option value="1">공지사항</option>
-                    <option value="2">매거진</option>
-                    <option value="3">이벤트</option>
-                  </>
-                ) : (
-                  <>
-                    <option value="1">사료</option>
-                    <option value="2">간식</option>
-                  </>
-                )}
+                <option value="1">공지사항</option>
+                <option value="2">매거진</option>
+                <option value="3">이벤트</option>
               </select>
 
               <input
@@ -289,7 +271,7 @@ function AdminModal({ isOpen, setOpen, mode, categoryName }) {
                 placeholder="제목을 입력해주세요."
                 value={modifyInputValue.title}
               />
-              {params.categoryId === "food" ? (
+              {categoryName === "food" ? (
                 <input
                   type="number"
                   name="price"
@@ -334,15 +316,9 @@ function AdminModal({ isOpen, setOpen, mode, categoryName }) {
                 value={modifyInputValue.content}
               />
             </div>
-            {mode === "register" ? (
-              <button css={s.modeButton} onClick={handleRegisterOnClick}>
-                등록하기
-              </button>
-            ) : (
-              <button css={s.modeButton} onClick={handleModifyOnClick}>
-                수정하기
-              </button>
-            )}
+            <button css={s.modeButton} onClick={handleModifyOnClick}>
+              수정하기
+            </button>
           </div>
         )}
       </div>
@@ -350,4 +326,4 @@ function AdminModal({ isOpen, setOpen, mode, categoryName }) {
   );
 }
 
-export default AdminModal;
+export default AdminManagementModal;

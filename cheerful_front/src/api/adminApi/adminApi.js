@@ -8,7 +8,9 @@ export const reqAdminLogin = async (data) =>
 ////////////////////////USERS//////////////////////////
 export const reqAdminUsers = async (page, size, searchText) =>
   // UserList
-  await api.get(`/admin/users`, { params: { page, size, searchText } });
+  await api.get(`/admin/users`, {
+    params: { page: page ?? 1, size: size ?? 10, searchText },
+  });
 
 export const reqAdminOneDeleteUsers = async (userId) =>
   //단일삭제
@@ -20,9 +22,19 @@ export const reqAdminAllDeleteUsers = async (userIds) =>
 ////////////////////////COMMUNITY//////////////////////////
 ////////////////////////COMMUNITY//////////////////////////
 ////////////////////////COMMUNITY//////////////////////////
-export const reqAdminCommunity = async (page, size, categoryId, searchText) =>
-  await api.get(`/admin/communities/${categoryId}`, {
-    params: { page, size, categoryId, searchText },
+export const reqAdminCommunity = async (
+  page,
+  size,
+  communityCategoryId,
+  searchText
+) =>
+  await api.get(`/admin/communities`, {
+    params: {
+      page: page ?? 1,
+      size: size ?? 10,
+      communityCategoryId: communityCategoryId ?? 1,
+      searchText,
+    },
   });
 
 export const reqAdminOneDeleteCommunity = async (communityId) =>
@@ -36,7 +48,7 @@ export const reqAdminAllDeleteCommunity = async (communityIds) =>
 ////////////////////////FOOD//////////////////////////
 export const reqAdminFood = async (page, size, searchText) =>
   await api.get(`/admin/foods`, {
-    params: { page, size, searchText },
+    params: { page: page ?? 1, size: size ?? 10, searchText },
   });
 
 export const reqAdminFoodRegister = async (data) =>
@@ -59,20 +71,25 @@ export const reqAdminAllDeleteFood = async (foodIds) =>
 ////////////////////////NOTICE//////////////////////////
 ////////////////////////NOTICE//////////////////////////
 ////////////////////////NOTICE//////////////////////////
-export const reqAdminNotice = async (page, size, categoryId, searchText) =>
-  await api.get(`/admin/notice/${categoryId}`, {
-    params: { page, size, categoryId, searchText },
+export const reqAdminNotice = async (
+  page,
+  size,
+  noticeCategoryId,
+  searchText
+) =>
+  await api.get(`/admin/notice`, {
+    params: { page, size, noticeCategoryId, searchText },
   });
 
-export const reqAdminNoticeRegister = async (data, categoryId) =>
-  await api.post(`admin/notice/${categoryId}`, data, {
+export const reqAdminNoticeRegister = async (data) =>
+  await api.post(`admin/notice`, data, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
   });
 
-export const reqAdminNoticeModify = async (data, categoryId) =>
-  await api.put(`admin/notice/${categoryId}`, data, {
+export const reqAdminNoticeModify = async (data) =>
+  await api.put(`admin/notice`, data, {
     headers: {
       "Content-Type": "multipart/form-data",
     },

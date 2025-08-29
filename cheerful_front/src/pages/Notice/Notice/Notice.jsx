@@ -17,7 +17,7 @@ function Notice(props) {
   const noticePages = notice?.data?.data?.body;
   const noticeList = notice?.data?.data?.body?.content;
 
-  console.log(noticeList);
+  // console.log(noticeList);
 
   const noticeCategory = [
     { id: 1, title: "공지사항", category: 1 },
