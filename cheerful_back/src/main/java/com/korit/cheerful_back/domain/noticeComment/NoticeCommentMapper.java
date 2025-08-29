@@ -10,6 +10,9 @@ public interface NoticeCommentMapper {
     int insert(NoticeComment noticeComment);
     List<NoticeComment> findAllByNoticeId(Integer noticeId);
     int getCountByCommentId(Integer noticeId);
-    int deleteByCommentId(Integer commentId, Integer userId);
+
+    // 댓글 및 댓글이미지 삭제
+    int adminDeleteByCommentId(Integer commentId);
+    List<String> getImagePathsByCommentId(Integer commentId);
 
 }

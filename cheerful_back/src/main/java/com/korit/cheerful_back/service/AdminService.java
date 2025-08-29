@@ -184,8 +184,8 @@ public class AdminService {
     /*
         community 댓글 삭제
      */
-    public void deleteCommunityComment(Integer commentId, Integer userId) {
-        communityCommentMapper.deleteByCommentId(commentId, userId);
+    public void deleteCommunityComment(Integer commentId) {
+        communityCommentMapper.adminDeleteByCommentId(commentId);
     }
 
     /*
@@ -353,9 +353,14 @@ public class AdminService {
     /*
         food 댓글 삭제
      */
-    public void deleteFoodComment(Integer commentId, Integer userId) {
+    public void deleteFoodComment(Integer commentId) {
 
-        foodCommentMapper.deleteByCommentId(commentId, userId);
+        List<String> imgFile = foodCommentMapper.getImagePathsByCommentId(commentId);
+        for (String file : imgFile) {
+            fileService.deletedFile(file, "foodComment");
+        }
+
+        foodCommentMapper.adminDeleteByCommentId(commentId);
 
     }
 
@@ -524,8 +529,13 @@ public class AdminService {
     /*
         notice 댓글 삭제
      */
-    public void deleteNoticeComment(Integer commentId, Integer userId) {
-        noticeCommentMapper.deleteByCommentId(commentId, userId);
+    public void deleteNoticeComment(Integer commentId) {
+        List<String> imgFile = noticeCommentMapper.getImagePathsByCommentId(commentId);
+        for (String file : imgFile) {
+            fileService.deletedFile(file, "noticeComment");
+        }
+
+        noticeCommentMapper.adminDeleteByCommentId(commentId);
     }
 
 }

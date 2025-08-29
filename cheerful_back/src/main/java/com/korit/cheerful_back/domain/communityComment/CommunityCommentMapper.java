@@ -13,6 +13,7 @@ public interface CommunityCommentMapper {
     List<CommunityComment> findAllByCommunityId(Integer categoryId, Integer communityId);
     int getCountByCommentId(Integer communityId);
 
-//    // admin전용 기능
-    int deleteByCommentId(Integer commentId, Integer userId);
+    // admin전용 기능
+    // 댓글 삭제
+    int adminDeleteByCommentId(Integer commentId);
 }

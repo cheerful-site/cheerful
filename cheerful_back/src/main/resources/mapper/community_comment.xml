@@ -121,7 +121,7 @@
     </select>
 
 <!--    admin comment delete-->
-    <delete id="deleteByCommentId">
+    <delete id="adminDeleteByCommentId">
         delete from community_comment_tb
         where community_comment_id = #{commentId}
     </delete>
