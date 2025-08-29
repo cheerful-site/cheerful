@@ -41,7 +41,7 @@
     values (default, #{foodId}, #{userId}, #{content}, now())
   </insert>
 
-  <select id="findAllByFoodId" resultMap="CommentMap">
+    <select id="findAllByFoodId" resultMap="CommentMap">
     select
       fct.food_comment_id,
       fct.food_id,
@@ -86,4 +86,10 @@
     from food_comment_tb
     where food_id = #{foodId}
   </select>
+
+  <!--    admin comment delete-->
+  <delete id="deleteByCommentId">
+    delete from food_comment_tb
+    where food_comment_id = #{commentId}
+  </delete>
 </mapper>

@@ -10,5 +10,6 @@ public interface NoticeCommentMapper {
     int insert(NoticeComment noticeComment);
     List<NoticeComment> findAllByNoticeId(Integer noticeId);
     int getCountByCommentId(Integer noticeId);
+    int deleteByCommentId(Integer commentId, Integer userId);
 
 }
