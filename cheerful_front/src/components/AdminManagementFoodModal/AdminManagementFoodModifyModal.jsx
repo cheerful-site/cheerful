@@ -1,18 +1,41 @@
 /**@jsxImportSource @emotion/react */
 import * as s from "./styles";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { reqAdminFoodModify } from "../../api/adminApi/adminApi";
+import ReactModal from "react-modal";
+import { IoMdClose } from "react-icons/io";
+import { FiPlus } from "react-icons/fi";
 
-function AdminManagementFoodModifyModal({ isOpen, setOpen }) {
+function AdminManagementFoodModifyModal({ isOpen, setOpen, modifyData }) {
   const [files, setFiles] = useState([]);
+  // console.log(modifyData);
+
+  const categoryNameToId = (value) => {
+    if (value === "사료") return 1;
+    if (value === "간식") return 2;
+  };
 
   const [inputValue, setInputValue] = useState({
+    foodId: "",
     categoryId: "1",
     title: "",
     content: "",
     price: "",
     foodAddress: "",
   });
+
+  useEffect(() => {
+    setInputValue({
+      foodId: modifyData[0]?.value,
+      categoryId: categoryNameToId(modifyData[1]?.value),
+      title: modifyData[3]?.value,
+      content: modifyData[4]?.value,
+      price: modifyData[6]?.value,
+      foodAddress: modifyData[5]?.value,
+    });
+  }, [modifyData]);
+
+  // console.log(inputValue);
 
   const handleOnChange = (e) => {
     setInputValue((prev) => ({
@@ -62,20 +85,20 @@ function AdminManagementFoodModifyModal({ isOpen, setOpen }) {
     const formData = new FormData();
     if (confirm("등록하시겠습니까?")) {
       try {
-        console.log(inputValue);
+        formData.append("foodId", inputValue.foodId);
+        formData.append("foodCategoryId", inputValue.categoryId);
+        formData.append("title", inputValue.title);
+        formData.append("content", inputValue.content);
+        formData.append("price", inputValue.price);
+        formData.append("foodAddress", inputValue.foodAddress);
+        files.forEach((f) => formData.append("files", f.file));
+        reqAdminFoodModify(formData);
+        setOpen(false);
+        // console.log(inputValue);
       } catch (error) {
         console.log(error);
       }
     }
-    // formData.append("noticeCategoryId", inputValue.categoryId);
-    // formData.append("title", inputValue.title);
-    // formData.append("content", inputValue.content);
-    // formData.append("price", inputValue.price);
-    // formData.append("foodAddress", inputValue.foodAddress);
-    // files.forEach((f) => formData.append("files", f.file));
-
-    // reqAdminFoodModify(formData, inputValue.categoryId);
-    // setOpen(false);
   };
 
   return (
@@ -107,7 +130,11 @@ function AdminManagementFoodModifyModal({ isOpen, setOpen }) {
         </div>
         <div css={s.registerContainer}>
           <div css={s.registerInputTitle}>
-            <select name="categoryId" id="" onChange={handleOnChange}>
+            <select
+              name="categoryId"
+              id=""
+              onChange={handleOnChange}
+              value={inputValue.categoryId}>
               <option value="1">사료</option>
               <option value="2">간식</option>
             </select>
@@ -117,6 +144,15 @@ function AdminManagementFoodModifyModal({ isOpen, setOpen }) {
               name="title"
               onChange={handleOnChange}
               placeholder="제목을 입력해주세요."
+              value={inputValue.title}
+            />
+
+            <input
+              type="number"
+              name="price"
+              onChange={handleOnChange}
+              placeholder="가격을 입력해주세요."
+              value={inputValue.price}
             />
           </div>
 
@@ -150,6 +186,7 @@ function AdminManagementFoodModifyModal({ isOpen, setOpen }) {
               name="foodAddress"
               onChange={handleOnChange}
               placeholder="상품 URL을 입력해 주세요."
+              value={inputValue.foodAddress}
             />
           </div>
 
@@ -158,6 +195,7 @@ function AdminManagementFoodModifyModal({ isOpen, setOpen }) {
               name="content"
               onChange={handleOnChange}
               placeholder="내용을 작성해 주세요. (최소 5자)"
+              value={inputValue.content}
             />
           </div>
           <button css={s.modeButton} onClick={handleModifyOnClick}>
