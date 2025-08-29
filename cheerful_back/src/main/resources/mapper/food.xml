@@ -80,7 +80,27 @@
             *
         from
             (select
-                dense_rank() over(order by COALESCE(flc.like_count, 0) desc, ft.created_at desc, ft.food_id desc) as food_number,
+                dense_rank() over(
+                    order by
+                    <choose>
+                        <when test="sort == 'rank'">
+                            COALESCE(flc.like_count, 0) desc, ft.created_at desc, ft.food_id desc
+                        </when>
+                        <when test="sort == 'price_asc'">
+                            ft.food_price asc, ft.created_at desc, ft.food_id desc
+                        </when>
+                        <when test="sort == 'price_desc'">
+                            ft.food_price desc, ft.created_at desc, ft.food_id desc
+                        </when>
+                        <when test="sort == 'new'">
+                            ft.created_at desc, ft.food_id desc
+                        </when>
+                        <otherwise>
+                            COALESCE(flc.like_count, 0) desc, ft.created_at desc, ft.food_id desc
+                        </otherwise>
+                    </choose>
+                ) as food_number,
+
                 ft.food_id,
                 ft.food_category_id,
                 ft.user_id as ft_user_id,
@@ -134,6 +154,25 @@
         where
             food_number between #{startIndex} + 1 and #{endIndex}
 <!--        limit #{startIndex}, #{size}-->
+        order by
+            <choose>
+                <when test="sort == 'rank'">
+                    like_count desc, created_at desc, food_id desc
+                </when>
+                <when test="sort == 'price_asc'">
+                    food_price asc, created_at desc, food_id desc
+                </when>
+                <when test="sort == 'price_desc'">
+                    food_price desc, created_at desc, food_id desc
+                </when>
+                <when test="sort == 'new'">
+                    created_at desc, food_id desc
+                </when>
+                <otherwise>
+                    like_count desc, created_at desc, food_id desc
+                </otherwise>
+            </choose>
+            , seq
     </select>
 
     <select id="getCountOfOptions" resultType="java.lang.Integer">

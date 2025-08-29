@@ -41,11 +41,17 @@ public class FoodService {
   /*
     food 페이징 목록 조회
    */
-  public PaginationRespDto<Food> getFoodList(Integer page, Integer size) {
+  public PaginationRespDto<Food> getFoodList(String sort, Integer page, Integer size) {
+    String sorts = switch (sort == null ? "rank" : sort) {
+      case "rank", "price_asc", "price_desc", "new" -> sort;
+      default -> "rank";
+    };
+
     FoodSearchOption searchOption = FoodSearchOption.builder()
         .startIndex((page - 1) * size)
         .endIndex(size * page)
         .size(size)
+        .sort(sorts)
         .build();
 
     List<Food> contents = foodMapper.findAllByOptions(searchOption);
@@ -56,7 +62,7 @@ public class FoodService {
     List<Food> contentWithUrls = contents.stream()
         .peek(c -> {
           List<FoodImg> imgs = c.getFoodImgs();
-
+          if(imgs == null || imgs.isEmpty()) return;
           imgs.sort(Comparator.comparingInt(FoodImg::getSeq));
 
           imgs.forEach(img ->

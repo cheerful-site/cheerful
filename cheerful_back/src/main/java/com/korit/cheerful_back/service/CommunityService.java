@@ -143,13 +143,20 @@ public class CommunityService {
     /*
         커뮤니티 페이징 목록 조회
      */
-    public PaginationRespDto<Community> getCommunityList(Integer page, Integer size, Integer categoryId) {
+    public PaginationRespDto<Community> getCommunityList(String sort, Integer page, Integer size, Integer categoryId) {
+
+        String sorts = switch (sort == null ? "new" : sort) {
+            case "new", "popular" -> sort;
+            default -> "new";
+        };
+
         CommunitySearchOption searchOption = CommunitySearchOption.builder()
-                .startIndex((page - 1) * size)
-                .endIndex(size * page)
-                .size(size)
-                .categoryId(categoryId)
-                .build();
+            .startIndex((page - 1) * size)
+            .endIndex(size * page)
+            .size(size)
+            .categoryId(categoryId)
+            .sort(sorts)
+            .build();
 
         // 총 건수 / 총 페이지 / 마지막 여부 계산
         List<Community> contents = communityMapper.findAllByOptions(searchOption);

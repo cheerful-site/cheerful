@@ -13,4 +13,5 @@ public class CommunitySearchOption {
   private Integer categoryId;
   private Integer userId;
 
+  private String sort;
 }
