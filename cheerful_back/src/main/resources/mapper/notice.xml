@@ -81,6 +81,15 @@
             </foreach>
     </delete>
 
+    <select id="getImagePathsByCommentIds" resultType="string">
+        select img_path
+        from notice_img_tb
+        where notice_id in
+        <foreach item="noticeId" collection="noticeIds" separator="," open="(" close=")">
+            #{noticeId}
+        </foreach>
+    </select>
+
     <delete id="deleteNoticeImages">
         delete from notice_img_tb
         where

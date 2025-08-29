@@ -36,7 +36,10 @@ import com.korit.cheerful_back.exception.auth.LoginException;
 import com.korit.cheerful_back.security.jwt.JwtUtil;
 import com.korit.cheerful_back.security.model.PrincipalUtil;
 
+import com.korit.cheerful_back.util.AppProperties;
 import com.korit.cheerful_back.util.ImageUrlUtil;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -69,6 +72,7 @@ public class AdminService {
     private final FoodCommentMapper foodCommentMapper;
     private final FoodCommentImgMapper foodCommentImgMapper;
     private final NoticeCommentMapper noticeCommentMapper;
+    private final AppProperties appProperties;
 
     public TokenDto login(AdminLoginReqDto dto) {
 
@@ -170,6 +174,11 @@ public class AdminService {
      */
     @Transactional(rollbackFor = Exception.class)
     public void deleteCommunity(Integer communityId) {
+        List<String> imgFile = communityMapper.getImagePathsByCommunityId(communityId);
+        for (String file : imgFile) {
+            fileService.deletedFile(file, "community");
+        }
+
         communityMapper.deleteByCommunityId(communityId);
     }
 
@@ -178,6 +187,11 @@ public class AdminService {
      */
     @Transactional(rollbackFor = Exception.class)
     public void deleteCommunities(List<Integer> communityIds) {
+        List<String> imgFiles = communityMapper.getImagePathByCommunityIds(communityIds);
+        for (String files : imgFiles) {
+            fileService.deletedFile(files, "community");
+        }
+
         communityMapper.deleteByCommunityIds(communityIds);
     }
 
@@ -249,6 +263,11 @@ public class AdminService {
      */
     @Transactional(rollbackFor = Exception.class)
     public void deleteFood(List<Integer> foodIds) {
+        List<String> imgFiles = foodMapper.getImagePathsByCommentIds(foodIds);
+        for (String files : imgFiles) {
+            fileService.deletedFile(files, "food");
+        }
+
         foodMapper.deleteByFoodIds(foodIds);
     }
 
@@ -312,6 +331,7 @@ public class AdminService {
 
                 foodImgs.add(foodImg);
             }
+            System.out.println(food);
 
             foodImgMapper.insertMany(foodImgs);
         }
@@ -417,6 +437,11 @@ public class AdminService {
      */
     @Transactional(rollbackFor = Exception.class)
     public void deleteNotice(List<Integer> noticeIds) {
+        List<String> imgFiles = noticeMapper.getImagePathsByCommentIds(noticeIds);
+        for (String files : imgFiles) {
+            fileService.deletedFile(files, "notice");
+        }
+
         noticeMapper.deleteByNoticeIds(noticeIds);
     }
 
