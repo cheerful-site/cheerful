@@ -2,13 +2,7 @@
 import { useEffect, useState } from "react";
 import * as s from "./styles";
 import { FaRegTrashAlt } from "react-icons/fa";
-import PageNation from "../PageNation/PageNation";
-import { usePageStore } from "../../stores/usePageStore";
 import { LiaEditSolid } from "react-icons/lia";
-import {
-  useAdminModalStore,
-  useAdminModifyDataStore,
-} from "../../stores/useAdminModalStore";
 import {
   reqAdminOneDeleteCommunity,
   reqAdminOneDeleteUsers,
@@ -18,24 +12,13 @@ function DataTable({
   isCheckBoxEnabled,
   cols,
   rows,
-  pagenation,
-  categoryName,
-  categoryId,
-  setCategoryId,
-  refetch,
-  enabledRegisterButton,
-  enabledDeleteButton,
-  enabledCategoryList,
-  categoryList,
-  onRegister,
-  onDelete,
-  setMode,
+  setIds,
+  enabledModify,
+  enabledDelete,
+  onModifyClick,
 }) {
   const [newRows, setNewRows] = useState([]);
-  const { page, setPage } = usePageStore();
-  const { setOpenModal } = useAdminModalStore();
   const [checkedAll, setCheckedAll] = useState(false);
-  const { modifyData, setModifyData } = useAdminModifyDataStore();
 
   useEffect(() => {
     let newRows = [];
@@ -63,6 +46,21 @@ function DataTable({
     setCheckedAll(!newRows.map((row) => row.checked).includes(false));
   }, [newRows]);
 
+  useEffect(() => {
+    // const selectedIds = newRows
+    //   .filter((row) => row.checked)
+    //   .map((row) => row.datas[0].value)
+    //   .filter((value) => value !== undefined && value !== null);
+    // setIds(selectedIds);
+  }, [newRows, setIds]);
+
+  console.log(
+    newRows
+      .filter((row) => row.checked)
+      .map((row) => row.datas[0].value)
+      .filter((value) => value !== undefined && value !== null)
+  );
+
   const handleCheckedAllOnChange = (e) => {
     setCheckedAll(e.target.checked);
     setNewRows((prev) =>
@@ -88,72 +86,24 @@ function DataTable({
   };
 
   const handleDeleteOnClick = async (id) => {
-    if (categoryName === "community") {
-      await reqAdminOneDeleteCommunity(id);
-      refetch.refetch();
-      return;
+    const deleteReq = confirm("삭제 하시겠습니까?");
+    if (deleteReq) {
+      try {
+        if (categoryName === "community") {
+          await reqAdminOneDeleteCommunity(id);
+        }
+        if (categoryName === "users") {
+          await reqAdminOneDeleteUsers(id);
+        }
+      } catch (error) {
+        console.log(error);
+        alert("데이터를 삭제하지 못하였습니다. 다시 시도해 주세요.");
+      }
     }
-    if (categoryName === "users") {
-      await reqAdminOneDeleteUsers(id);
-      refetch.refetch();
-      return;
-    }
-    //단일 삭제 버튼
-    // console.log(id);
   };
-
-  const handleModifyOnClick = (data) => {
-    setModifyData(data);
-    setMode("modify");
-    setOpenModal(true);
-  };
-
-  console.log(modifyData);
-
-  // console.log(
-  //   newRows.filter((row) => row.checked).map((row) => row.datas[0].value)
-  // );
 
   return (
     <>
-      <div css={s.category}>
-        <div>
-          {enabledCategoryList && (
-            <div>
-              {categoryList.map((community) => (
-                <span
-                  key={community.id}
-                  css={s.categorySpan(categoryId === community.categoryId)}
-                  onClick={() => setCategoryId(community.categoryId)}>
-                  {community.categoryName}
-                </span>
-              ))}
-            </div>
-          )}
-        </div>
-        <div css={s.registerAndDel}>
-          {enabledRegisterButton && (
-            <button
-              onClick={() => {
-                onRegister("register");
-              }}>
-              등록
-            </button>
-          )}
-          {enabledDeleteButton && (
-            <button
-              onClick={() => {
-                onDelete(
-                  newRows
-                    .filter((row) => row.checked)
-                    .map((row) => row.datas[0].value)
-                );
-              }}>
-              삭제
-            </button>
-          )}
-        </div>
-      </div>
       <table css={s.manageTable}>
         <thead>
           <tr css={s.TableHeader}>
@@ -171,11 +121,8 @@ function DataTable({
                 {col.label}
               </th>
             ))}
-            {categoryName === "food" || categoryName === "notice" ? (
-              <th css={s.modifyButton}>Edit</th>
-            ) : (
-              <th css={s.deleteButton}>Del</th>
-            )}
+            {enabledModify && <th css={s.modifyButton}>Edit</th>}
+            {enabledDelete && <th css={s.deleteButton}>Del</th>}
           </tr>
         </thead>
         <tbody>
@@ -198,13 +145,14 @@ function DataTable({
                   {data.value}
                 </td>
               ))}
-              {categoryName === "food" || categoryName === "notice" ? (
+              {enabledModify && (
                 <td
                   css={s.modifyButton}
-                  onClick={() => handleModifyOnClick(row.datas)}>
+                  onClick={() => onModifyClick(row.datas)}>
                   <LiaEditSolid />
                 </td>
-              ) : (
+              )}
+              {enabledDelete && (
                 <td
                   css={s.deleteButton}
                   onClick={() => handleDeleteOnClick(row.datas[0].value)}>
@@ -215,13 +163,6 @@ function DataTable({
           ))}
         </tbody>
       </table>
-      <PageNation
-        page={page}
-        setPage={setPage}
-        size={pagenation?.size}
-        totalElements={pagenation?.totalElements}
-        totalPage={pagenation?.totalPages}
-      />
     </>
   );
 }

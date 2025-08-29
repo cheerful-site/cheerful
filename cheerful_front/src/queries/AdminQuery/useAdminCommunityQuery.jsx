@@ -1,11 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
 import { reqAdminCommunity } from "../../api/adminApi/adminApi";
 
-function useAdminCommunityQuery(page, size, categoryId, searchText) {
+function useAdminCommunityQuery({
+  page,
+  size,
+  communityCategoryId,
+  searchText,
+}) {
   return useQuery({
-    queryKey: ["adminCommunity", page, size, categoryId, searchText],
+    queryKey: ["adminCommunity", page, size, communityCategoryId, searchText],
     queryFn: async () =>
-      await reqAdminCommunity(page, size, categoryId, searchText),
+      await reqAdminCommunity(page, size, communityCategoryId, searchText),
   });
 }
 

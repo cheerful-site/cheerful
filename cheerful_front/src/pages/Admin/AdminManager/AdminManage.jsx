@@ -1,7 +1,7 @@
 /**@jsxImportSource @emotion/react */
 import { FaSearch } from "react-icons/fa";
 import * as s from "./styles";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, Route, Routes, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ReactModal from "react-modal";
 import { useQueryClient } from "@tanstack/react-query";
@@ -30,6 +30,10 @@ import {
   reqAdminAllDeleteNotice,
   reqAdminAllDeleteUsers,
 } from "../../../api/adminApi/adminApi";
+import NoticeManagement from "../NoticeManagement/NoticeManagement";
+import FoodManagement from "../FoodManagement/FoodManagement";
+import CommunityManagement from "../CommunityManagement/CommunityManagement";
+import UserMangement from "../UserManagement/UserMangement";
 
 function AdminManage(props) {
   const navigate = useNavigate();
@@ -56,8 +60,6 @@ function AdminManage(props) {
     inputValue
   );
   const adminFood = useAdminFoodQuery(page, 10, inputValue);
-  const adminNotice = useAdminNoticeQuery(page, 10, categoryId, inputValue);
-
   const handleProfileOnClick = () => {
     setIsOpen((prev) => !prev);
   };
@@ -73,6 +75,8 @@ function AdminManage(props) {
   const handleOnChange = (e) => {
     setInputValue(e.target.value);
   };
+
+  const handleSearchOnClick = () => {};
 
   const users = adminUsers?.data?.data?.body;
   const userList = adminUsers?.data?.data?.body?.content || []; // user 리스트
@@ -91,14 +95,7 @@ function AdminManage(props) {
     ...food.user,
   }));
 
-  const notice = adminNotice?.data?.data?.body;
-  const noticeList = notice?.content.map((notice) => ({
-    ...notice,
-    ...notice.noticeCategory,
-    ...notice.user,
-  }));
-
-  console.log(userStatus);
+  // console.log(userStatus);
   // console.log(user);
   // console.log(users);
   // console.log(communityList);
@@ -131,20 +128,15 @@ function AdminManage(props) {
       adminFood.refetch();
       return;
     }
-    if (params.categoryId === "notice") {
-      await reqAdminAllDeleteNotice(ids);
-      adminNotice.refetch();
-      return;
-    }
   };
 
   useEffect(() => {
     setPage(1);
+    setInputValue("");
   }, [params.categoryId]);
 
   return (
     <div css={s.layout}>
-      <AdminModal mode={mode} categoryName={params.categoryId} />
       <div css={s.manageContainer}>
         <LeftSideBar />
         <div css={s.manageLayout}>
@@ -204,91 +196,12 @@ function AdminManage(props) {
               )}
             </div>
           </div>
-          <div css={s.manageContent}>
-            <div>
-              <div css={s.manageSearch}>
-                <input
-                  type="text"
-                  placeholder="Search for ..."
-                  onChange={handleOnChange}
-                />
-                <FaSearch />
-              </div>
-              {params.categoryId === "users" ? (
-                <>
-                  <DataTable
-                    isCheckBoxEnabled={true}
-                    cols={usersCols}
-                    rows={userList}
-                    pagenation={users}
-                    categoryName={params.categoryId}
-                    categoryId={categoryId}
-                    setCategoryId={setCategoryId}
-                    refetch={adminUsers}
-                    enabledDeleteButton={true}
-                    enabledRegisterButton={false}
-                    onDelete={handelAllDeleteClick}
-                  />
-                </>
-              ) : params.categoryId === "community" ? (
-                <>
-                  <DataTable
-                    isCheckBoxEnabled={true}
-                    cols={communityCols}
-                    rows={communityList}
-                    pagenation={community}
-                    enabledCategoryList={true}
-                    categoryList={communityCategory}
-                    categoryName={params.categoryId}
-                    categoryId={categoryId}
-                    setCategoryId={setCategoryId}
-                    refetch={adminCommunity}
-                    enabledDeleteButton={true}
-                    enabledRegisterButton={false}
-                    onDelete={handelAllDeleteClick}
-                  />
-                </>
-              ) : params.categoryId === "food" ? (
-                <>
-                  <DataTable
-                    isCheckBoxEnabled={true}
-                    cols={foodCols}
-                    rows={foodList}
-                    pagenation={food}
-                    categoryName={params.categoryId}
-                    categoryId={categoryId}
-                    setCategoryId={setCategoryId}
-                    enabledDeleteButton={true}
-                    enabledRegisterButton={true}
-                    onRegister={() => handleOpenModalOnClick("register")}
-                    onDelete={handelAllDeleteClick}
-                    setMode={setMode}
-                  />
-                </>
-              ) : params.categoryId === "notice" ? (
-                <>
-                  <DataTable
-                    isCheckBoxEnabled={true}
-                    cols={noticeCols}
-                    rows={noticeList}
-                    pagenation={notice}
-                    enabledCategoryList={true}
-                    categoryList={noticeCategory}
-                    categoryName={params.categoryId}
-                    categoryId={categoryId}
-                    setCategoryId={setCategoryId}
-                    enabledDeleteButton={true}
-                    enabledRegisterButton={true}
-                    onRegister={() => handleOpenModalOnClick("register")}
-                    onDelete={handelAllDeleteClick}
-                    setMode={setMode}
-                  />
-                </>
-              ) : (
-                <></>
-              )}
-            </div>
-          </div>
+          <Routes>
+            <Route path="/users" element={<UserMangement />} />
+            <Route path="/community" element={<CommunityManagement />} />
+            <Route path="/food" element={<FoodManagement />} />
+            <Route path="/notice" element={<NoticeManagement />} />
+          </Routes>
         </div>
       </div>
     </div>
