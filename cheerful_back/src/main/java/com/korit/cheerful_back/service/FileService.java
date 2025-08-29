@@ -69,20 +69,36 @@ public class FileService {
     /*
         업로드 파일 삭제 (기본 이미지 보호)
      */
-    public void deletedFile(String path) {
-
-        if (path == null || path.isEmpty()) {
-            return;
-        }
-        if (path.substring(path.lastIndexOf("/")).contains("default")) {
-            return;
-        }
-        File file = new File(path);
-//        if (!file.exists()) {
+//    public void deletedFile(String path) {
+//
+//        if (path == null || path.isEmpty()) {
 //            return;
 //        }
-        file.delete();
-    }
+//        if (path.substring(path.lastIndexOf("/")).contains("default")) {
+//            return;
+//        }
+//        File file = new File(path);
+////        if (!file.exists()) {
+////            return;
+////        }
+//        file.delete();
+//    }
+
+    /*
+        업로드 파일 삭제 (기본 이미지 보호)
+     */
+        public void deletedFile(String file, String imageConfigName) {
+            if (file == null || file.isEmpty()) return;
+            if (file.contains("default")) return;
+
+            // 이미지 설정에서 업로드 디렉토리 가져오기
+            String dirPath = appProperties.getImageConfigs().get(imageConfigName).getDirPath();
+            File files = new File(dirPath + "/" + file);
+
+            if (files.exists()) {
+                files.delete();
+            }
+        }
 
 
 //    private static final Set<String> DEFAULT_NAMES = Set.of(

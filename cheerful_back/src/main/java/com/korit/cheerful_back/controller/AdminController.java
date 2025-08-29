@@ -86,9 +86,9 @@ public class AdminController {
     /*
         community 댓글 삭제
      */
-    @DeleteMapping("/communities/{commentId}/{userId}")
-    public ResponseEntity<ResponseDto<?>> deleteCommunityComment(@PathVariable Integer commentId, @PathVariable Integer userId) {
-        adminService.deleteCommunityComment(commentId, userId);
+    @DeleteMapping("/communities/comments/{commentId}")
+    public ResponseEntity<ResponseDto<?>> deleteCommunityComment(@PathVariable Integer commentId) {
+        adminService.deleteCommunityComment(commentId);
         return ResponseEntity.ok(ResponseDto.success("community 댓글을 삭제했습니다."));
     }
 
@@ -135,9 +135,9 @@ public class AdminController {
     /*
         food 댓글 삭제
      */
-    @DeleteMapping("/foods/{commentId}/{userId}")
-    public ResponseEntity<ResponseDto<?>> deleteFoodComment(@PathVariable Integer commentId, @PathVariable Integer userId) {
-        adminService.deleteFoodComment(commentId, userId);
+    @DeleteMapping("/foods/comments/{commentId}")
+    public ResponseEntity<ResponseDto<?>> deleteFoodComment(@PathVariable Integer commentId) {
+        adminService.deleteFoodComment(commentId);
         return ResponseEntity.ok(ResponseDto.success("food 댓글을 삭제했습니다."));
     }
 
@@ -183,9 +183,9 @@ public class AdminController {
     /*
         notice event 댓글 삭제
      */
-    @DeleteMapping("/notice/{commentId}/{userId}")
-    public ResponseEntity<ResponseDto<?>> deleteNoticeComment(@PathVariable Integer commentId, @PathVariable Integer userId) {
-        adminService.deleteNoticeComment(commentId, userId);
+    @DeleteMapping("/notice/comments/{commentId}")
+    public ResponseEntity<ResponseDto<?>> deleteNoticeComment(@PathVariable Integer commentId) {
+        adminService.deleteNoticeComment(commentId);
         return ResponseEntity.ok(ResponseDto.success("notice 댓글을 삭제했습니다."));
     }
 }

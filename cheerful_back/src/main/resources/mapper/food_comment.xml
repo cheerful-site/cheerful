@@ -87,9 +87,16 @@
     where food_id = #{foodId}
   </select>
 
+
   <!--    admin comment delete-->
-  <delete id="deleteByCommentId">
+  <delete id="adminDeleteByCommentId">
     delete from food_comment_tb
     where food_comment_id = #{commentId}
   </delete>
+
+  <select id="getImagePathsByCommentId" resultType="string">
+    select img_path
+    from food_comment_img_tb
+    where food_comment_id = #{commentId}
+  </select>
 </mapper>
