@@ -58,10 +58,10 @@ public class AdminController {
     /*
         community 조회
      */
-    @GetMapping("/communities/{categoryId}")
+    @GetMapping("/communities")
     public ResponseEntity<ResponseDto<?>> managerCommunity(@RequestParam Integer page, @RequestParam Integer size
-            , @PathVariable Integer categoryId, @RequestParam(required = false) String searchText) {
-        return ResponseEntity.ok(ResponseDto.success(adminService.getCommunitySearchList(page, size, categoryId, searchText)));
+            , @RequestParam Integer communityCategoryId, @RequestParam(required = false) String searchText) {
+        return ResponseEntity.ok(ResponseDto.success(adminService.getCommunitySearchList(page, size, communityCategoryId, searchText)));
     }
 
 
@@ -144,17 +144,17 @@ public class AdminController {
     /*
         notice 조회
      */
-    @GetMapping("/notice/{categoryId}")
+    @GetMapping("/notice")
     public ResponseEntity<ResponseDto<?>> managerNotice(@RequestParam Integer page, @RequestParam Integer size
-        , @PathVariable Integer categoryId, @RequestParam(required = false) String searchText) {
+        , @RequestParam Integer noticeCategoryId, @RequestParam(required = false) String searchText) {
 //        System.out.println(adminService.getNoticeSearchList(page, size, categoryId, searchText));
-        return ResponseEntity.ok(ResponseDto.success(adminService.getNoticeSearchList(page, size, categoryId, searchText)));
+        return ResponseEntity.ok(ResponseDto.success(adminService.getNoticeSearchList(page, size, noticeCategoryId, searchText)));
     }
 
     /*
         notice 글 등록
      */
-    @PostMapping("/notice/{categoryId}")
+    @PostMapping("/notice")
     public ResponseEntity<ResponseDto<?>> register(@Valid @ModelAttribute NoticeRegisterReqDto dto) {
         adminService.registerNotice(dto);
         return ResponseEntity.ok(ResponseDto.success("notice 글을 등록하였습니다."));
@@ -173,7 +173,7 @@ public class AdminController {
     /*
         notice 수정
      */
-    @PutMapping("/notice/{categoryId}")
+    @PutMapping("/notice")
     public ResponseEntity<ResponseDto<?>> modifyNotice(@ModelAttribute NoticeModifyReqDto dto) {
         System.out.println(dto);
         adminService.modifyNotice(dto);

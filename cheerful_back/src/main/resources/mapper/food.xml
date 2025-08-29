@@ -457,7 +457,7 @@
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="foodId">
         insert into food_tb
-        values (default, #{foodCategoryId}, #{userId}, #{title}, #{content}, #{price}, now())
+        values (default, #{foodCategoryId}, #{userId}, #{title}, #{content}, #{price}, #{foodAddress}, now())
     </insert>
 
     <insert id="insertFoodImages">
