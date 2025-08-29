@@ -12,7 +12,7 @@ function DataTable({
   isCheckBoxEnabled,
   cols,
   rows,
-  setIds,
+  setSelectedIds,
   enabledModify,
   enabledDelete,
   onModifyClick,
@@ -21,25 +21,28 @@ function DataTable({
   const [checkedAll, setCheckedAll] = useState(false);
 
   useEffect(() => {
-    let newRows = [];
+    if (rows?.length > 0) {
+      let newRows = [];
 
-    for (let i = 0; i < rows?.length; i++) {
-      //rows 순서 정렬
-      const entries = Object.entries(rows[i]);
-      let newRow = [];
-      for (let j = 0; j < cols.length; j++) {
-        for (let k = 0; k < entries.length; k++) {
-          const [key, value] = entries[k];
-          // console.log(key, value);
-          if (cols[j].field === key) {
-            newRow = [...newRow, { field: key, value: value }];
-            // console.log(newRow);
+      for (let i = 0; i < rows?.length; i++) {
+        //rows 순서 정렬
+        const entries = Object.entries(rows[i]);
+        let newRow = [];
+        for (let j = 0; j < cols.length; j++) {
+          for (let k = 0; k < entries.length; k++) {
+            const [key, value] = entries[k];
+            // console.log(key, value);
+            if (cols[j].field === key) {
+              newRow = [...newRow, { field: key, value: value }];
+              // console.log(newRow);
+            }
           }
         }
+        newRows = [...newRows, { checked: false, datas: newRow }];
       }
-      newRows = [...newRows, { checked: false, datas: newRow }];
+      setNewRows(newRows);
+      // setSelectedIds([]);
     }
-    setNewRows(newRows);
   }, [rows]);
 
   useEffect(() => {
@@ -47,19 +50,13 @@ function DataTable({
   }, [newRows]);
 
   useEffect(() => {
-    // const selectedIds = newRows
-    //   .filter((row) => row.checked)
-    //   .map((row) => row.datas[0].value)
-    //   .filter((value) => value !== undefined && value !== null);
-    // setIds(selectedIds);
-  }, [newRows, setIds]);
-
-  console.log(
-    newRows
+    const selectedIds = newRows
       .filter((row) => row.checked)
-      .map((row) => row.datas[0].value)
-      .filter((value) => value !== undefined && value !== null)
-  );
+      .map((row) => row.datas[0].value);
+    if (selectedIds.length > 0) {
+      setSelectedIds(selectedIds);
+    }
+  }, [newRows]);
 
   const handleCheckedAllOnChange = (e) => {
     setCheckedAll(e.target.checked);
@@ -85,14 +82,15 @@ function DataTable({
     );
   };
 
-  const handleDeleteOnClick = async (id) => {
+  const handleDeleteOnClick = async (id, field) => {
+    // console.log(id, field);
     const deleteReq = confirm("삭제 하시겠습니까?");
     if (deleteReq) {
       try {
-        if (categoryName === "community") {
+        if (field === "communityId") {
           await reqAdminOneDeleteCommunity(id);
         }
-        if (categoryName === "users") {
+        if (field === "userId") {
           await reqAdminOneDeleteUsers(id);
         }
       } catch (error) {
@@ -155,7 +153,9 @@ function DataTable({
               {enabledDelete && (
                 <td
                   css={s.deleteButton}
-                  onClick={() => handleDeleteOnClick(row.datas[0].value)}>
+                  onClick={() =>
+                    handleDeleteOnClick(row.datas[0].value, row.datas[0].field)
+                  }>
                   <FaRegTrashAlt />
                 </td>
               )}

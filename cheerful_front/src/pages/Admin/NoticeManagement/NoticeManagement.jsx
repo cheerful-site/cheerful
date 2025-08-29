@@ -1,6 +1,6 @@
 /**@jsxImportSource @emotion/react */
 import * as s from "./styles";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import useAdminNoticeQuery from "../../../queries/AdminQuery/useAdminNoticeQuery";
 import { reqAdminAllDeleteNotice } from "../../../api/adminApi/adminApi";
 import {
@@ -19,7 +19,7 @@ function NoticeManagement(props) {
   const [openModifyModal, setOpenModifyModal] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [modifyData, setModifyData] = useState([]);
-  const [ids, setIds] = useState([]);
+  const [selectedIds, setSelectedIds] = useState([]);
 
   const [searchOption, setSearchOption] = useState({
     page: 1,
@@ -30,13 +30,17 @@ function NoticeManagement(props) {
 
   const adminNotice = useAdminNoticeQuery(searchOption);
 
-  const noticeResponseBody = adminNotice?.data?.data?.body;
+  const noticeResponseBody = useMemo(() => {
+    return adminNotice?.data?.data?.body;
+  }, [adminNotice?.data?.data?.body]);
 
-  const noticeList = noticeResponseBody?.content.map((notice) => ({
-    ...notice,
-    ...notice.noticeCategory,
-    ...notice.user,
-  }));
+  const noticeList = useMemo(() => {
+    return noticeResponseBody?.content.map((notice) => ({
+      ...notice,
+      ...notice.noticeCategory,
+      ...notice.user,
+    }));
+  }, [noticeResponseBody]);
 
   const setPage = (page) => {
     setSearchOption((prev) => ({ ...prev, page }));
@@ -58,16 +62,16 @@ function NoticeManagement(props) {
     setModifyData(row);
   };
 
-  const handelAllDeleteClick = async (id) => {
-    console.log(id);
-    // if (confirm("삭제하시겠습니까?")) {
-    //   try {
-    //     await reqAdminAllDeleteNotice(id);
-    //     adminNotice.refetch();
-    //   } catch (e) {
-    //     console.log(e);
-    //   }
-    // }
+  const handelAllDeleteClick = async (selectedIds) => {
+    console.log(selectedIds);
+    if (confirm("삭제하시겠습니까?")) {
+      try {
+        await reqAdminAllDeleteNotice(selectedIds);
+        adminNotice.refetch();
+      } catch (e) {
+        console.log(e);
+      }
+    }
   };
 
   return (
@@ -124,20 +128,22 @@ function NoticeManagement(props) {
             </button>
             <button
               onClick={() => {
-                handelAllDeleteClick(ids);
+                handelAllDeleteClick(selectedIds);
               }}>
               삭제
             </button>
           </div>
         </div>
-        <DataTable
-          isCheckBoxEnabled={true}
-          cols={noticeCols}
-          rows={noticeList}
-          setIds={setIds}
-          enabledModify={true}
-          onModifyClick={handleModifyOnClick}
-        />
+        {!!noticeResponseBody && (
+          <DataTable
+            isCheckBoxEnabled={true}
+            cols={noticeCols}
+            rows={noticeList}
+            setSelectedIds={setSelectedIds}
+            enabledModify={true}
+            onModifyClick={handleModifyOnClick}
+          />
+        )}
 
         <PageNation
           page={searchOption.page}

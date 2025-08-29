@@ -60,14 +60,21 @@ function AdminManagementNoticeRegisterModal({ isOpen, setOpen }) {
   };
 
   const handleRegisterOnClick = () => {
-    const formData = new FormData();
-    formData.append("noticeCategoryId", inputValue.categoryId);
-    formData.append("title", inputValue.title);
-    formData.append("content", inputValue.content);
-    files.forEach((f) => formData.append("files", f.file));
+    if (confirm("등록하시겠습니까?")) {
+      try {
+        const formData = new FormData();
+        formData.append("noticeCategoryId", inputValue.categoryId);
+        formData.append("title", inputValue.title);
+        formData.append("content", inputValue.content);
+        files.forEach((f) => formData.append("files", f.file));
 
-    reqAdminNoticeRegister(formData, inputValue.categoryId);
-    setOpen(false);
+        reqAdminNoticeRegister(formData, inputValue.categoryId);
+        setOpen(false);
+      } catch (error) {
+        console.log(error);
+        alert("게시물 등록을 실패했습니다.");
+      }
+    }
   };
 
   return (
@@ -126,7 +133,7 @@ function AdminManagementNoticeRegisterModal({ isOpen, setOpen }) {
                 file,
                 index // 파일 미리보기 및 삭제
               ) => (
-                <div css={s.imgContainer}>
+                <div key={index} css={s.imgContainer}>
                   <div css={s.imgBox(`${file.dataUrl}`)}>
                     <div css={s.fixButton}>
                       <FiX onClick={() => handleImgDeleteOnClick(index)} />

@@ -1,6 +1,6 @@
 /**@jsxImportSource @emotion/react */
 import * as s from "./styles";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { reqAdminAllDeleteFood } from "../../../api/adminApi/adminApi";
 import useAdminFoodQuery from "../../../queries/AdminQuery/useAdminFoodQuery";
 import { FaSearch } from "react-icons/fa";
@@ -11,8 +11,11 @@ import AdminManagementFoodRegisterModal from "../../../components/AdminManagemen
 import { useAdminModifyDataStore } from "../../../stores/useAdminModalStore";
 
 function FoodManagement(props) {
-  const [openModal, setOpenModal] = useState(false);
+  const [openRegisterModal, setOpenRegisterModal] = useState(false);
+  const [openModifyModal, setOpenModifyModal] = useState(false);
   const [inputValue, setInputValue] = useState("");
+  const [modifyData, setModifyData] = useState([]);
+  const [selectedIds, setSelectedIds] = useState([]);
 
   const [searchOption, setSearchOption] = useState({
     page: 1,
@@ -22,13 +25,17 @@ function FoodManagement(props) {
 
   const adminFood = useAdminFoodQuery(searchOption);
 
-  const foodResponseBody = adminFood?.data?.data?.body;
+  const foodResponseBody = useMemo(() => {
+    return adminFood?.data?.data?.body;
+  }, [adminFood?.data?.data?.body]);
 
-  const foodList = foodResponseBody?.content.map((food) => ({
-    ...food,
-    ...food.foodCategory,
-    ...food.user,
-  }));
+  const foodList = useMemo(() => {
+    return foodResponseBody?.content.map((food) => ({
+      ...food,
+      ...food.foodCategory,
+      ...food.user,
+    }));
+  }, [foodResponseBody]);
 
   const setPage = (page) => {
     setSearchOption((prev) => ({ ...prev, page }));
@@ -46,20 +53,26 @@ function FoodManagement(props) {
   };
 
   const handleModifyOnClick = (row) => {
-    setOpenModal(true);
+    // setOpenModal(true);
   };
 
-  const handelAllDeleteClick = async (ids) => {
-    await reqAdminAllDeleteFood(ids);
-    adminFood.refetch();
-    return;
+  const handelAllDeleteClick = async (selectedIds) => {
+    console.log(selectedIds);
+    if (confirm("삭제하시겠습니까?")) {
+      try {
+        await reqAdminAllDeleteFood(selectedIds);
+        adminFood.refetch();
+      } catch (e) {
+        console.log(e);
+      }
+    }
   };
 
   return (
     <div css={s.manageContent}>
       <AdminManagementFoodRegisterModal
-        isOpen={openModal}
-        setOpen={setOpenModal}
+        isOpen={openRegisterModal}
+        setOpen={setOpenRegisterModal}
       />
       <div>
         <div css={s.manageSearch}>
@@ -79,17 +92,13 @@ function FoodManagement(props) {
           <div css={s.registerAndDel}>
             <button
               onClick={() => {
-                setOpenModal(true);
+                setOpenRegisterModal(true);
               }}>
               등록
             </button>
             <button
               onClick={() => {
-                handelAllDeleteClick(
-                  newRows
-                    .filter((row) => row.checked)
-                    .map((row) => row.datas[0].value)
-                );
+                handelAllDeleteClick(selectedIds);
               }}>
               삭제
             </button>
@@ -99,6 +108,7 @@ function FoodManagement(props) {
           isCheckBoxEnabled={true}
           cols={foodCols}
           rows={foodList}
+          setSelectedIds={setSelectedIds}
           enabledModify={true}
           onModifyClick={handleModifyOnClick}
         />

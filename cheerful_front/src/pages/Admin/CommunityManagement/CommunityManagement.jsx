@@ -1,5 +1,5 @@
 /**@jsxImportSource @emotion/react */
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import * as s from "./styles";
 import useAdminCommunityQuery from "../../../queries/AdminQuery/useAdminCommunityQuery";
 import { reqAdminAllDeleteCommunity } from "../../../api/adminApi/adminApi";
@@ -10,6 +10,7 @@ import PageNation from "../../../components/PageNation/PageNation";
 
 function CommunityManagement(props) {
   const [inputValue, setInputValue] = useState("");
+  const [selectedIds, setSelectedIds] = useState([]);
 
   const [searchOption, setSearchOption] = useState({
     page: 1,
@@ -20,14 +21,17 @@ function CommunityManagement(props) {
 
   const adminCommunity = useAdminCommunityQuery(searchOption);
 
-  const communityResponseBody = adminCommunity?.data?.data?.body;
-  // console.log(communityResponseBody);
+  const communityResponseBody = useMemo(() => {
+    return adminCommunity?.data?.data?.body;
+  }, [adminCommunity?.data?.data?.body]);
 
-  const communityList = communityResponseBody?.content.map((community) => ({
-    ...community,
-    ...community.communityCategory,
-    ...community.user,
-  }));
+  const communityList = useMemo(() => {
+    return communityResponseBody?.content.map((community) => ({
+      ...community,
+      ...community.communityCategory,
+      ...community.user,
+    }));
+  }, [communityResponseBody]);
 
   const setPage = (page) => {
     setSearchOption((prev) => ({ ...prev, page }));
@@ -44,10 +48,15 @@ function CommunityManagement(props) {
     }));
   };
 
-  const handelAllDeleteClick = async (ids) => {
-    await reqAdminAllDeleteCommunity(ids);
-    adminCommunity.refetch();
-    return;
+  const handelAllDeleteClick = async (selectedIds) => {
+    if (confirm("삭제하시겠습니까?")) {
+      try {
+        await reqAdminAllDeleteCommunity(selectedIds);
+        adminCommunity.refetch();
+      } catch (error) {
+        console.log(error);
+      }
+    }
   };
 
   return (
@@ -70,11 +79,7 @@ function CommunityManagement(props) {
           <div css={s.registerAndDel}>
             <button
               onClick={() => {
-                handelAllDeleteClick(
-                  newRows
-                    .filter((row) => row.checked)
-                    .map((row) => row.datas[0].value)
-                );
+                handelAllDeleteClick(selectedIds);
               }}>
               삭제
             </button>
@@ -84,6 +89,7 @@ function CommunityManagement(props) {
           isCheckBoxEnabled={true}
           cols={communityCols}
           rows={communityList}
+          setSelectedIds={setSelectedIds}
           enabledDelete={true}
         />
 

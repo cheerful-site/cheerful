@@ -5,7 +5,7 @@ import * as s from "./styles";
 import CategoryComponent from "../../components/CategoryComponent/CategoryComponent";
 import { useEffect, useState } from "react";
 import { Wrapper } from "@googlemaps/react-wrapper";
-import { GoogleMap } from "@react-google-maps/api";
+import { GoogleMap, MarkerF } from "@react-google-maps/api";
 
 function MapPage(props) {
   const { category } = useParams();
@@ -58,7 +58,9 @@ function MapPage(props) {
                 "rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px",
             }}
             center={center}
-            zoom={15}></GoogleMap>
+            zoom={15}>
+            <MarkerF position={center} />
+          </GoogleMap>
         </Wrapper>
       </div>
 
