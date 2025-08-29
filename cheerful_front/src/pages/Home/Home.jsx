@@ -9,8 +9,11 @@ import SearchBar from "../../components/SearchBar/SearchBar";
 import usePrincipalQuery from "../../queries/PrincipalQuery/usePrincipalQuery";
 import useHomeBestFoodQuery from "../../queries/HomeQuery/useHomeBestFoodQuery";
 import useHomeBestCommunityQuery from "../../queries/HomeQuery/useHomeBestCommunityQuery";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import noImage from "../../icons/Frame2.png";
+import mapImage from "../../../logo/cheerful_home_map.png";
+import communitImage from "../../../logo/cheerful_home_community.png";
+import foodImage from "../../../logo/cheerful_home_food.png";
 
 function Home(props) {
   const principal = usePrincipalQuery();
@@ -82,9 +85,15 @@ function Home(props) {
 
           <div css={s.foodInfo}>
             <div css={s.imgContainer}>
-              <img src="src/image/img_dog2.png" alt="" />
-              <img src="src/image/img_shiba.png" alt="" />
-              <img src="src/image/img_welshcorgi.png" alt="" />
+              <Link to={"/community/1"}>
+                <img src={communitImage} alt="" />
+              </Link>
+              <Link to={"/food"}>
+                <img src={foodImage} alt="" />
+              </Link>
+              <Link to={"/map/1"}>
+                <img src={mapImage} alt="" />
+              </Link>
             </div>
 
             <div css={s.reviewContainer}>
@@ -170,11 +179,6 @@ function Home(props) {
           </div>
 
           <div css={s.mapContainer}>
-            <div css={s.mapCategory}>
-              <div>동물병원</div>
-              <div>카페</div>
-              <div>보호소</div>
-            </div>
             <div css={s.googleMap}>
               <Wrapper apiKey={import.meta.env.VITE_REACT_APP_API_KEY}>
                 <GoogleMap
