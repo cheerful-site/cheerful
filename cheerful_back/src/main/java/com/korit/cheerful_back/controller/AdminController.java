@@ -137,7 +137,7 @@ public class AdminController {
     @GetMapping("/notice/{categoryId}")
     public ResponseEntity<ResponseDto<?>> managerNotice(@RequestParam Integer page, @RequestParam Integer size
             , @PathVariable Integer categoryId, @RequestParam(required = false) String searchText) {
-        System.out.println(adminService.getNoticeSearchList(page, size, categoryId, searchText));
+//        System.out.println(adminService.getNoticeSearchList(page, size, categoryId, searchText));
         return ResponseEntity.ok(ResponseDto.success(adminService.getNoticeSearchList(page, size, categoryId, searchText)));
     }
 
