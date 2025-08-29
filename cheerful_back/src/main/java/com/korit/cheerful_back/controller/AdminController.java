@@ -169,4 +169,13 @@ public class AdminController {
         adminService.modifyNotice(dto);
         return ResponseEntity.ok(ResponseDto.success("notice 정보를 수정했습니다."));
     }
+
+    /*
+        notice event 댓글 삭제
+     */
+    @DeleteMapping("/notice/comments/{commentId}")
+    public ResponseEntity<ResponseDto<?>> deleteNoticeComment(@PathVariable Integer commentId) {
+        adminService.deleteNoticeComment(commentId);
+        return ResponseEntity.ok(ResponseDto.success("notice 댓글을 삭제했습니다."));
+    }
 }
