@@ -4,6 +4,9 @@ import com.korit.cheerful_back.domain.food.Food;
 import com.korit.cheerful_back.domain.foodImg.FoodImg;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Data;
@@ -19,10 +22,19 @@ public class FoodModifyReqDto {
 
   @NotBlank(message = "내용이 없습니다.")
   private String content;
+
+  @NotNull(message = "가격은 필수입니다.")
+  @Positive(message = "가격은 1원 이상이어야 합니다.")
   private Integer price;
-//  private List<MultipartFile> files;
+
+  @NotBlank(message = "주소가 없습니다.")
+  private String foodAddress;
+
+
   // 빈 리스트로 초기화 → 파일이 없어도 안전
-  private List<MultipartFile> files = new ArrayList<>();
+  @NotEmpty(message = "사진이 없습니다.")
+  private List<MultipartFile> files;
+//  private List<MultipartFile> files = new ArrayList<>();
 
   public Food toEntity() {
     return Food.builder()

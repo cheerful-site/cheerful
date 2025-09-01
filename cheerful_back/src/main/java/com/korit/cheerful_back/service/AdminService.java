@@ -305,8 +305,8 @@ public class AdminService {
         }
 
         // file 유효성 검사
-        if (dto.getFiles() == null) {
-            throw new IllegalArgumentException("내용이 없습니다.");
+        if (dto.getFiles().stream().anyMatch(MultipartFile::isEmpty)) {
+            throw new IllegalArgumentException("사진이 없습니다.");
         }
 
         Food food = Food.builder()
@@ -357,6 +357,32 @@ public class AdminService {
         food 글 수정
      */
     public void modifyFood(FoodModifyReqDto dto) {
+
+        // title 유효성 검사
+        if (dto.getTitle() == null || dto.getTitle().trim().isEmpty()) {
+            throw new IllegalArgumentException("제목이 없습니다.");
+        }
+
+        // content 유효성 검사
+        if (dto.getContent() == null || dto.getContent().trim().isEmpty()) {
+            throw new IllegalArgumentException("내용이 없습니다.");
+        }
+
+        // price 유효성 검사
+        if (dto.getPrice() == null) {
+            throw new IllegalArgumentException("가격이 없습니다.");
+        }
+
+        // address 유효성 검사
+        if (dto.getFoodAddress() == null || dto.getFoodAddress().trim().isEmpty()) {
+            throw new IllegalArgumentException("주소가 없습니다.");
+        }
+
+        // file 유효성 검사
+        if (dto.getFiles().stream().anyMatch(MultipartFile::isEmpty)) {
+            throw new IllegalArgumentException("사진이 없습니다.");
+        }
+
         // 글 수정
         Food food = dto.toEntity();
         foodMapper.update(food);
