@@ -1,6 +1,6 @@
 /**@jsxImportSource @emotion/react */
 import * as s from "./styles";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import useCommunityDetailQuery from "../../../queries/CommunityQuery/useCommunityDetail";
 import Footer from "../../../components/Footer/Footer";
@@ -20,6 +20,7 @@ import {
 } from "../../../api/adminApi/adminApi";
 
 function CommunityDetail(props) {
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const params = useParams();
   const principal = usePrincipalQuery();
@@ -143,12 +144,13 @@ function CommunityDetail(props) {
 
   const handlePostDeleteOnClick = async (communityId, userId) => {
     // console.log(communityId);
-    if (user?.role === "ROLE_ADMIN") {
-      if (confirm("게시글을 삭제하시겠습니까?")) {
+    if (confirm("게시글을 삭제하시겠습니까?")) {
+      if (user?.role === "ROLE_ADMIN") {
         try {
           await reqAdminOneDeleteCommunity(communityId);
-          communityDetail.refetch();
           alert("게시글이 삭제되었습니다.");
+          navigate("/community/1");
+          communityDetail.refetch();
         } catch (error) {
           console.log(error);
         }
@@ -157,6 +159,7 @@ function CommunityDetail(props) {
           await reqUserDeleteCommunityPost(communityId, userId);
           communityDetail.refetch();
           alert("게시글이 삭제되었습니다.");
+          navigate("/community/1");
         } catch (error) {
           console.log(error);
         }

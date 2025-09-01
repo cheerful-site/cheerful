@@ -33,7 +33,7 @@ export const reqCommunitydisLike = async (communityId) =>
   await api.delete(`/communities/${communityId}/dislike`);
 
 export const reqUserDeleteCommunityPost = async (communityId, userId) =>
-  await api.delete(`communities/comments/${communityId}/${userId}`);
+  await api.delete(`communities/${communityId}/${userId}`);
 
 export const reqUserDeleteCommunityComment = async (communityId, userId) =>
   await api.delete(`communities/comments/${communityId}/${userId}`);
