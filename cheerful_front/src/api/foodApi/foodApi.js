@@ -29,3 +29,6 @@ export const reqFoodCommentLike = (foodId, foodCommentId) =>
 
 export const reqFoodCommentDislike = (foodId, foodCommentId) =>
   api.delete(`/foods/${foodId}/${foodCommentId}/dislike`);
+
+export const reqUserDeleteFoodComment = (commentId, userId) =>
+  api.delete(`/foods/comments/${commentId}/${userId}`);

@@ -10,8 +10,14 @@ import {
   reqCommunitydisLike,
   reqCommunityLike,
   reqCommunityRegisterComments,
+  reqUserDeleteCommunityComment,
+  reqUserDeleteCommunityPost,
 } from "../../../api/communityApi/communityApi";
 import { useQueryClient } from "@tanstack/react-query";
+import {
+  reqAdminDeleteCommentCommunity,
+  reqAdminOneDeleteCommunity,
+} from "../../../api/adminApi/adminApi";
 
 function CommunityDetail(props) {
   const queryClient = useQueryClient();
@@ -31,15 +37,12 @@ function CommunityDetail(props) {
   const comments = communityDetail?.data?.data?.body?.communityComments;
   const user = principal?.data?.data?.body?.user || [];
 
-  // console.log(user);
+  // console.log(principal?.data?.data?.body?.user);
   // console.log(detailContent);
   // console.log(comments);
 
   const handleCommentOnChange = (e) => {
     setCommentInputValue(e.target.value);
-    // if (!/^@\w+\s/.test(e.target.value)) {
-    //   setRecomment(null);
-    // }
   };
 
   const handleCommentsOnClick = async () => {
@@ -138,8 +141,51 @@ function CommunityDetail(props) {
     }
   };
 
-  console.log(detailContent);
-  // console.log(recomment);
+  const handlePostDeleteOnClick = async (communityId, userId) => {
+    // console.log(communityId);
+    if (user?.role === "ROLE_ADMIN") {
+      if (confirm("게시글을 삭제하시겠습니까?")) {
+        try {
+          await reqAdminOneDeleteCommunity(communityId);
+          communityDetail.refetch();
+          alert("게시글이 삭제되었습니다.");
+        } catch (error) {
+          console.log(error);
+        }
+      } else {
+        try {
+          await reqUserDeleteCommunityPost(communityId, userId);
+          communityDetail.refetch();
+          alert("게시글이 삭제되었습니다.");
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    }
+  };
+
+  const handleCommentDeleteOnClick = async (commentId, userId) => {
+    console.log(commentId, userId);
+    if (confirm("댓글을 삭제하시겠습니까?")) {
+      if (user?.role === "ROLE_ADMIN") {
+        try {
+          reqAdminDeleteCommentCommunity(commentId);
+          communityDetail.refetch();
+          alert("댓글이 삭제되었습니다.");
+        } catch (error) {
+          console.log(error);
+        }
+      } else {
+        try {
+          reqUserDeleteCommunityComment(commentId, userId);
+          communityDetail.refetch();
+          alert("댓글이 삭제되었습니다.");
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    }
+  };
 
   return (
     <>
@@ -156,7 +202,23 @@ function CommunityDetail(props) {
           <div css={s.postContainer}>
             <div css={s.content}>
               <div css={s.contentTitle}>
-                <span>{detailContent?.title}</span>
+                <div>
+                  <span>{detailContent?.title}</span>
+                  {user?.role === "ROLE_ADMIN" ||
+                  user?.userId === detailContent?.user?.userId ? (
+                    <button
+                      onClick={() =>
+                        handlePostDeleteOnClick(
+                          detailContent?.communityId,
+                          user?.userId
+                        )
+                      }>
+                      삭제
+                    </button>
+                  ) : (
+                    <></>
+                  )}
+                </div>
                 <div>
                   <span>{detailContent?.user.name}</span>
                   <span>{detailContent?.createdAt.slice(0, 10)}</span>
@@ -223,8 +285,26 @@ function CommunityDetail(props) {
                       <div key={index}>
                         <div>
                           <div css={s.commentUser}>
-                            <img src={comment?.user?.profileImgUrl} alt="" />
-                            <span>{comment?.user?.name}</span>
+                            <div>
+                              <img src={comment?.user?.profileImgUrl} alt="" />
+                              <span>{comment?.user?.name}</span>
+                            </div>
+                            <div>
+                              {user?.role === "ROLE_ADMIN" ||
+                              user?.userId === comment?.userId ? (
+                                <button
+                                  onClick={() =>
+                                    handleCommentDeleteOnClick(
+                                      comment?.communityCommentId,
+                                      user?.userId
+                                    )
+                                  }>
+                                  삭제
+                                </button>
+                              ) : (
+                                <></>
+                              )}
+                            </div>
                           </div>
                           <div css={s.commentContent}>
                             <span>{comment.content}</span>
@@ -271,8 +351,27 @@ function CommunityDetail(props) {
                     <>
                       <div css={s.subComments}>
                         <div css={s.commentUser}>
-                          <img src={comment?.user?.profileImgUrl} alt="" />
-                          <span>{comment?.user?.name}</span>
+                          <div>
+                            <img src={comment?.user?.profileImgUrl} alt="" />
+                            <span>{comment?.user?.name}</span>
+                          </div>
+                          <div>
+                            {user?.role === "ROLE_ADMIN" ||
+                            user?.userId === comment?.userId ? (
+                              <button
+                                css={s.recomments}
+                                onClick={() =>
+                                  handleCommentDeleteOnClick(
+                                    comment?.communityCommentId,
+                                    user?.userId
+                                  )
+                                }>
+                                삭제
+                              </button>
+                            ) : (
+                              <></>
+                            )}
+                          </div>
                         </div>
                         <div css={s.commentContent}>
                           <span>{comment.content}</span>

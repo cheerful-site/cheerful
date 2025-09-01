@@ -230,19 +230,37 @@ export const commentContainer = css`
 
 export const commentUser = css`
   display: flex;
+  justify-content: space-between;
   align-items: center;
+  width: 100%;
 
-  & > img {
-    margin-right: 0.5rem;
-    border-radius: 50%;
-    width: 3rem;
-    height: 3rem;
+  & > div:first-of-type {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    & > img {
+      margin-right: 0.5rem;
+      border-radius: 50%;
+      width: 3rem;
+      height: 3rem;
+    }
+
+    & > span {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #222222;
+    }
   }
 
-  & > span {
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: #222222;
+  & > div:last-of-type {
+    & > button {
+      padding: 0;
+      border: none;
+      color: #22222270;
+      background-color: #ffffff;
+      cursor: pointer;
+    }
   }
 `;
 

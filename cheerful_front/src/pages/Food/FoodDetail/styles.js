@@ -90,8 +90,11 @@ export const foodPrice = css`
     font-weight: 700;
     color: #222222;
   }
+  & > a {
+    width: 22rem;
+  }
 
-  & > button {
+  & > a > button {
     border: 0.2rem solid #ffc421;
     border-radius: 1rem;
     width: 22rem;
@@ -100,6 +103,7 @@ export const foodPrice = css`
     font-weight: 900;
     color: #ffc421;
     background-color: #ffffff;
+    cursor: pointer;
 
     &:hover {
       color: #ffffff;
@@ -242,19 +246,37 @@ export const commentContainer = css`
 
 export const commentUser = css`
   display: flex;
+  justify-content: space-between;
   align-items: center;
+  width: 100%;
 
-  & > img {
-    margin-right: 0.5rem;
-    border-radius: 50%;
-    width: 3rem;
-    height: 3rem;
+  & > div:first-of-type {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    & > img {
+      margin-right: 0.5rem;
+      border-radius: 50%;
+      width: 3rem;
+      height: 3rem;
+    }
+
+    & > span {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #222222;
+    }
   }
 
-  & > span {
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: #222222;
+  & > div:last-of-type {
+    & > button {
+      padding: 0;
+      border: none;
+      color: #22222270;
+      background-color: #ffffff;
+      cursor: pointer;
+    }
   }
 `;
 
@@ -287,8 +309,8 @@ export const commentImgList = css`
 export const likeSelected = css`
   display: flex;
   align-items: center;
-  cursor: pointer;
-  q & > span {
+
+  & > span {
     margin-right: 1.5rem;
     font-size: 1.4rem;
     font-weight: 700;
@@ -307,6 +329,7 @@ export const dislike = css`
   width: 6rem;
   height: 3rem;
   background-color: #ffffff;
+  cursor: pointer;
 
   & > svg {
     font-size: 1.8rem;
@@ -333,6 +356,7 @@ export const like = css`
   width: 6rem;
   height: 3rem;
   background-color: #ffffff;
+  cursor: pointer;
 
   & > svg {
     font-size: 1.8rem;
