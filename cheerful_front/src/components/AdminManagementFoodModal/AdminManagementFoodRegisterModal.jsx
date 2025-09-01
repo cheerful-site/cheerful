@@ -67,18 +67,23 @@ function AdminManagementFoodRegisterModal({ isOpen, setOpen }) {
     if (confirm("등록하시겠습니까?")) {
       if (inputValue.title === "") {
         alert("제목을 작성해주세요.");
+        return;
       }
       if (inputValue.content === "") {
         alert("내용을 작성해주세요.");
+        return;
       }
       if (inputValue.price === "" || inputValue.price === 0) {
         alert("가격을 입력해주세요.");
+        return;
       }
       if (inputValue.foodAddress === "") {
         alert("제품주소를 입력해주세요.");
+        return;
       }
       if (files.length === 0) {
         alert("이미지를 추가해주세요.");
+        return;
       }
 
       try {

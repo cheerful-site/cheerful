@@ -82,6 +82,7 @@ function FoodDetail(props) {
         await reqFoodRegisterComment(formData, foodDetail?.foodId);
         setInputValue("");
         await food.refetch();
+        setFiles([]);
       } catch (error) {
         console.log(error);
       }

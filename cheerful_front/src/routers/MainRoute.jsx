@@ -10,12 +10,14 @@ import CommunityRoute from "./CommunityRoute";
 import NoticeRoute from "./NoticeRoute";
 import FoodRoute from "./FoodRoute";
 import SearchRoute from "./SearchRoute";
+import ScrollTop from "../components/ScrollTop/ScrollTop";
 
 function MainRoute(props) {
   const location = useLocation();
   return (
     <>
       {location.pathname.startsWith("/admin") ? <></> : <Header />}
+      <ScrollTop />
       <Routes>
         <Route path="/auth/*" element={<Auth />} />
         <Route path="/search/*" element={<SearchRoute />} />
