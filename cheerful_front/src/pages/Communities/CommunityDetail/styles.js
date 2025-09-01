@@ -36,17 +36,33 @@ export const content = css`
 `;
 
 export const contentTitle = css`
+  display: flex;
+  flex-direction: column;
   border-bottom: 0.15rem solid #22222230;
   margin-bottom: 5rem;
   padding-bottom: 3rem;
   width: 100%;
 
-  & > span {
-    font-size: 2rem;
-    font-weight: 700;
+  & > div:first-of-type {
+    display: flex;
+    justify-content: space-between;
+
+    & > span:first-of-type {
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    & > button:last-of-type {
+      border: none;
+      font-size: 1.4rem;
+      font-weight: 500;
+      background-color: #ffffff;
+      color: #22222280;
+      cursor: pointer;
+    }
   }
 
-  & > div {
+  & > div:last-of-type {
     display: flex;
     justify-content: space-between;
     margin-top: 1rem;
@@ -196,21 +212,41 @@ export const commentsContainer = css`
 
 export const commentUser = css`
   display: flex;
+  justify-content: space-between;
   align-items: center;
   width: 100%;
 
-  & > img {
-    margin-right: 1rem;
-    border-radius: 50%;
-    width: 2.5rem;
-    height: 2.5rem;
+  & > div:first-of-type {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    & > img {
+      margin-right: 1rem;
+      border-radius: 50%;
+      width: 2.5rem;
+      height: 2.5rem;
+    }
+
+    & > span {
+      font-size: 1.4rem;
+      font-weight: 600;
+      height: 100%;
+      color: #22222290;
+    }
   }
 
-  & > span {
-    font-size: 1.4rem;
-    font-weight: 600;
-    color: #22222290;
+  & > div:last-of-type > button {
+    padding: 0;
+    border: none;
+    color: #22222280;
+    background-color: #ffffff;
+    cursor: pointer;
   }
+`;
+
+export const recomments = css`
+  margin-right: 6rem;
 `;
 
 export const commentContent = css`

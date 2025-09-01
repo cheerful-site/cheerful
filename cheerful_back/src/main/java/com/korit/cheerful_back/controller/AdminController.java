@@ -70,6 +70,7 @@ public class AdminController {
      */
     @DeleteMapping("/communities/{communityId}")
     public ResponseEntity<ResponseDto<?>> deleteCommunityId(@PathVariable Integer communityId) {
+//        System.out.println(communityId);
         adminService.deleteCommunity(communityId);
         return ResponseEntity.ok(ResponseDto.success("community 정보를 삭제하였습니다."));
     }
@@ -88,6 +89,7 @@ public class AdminController {
      */
     @DeleteMapping("/communities/comments/{commentId}")
     public ResponseEntity<ResponseDto<?>> deleteCommunityComment(@PathVariable Integer commentId) {
+//        System.out.println(commentId);
         adminService.deleteCommunityComment(commentId);
         return ResponseEntity.ok(ResponseDto.success("community 댓글을 삭제했습니다."));
     }
@@ -137,6 +139,7 @@ public class AdminController {
      */
     @DeleteMapping("/foods/comments/{commentId}")
     public ResponseEntity<ResponseDto<?>> deleteFoodComment(@PathVariable Integer commentId) {
+//        System.out.println(commentId);
         adminService.deleteFoodComment(commentId);
         return ResponseEntity.ok(ResponseDto.success("food 댓글을 삭제했습니다."));
     }
@@ -175,7 +178,6 @@ public class AdminController {
      */
     @PutMapping("/notice")
     public ResponseEntity<ResponseDto<?>> modifyNotice(@ModelAttribute NoticeModifyReqDto dto) {
-        System.out.println(dto);
         adminService.modifyNotice(dto);
         return ResponseEntity.ok(ResponseDto.success("notice 정보를 수정했습니다."));
     }

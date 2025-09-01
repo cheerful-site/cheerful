@@ -28,7 +28,7 @@ function Community(props) {
     setPage(1);
   }, [category]);
 
-  console.log(communityList.data?.data.body);
+  // console.log(communityList.data?.data.body);
 
   return (
     <div css={s.layout}>
@@ -53,6 +53,12 @@ function Community(props) {
       <div css={s.horizon}></div>
 
       <div css={s.postContainer}>
+        <div css={s.sort()}>
+          <span>최신순</span>
+          <div></div>
+          <span>인기순</span>
+        </div>
+
         {communityContents?.content?.map((content) => (
           <Post key={content.communityId} content={content} />
         ))}

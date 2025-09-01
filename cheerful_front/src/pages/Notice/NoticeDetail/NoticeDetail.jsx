@@ -10,9 +10,10 @@ import {
   reqNoticeDislike,
   reqNoticeLike,
   reqNoticeRegisterComment,
+  reqUserDeleteNoticeComment,
 } from "../../../api/noticeApi/noticeApi";
-import noImage from "../../../../logo/logo__2.png";
 import usePrincipalQuery from "../../../queries/PrincipalQuery/usePrincipalQuery";
+import { reqAdminNoticeCommentDelete } from "../../../api/adminApi/adminApi";
 
 function NoticeDetail(props) {
   const params = useParams();
@@ -25,7 +26,7 @@ function NoticeDetail(props) {
   const detailContent = notice?.data?.data?.body;
   const user = principal?.data?.data?.body.user;
 
-  // console.log(detailContent);
+  console.log(detailContent);
   // console.log(detailContent?.noticeImgs);
 
   // console.log(user);
@@ -135,6 +136,28 @@ function NoticeDetail(props) {
     await notice.refetch();
   };
 
+  const handleCommentDeleteOnClick = async (commentId, userId) => {
+    if (confirm("댓글을 삭제하시겠습니까?")) {
+      if (user?.role === "ROLE_ADMIN") {
+        try {
+          await reqAdminNoticeCommentDelete(commentId);
+          alert("댓글이 삭제되었습니다.");
+          notice.refetch();
+        } catch (error) {
+          console.log(error);
+        }
+      } else {
+        try {
+          await reqUserDeleteNoticeComment(commentId, userId);
+          alert("댓글이 삭제되었습니다.");
+          notice.refetch();
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    }
+  };
+
   return (
     <div css={s.layout}>
       <div>
@@ -239,8 +262,26 @@ function NoticeDetail(props) {
           {detailContent?.noticeComment?.map((comment) => (
             <div key={comment.noticeCommentId} css={s.commentContainer}>
               <div css={s.commentUser}>
-                <img src={comment?.user.profileImgUrl} alt="" />
-                <span>{comment?.user.name}</span>
+                <div>
+                  <img src={comment?.user.profileImgUrl} alt="" />
+                  <span>{comment?.user.name}</span>
+                </div>
+                {user?.role === "ROLE_ADMIN" ||
+                user?.userId === comment?.userId ? (
+                  <div>
+                    <button
+                      onClick={() =>
+                        handleCommentDeleteOnClick(
+                          comment?.noticeCommentId,
+                          user?.userId
+                        )
+                      }>
+                      삭제
+                    </button>
+                  </div>
+                ) : (
+                  <></>
+                )}
               </div>
               <div css={s.imgAndContent}>
                 <div>

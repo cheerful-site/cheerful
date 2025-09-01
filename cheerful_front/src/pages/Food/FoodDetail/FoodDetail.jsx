@@ -1,5 +1,5 @@
 /**@jsxImportSource @emotion/react */
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import useFoodDetailQuery from "../../../queries/FoodQuery/useFoodDetailQuery";
 import * as s from "./styles";
 import like from "../../../../logo/cheerful_like.png";
@@ -14,9 +14,11 @@ import {
   reqFoodDislike,
   reqFoodLike,
   reqFoodRegisterComment,
+  reqUserDeleteFoodComment,
 } from "../../../api/foodApi/foodApi";
 import { useQueryClient } from "@tanstack/react-query";
 import usePrincipalQuery from "../../../queries/PrincipalQuery/usePrincipalQuery";
+import { reqAdminFoodCommentDelete } from "../../../api/adminApi/adminApi";
 
 function FoodDetail(props) {
   const params = useParams();
@@ -68,17 +70,22 @@ function FoodDetail(props) {
 
   const handleRegisterOnClick = async () => {
     const formData = new FormData();
+    if (confirm("댓글을 등록하시겠습니까?")) {
+      try {
+        formData.append("content", inputValue);
+        files.forEach((f) => formData.append("files", f.file));
 
-    formData.append("content", inputValue);
-    files.forEach((f) => formData.append("files", f.file));
+        // for (let pair of formData.entries()) {
+        //   console.log(pair[0], pair[1]);
+        // }
 
-    // for (let pair of formData.entries()) {
-    //   console.log(pair[0], pair[1]);
-    // }
-
-    await reqFoodRegisterComment(formData, foodDetail?.foodId);
-    setInputValue("");
-    await food.refetch();
+        await reqFoodRegisterComment(formData, foodDetail?.foodId);
+        setInputValue("");
+        await food.refetch();
+      } catch (error) {
+        console.log(error);
+      }
+    }
   };
 
   const handleLikeOnClick = (foodId) => {
@@ -195,6 +202,29 @@ function FoodDetail(props) {
     }
   };
 
+  const handleCommentDeleteOnClick = async (commentId, userId) => {
+    console.log(commentId, userId);
+    if (confirm("댓글을 삭제하시겠습니까?")) {
+      if (user?.role === "ROLE_ADMIN") {
+        try {
+          await reqAdminFoodCommentDelete(commentId);
+          alert("댓글이 삭제되었습니다.");
+          food.refetch();
+        } catch (error) {
+          console.log(error);
+        }
+      } else {
+        try {
+          await reqUserDeleteFoodComment(commentId, userId);
+          alert("댓글이 삭제되었습니다.");
+          food.refetch();
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    }
+  };
+
   return (
     <>
       <div css={s.layout}>
@@ -235,7 +265,12 @@ function FoodDetail(props) {
             </div>
             <div css={s.foodPrice}>
               <span>{foodDetail?.price.toLocaleString()}원</span>
-              <button>바로구매</button>
+              <Link
+                to={foodDetail?.foodAddress}
+                target="_blank"
+                rel="noopener noreferrer">
+                <button>바로구매</button>
+              </Link>
             </div>
           </div>
         </div>
@@ -290,8 +325,26 @@ function FoodDetail(props) {
           {foodDetail?.foodComment?.map((comment, index) => (
             <div key={index} css={s.commentContainer}>
               <div css={s.commentUser}>
-                <img src={comment?.user.profileImgUrl} alt="" />
-                <span>{comment?.user.name}</span>
+                <div>
+                  <img src={comment?.user.profileImgUrl} alt="" />
+                  <span>{comment?.user.name}</span>
+                </div>
+                {user?.role === "ROLE_ADMIN" ||
+                user?.userId === comment?.user?.userId ? (
+                  <div>
+                    <button
+                      onClick={() =>
+                        handleCommentDeleteOnClick(
+                          comment?.foodCommentId,
+                          user?.userId
+                        )
+                      }>
+                      삭제
+                    </button>
+                  </div>
+                ) : (
+                  <></>
+                )}
               </div>
               <div css={s.imgAndContent}>
                 <div>

@@ -6,6 +6,7 @@ export const reqAdminLogin = async (data) =>
 ////////////////////////USERS//////////////////////////
 ////////////////////////USERS//////////////////////////
 ////////////////////////USERS//////////////////////////
+
 export const reqAdminUsers = async (page, size, searchText) =>
   // UserList
   await api.get(`/admin/users`, {
@@ -22,6 +23,7 @@ export const reqAdminAllDeleteUsers = async (userIds) =>
 ////////////////////////COMMUNITY//////////////////////////
 ////////////////////////COMMUNITY//////////////////////////
 ////////////////////////COMMUNITY//////////////////////////
+
 export const reqAdminCommunity = async (
   page,
   size,
@@ -43,9 +45,13 @@ export const reqAdminOneDeleteCommunity = async (communityId) =>
 export const reqAdminAllDeleteCommunity = async (communityIds) =>
   await api.delete(`/admin/communities`, { data: communityIds });
 
+export const reqAdminDeleteCommentCommunity = async (commentId) =>
+  await api.delete(`/admin/communities/comments/${commentId}`);
+
 ////////////////////////FOOD//////////////////////////
 ////////////////////////FOOD//////////////////////////
 ////////////////////////FOOD//////////////////////////
+
 export const reqAdminFood = async (page, size, searchText) =>
   await api.get(`/admin/foods`, {
     params: { page: page ?? 1, size: size ?? 10, searchText },
@@ -68,9 +74,13 @@ export const reqAdminFoodModify = async (data) =>
 export const reqAdminAllDeleteFood = async (foodIds) =>
   await api.delete(`/admin/foods`, { data: foodIds });
 
+export const reqAdminFoodCommentDelete = async (commentId) =>
+  await api.delete(`admin/foods/comments/${commentId}`);
+
 ////////////////////////NOTICE//////////////////////////
 ////////////////////////NOTICE//////////////////////////
 ////////////////////////NOTICE//////////////////////////
+
 export const reqAdminNotice = async (
   page,
   size,
@@ -97,3 +107,6 @@ export const reqAdminNoticeModify = async (data) =>
 
 export const reqAdminAllDeleteNotice = async (noticeIds) =>
   await api.delete(`/admin/notice`, { data: noticeIds });
+
+export const reqAdminNoticeCommentDelete = async (commentId) =>
+  await api.delete(`/admin/notice/comments/${commentId}`);
