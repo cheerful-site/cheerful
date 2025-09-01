@@ -24,118 +24,118 @@ public class MapInfoService {
     private static final int MIN_RESULTS = 10;
     private static final int PATCH_TOP_N  = 25;
 
-    public List<MapInfoRespDto> search(MapSearchReqDto req) {
+    public List<MapInfoRespDto> search(MapSearchReqDto dto) {
 
         // 0) 캐시 우선
         var cached = mapInfoMapper.selectNearby(
-                req.getCategoryId(), req.getLat(), req.getLng(), req.getRadiusMeters(), 100);
+            dto.getCategoryId(), dto.getLat(), dto.getLng(), dto.getRadiusMeters(), 100);
         if (cached.size() >= MIN_RESULTS) return map(cached);
 
         // 1) 카테고리별 수집
-        List<GoogleNearbyRespDto.Result> results = switch (req.getCategoryId()) {
-            case 1 -> queryForHospital(req);
-            case 2 -> queryForCafe(req);
-            case 3 -> queryForShelter(req);
+        List<GoogleNearbyRespDto.Result> results = switch (dto.getCategoryId()) {
+            case 1 -> queryForHospital(dto);
+            case 2 -> queryForCafe(dto);
+            case 3 -> queryForShelter(dto);
             default -> new ArrayList<>();
         };
 
         // 2) 저장 + 라이트 보강 (업서트 금지: 존재 확인 후 삽입/수정)
         var seen = new HashSet<String>(); // 배치 중복 방지(place_id 기반으로 이미 합쳐졌지만 방어)
-        for (var r : results) {
-            if (r == null || r.getGeometry() == null || r.getGeometry().getLocation() == null) continue;
+        for (var result : results) {
+            if (result == null || result.getGeometry() == null || result.getGeometry().getLocation() == null) continue;
 
-            MapInfo m = new MapInfo();
-            m.setMapInfoName(clean(r.getName()));
-            m.setMapInfoCategoryId(req.getCategoryId());
-            m.setMapInfoAddress(defaultIfBlank(clean(r.getVicinity()), "")); // NOT NULL 보호
-            m.setMapInfoOperationTime("");
-            m.setMapInfoPhoneNumber("");
-            m.setMapInfoLat(r.getGeometry().getLocation().getLat());
-            m.setMapInfoLng(r.getGeometry().getLocation().getLng());
-            m.setMapInfoFullTime(Boolean.FALSE);
-            m.setMapInfoContent(buildContent(req.getCategoryId(), m.getMapInfoName(), null, null));
+            MapInfo mapInfo = new MapInfo();
+            mapInfo.setMapInfoName(clean(result.getName()));
+            mapInfo.setMapInfoCategoryId(dto.getCategoryId());
+            mapInfo.setMapInfoAddress(defaultIfBlank(clean(result.getVicinity()), "")); // NOT NULL 보호
+            mapInfo.setMapInfoOperationTime("");
+            mapInfo.setMapInfoPhoneNumber("");
+            mapInfo.setMapInfoLat(result.getGeometry().getLocation().getLat());
+            mapInfo.setMapInfoLng(result.getGeometry().getLocation().getLng());
+            mapInfo.setMapInfoFullTime(Boolean.FALSE);
+            mapInfo.setMapInfoContent(buildContent(dto.getCategoryId(), mapInfo.getMapInfoName(), null, null));
 
-            String natKey = m.getMapInfoName() + "|" + m.getMapInfoLat() + "|" + m.getMapInfoLng();
+            String natKey = mapInfo.getMapInfoName() + "|" + mapInfo.getMapInfoLat() + "|" + mapInfo.getMapInfoLng();
             if (!seen.add(natKey)) continue;
 
             int exists = mapInfoMapper.existsByNameAndCoords(
-                    m.getMapInfoName(), m.getMapInfoLat(), m.getMapInfoLng());
-            if (exists == 0) mapInfoMapper.insertOne(m);
-            else            mapInfoMapper.updateByNaturalKey(m);
+                mapInfo.getMapInfoName(), mapInfo.getMapInfoLat(), mapInfo.getMapInfoLng());
+            if (exists == 0) mapInfoMapper.insertOne(mapInfo);
+            else            mapInfoMapper.updateByNaturalKey(mapInfo);
 
             // 라이트 디테일 보강
-            if (r.getPlace_id() != null) {
-                var d = google.detailsLight(r.getPlace_id());
-                if (d != null && d.getResult() != null) {
-                    var dr = d.getResult();
+            if (result.getPlace_id() != null) {
+                var details = google.detailsLight(result.getPlace_id());
+                if (details != null && details.getResult() != null) {
+                    var detailResult = details.getResult();
 
                     // 영업시간: current_opening_hours 우선
-                    var pref = preferOpeningHours(dr);
-                    String op = summarizeHours(pref);
-                    boolean full = looks24Hours(pref, m.getMapInfoName());
+                    var pref = preferOpeningHours(detailResult);
+                    String operation = summarizeHours(pref);
+                    boolean full = looks24Hours(pref, mapInfo.getMapInfoName());
 
                     // 전화: formatted → international → 기존
                     String phone = normalizePhoneKR(firstNonBlank(
-                            dr.getFormatted_phone_number(),
-                            dr.getInternational_phone_number(),
-                            m.getMapInfoPhoneNumber()
+                            detailResult.getFormatted_phone_number(),
+                            detailResult.getInternational_phone_number(),
+                            mapInfo.getMapInfoPhoneNumber()
                     ));
 
                     // 주소: formatted → 기존 → 빈 문자열, 국가 prefix 제거
-                    String addr = trimKR(firstNonBlank(
-                            dr.getFormatted_address(),
-                            m.getMapInfoAddress(),
+                    String address = trimKR(firstNonBlank(
+                            detailResult.getFormatted_address(),
+                            mapInfo.getMapInfoAddress(),
                             ""
                     ));
 
-                    MapInfo u = new MapInfo();
-                    u.setMapInfoName(m.getMapInfoName());
-                    u.setMapInfoLat(m.getMapInfoLat());
-                    u.setMapInfoLng(m.getMapInfoLng());
-                    u.setMapInfoOperationTime(op);
-                    u.setMapInfoFullTime(full);
-                    u.setMapInfoPhoneNumber(defaultIfBlank(phone, m.getMapInfoPhoneNumber()));
-                    u.setMapInfoAddress(defaultIfBlank(addr, m.getMapInfoAddress()));
+                    MapInfo info = new MapInfo();
+                    info.setMapInfoName(mapInfo.getMapInfoName());
+                    info.setMapInfoLat(mapInfo.getMapInfoLat());
+                    info.setMapInfoLng(mapInfo.getMapInfoLng());
+                    info.setMapInfoOperationTime(operation);
+                    info.setMapInfoFullTime(full);
+                    info.setMapInfoPhoneNumber(defaultIfBlank(phone, mapInfo.getMapInfoPhoneNumber()));
+                    info.setMapInfoAddress(defaultIfBlank(address, mapInfo.getMapInfoAddress()));
 
                     // content 비었으면(또는 24시간 새로 판정되면) 재생성
-                    if (m.getMapInfoContent() == null || m.getMapInfoContent().isBlank() || full) {
-                        String c = buildContent(req.getCategoryId(), m.getMapInfoName(), dr, full);
-                        if (c != null) u.setMapInfoContent(c);
+                    if (mapInfo.getMapInfoContent() == null || mapInfo.getMapInfoContent().isBlank() || full) {
+                        String content = buildContent(dto.getCategoryId(), mapInfo.getMapInfoName(), detailResult, full);
+                        if (content != null) info.setMapInfoContent(content);
                     }
 
-                    mapInfoMapper.updateByNaturalKey(u);
+                    mapInfoMapper.updateByNaturalKey(info);
                 }
             }
         }
 
         // 3) 콘텐츠 빈 항목 상위 N개만 추가 보강
         var needEnrich = mapInfoMapper.selectNearby(
-                req.getCategoryId(), req.getLat(), req.getLng(), req.getRadiusMeters(), PATCH_TOP_N);
+            dto.getCategoryId(), dto.getLat(), dto.getLng(), dto.getRadiusMeters(), PATCH_TOP_N);
 
         int enriched = 0;
-        for (var mi : needEnrich) {
+        for (var mapInfo : needEnrich) {
             if (enriched >= PATCH_TOP_N) break;
-            if (mi.getMapInfoContent() != null && !mi.getMapInfoContent().isBlank()) continue;
+            if (mapInfo.getMapInfoContent() != null && !mapInfo.getMapInfoContent().isBlank()) continue;
 
-            var maybe = results.stream().filter(r ->
-                    r.getPlace_id() != null &&
-                            eq(clean(r.getName()), mi.getMapInfoName()) &&
-                            almostEqual(r.getGeometry().getLocation().getLat(), mi.getMapInfoLat()) &&
-                            almostEqual(r.getGeometry().getLocation().getLng(), mi.getMapInfoLng())
+            var maybe = results.stream().filter(result ->
+                    result.getPlace_id() != null &&
+                            eq(clean(result.getName()), mapInfo.getMapInfoName()) &&
+                            almostEqual(result.getGeometry().getLocation().getLat(), mapInfo.getMapInfoLat()) &&
+                            almostEqual(result.getGeometry().getLocation().getLng(), mapInfo.getMapInfoLng())
             ).findFirst();
 
             if (maybe.isEmpty()) continue;
 
-            var dr = google.detailsEnrich(maybe.get().getPlace_id());
-            if (dr != null && dr.getResult() != null) {
-                String content = buildContent(mi.getMapInfoCategoryId(), mi.getMapInfoName(), dr.getResult(), mi.getMapInfoFullTime());
+            var detailResult = google.detailsEnrich(maybe.get().getPlace_id());
+            if (detailResult != null && detailResult.getResult() != null) {
+                String content = buildContent(mapInfo.getMapInfoCategoryId(), mapInfo.getMapInfoName(), detailResult.getResult(), mapInfo.getMapInfoFullTime());
                 if (content != null && !content.isBlank()) {
-                    MapInfo u = new MapInfo();
-                    u.setMapInfoName(mi.getMapInfoName());
-                    u.setMapInfoLat(mi.getMapInfoLat());
-                    u.setMapInfoLng(mi.getMapInfoLng());
-                    u.setMapInfoContent(content);
-                    mapInfoMapper.updateByNaturalKey(u);
+                    MapInfo update = new MapInfo();
+                    update.setMapInfoName(mapInfo.getMapInfoName());
+                    update.setMapInfoLat(mapInfo.getMapInfoLat());
+                    update.setMapInfoLng(mapInfo.getMapInfoLng());
+                    update.setMapInfoContent(content);
+                    mapInfoMapper.updateByNaturalKey(update);
                 }
             }
             enriched++;
@@ -143,7 +143,7 @@ public class MapInfoService {
 
         // 4) 최종 반환
         var finalList = mapInfoMapper.selectNearby(
-                req.getCategoryId(), req.getLat(), req.getLng(), req.getRadiusMeters(), 100);
+                dto.getCategoryId(), dto.getLat(), dto.getLng(), dto.getRadiusMeters(), 100);
         return map(finalList);
     }
 
@@ -155,27 +155,27 @@ public class MapInfoService {
     }
 
     // ---------- 카테고리별 조회 ----------
-    private List<GoogleNearbyRespDto.Result> queryForHospital(MapSearchReqDto req) {
+    private List<GoogleNearbyRespDto.Result> queryForHospital(MapSearchReqDto dto) {
         var r1 = google.nearbyAllPages("veterinary_care", null,
-                req.getLat(), req.getLng(), req.getRadiusMeters());
+                dto.getLat(), dto.getLng(), dto.getRadiusMeters());
         var r2 = google.nearbyAllPages(null, "동물병원|수의과|애견병원|vet",
-                req.getLat(), req.getLng(), req.getRadiusMeters());
+                dto.getLat(), dto.getLng(), dto.getRadiusMeters());
         var r3 = google.nearbyAllPages("hospital", "동물|반려동물|애견",
-                req.getLat(), req.getLng(), req.getRadiusMeters());
+                dto.getLat(), dto.getLng(), dto.getRadiusMeters());
         return mergeByPlaceId(r1, r2, r3);
     }
 
-    private List<GoogleNearbyRespDto.Result> queryForCafe(MapSearchReqDto req) {
+    private List<GoogleNearbyRespDto.Result> queryForCafe(MapSearchReqDto dto) {
         var r1 = google.nearbyAllPages("cafe", "반려동물|애견|dog|pet|동반",
-                req.getLat(), req.getLng(), req.getRadiusMeters());
+                dto.getLat(), dto.getLng(), dto.getRadiusMeters());
         var r2 = google.nearbyAllPages(null, "반려동물 동반|애견카페|pet friendly|dog cafe",
-                req.getLat(), req.getLng(), req.getRadiusMeters());
+                dto.getLat(), dto.getLng(), dto.getRadiusMeters());
         return mergeByPlaceId(r1, r2);
     }
 
-    private List<GoogleNearbyRespDto.Result> queryForShelter(MapSearchReqDto req) {
+    private List<GoogleNearbyRespDto.Result> queryForShelter(MapSearchReqDto dto) {
         return google.nearbyAllPages(null, "유기견|동물 보호소|animal shelter|rescue",
-                req.getLat(), req.getLng(), req.getRadiusMeters());
+                dto.getLat(), dto.getLng(), dto.getRadiusMeters());
     }
 
     @SafeVarargs
