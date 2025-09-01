@@ -119,7 +119,7 @@ public class MapInfoService {
 
             var maybe = results.stream().filter(r ->
                     r.getPlace_id() != null &&
-                            equals(clean(r.getName()), mi.getMapInfoName()) &&
+                            eq(clean(r.getName()), mi.getMapInfoName()) &&
                             almostEqual(r.getGeometry().getLocation().getLat(), mi.getMapInfoLat()) &&
                             almostEqual(r.getGeometry().getLocation().getLng(), mi.getMapInfoLng())
             ).findFirst();
