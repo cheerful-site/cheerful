@@ -54,7 +54,6 @@ export const foodContainer = css`
   grid-template-rows: repeat(4, 30rem);
   justify-items: center;
   align-items: center;
-  margin-top: 4rem;
 
   & > div > img {
     border-radius: 1rem;
