@@ -155,13 +155,13 @@ public class MapInfoService {
     }
 
     // ---------- 카테고리별 조회 ----------
-    private List<GoogleNearbyRespDto.Result> queryForHospital(MapSearchReqDto req) {
+    private List<GoogleNearbyRespDto.Result> queryForHospital(MapSearchReqDto dto) {
         var var1 = google.nearbyAllPages("veterinary_care", null,
-                req.getLat(), req.getLng(), req.getRadiusMeters());
+                dto.getLat(), dto.getLng(), dto.getRadiusMeters());
         var var2 = google.nearbyAllPages(null, "동물병원|수의과|애견병원|vet",
-                req.getLat(), req.getLng(), req.getRadiusMeters());
+                dto.getLat(), dto.getLng(), dto.getRadiusMeters());
         var var3 = google.nearbyAllPages("hospital", "동물|반려동물|애견",
-                req.getLat(), req.getLng(), req.getRadiusMeters());
+                dto.getLat(), dto.getLng(), dto.getRadiusMeters());
         return mergeByPlaceId(var1, var2, var3);
     }
 
