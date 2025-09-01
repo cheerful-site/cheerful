@@ -1,5 +1,5 @@
 /**@jsxImportSource @emotion/react */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import * as s from "./styles";
 import Footer from "../../../components/Footer/Footer";
 import useFoodListQuery from "../../../queries/FoodQuery/useFoodListQuery";
@@ -9,7 +9,43 @@ import { useNavigate } from "react-router-dom";
 function Food(props) {
   const [page, setPage] = useState(1);
   const navigate = useNavigate();
-  const food = useFoodListQuery(page, 16);
+  const [active, setActive] = useState(1);
+  const [sortName, setSortName] = useState("rank");
+  const food = useFoodListQuery(sortName, page, 16);
+
+  const sortList = [
+    {
+      id: 1,
+      label: "똥꼬발랄 랭킹순",
+    },
+    {
+      id: 2,
+      label: "낮은 가격순",
+    },
+    {
+      id: 3,
+      label: "높은 가격순",
+    },
+    {
+      id: 4,
+      label: "최신순",
+    },
+  ];
+
+  useEffect(() => {
+    if (active === 1) {
+      setSortName("rank");
+    }
+    if (active === 2) {
+      setSortName("price_asc");
+    }
+    if (active === 3) {
+      setSortName("price_desc");
+    }
+    if (active === 4) {
+      setSortName("new");
+    }
+  }, [active]);
 
   const foodPages = food?.data?.data?.body;
   const foodList = food?.data?.data?.body?.content;
@@ -33,13 +69,16 @@ function Food(props) {
 
       <div>
         <div css={s.foodSort}>
-          <span>똥꼬발랄 랭킹순</span>
-          <div css={s.dot}></div>
-          <span>낮은 가격순</span>
-          <div css={s.dot}></div>
-          <span>높은 가격순</span>
-          <div css={s.dot}></div>
-          <span>최신순</span>
+          {sortList.map((s) => (
+            <span
+              key={s.id}
+              onClick={() => setActive(s.id)}
+              style={{
+                fontWeight: active === s.id ? "700" : "400",
+              }}>
+              {s.label}
+            </span>
+          ))}
         </div>
 
         <div css={s.foodContainer}>

@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { reqFoodList } from "../../api/foodApi/foodApi";
 
-function useFoodListQuery(page, size) {
+function useFoodListQuery(sort, page, size) {
   return useQuery({
-    queryKey: ["foodList", page, size],
-    queryFn: async () => await reqFoodList(page, size),
+    queryKey: ["foodList", sort, page, size],
+    queryFn: async () => await reqFoodList(sort, page, size),
   });
 }
 

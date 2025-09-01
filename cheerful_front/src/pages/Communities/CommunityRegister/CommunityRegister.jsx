@@ -67,6 +67,13 @@ function CommunityRegister(props) {
       "communityCategoryId",
       parseInt(inputValue.communityCategoryId)
     );
+
+    if (inputValue.title === "") {
+      alert("제목을 작성해주세요.");
+    }
+    if (inputValue.content === "") {
+      alert("내용을 작성해주세요.");
+    }
     formData.append("title", inputValue.title);
     formData.append("content", inputValue.content);
     files.forEach((f) => formData.append("files", f.file));

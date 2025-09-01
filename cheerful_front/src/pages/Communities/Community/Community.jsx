@@ -11,7 +11,26 @@ import PageNation from "../../../components/PageNation/PageNation";
 function Community(props) {
   const { category } = useParams();
   const [page, setPage] = useState(1);
-  const communityList = useCommunityListQuery(page, 10, category);
+
+  const sort = [
+    { id: 1, label: "최신순" },
+    { id: 2, label: "인기순" },
+  ];
+
+  const [sortName, setSortName] = useState("new");
+  const [active, setActive] = useState(1);
+  const communityList = useCommunityListQuery(sortName, page, 10, category);
+
+  console.log(sortName, page, 10, category);
+
+  useEffect(() => {
+    if (active === 1) {
+      setSortName("new");
+    } else {
+      setSortName("popular");
+    }
+  }, [active]);
+
   const communityContents = communityList?.data?.data.body || [];
 
   const communityCategory = [
@@ -53,10 +72,17 @@ function Community(props) {
       <div css={s.horizon}></div>
 
       <div css={s.postContainer}>
-        <div css={s.sort()}>
-          <span>최신순</span>
-          <div></div>
-          <span>인기순</span>
+        <div css={s.sort}>
+          {sort.map((s) => (
+            <button
+              key={s.id}
+              onClick={() => setActive(s.id)}
+              style={{
+                fontWeight: active === s.id ? "700" : "400",
+              }}>
+              {s.label}
+            </button>
+          ))}
         </div>
 
         {communityContents?.content?.map((content) => (

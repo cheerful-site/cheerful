@@ -1,8 +1,9 @@
 import api from "../axios/axios";
 
-export const reqCommunityList = async (page, size, categoryId) => {
+export const reqCommunityList = async (sort, page, size, categoryId) => {
   return await api.get(`/communities/${categoryId}`, {
     params: {
+      sort,
       page,
       size,
       categoryId,
