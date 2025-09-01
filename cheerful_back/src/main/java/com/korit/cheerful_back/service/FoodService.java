@@ -14,15 +14,19 @@ import com.korit.cheerful_back.dto.food.FoodRegisterReqDto;
 import com.korit.cheerful_back.dto.food.FoodsCommentRegisterReqDto;
 import com.korit.cheerful_back.dto.response.PaginationRespDto;
 import com.korit.cheerful_back.security.model.PrincipalUtil;
+import com.korit.cheerful_back.service.CommunityService.NotFoundException;
 import com.korit.cheerful_back.util.ImageUrlUtil;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
@@ -55,6 +59,9 @@ public class FoodService {
         .build();
 
     List<Food> contents = foodMapper.findAllByOptions(searchOption);
+    if(contents == null) {
+      contents = Collections.emptyList();
+    }
     Integer totalElements = foodMapper.getCountOfOptions(searchOption);
     Integer totalPages = (int) Math.ceil(totalElements.longValue() / size.doubleValue());
     Boolean isLast = page.equals(totalPages);
@@ -103,6 +110,9 @@ public class FoodService {
     Integer userId = principalUtil.getPrincipalUser().getUser().getUserId();
 
     Food food = foodMapper.findByOption(foodId, userId);
+    if(food == null) {
+      throw new FoodService.NotFoundException("Food not found with id = " + foodId);
+    }
 
     // 이미지 URL 세팅
     List<FoodImg> imgs = food.getFoodImgs();
@@ -131,6 +141,13 @@ public class FoodService {
     food.setFoodComment(comment);
 
     return food;
+  }
+
+  @ResponseStatus(HttpStatus.NOT_FOUND)
+  public class NotFoundException extends RuntimeException {
+    public NotFoundException(String message) {
+      super(message);
+    }
   }
 
   /*

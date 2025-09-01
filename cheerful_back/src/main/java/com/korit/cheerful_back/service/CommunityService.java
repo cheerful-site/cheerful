@@ -13,13 +13,16 @@ import com.korit.cheerful_back.dto.community.CommunityRegisterReqDto;
 import com.korit.cheerful_back.dto.response.PaginationRespDto;
 import com.korit.cheerful_back.security.model.PrincipalUtil;
 import com.korit.cheerful_back.util.ImageUrlUtil;
+import java.util.Collections;
 import java.util.Comparator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
@@ -160,6 +163,9 @@ public class CommunityService {
 
         // 총 건수 / 총 페이지 / 마지막 여부 계산
         List<Community> contents = communityMapper.findAllByOptions(searchOption);
+        if(contents == null) {
+            contents = Collections.emptyList();
+        }
         Integer totalElements = communityMapper.getCountOfOptions(searchOption);
         Integer totalPages = (int) Math.ceil(totalElements.longValue() / size.doubleValue());
         Boolean isLast = page.equals(totalPages);
@@ -216,6 +222,9 @@ public class CommunityService {
 
         // 게시글 단건 조회
         Community community = communityMapper.findByOption(categoryId, communityId, userId);
+        if(community == null) {
+            throw new NotFoundException("Community not found with id = " + communityId);
+        }
 
         // 이미지 URL 세팅
         List<CommunityImg> imgs = community.getCommunityImgs();
@@ -237,6 +246,14 @@ public class CommunityService {
 
         return community;
     }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public class NotFoundException extends RuntimeException {
+        public NotFoundException(String message) {
+            super(message);
+        }
+    }
+
 
     /*
         특정 글 조회수

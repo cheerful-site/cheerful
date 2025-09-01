@@ -16,13 +16,17 @@ import com.korit.cheerful_back.dto.notice.NoticeCommentRegisterReqDto;
 import com.korit.cheerful_back.dto.response.PaginationRespDto;
 import com.korit.cheerful_back.security.model.PrincipalUser;
 import com.korit.cheerful_back.security.model.PrincipalUtil;
+import com.korit.cheerful_back.service.CommunityService.NotFoundException;
 import com.korit.cheerful_back.util.ImageUrlUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -51,6 +55,9 @@ public class NoticeService {
                 .build();
 
         List<Notice> contents = noticeMapper.findAllByOptions(searchOption);
+        if(contents == null) {
+            contents = Collections.emptyList();
+        }
         Integer totalElements = noticeMapper.getCountOfOptions(searchOption);
         Integer totalPages = (int) Math.ceil(totalElements.longValue() / size.doubleValue());
         Boolean isLast = page.equals(totalPages);
@@ -100,6 +107,9 @@ public class NoticeService {
         Integer userId = principalUtil.getPrincipalUser().getUser().getUserId();
 
         Notice notice = noticeMapper.findByOption(categoryId, noticeId, userId);
+        if(notice == null) {
+            throw new NoticeService.NotFoundException("Notice not found with id = " + noticeId);
+        }
 
         // 이미지 URL 세팅
         List<NoticeImg> imgs = notice.getNoticeImgs();
@@ -128,6 +138,13 @@ public class NoticeService {
         notice.setNoticeComment(comment);
 
         return notice;
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public class NotFoundException extends RuntimeException {
+        public NotFoundException(String message) {
+            super(message);
+        }
     }
 
     /*
