@@ -166,7 +166,7 @@ function AdminManagementFoodRegisterModal({ isOpen, setOpen }) {
                 file,
                 index // 파일 미리보기 및 삭제
               ) => (
-                <div css={s.imgContainer}>
+                <div key={index} css={s.imgContainer}>
                   <div css={s.imgBox(`${file.dataUrl}`)}>
                     <div css={s.fixButton}>
                       <FiX onClick={() => handleImgDeleteOnClick(index)} />

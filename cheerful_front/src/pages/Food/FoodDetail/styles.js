@@ -10,6 +10,7 @@ export const layout = css`
 
 export const foodContainer = css`
   display: flex;
+  justify-content: space-around;
   align-items: center;
   border-radius: 1.5rem;
   margin-top: 10rem;
@@ -19,10 +20,20 @@ export const foodContainer = css`
 `;
 
 export const foodImgContainer = css`
-  & > img {
-    margin-left: 10rem;
-    width: 30rem;
+  & > div:first-of-type > img {
+    /* margin-left: 10rem; */
+    border-radius: 1rem;
+    margin-bottom: 1rem;
+    width: 40rem;
     height: 30rem;
+  }
+
+  & > div:last-of-type > img {
+    border-radius: 1rem;
+    margin-right: 1rem;
+    width: 5rem;
+    height: 5rem;
+    cursor: pointer;
   }
 `;
 
