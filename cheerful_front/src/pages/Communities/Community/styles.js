@@ -57,21 +57,21 @@ export const horizon = css`
   border: 0.1rem solid #22222230;
 `;
 
-export const sort = () => css`
+export const sort = css`
   display: flex;
   justify-content: flex-end;
   align-items: center;
   margin-bottom: 0.8rem;
   width: 100%;
 
-  & > div {
-    margin: 0 1rem;
-    border: 0.1rem solid #22222250;
-    width: 0.2rem;
-    height: 0.2rem;
-    background-color: #22222250;
+  & > button {
+    border: none;
+    cursor: pointer;
+    font-size:1.4rem;
   }
 `;
+
+
 
 export const postContainer = css`
   display: flex;

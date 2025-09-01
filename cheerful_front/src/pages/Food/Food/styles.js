@@ -38,13 +38,14 @@ export const horizon = css`
 
 export const foodSort = css`
   display: flex;
+  justify-content: flex-end;
   align-items: center;
   width: 93.6rem;
-`;
 
-export const dot = css`
-  margin: 0 1rem;
-  border: 0.2rem solid #22222250;
+  & > span {
+    margin-left: 1rem;
+    cursor: pointer;
+  }
 `;
 
 export const foodContainer = css`

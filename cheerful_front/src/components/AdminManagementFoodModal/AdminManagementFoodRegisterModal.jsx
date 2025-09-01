@@ -65,6 +65,22 @@ function AdminManagementFoodRegisterModal({ isOpen, setOpen }) {
     const formData = new FormData();
 
     if (confirm("등록하시겠습니까?")) {
+      if (inputValue.title === "") {
+        alert("제목을 작성해주세요.");
+      }
+      if (inputValue.content === "") {
+        alert("내용을 작성해주세요.");
+      }
+      if (inputValue.price === "") {
+        alert("가격을 입력해주세요.");
+      }
+      if (inputValue.foodAddress === "") {
+        alert("제품주소를 입력해주세요.");
+      }
+      if (files.length === 0) {
+        alert("이미지를 추가해주세요.");
+      }
+
       try {
         formData.append("foodCategoryId", inputValue.categoryId);
         formData.append("title", inputValue.title);

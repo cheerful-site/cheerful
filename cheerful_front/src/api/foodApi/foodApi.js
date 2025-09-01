@@ -1,8 +1,9 @@
 import api from "../axios/axios";
 
-export const reqFoodList = async (page, size) =>
+export const reqFoodList = async (sort, page, size) =>
   api.get(`/foods`, {
     params: {
+      sort,
       page,
       size,
     },
