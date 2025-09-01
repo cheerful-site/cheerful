@@ -102,19 +102,19 @@ function NoticeManagement(props) {
         <div css={s.category}>
           <div>
             <div>
-              {noticeCategory.map((community) => (
+              {noticeCategory.map((notice) => (
                 <span
-                  key={community.id}
+                  key={notice.id}
                   css={s.categorySpan(
-                    searchOption.noticeCategoryId === community.categoryId
+                    searchOption.noticeCategoryId === notice.categoryId
                   )}
                   onClick={() =>
                     setSearchOption((prev) => ({
                       ...prev,
-                      noticeCategoryId: community.categoryId,
+                      noticeCategoryId: notice.categoryId,
                     }))
                   }>
-                  {community.categoryName}
+                  {notice.categoryName}
                 </span>
               ))}
             </div>

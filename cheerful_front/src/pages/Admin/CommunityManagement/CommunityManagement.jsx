@@ -3,7 +3,10 @@ import { useMemo, useState } from "react";
 import * as s from "./styles";
 import useAdminCommunityQuery from "../../../queries/AdminQuery/useAdminCommunityQuery";
 import { reqAdminAllDeleteCommunity } from "../../../api/adminApi/adminApi";
-import { communityCols } from "../../../constants/adminPage/adminPageCategory";
+import {
+  communityCategory,
+  communityCols,
+} from "../../../constants/adminPage/adminPageCategory";
 import { FaSearch } from "react-icons/fa";
 import DataTable from "../../../components/DataTable/DataTable";
 import PageNation from "../../../components/PageNation/PageNation";
@@ -76,6 +79,25 @@ function CommunityManagement(props) {
         </div>
 
         <div css={s.category}>
+          <div>
+            <div>
+              {communityCategory.map((community) => (
+                <span
+                  key={community.id}
+                  css={s.categorySpan(
+                    searchOption.communityCategoryId === community.categoryId
+                  )}
+                  onClick={() =>
+                    setSearchOption((prev) => ({
+                      ...prev,
+                      communityCategoryId: community.categoryId,
+                    }))
+                  }>
+                  {community.categoryName}
+                </span>
+              ))}
+            </div>
+          </div>
           <div css={s.registerAndDel}>
             <button
               onClick={() => {
