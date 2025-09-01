@@ -37,7 +37,7 @@ export const manageSearch = css`
 
 export const category = css`
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   margin-bottom: 1rem;
   width: 100%;
 `;
