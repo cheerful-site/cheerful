@@ -5,6 +5,7 @@ export const layout = css`
   flex-direction: column;
   align-items: center;
   width: 100%;
+  background-color: #f2f4f8;
 `;
 
 export const noticeTitle = css`
