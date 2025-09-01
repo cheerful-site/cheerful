@@ -122,18 +122,24 @@ function NoticeDetail(props) {
 
   const handleRegisterOnClick = async () => {
     const formData = new FormData();
+    if (confirm("댓글을 등록하시겠습니까?")) {
+      if (inputValue === "") {
+        alert("댓글 내용을 작성해주세요.");
+        return;
+      }
 
-    formData.append("content", inputValue);
-    files.forEach((f) => formData.append("files", f.file));
+      formData.append("content", inputValue);
+      files.forEach((f) => formData.append("files", f.file));
 
-    // for (let pair of formData.entries()) {
-    //   console.log(pair[0], pair[1]);
-    // }
+      // for (let pair of formData.entries()) {
+      //   console.log(pair[0], pair[1]);
+      // }
 
-    await reqNoticeRegisterComment(formData, detailContent?.noticeId);
-    setInputValue("");
-    setFiles([]);
-    await notice.refetch();
+      await reqNoticeRegisterComment(formData, detailContent?.noticeId);
+      setInputValue("");
+      setFiles([]);
+      await notice.refetch();
+    }
   };
 
   const handleCommentDeleteOnClick = async (commentId, userId) => {

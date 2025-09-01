@@ -1,5 +1,5 @@
 /**@jsxImportSource @emotion/react */
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import * as s from "./styles";
 import useAdminCommunityQuery from "../../../queries/AdminQuery/useAdminCommunityQuery";
 import { reqAdminAllDeleteCommunity } from "../../../api/adminApi/adminApi";
@@ -35,6 +35,10 @@ function CommunityManagement(props) {
       ...community.user,
     }));
   }, [communityResponseBody]);
+
+  useEffect(() => {
+    setSearchOption((prev) => ({ ...prev, page: 1 }));
+  }, [searchOption.communityCategoryId]);
 
   const setPage = (page) => {
     setSearchOption((prev) => ({ ...prev, page }));

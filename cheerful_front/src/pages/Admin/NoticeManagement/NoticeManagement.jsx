@@ -42,6 +42,10 @@ function NoticeManagement(props) {
     }));
   }, [noticeResponseBody]);
 
+  useEffect(() => {
+    setSearchOption((prev) => ({ ...prev, page: 1 }));
+  }, [searchOption.noticeCategoryId]);
+
   const setPage = (page) => {
     setSearchOption((prev) => ({ ...prev, page }));
   };

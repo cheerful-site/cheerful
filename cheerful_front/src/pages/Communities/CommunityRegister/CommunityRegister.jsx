@@ -70,10 +70,13 @@ function CommunityRegister(props) {
 
     if (inputValue.title === "") {
       alert("제목을 작성해주세요.");
+      return;
     }
     if (inputValue.content === "") {
       alert("내용을 작성해주세요.");
+      return;
     }
+
     formData.append("title", inputValue.title);
     formData.append("content", inputValue.content);
     files.forEach((f) => formData.append("files", f.file));
