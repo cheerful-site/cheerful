@@ -19,6 +19,7 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import usePrincipalQuery from "../../../queries/PrincipalQuery/usePrincipalQuery";
 import { reqAdminFoodCommentDelete } from "../../../api/adminApi/adminApi";
+import FoodImgSlider from "../../../components/FoodImgSlider/FoodImgSlider";
 
 function FoodDetail(props) {
   const params = useParams();
@@ -231,8 +232,11 @@ function FoodDetail(props) {
       <div css={s.layout}>
         <div css={s.foodContainer}>
           <div css={s.foodImgContainer}>
-            {/* 여러장일수도 있어서 슬라이드 처리해야됨 */}
-            <img src={`${foodDetail?.foodImgs[0]?.imgUrl}`} alt="" />
+            <FoodImgSlider
+              images={(foodDetail?.foodImgs || [])
+                .map((i) => i?.imgUrl)
+                .filter(Boolean)}
+            />
           </div>
           <div css={s.contentContainer}>
             <div css={s.contentLayout}>
