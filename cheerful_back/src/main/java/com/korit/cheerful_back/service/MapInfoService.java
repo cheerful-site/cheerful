@@ -156,21 +156,21 @@ public class MapInfoService {
 
     // ---------- 카테고리별 조회 ----------
     private List<GoogleNearbyRespDto.Result> queryForHospital(MapSearchReqDto dto) {
-        var var1 = google.nearbyAllPages("veterinary_care", null,
+        var r1 = google.nearbyAllPages("veterinary_care", null,
                 dto.getLat(), dto.getLng(), dto.getRadiusMeters());
-        var var2 = google.nearbyAllPages(null, "동물병원|수의과|애견병원|vet",
+        var r2 = google.nearbyAllPages(null, "동물병원|수의과|애견병원|vet",
                 dto.getLat(), dto.getLng(), dto.getRadiusMeters());
-        var var3 = google.nearbyAllPages("hospital", "동물|반려동물|애견",
+        var r3 = google.nearbyAllPages("hospital", "동물|반려동물|애견",
                 dto.getLat(), dto.getLng(), dto.getRadiusMeters());
-        return mergeByPlaceId(var1, var2, var3);
+        return mergeByPlaceId(r1, r2, r3);
     }
 
     private List<GoogleNearbyRespDto.Result> queryForCafe(MapSearchReqDto req) {
-        var var1 = google.nearbyAllPages("cafe", "반려동물|애견|dog|pet|동반",
+        var r1 = google.nearbyAllPages("cafe", "반려동물|애견|dog|pet|동반",
                 req.getLat(), req.getLng(), req.getRadiusMeters());
-        var var2 = google.nearbyAllPages(null, "반려동물 동반|애견카페|pet friendly|dog cafe",
+        var r2 = google.nearbyAllPages(null, "반려동물 동반|애견카페|pet friendly|dog cafe",
                 req.getLat(), req.getLng(), req.getRadiusMeters());
-        return mergeByPlaceId(var1, var2);
+        return mergeByPlaceId(r1, r2);
     }
 
     private List<GoogleNearbyRespDto.Result> queryForShelter(MapSearchReqDto req) {
