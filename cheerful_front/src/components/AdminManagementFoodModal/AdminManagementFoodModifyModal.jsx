@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { reqAdminFoodModify } from "../../api/adminApi/adminApi";
 import ReactModal from "react-modal";
 import { IoMdClose } from "react-icons/io";
-import { FiPlus } from "react-icons/fi";
+import { FiPlus, FiX } from "react-icons/fi";
 
 function AdminManagementFoodModifyModal({ isOpen, setOpen, modifyData }) {
   const [files, setFiles] = useState([]);
@@ -84,6 +84,10 @@ function AdminManagementFoodModifyModal({ isOpen, setOpen, modifyData }) {
   const handleModifyOnClick = () => {
     const formData = new FormData();
     if (confirm("등록하시겠습니까?")) {
+      if (inputValue.price === "" || inputValue.price === 0) {
+        alert("가격을 입력해주세요.");
+        return;
+      }
       try {
         formData.append("foodId", inputValue.foodId);
         formData.append("foodCategoryId", inputValue.categoryId);
@@ -94,9 +98,11 @@ function AdminManagementFoodModifyModal({ isOpen, setOpen, modifyData }) {
         files.forEach((f) => formData.append("files", f.file));
         reqAdminFoodModify(formData);
         setOpen(false);
+        setFiles([]);
         // console.log(inputValue);
       } catch (error) {
         console.log(error);
+        setFiles([]);
       }
     }
   };

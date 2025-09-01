@@ -1,7 +1,7 @@
 /**@jsxImportSource @emotion/react */
 import * as s from "./styles";
 import { useNavigate, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import useCommunityDetailQuery from "../../../queries/CommunityQuery/useCommunityDetail";
 import Footer from "../../../components/Footer/Footer";
 import usePrincipalQuery from "../../../queries/PrincipalQuery/usePrincipalQuery";
