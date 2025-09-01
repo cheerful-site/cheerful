@@ -71,7 +71,7 @@ function AdminManagementFoodRegisterModal({ isOpen, setOpen }) {
       if (inputValue.content === "") {
         alert("내용을 작성해주세요.");
       }
-      if (inputValue.price === "") {
+      if (inputValue.price === "" || inputValue.price === 0) {
         alert("가격을 입력해주세요.");
       }
       if (inputValue.foodAddress === "") {
@@ -91,8 +91,10 @@ function AdminManagementFoodRegisterModal({ isOpen, setOpen }) {
 
         reqAdminFoodRegister(formData, inputValue.categoryId);
         setOpen(false);
+        setFiles([]);
       } catch (error) {
         alert("게시물 등록에 실패했습니다. 다시 시도 해주세요.");
+        setFiles([]);
       }
     }
   };

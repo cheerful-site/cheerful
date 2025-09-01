@@ -70,9 +70,11 @@ function AdminManagementNoticeRegisterModal({ isOpen, setOpen }) {
 
         reqAdminNoticeRegister(formData, inputValue.categoryId);
         setOpen(false);
+        setFiles([]);
       } catch (error) {
         console.log(error);
         alert("게시물 등록을 실패했습니다.");
+        setFiles([]);
       }
     }
   };

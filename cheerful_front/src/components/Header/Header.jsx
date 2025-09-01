@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import usePrincipalQuery from "../../queries/PrincipalQuery/usePrincipalQuery";
 import ReactModal from "react-modal";
 import { useQueryClient } from "@tanstack/react-query";
-import { baseURL } from "../../api/axios/axios";
 
 function Header(props) {
   const [login, setLogin] = useState(false);

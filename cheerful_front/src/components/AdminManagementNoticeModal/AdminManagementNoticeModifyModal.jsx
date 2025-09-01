@@ -98,9 +98,11 @@ function AdminManagementNoticeModifyModal({ isOpen, setOpen, modifyData }) {
         // }
 
         reqAdminNoticeModify(formData);
-        // setOpen(false);
+        setOpen(false);
+        setFiles([]);
       } catch (e) {
         console.log(e);
+        setFiles([]);
         alert("게시물 수정이 실패했습니다.");
       }
     }
