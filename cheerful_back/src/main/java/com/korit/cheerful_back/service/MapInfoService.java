@@ -119,7 +119,7 @@ public class MapInfoService {
 
             var maybe = results.stream().filter(result ->
                     result.getPlace_id() != null &&
-                            eq(clean(result.getName()), mapInfo.getMapInfoName()) &&
+                            equals(clean(result.getName()), mapInfo.getMapInfoName()) &&
                             almostEqual(result.getGeometry().getLocation().getLat(), mapInfo.getMapInfoLat()) &&
                             almostEqual(result.getGeometry().getLocation().getLng(), mapInfo.getMapInfoLng())
             ).findFirst();
@@ -156,21 +156,21 @@ public class MapInfoService {
 
     // ---------- 카테고리별 조회 ----------
     private List<GoogleNearbyRespDto.Result> queryForHospital(MapSearchReqDto dto) {
-        var r1 = google.nearbyAllPages("veterinary_care", null,
+        var var1 = google.nearbyAllPages("veterinary_care", null,
                 dto.getLat(), dto.getLng(), dto.getRadiusMeters());
-        var r2 = google.nearbyAllPages(null, "동물병원|수의과|애견병원|vet",
+        var var2 = google.nearbyAllPages(null, "동물병원|수의과|애견병원|vet",
                 dto.getLat(), dto.getLng(), dto.getRadiusMeters());
-        var r3 = google.nearbyAllPages("hospital", "동물|반려동물|애견",
+        var var3 = google.nearbyAllPages("hospital", "동물|반려동물|애견",
                 dto.getLat(), dto.getLng(), dto.getRadiusMeters());
-        return mergeByPlaceId(r1, r2, r3);
+        return mergeByPlaceId(var1, var2, var3);
     }
 
     private List<GoogleNearbyRespDto.Result> queryForCafe(MapSearchReqDto dto) {
-        var r1 = google.nearbyAllPages("cafe", "반려동물|애견|dog|pet|동반",
+        var var1 = google.nearbyAllPages("cafe", "반려동물|애견|dog|pet|동반",
                 dto.getLat(), dto.getLng(), dto.getRadiusMeters());
-        var r2 = google.nearbyAllPages(null, "반려동물 동반|애견카페|pet friendly|dog cafe",
+        var var2 = google.nearbyAllPages(null, "반려동물 동반|애견카페|pet friendly|dog cafe",
                 dto.getLat(), dto.getLng(), dto.getRadiusMeters());
-        return mergeByPlaceId(r1, r2);
+        return mergeByPlaceId(var1, var2);
     }
 
     private List<GoogleNearbyRespDto.Result> queryForShelter(MapSearchReqDto dto) {
