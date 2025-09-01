@@ -58,7 +58,7 @@ public class GooglePlacesClient {
 
         String token = (first != null) ? first.getNext_page_token() : null;
         int page = 1;
-        while (token != null && page < 3) {
+        while (token != null && page < 10) {
             try { Thread.sleep(1800); } catch (InterruptedException ignored) {}
             var nextUri = UriComponentsBuilder.fromHttpUrl(nearbyUrl)
                     .queryParam("pagetoken", token)
