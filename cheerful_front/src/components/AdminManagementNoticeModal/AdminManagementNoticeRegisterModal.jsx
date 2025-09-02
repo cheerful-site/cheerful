@@ -70,11 +70,6 @@ function AdminManagementNoticeRegisterModal({ isOpen, setOpen }) {
         return;
       }
 
-      if (files.length === 0) {
-        alert("이미지를 추가해주세요.");
-        return;
-      }
-
       try {
         const formData = new FormData();
         formData.append("noticeCategoryId", inputValue.categoryId);
