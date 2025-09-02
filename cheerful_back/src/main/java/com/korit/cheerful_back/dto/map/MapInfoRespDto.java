@@ -15,7 +15,7 @@ public class MapInfoRespDto {
   private String phone;
   private Double lat;
   private Double lng;
-  private String operationTime;   // 사람이 읽는 영업시간 요약
+  private String operationTime;
   private Boolean fullTime;
-  private String content;         // 특이사항
+  private String content;
 }
