@@ -6,6 +6,8 @@ import CategoryComponent from "../../components/CategoryComponent/CategoryCompon
 import { useEffect, useState } from "react";
 import { Wrapper } from "@googlemaps/react-wrapper";
 import { GoogleMap, MarkerF } from "@react-google-maps/api";
+import useMapQuery from "../../queries/MapQuery/useMapQuery";
+import mapHospital from "../../../logo/cheerful_map_hospital.png";
 
 function MapPage(props) {
   const { category } = useParams();
@@ -14,6 +16,16 @@ function MapPage(props) {
     { id: 2, title: "카페", category: 2 },
     { id: 3, title: "보호소", category: 3 },
   ];
+  const [searchMap, setSearchMap] = useState({
+    lat: 35.1595454,
+    lng: 129.0616078,
+    radius: 3000,
+    categoryId: Number(category),
+  });
+
+  const map = useMapQuery(searchMap);
+  const mapList = map?.data?.data?.body;
+  console.log(map?.data?.data?.body);
 
   const [center, setCenter] = useState(null);
   useEffect(() => {
@@ -21,10 +33,14 @@ function MapPage(props) {
       // 현재 위치: 위도,경도
       const { latitude, longitude } = position?.coords;
       setCenter({ lat: latitude, lng: longitude });
+      setSearchMap((prev) => ({
+        ...prev,
+        lat: latitude,
+        lng: longitude,
+      }));
     });
   }, []);
 
-  console.log(category);
   return (
     <div css={s.layout}>
       <div css={s.mapTitle}>
@@ -59,7 +75,18 @@ function MapPage(props) {
             }}
             center={center}
             zoom={15}>
-            <MarkerF position={center} />
+            <MarkerF
+              position={center}
+              icon={{
+                url: mapHospital,
+                scaledSize: new window.google.maps.Size(40, 40),
+                scale: 5,
+              }}
+            />
+            {/* {mapList?.map((info) => (
+              <></>
+              
+            ))} */}
           </GoogleMap>
         </Wrapper>
       </div>
