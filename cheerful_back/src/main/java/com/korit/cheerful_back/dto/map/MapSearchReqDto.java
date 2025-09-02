@@ -11,9 +11,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MapSearchReqDto {
 
-    private double lat;
-    private double lng;
-    private int radiusMeters;
-    private int categoryId;
+    private double mapInfoLat;
+    private double mapInfoLng;
+    private Integer radius;
+    private Integer categoryId;
 
 }

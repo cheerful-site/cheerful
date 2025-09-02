@@ -14,73 +14,116 @@
         <result property="mapInfoLng"           column="map_info_lng"/>
         <result property="mapInfoFullTime"      column="map_info_full_time"/>
         <result property="mapInfoContent"       column="map_info_content"/>
+        <association property="mapInfoCategory" resultMap="MapInfoCategoryMap" />
     </resultMap>
 
-    <select id="selectNearby" resultMap="MapInfoMap">
-        <![CDATA[
-      SELECT
-        mi.*,
-        ST_Distance_Sphere(POINT(mi.map_info_lng, mi.map_info_lat), POINT(#{lng}, #{lat})) AS distance_m
-      FROM map_info_tb mi
-      WHERE mi.map_info_category_id = #{categoryId}
-        AND ST_Distance_Sphere(POINT(mi.map_info_lng, mi.map_info_lat), POINT(#{lng}, #{lat})) <= #{radius}
-      ORDER BY distance_m ASC
-    ]]>
+    <resultMap id="MapInfoCategoryMap" type="com.korit.cheerful_back.domain.mapInfoCategory.MapInfoCategory">
+        <id property="mapInfoCategoryId" column="map_info_category_id" />
+        <result property="mapInfoCategoryName" column="map_info_category_name" />
+    </resultMap>
+
+<!--    <select id="selectNearby" resultMap="MapInfoMap">-->
+<!--        <![CDATA[-->
+<!--      SELECT-->
+<!--        mi.*,-->
+<!--        ST_Distance_Sphere(POINT(mi.map_info_lng, mi.map_info_lat), POINT(#{lng}, #{lat})) AS distance_m-->
+<!--      FROM map_info_tb mi-->
+<!--      WHERE mi.map_info_category_id = #{categoryId}-->
+<!--        AND ST_Distance_Sphere(POINT(mi.map_info_lng, mi.map_info_lat), POINT(#{lng}, #{lat})) <= #{radius}-->
+<!--      ORDER BY distance_m ASC-->
+<!--    ]]>-->
+<!--    </select>-->
+
+<!--    <select id="existsByNameAndCoords" resultType="int">-->
+<!--        <![CDATA[-->
+<!--      SELECT COUNT(*)-->
+<!--      FROM map_info_tb-->
+<!--      WHERE map_info_name = #{name}-->
+<!--        AND map_info_lat  = #{lat}-->
+<!--        AND map_info_lng  = #{lng}-->
+<!--    ]]>-->
+<!--    </select>-->
+
+<!--    &lt;!&ndash; INSERT &ndash;&gt;-->
+<!--    <insert id="insertOne" useGeneratedKeys="true" keyProperty="mapInfoId" keyColumn="map_info_id">-->
+<!--        <![CDATA[-->
+<!--      INSERT INTO map_info_tb (-->
+<!--        map_info_name,-->
+<!--        map_info_category_id,-->
+<!--        map_info_address,-->
+<!--        map_info_operation_time,-->
+<!--        map_info_phone_number,-->
+<!--        map_info_lat,-->
+<!--        map_info_lng,-->
+<!--        map_info_full_time,-->
+<!--        map_info_content-->
+<!--      ) VALUES (-->
+<!--        #{mapInfoName},-->
+<!--        #{mapInfoCategoryId},-->
+<!--        COALESCE(#{mapInfoAddress}, ''),-->
+<!--        COALESCE(#{mapInfoOperationTime}, ''),-->
+<!--        COALESCE(#{mapInfoPhoneNumber}, ''),-->
+<!--        #{mapInfoLat},-->
+<!--        #{mapInfoLng},-->
+<!--        COALESCE(#{mapInfoFullTime}, 0),-->
+<!--        COALESCE(#{mapInfoContent}, '')-->
+<!--      )-->
+<!--      ON DUPLICATE KEY UPDATE-->
+<!--        map_info_id = LAST_INSERT_ID(map_info_id),-->
+
+<!--        map_info_address        = IFNULL(NULLIF(TRIM(VALUES(map_info_address)), ''), map_info_address),-->
+<!--        map_info_operation_time = IFNULL(NULLIF(TRIM(VALUES(map_info_operation_time)), ''), map_info_operation_time),-->
+<!--        map_info_phone_number   = IFNULL(NULLIF(TRIM(VALUES(map_info_phone_number)), ''), map_info_phone_number),-->
+<!--        map_info_full_time      = GREATEST(map_info_full_time, VALUES(map_info_full_time)),-->
+<!--        map_info_content        = IFNULL(NULLIF(TRIM(VALUES(map_info_content)), ''), map_info_content)-->
+<!--    ]]>-->
+<!--    </insert>-->
+
+<!--    &lt;!&ndash; UPDATE: null 인자는 컬럼의 기존 값을 유지 &ndash;&gt;-->
+<!--    <update id="updateByNaturalKey">-->
+<!--        <![CDATA[-->
+<!--      UPDATE map_info_tb-->
+<!--      SET-->
+<!--        map_info_address        = COALESCE(#{mapInfoAddress},        map_info_address),-->
+<!--        map_info_operation_time = COALESCE(#{mapInfoOperationTime},  map_info_operation_time),-->
+<!--        map_info_phone_number   = COALESCE(#{mapInfoPhoneNumber},    map_info_phone_number),-->
+<!--        map_info_full_time      = COALESCE(#{mapInfoFullTime},       map_info_full_time),-->
+<!--        map_info_content        = COALESCE(#{mapInfoContent},        map_info_content)-->
+<!--      WHERE map_info_name = #{mapInfoName}-->
+<!--        AND map_info_lat  = #{mapInfoLat}-->
+<!--        AND map_info_lng  = #{mapInfoLng}-->
+<!--    ]]>-->
+<!--    </update>-->
+
+
+    <select id="findAllByOptions" resultMap="MapInfoMap">
+        select *
+        from
+            map_info_tb mit
+            left outer join map_info_category_tb mict on(mict.map_info_category_id = mit.map_info_category_id)
+        where
+            mit.map_info_category_id = #{categoryId}
+        AND <![CDATA[
+          ST_Distance_Sphere(
+              POINT(mit.map_info_lng, mit.map_info_lat),
+              POINT(#{lng}, #{lat})
+          ) <= #{radius}
+      ]]>
     </select>
 
-    <select id="existsByNameAndCoords" resultType="int">
-        <![CDATA[
-      SELECT COUNT(*)
-      FROM map_info_tb
-      WHERE map_info_name = #{name}
-        AND map_info_lat  = #{lat}
-        AND map_info_lng  = #{lng}
-    ]]>
+    <select id="getCountOfOptions" resultType="java.lang.Integer">
+        select
+            count(*)
+        from
+            map_info_tb mit
+            left outer join nmap_info_category_tb mict on(mict.map_info_category_id = mit.map_info_category_id)
+        where
+            mit.map_info_category_id = #{categoryId}
+        AND <![CDATA[
+          ST_Distance_Sphere(
+              POINT(mit.map_info_lng, mit.map_info_lat),
+              POINT(#{lng}, #{lat})
+          ) <= #{radius}
+      ]]>
     </select>
-
-    <!-- INSERT -->
-    <insert id="insertOne" useGeneratedKeys="true" keyProperty="mapInfoId" keyColumn="map_info_id">
-        <![CDATA[
-      INSERT INTO map_info_tb (
-        map_info_name, map_info_category_id, map_info_address,
-        map_info_operation_time, map_info_phone_number,
-        map_info_lat, map_info_lng, map_info_full_time, map_info_content
-      ) VALUES (
-        #{mapInfoName},
-        #{mapInfoCategoryId},
-        COALESCE(#{mapInfoAddress}, ''),
-        COALESCE(#{mapInfoOperationTime}, ''),
-        COALESCE(#{mapInfoPhoneNumber}, ''),
-        #{mapInfoLat},
-        #{mapInfoLng},
-        COALESCE(#{mapInfoFullTime}, 0),
-        COALESCE(#{mapInfoContent}, '')
-      )
-      ON DUPLICATE KEY UPDATE
-        -- 기존 행으로 전환되었을 때도 PK를 getGeneratedKeys로 받기 원하면 다음 한 줄을 추가
-        map_info_id = LAST_INSERT_ID(map_info_id),
-
-        map_info_address        = IFNULL(NULLIF(TRIM(VALUES(map_info_address)), ''), map_info_address),
-        map_info_operation_time = IFNULL(NULLIF(TRIM(VALUES(map_info_operation_time)), ''), map_info_operation_time),
-        map_info_phone_number   = IFNULL(NULLIF(TRIM(VALUES(map_info_phone_number)), ''), map_info_phone_number),
-        map_info_full_time      = GREATEST(map_info_full_time, VALUES(map_info_full_time)),
-        map_info_content        = IFNULL(NULLIF(TRIM(VALUES(map_info_content)), ''), map_info_content)
-    ]]>
-    </insert>
-
-    <!-- UPDATE: null 인자는 컬럼의 기존 값을 유지 -->
-    <update id="updateByNaturalKey">
-        <![CDATA[
-      UPDATE map_info_tb
-      SET
-        map_info_address        = COALESCE(#{mapInfoAddress},        map_info_address),
-        map_info_operation_time = COALESCE(#{mapInfoOperationTime},  map_info_operation_time),
-        map_info_phone_number   = COALESCE(#{mapInfoPhoneNumber},    map_info_phone_number),
-        map_info_full_time      = COALESCE(#{mapInfoFullTime},       map_info_full_time),
-        map_info_content        = COALESCE(#{mapInfoContent},        map_info_content)
-      WHERE map_info_name = #{mapInfoName}
-        AND map_info_lat  = #{mapInfoLat}
-        AND map_info_lng  = #{mapInfoLng}
-    ]]>
-    </update>
 </mapper>

@@ -1,5 +1,6 @@
 package com.korit.cheerful_back.domain.map;
 
+import com.korit.cheerful_back.domain.mapInfoCategory.MapInfoCategory;
 import lombok.*;
 import java.util.Map;
 
@@ -18,4 +19,6 @@ public class MapInfo {
   private Double mapInfoLng;
   private Boolean mapInfoFullTime;
   private String mapInfoContent;
+
+  private MapInfoCategory mapInfoCategory;
 }
