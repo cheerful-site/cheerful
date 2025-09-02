@@ -72,6 +72,10 @@ function FoodDetail(props) {
   const handleRegisterOnClick = async () => {
     const formData = new FormData();
     if (confirm("댓글을 등록하시겠습니까?")) {
+      if (inputValue === "") {
+        alert("내용을 입력해주세요.");
+        return;
+      }
       try {
         formData.append("content", inputValue);
         files.forEach((f) => formData.append("files", f.file));
