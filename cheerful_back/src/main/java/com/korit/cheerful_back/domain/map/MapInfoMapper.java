@@ -8,11 +8,10 @@ import java.util.List;
 @Mapper
 public interface MapInfoMapper {
 
-    List<MapInfo> selectNearby(@Param("categoryId") int categoryId,
+    List<MapInfo> selectNearby(@Param("categoryId") Integer categoryId,
                                @Param("lat") double lat,
                                @Param("lng") double lng,
-                               @Param("radius") int radius,
-                               @Param("limit") int limit);
+                               @Param("radius") Integer radius);
 
     int existsByNameAndCoords(@Param("name") String name,
                               @Param("lat") double lat,
@@ -22,4 +21,14 @@ public interface MapInfoMapper {
 
     /** name + lat + lng 기준 부분 갱신 */
     int updateByNaturalKey(MapInfo mapInfo);
+
+
+    List<MapInfo> findAllByOptions(@Param("categoryId") Integer categoryId,
+                                   @Param("lat") double lat,
+                                   @Param("lng") double lng,
+                                   @Param("radius") int radius);
+    int getCountOfOptions(@Param("categoryId") Integer categoryId,
+                          @Param("lat") double lat,
+                          @Param("lng") double lng,
+                          @Param("radius") int radius);
 }
