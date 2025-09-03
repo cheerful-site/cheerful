@@ -95,7 +95,7 @@ public class GoogleDetailsRespDto {
     @AllArgsConstructor
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class EditorialSummary {
-        private String overview;
+        private String overview; // 자유서술 요약
     }
 
     @Data
