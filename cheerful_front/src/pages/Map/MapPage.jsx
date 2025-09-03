@@ -27,6 +27,30 @@ function MapPage(props) {
   const mapList = map?.data?.data?.body;
   console.log(map?.data?.data?.body);
 
+  const CLEAN_STYLE = [
+    { featureType: "poi", stylers: [{ visibility: "off" }] }, // 모든 POI
+    { featureType: "poi.business", stylers: [{ visibility: "off" }] }, // 상업시설
+    { featureType: "poi.medical", stylers: [{ visibility: "off" }] }, // 병원 아이콘
+    { featureType: "poi.school", stylers: [{ visibility: "off" }] },
+    { featureType: "poi.park", stylers: [{ visibility: "off" }] },
+    { featureType: "transit.station", stylers: [{ visibility: "off" }] }, // 역 아이콘
+    {
+      featureType: "road.arterial",
+      elementType: "labels.icon",
+      stylers: [{ visibility: "off" }],
+    },
+    {
+      featureType: "road",
+      elementType: "labels",
+      stylers: [{ visibility: "off" }],
+    }, // ✅ 도로명 라벨 숨김
+    {
+      featureType: "administrative",
+      elementType: "labels",
+      stylers: [{ visibility: "off" }],
+    }, // 행정구역 라벨 숨김
+  ];
+
   const [center, setCenter] = useState(null);
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
@@ -74,15 +98,25 @@ function MapPage(props) {
                 "rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px",
             }}
             center={center}
-            zoom={15}>
-            <MarkerF
-              position={center}
-              icon={{
-                url: mapHospital,
-                scaledSize: new window.google.maps.Size(40, 40),
-                scale: 5,
-              }}
-            />
+            zoom={15}
+            options={{
+              styles: CLEAN_STYLE,
+              clickableIcons: false,
+              streetViewControl: false,
+              mapTypeControl: true,
+              fullscreenControl: true,
+            }}>
+            {center && window.google && (
+              <MarkerF
+                position={center}
+                icon={{
+                  url: mapHospital,
+                  scaledSize: new window.google.maps.Size(40, 40),
+                  scale: 5,
+                }}
+              />
+            )}
+
             {/* {mapList?.map((info) => (
               <></>
               
