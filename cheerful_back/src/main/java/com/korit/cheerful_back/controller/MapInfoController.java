@@ -17,19 +17,19 @@ import java.util.List;
 public class MapInfoController {
 
     private final MapInfoService mapInfoService;
-
-    @GetMapping("/search")
-    public ResponseEntity<ResponseDto<?>> search(
-            @RequestParam double lat,
-            @RequestParam double lng,
-            @RequestParam(defaultValue = "3000") int radius,
-            @RequestParam int categoryId
-    ) {
-        var req = new MapSearchReqDto(lat, lng, radius, categoryId);
-        var result = mapInfoService.search(req);
-        System.out.println(categoryId);
-        return ResponseEntity.ok(ResponseDto.success(result));
-    }
+//
+//    @GetMapping("/search")
+//    public ResponseEntity<ResponseDto<?>> search(
+//            @RequestParam double lat,
+//            @RequestParam double lng,
+//            @RequestParam(defaultValue = "3000") int radius,
+//            @RequestParam int categoryId
+//    ) {
+//        var req = new MapSearchReqDto(lat, lng, radius, categoryId);
+//        var result = mapInfoService.search(req);
+//        System.out.println(categoryId);
+//        return ResponseEntity.ok(ResponseDto.success(result));
+//    }
 
     /*
         Map 조회

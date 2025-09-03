@@ -22,7 +22,7 @@ public class MapInfoService {
 
     private final MapInfoMapper mapInfoMapper;
 //    private final MapInfoCategoryMapper mapInfoCategoryMapper;
-//    private final GooglePlacesClient google;
+    private final GooglePlacesClient google;
 //
 //    private static final int MIN_RESULTS = 10;
 //    private static final int PATCH_TOP_N  = 25;
