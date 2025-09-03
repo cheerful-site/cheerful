@@ -17,7 +17,8 @@ import java.util.*;
 @Transactional
 public class MapInfoService {
 
-    //    private final MapInfoCategoryMapper mapInfoCategoryMapper;
+    private final MapInfoMapper mapInfoMapper;
+//    private final MapInfoCategoryMapper mapInfoCategoryMapper;
     private final GooglePlacesClient google;
 //
 //    private static final int MIN_RESULTS = 10;
