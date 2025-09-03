@@ -5,10 +5,7 @@ import com.korit.cheerful_back.domain.map.MapInfo;
 import com.korit.cheerful_back.domain.map.MapInfoMapper;
 import com.korit.cheerful_back.domain.mapInfoCategory.MapInfoCategory;
 import com.korit.cheerful_back.domain.mapInfoCategory.MapInfoCategoryMapper;
-import com.korit.cheerful_back.dto.map.GoogleDetailsRespDto;
-import com.korit.cheerful_back.dto.map.GoogleNearbyRespDto;
-import com.korit.cheerful_back.dto.map.MapInfoRespDto;
-import com.korit.cheerful_back.dto.map.MapSearchReqDto;
+import com.korit.cheerful_back.dto.map.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -366,9 +363,8 @@ public class MapInfoService {
 //        )).toList();
 //    }
 
+
     public List<MapInfo> mapInfoList(Integer categoryId, double lat, double lng, int radius) {
         return mapInfoMapper.findAllByOptions(categoryId, lat, lng, radius);
     }
-
-
 }

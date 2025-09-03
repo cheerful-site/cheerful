@@ -31,14 +31,15 @@ public class MapInfoController {
         return ResponseEntity.ok(ResponseDto.success(result));
     }
 
-    /*
-        Map 조회
-     */
+
     @GetMapping("/{categoryId}")
-    public ResponseEntity<ResponseDto<?>> getMapInfo(@PathVariable Integer categoryId, @RequestParam double lat,
+    public ResponseEntity<ResponseDto<?>> getMapInfo(@PathVariable Integer categoryId,
+                                                     @RequestParam double lat,
                                                      @RequestParam double lng,
-                                                     @RequestParam(defaultValue = "5000") int radius) {
+                                                     @RequestParam(defaultValue = "3000") int radius) {
         List<MapInfo> mapInfoList = mapInfoService.mapInfoList(categoryId, lat, lng, radius);
-        return ResponseEntity.ok(ResponseDto.success(mapInfoList));
+        List<MapInfoRespDto> dtoList = MapInfoRespDto.map(mapInfoList);
+
+        return ResponseEntity.ok(ResponseDto.success(dtoList));
     }
 }
