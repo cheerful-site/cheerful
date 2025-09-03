@@ -101,7 +101,7 @@ function Home(props) {
               <div css={s.foodReviewContainer}>
                 {/* best 글 표시 */}
                 {journal.map((popular, index) => (
-                  <div css={s.foodReview} key={popular?.communityId}>
+                  <div css={s.foodReview} key={index}>
                     <div
                       onClick={() =>
                         handleGotoCommunityOnClick(
