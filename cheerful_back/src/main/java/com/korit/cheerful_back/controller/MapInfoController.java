@@ -39,8 +39,6 @@ public class MapInfoController {
                                                      @RequestParam double lng,
                                                      @RequestParam(defaultValue = "3000") int radius) {
         List<MapInfo> mapInfoList = mapInfoService.mapInfoList(categoryId, lat, lng, radius);
-
-        // DTO 변환
         List<MapInfoRespDto> dtoList = MapInfoRespDto.map(mapInfoList);
 
         return ResponseEntity.ok(ResponseDto.success(dtoList));
