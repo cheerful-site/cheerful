@@ -26,7 +26,7 @@ export const postContainer = css`
 `;
 
 export const postTitle = css`
-  font-size: 1.6rem;
+  font-size: 1.7rem;
   font-weight: 700;
   color: #222222;
   cursor: pointer;
@@ -37,10 +37,17 @@ export const postTitle = css`
 `;
 
 export const postContent = css`
-  width: 70rem;
-  height: 6rem;
+  margin: 1rem 0;
+  width: 60rem;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
   overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: normal;
+  word-break: keep-all;
+  line-height: 1.6;
+  max-height: calc(1.6em * 2);
+  font-size: 1.4rem;
 `;
 
 export const postLike = css`

@@ -55,7 +55,7 @@ export const googleMap = css`
 
 export const infoCard = css`
   padding: 1.2rem;
-  border-radius: 1rem 1rem 1rem 0;
+  border-radius: 1rem;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
   width: 26rem;
   background-color: #ffffff;
