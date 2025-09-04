@@ -7,6 +7,7 @@ import {
   reqAdminOneDeleteCommunity,
   reqAdminOneDeleteUsers,
 } from "../../api/adminApi/adminApi";
+import { useQueryClient } from "@tanstack/react-query";
 
 function DataTable({
   isCheckBoxEnabled,
@@ -19,6 +20,7 @@ function DataTable({
 }) {
   const [newRows, setNewRows] = useState([]);
   const [checkedAll, setCheckedAll] = useState(false);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (rows?.length > 0) {
@@ -84,14 +86,19 @@ function DataTable({
 
   const handleDeleteOnClick = async (id, field) => {
     // console.log(id, field);
-    const deleteReq = confirm("삭제 하시겠습니까?");
-    if (deleteReq) {
+    if (confirm("삭제 하시겠습니까?")) {
       try {
         if (field === "communityId") {
           await reqAdminOneDeleteCommunity(id);
+          queryClient.invalidateQueries({
+            queryKey: ["adminCommunity"],
+          });
         }
         if (field === "userId") {
           await reqAdminOneDeleteUsers(id);
+          queryClient.invalidateQueries({
+            queryKey: ["adminUsers"],
+          });
         }
       } catch (error) {
         console.log(error);
