@@ -126,8 +126,11 @@
         from community_comment_tb
         where community_id = #{communityId}
     </select>
+    <select id="getMyPageCommentList" resultMap="CommentMap">
 
-<!--    admin comment delete-->
+    </select>
+
+    <!--    admin comment delete-->
     <delete id="adminDeleteByCommentId">
         delete from community_comment_tb
         where community_comment_id = #{commentId}
