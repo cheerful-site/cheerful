@@ -1,12 +1,11 @@
 /**@jsxImportSource @emotion/react */
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import * as s from "./styles";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Wrapper } from "@googlemaps/react-wrapper";
-import { GoogleMap, MarkerF } from "@react-google-maps/api";
+import { GoogleMap, MarkerF, InfoBox } from "@react-google-maps/api";
 import Footer from "../../components/Footer/Footer";
 import SearchBar from "../../components/SearchBar/SearchBar";
-import usePrincipalQuery from "../../queries/PrincipalQuery/usePrincipalQuery";
 import useHomeBestFoodQuery from "../../queries/HomeQuery/useHomeBestFoodQuery";
 import useHomeBestCommunityQuery from "../../queries/HomeQuery/useHomeBestCommunityQuery";
 import { Link, useNavigate } from "react-router-dom";
@@ -14,11 +13,17 @@ import noImage from "../../icons/Frame2.png";
 import mapImage from "../../../logo/cheerful_home_map.png";
 import communitImage from "../../../logo/cheerful_home_community.png";
 import foodImage from "../../../logo/cheerful_home_food.png";
+import mapCenter from "../../../logo/cheerful_map_center.png";
+import { CLEAN_STYLE } from "../../constants/mapPage/mapPage";
+import useMapQuery from "../../queries/MapQuery/useMapQuery";
+import hospital24 from "../../../logo/cheerful_map_24hospital.png";
+import hospital from "../../../logo/cheerful_map_hospital.png";
 
 function Home(props) {
-  const principal = usePrincipalQuery();
   const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
+  const mapRef = useRef(null);
+  const centerRef = useRef({ lat: 35.1595454, lng: 129.0616078 });
   const bestFood = useHomeBestFoodQuery();
   const bestCommunity = useHomeBestCommunityQuery();
 
@@ -31,6 +36,31 @@ function Home(props) {
     bestCommunity?.data?.data?.body.bestMissing,
   ];
 
+  const [searchMap, setSearchMap] = useState({
+    lat: centerRef.current.lat,
+    lng: centerRef.current.lng,
+    radius: 3000,
+    categoryId: 1,
+  });
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      ({ coords }) => {
+        const lat = Number(coords.latitude);
+        const lng = Number(coords.longitude);
+        setCenter({ lat, lng });
+        setSearchMap((prev) => ({ ...prev, lat, lng }));
+      },
+      () => {}, // 실패 시 기본 좌표 유지
+      { enableHighAccuracy: true, timeout: 8000 }
+    );
+  }, []);
+
+  const [selected, setSelected] = useState(null);
+  const map = useMapQuery(searchMap);
+  const mapList = map?.data?.data?.body || [];
+
+  console.log(mapList);
   // console.log(foodImg);
   // console.log(journal);
 
@@ -54,6 +84,14 @@ function Home(props) {
       setCenter({ lat: latitude, lng: longitude });
     });
   }, []);
+
+  const toLatLng = (lat, lng) => {
+    const _lat = Number(lat);
+    const _lng = Number(lng);
+    return Number.isFinite(_lat) && Number.isFinite(_lng)
+      ? { lat: _lat, lng: _lng }
+      : null;
+  };
 
   const handleGotoCommunityOnClick = (categoryId, id) => {
     navigate(`/community/${categoryId}/${id}`);
@@ -189,8 +227,98 @@ function Home(props) {
                     boxShadow:
                       "rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px",
                   }}
+                  options={{
+                    styles: CLEAN_STYLE,
+                    clickableIcons: false,
+                    streetView: false,
+                    mapTypeControl: true,
+                    fullscreenControl: true,
+                  }}
                   center={center}
-                  zoom={15}></GoogleMap>
+                  zoom={15}>
+                  <MarkerF
+                    position={center}
+                    icon={{
+                      url: mapCenter,
+                      scaledSize: { width: 45, height: 45 },
+                    }}
+                  />
+
+                  {mapList?.map((info) => {
+                    const location = info?.mapInfoLocationDto;
+                    const pos = toLatLng(
+                      location?.mapInfoLat,
+                      location?.mapInfoLng
+                    );
+                    let iconUrl = null;
+                    iconUrl = info?.fullTime ? hospital24 : hospital;
+
+                    return (
+                      <MarkerF
+                        key={info?.mapInfoId}
+                        position={pos}
+                        title={info?.name}
+                        icon={{
+                          url: iconUrl,
+                          scaledSize: { width: 45, height: 45 },
+                        }}
+                        onClick={() => setSelected(info)}
+                      />
+                    );
+                  })}
+                  {selected &&
+                    (() => {
+                      const p = toLatLng(
+                        selected?.mapInfoLocationDto?.mapInfoLat,
+                        selected?.mapInfoLocationDto?.mapInfoLng
+                      );
+                      if (!p) return null;
+                      return (
+                        <InfoBox
+                          position={p}
+                          options={{
+                            closeBoxURL: "", // 기본 X 제거
+                            enableEventPropagation: true,
+                            pixelOffset: new google.maps.Size(-140, -180),
+                          }}>
+                          <div css={s.infoCard}>
+                            <div css={s.infoCardTitle}>
+                              <div>{selected?.name}</div>
+                              <button onClick={() => setSelected(null)}>
+                                ✕
+                              </button>
+                            </div>
+                            {selected?.address && (
+                              <div css={s.address}>
+                                주소: {selected.address}
+                              </div>
+                            )}
+                            {selected?.phoneNumber && (
+                              <div css={s.phoneNumber}>
+                                전화: {selected.phoneNumber}
+                              </div>
+                            )}
+                            {selected?.operationTime && (
+                              <div css={s.operationTime}>
+                                영업시간: {selected.operationTime}
+                              </div>
+                            )}
+                            {selected?.breakTime && (
+                              <div css={s.breakTime}>
+                                브레이크타임: {selected.breakTime}
+                              </div>
+                            )}
+                            {selected?.fullTime && (
+                              <div css={s.fullTime}>24시간 운영</div>
+                            )}
+                            {selected?.content && (
+                              <div css={s.content}>{selected?.content}</div>
+                            )}
+                          </div>
+                        </InfoBox>
+                      );
+                    })()}
+                </GoogleMap>
               </Wrapper>
             </div>
           </div>

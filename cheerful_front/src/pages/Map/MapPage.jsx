@@ -13,6 +13,7 @@ import hospital from "../../../logo/cheerful_map_hospital.png";
 import cafe from "../../../logo/cheerful_map_cafe.png";
 import shelter from "../../../logo/cheerful_map_shelter.png";
 import { CLEAN_STYLE, mapCategory } from "../../constants/mapPage/mapPage";
+import Loading from "../../components/Loading/Loading";
 
 function MapPage(props) {
   const { category } = useParams();
@@ -86,6 +87,7 @@ function MapPage(props) {
 
   return (
     <div css={s.layout}>
+      {map.isLoading && <Loading />}
       <div css={s.mapTitle}>
         <div>
           우리 동네, <span>반려 생활 지킴</span>이 지도

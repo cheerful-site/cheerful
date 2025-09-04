@@ -8,6 +8,7 @@ import CategoryComponent from "../../../components/CategoryComponent/CategoryCom
 import PageNation from "../../../components/PageNation/PageNation";
 import { reqNoticeViews } from "../../../api/noticeApi/noticeApi";
 import Post from "../../../components/Post/Post";
+import Loading from "../../../components/Loading/Loading";
 
 function Notice(props) {
   const { category } = useParams();
@@ -37,6 +38,7 @@ function Notice(props) {
 
   return (
     <div css={s.layout}>
+      {notice.isLoading && <Loading />}
       <div css={s.noticeTitle}>
         <div>
           우리 커뮤니티의 <span>똥꼬발랄한 소식</span>들, 다 여기 있어요!
