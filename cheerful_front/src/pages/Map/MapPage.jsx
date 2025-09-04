@@ -178,7 +178,7 @@ function MapPage(props) {
                     options={{
                       closeBoxURL: "", // 기본 X 제거
                       enableEventPropagation: true,
-                      pixelOffset: new google.maps.Size(-140, -180),
+                      // pixelOffset: new google.maps.Size(-140, -220),
                     }}>
                     <div css={s.infoCard}>
                       <div css={s.infoCardTitle}>

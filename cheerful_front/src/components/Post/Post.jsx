@@ -52,9 +52,7 @@ function Post({ content }) {
         <div css={s.postTitle} onClick={handleOnClick}>
           {content?.title}
         </div>
-        <div css={s.postContent}>
-          <p>{content?.content}</p>
-        </div>
+        <div css={s.postContent}>{content?.content}</div>
         <div css={s.postLike}>
           <div>
             <span>{content?.user?.name}</span>
