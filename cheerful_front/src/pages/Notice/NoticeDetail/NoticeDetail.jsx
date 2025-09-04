@@ -1,5 +1,5 @@
 /**@jsxImportSource @emotion/react */
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import useNoticeDetailQuery from "../../../queries/NoticeQuery/useNoticeDetailQuery";
 import * as s from "./styles";
 import Footer from "../../../components/Footer/Footer";
@@ -26,7 +26,9 @@ function NoticeDetail(props) {
   const detailContent = notice?.data?.data?.body;
   const user = principal?.data?.data?.body.user;
 
-  console.log(detailContent);
+  console.log(params);
+
+  // console.log(detailContent);
   // console.log(detailContent?.noticeImgs);
 
   // console.log(user);
@@ -218,6 +220,13 @@ function NoticeDetail(props) {
             )}
           </div>
         </div>
+
+        <div css={s.listMoveContaier}>
+          <Link to={`/notice/${params.category}`} css={s.listMove}>
+            목록으로 가기
+          </Link>
+        </div>
+
         {token && detailContent?.noticeCategoryId === 3 ? (
           <div css={s.commentsRegister}>
             {/* 댓글 등록하기 */}
@@ -307,6 +316,7 @@ function NoticeDetail(props) {
                   <p>{comment?.content}</p>
                 </div>
               </div>
+              <div css={s.horizen}></div>
             </div>
           ))}
         </div>

@@ -17,6 +17,7 @@ function Notice(props) {
   const notice = useNoticeListQuery(page, 10, parseInt(category));
   const noticePages = notice?.data?.data?.body;
   const noticeList = notice?.data?.data?.body?.content;
+  console.log(category);
 
   // console.log(noticeList);
 

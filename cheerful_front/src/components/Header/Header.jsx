@@ -15,7 +15,7 @@ function Header(props) {
   const principalQuery = usePrincipalQuery();
   const user = principalQuery?.data?.data?.body?.user || [];
   const userStatus = principalQuery?.data?.data?.body.myStatus || [];
-  
+
   // console.log(user);
   // console.log(userStatus);
 
@@ -136,7 +136,7 @@ function Header(props) {
                     {user?.role === "ROLE_ADMIN" ? (
                       <Link to={"/admin/users"}>관리자 페이지</Link>
                     ) : (
-                      <></>
+                      <Link to={"/mypage"}>마이페이지</Link>
                     )}
                     <div onClick={handleLogoutOnClick}>로그아웃</div>
                   </div>

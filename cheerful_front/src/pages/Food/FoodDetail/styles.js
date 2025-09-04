@@ -127,7 +127,7 @@ export const commentsRegister = css`
   box-sizing: border-box;
   border-radius: 1.5rem;
   margin-top: 3rem;
-  padding: 3rem;
+  padding: 2rem 7rem;
   width: 110rem;
   height: 24rem;
   background-color: #ffffff;
@@ -251,7 +251,8 @@ export const commentsContainer = css`
 `;
 
 export const commentContainer = css`
-  padding: 5rem 0;
+  margin-top: 2rem;
+  /* padding: 2rem 0; */
   width: 96rem;
 `;
 
@@ -381,4 +382,11 @@ export const like = css`
     font-weight: 800;
     color: #ffc421;
   }
+`;
+
+export const horizen = css`
+  margin-top: 2rem;
+  box-sizing: border-box;
+  border-bottom: 0.1rem solid #f2f4f8;
+  width: 100%;
 `;

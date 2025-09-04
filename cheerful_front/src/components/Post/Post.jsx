@@ -29,23 +29,27 @@ function Post({ content }) {
   return (
     <div css={s.postLayout}>
       {location.pathname.startsWith("/notice") ? (
-        <img
-          css={s.postImg}
-          src={content?.noticeImgs[0]?.imgUrl || noImage}
-          alt=""
-          onClick={handleOnClick}
-        />
+        <div css={s.postImgWrap}>
+          <img
+            css={s.postImg}
+            src={content?.noticeImgs[0]?.imgUrl || noImage}
+            alt=""
+            onClick={handleOnClick}
+          />
+        </div>
       ) : (
-        <img
-          css={s.postImg}
-          src={
-            content?.communityImgs.length === 0
-              ? noImage
-              : content?.communityImgs[0]?.imgUrl
-          }
-          alt=""
-          onClick={handleOnClick}
-        />
+        <div css={s.postImgWrap}>
+          <img
+            css={s.postImg}
+            src={
+              content?.communityImgs.length === 0
+                ? noImage
+                : content?.communityImgs[0]?.imgUrl
+            }
+            alt=""
+            onClick={handleOnClick}
+          />
+        </div>
       )}
 
       <div css={s.postContainer}>

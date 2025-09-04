@@ -29,13 +29,6 @@ export const category = css`
   font-size: 2rem;
   font-weight: 400;
 
-  & > a:nth-of-type(2),
-  a:nth-of-type(3),
-  a:nth-of-type(4),
-  a:nth-of-type(5) {
-    margin-left: 6rem;
-  }
-
   & > a {
     text-decoration: none;
     cursor: pointer;
@@ -73,7 +66,6 @@ export const profile = css`
   justify-content: center;
   align-items: center;
   height: 8rem;
-  /* margin-right: 150px; */
 `;
 
 export const searchIconBox = css`

@@ -401,6 +401,7 @@ function FoodDetail(props) {
                   )}
                 </div>
               </div>
+              <div css={s.horizen}></div>
             </div>
           ))}
         </div>

@@ -1,24 +1,31 @@
 /**@jsxImportSource @emotion/react */
 import { FaSearch } from "react-icons/fa";
 import * as s from "./styles";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { reqSearchCommunity } from "../../api/searchApi/searchApi";
 import { useSearchTextStore } from "../../stores/useSearchTextStore";
 
 function SearchBar(props) {
   const navigate = useNavigate();
   const [value, setValue] = useState("");
-  const { searchText, setSearchText } = useSearchTextStore();
+  const { setSearchText } = useSearchTextStore();
 
   const handleSearchOnChange = (e) => {
     setValue(e.target.value);
   };
 
   const handleSearchOnClick = () => {
-    setSearchText(value);
-    navigate(`/search?q=${searchText}`);
+    // setSearchText(value);
+    // navigate(`/search?q=${searchText}`);
+
+    const keyword = value.trim();
+    if (!keyword) return;
+    setSearchText(keyword);
+    navigate(`/search?q=${encodeURIComponent(keyword)}`);
   };
+
+  // useEffect(() => {
+  // }, [value]);
 
   return (
     <div css={s.searchBar}>
@@ -30,7 +37,7 @@ function SearchBar(props) {
         name="search"
         onChange={handleSearchOnChange}
         onKeyDown={(e) => {
-          if (e.keyCode === 13) handleSearchOnClick();
+          if (e.key === "Enter") handleSearchOnClick();
         }}
         value={value}
       />

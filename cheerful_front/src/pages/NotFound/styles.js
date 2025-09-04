@@ -38,7 +38,7 @@ export const homeButton = css`
   justify-content: center;
   align-items: center;
   border-radius: 1rem;
-  margin-top: 10rem;
+  margin-top: 5rem;
   width: 20rem;
   height: 4rem;
   font-weight: 900;
