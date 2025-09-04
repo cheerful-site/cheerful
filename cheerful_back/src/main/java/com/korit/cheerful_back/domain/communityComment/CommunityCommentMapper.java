@@ -20,4 +20,6 @@ public interface CommunityCommentMapper {
     // 등록한 user일 경우 댓글 삭제
     int deleteUserCommunityCommentId(Integer commentId, Integer userId);
 
+    // myPage
+    List<CommunityComment> getMyPageCommentList();
 }

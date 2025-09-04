@@ -34,4 +34,8 @@ public interface CommunityMapper {
     int deleteByCommunityIds(List<Integer> communityIds);
     List<String> getImagePathsByCommunityId(Integer communityId);
     List<String> getImagePathByCommunityIds(List<Integer> communityIds);
+
+    // myPage
+    List<Community> getMyPageCommunityList(CommunitySearchOption communitySearchOption);
+    int getCountOfMyPage(CommunitySearchOption communitySearchOption);
 }

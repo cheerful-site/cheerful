@@ -15,11 +15,12 @@
     <result property="provider" column="provider"/>
     <result property="providerId" column="provider_id"/>
     <result property="createdAt" column="created_at" />
+    <result property="updatedAt" column="updated_at" />
   </resultMap>
 
   <insert id="insert" useGeneratedKeys="true" keyProperty="userId">
     insert into user_tb
-    values (default, #{username}, #{password}, #{name}, #{email}, #{profileImgPath}, #{role}, #{provider}, #{providerId}, now())
+    values (default, #{username}, #{password}, #{name}, #{email}, #{profileImgPath}, #{role}, #{provider}, #{providerId}, now(), now())
   </insert>
 
   <delete id="deleteByUserIds" parameterType="list">
