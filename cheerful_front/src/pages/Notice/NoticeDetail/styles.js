@@ -95,11 +95,33 @@ export const isDislike = css`
   color: #000000;
 `;
 
+export const listMoveContaier = css`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
+  width: 100%;
+`;
+
+export const listMove = css`
+  align-content: center;
+  border: none;
+  /* border: 0.15rem solid #ffc42150; */
+  border-radius: 1rem;
+  width: 13rem;
+  height: 4rem;
+  font-weight: 600;
+  background-color: #adadad86;
+  text-align: center;
+  text-decoration: none;
+  color: #ffffff;
+`;
+
 export const commentsRegister = css`
   box-sizing: border-box;
   border-radius: 1.5rem;
   margin-top: 3rem;
-  padding: 3rem;
+  padding: 2rem 7rem;
   width: 110rem;
   height: 24rem;
   background-color: #ffffff;
@@ -223,8 +245,7 @@ export const commentsContainer = css`
 `;
 
 export const commentContainer = css`
-  padding-top: 4rem;
-  padding-bottom: 1rem;
+  padding: 2rem 0;
   width: 96rem;
 `;
 
@@ -288,4 +309,10 @@ export const commentImgList = css`
     width: 10rem;
     height: 10rem;
   }
+`;
+
+export const horizen = css`
+  box-sizing: border-box;
+  border-bottom: 0.1rem solid #22222220;
+  width: 100%;
 `;

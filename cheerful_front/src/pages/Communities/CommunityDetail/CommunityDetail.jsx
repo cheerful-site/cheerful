@@ -31,6 +31,7 @@ function CommunityDetail(props) {
   );
 
   const [commentInputValue, setCommentInputValue] = useState();
+  const [recommentInputValue, setRecommentInputValue] = useState();
   const [recomment, setRecomment] = useState(null);
   const [openCommentId, setOpenCommentId] = useState(null);
 
@@ -44,6 +45,10 @@ function CommunityDetail(props) {
 
   const handleCommentOnChange = (e) => {
     setCommentInputValue(e.target.value);
+  };
+
+  const handleRecommentOnChange = (e) => {
+    setRecommentInputValue(e.target.value);
   };
 
   const handleCommentsOnClick = async () => {
@@ -75,9 +80,9 @@ function CommunityDetail(props) {
   };
 
   const handleRecommentsOnClick = async () => {
-    const content = /^@\w+\s/.test(commentInputValue)
-      ? commentInputValue.substring(commentInputValue.indexOf(" ") + 1)
-      : commentInputValue;
+    const content = /^@\w+\s/.test(recommentInputValue)
+      ? recommentInputValue.substring(recommentInputValue.indexOf(" ") + 1)
+      : recommentInputValue;
 
     const comment = {
       communityId: recomment?.communityId,
@@ -88,7 +93,7 @@ function CommunityDetail(props) {
 
     await reqCommunityRegisterComments(comment);
     await communityDetail.refetch();
-    setCommentInputValue("");
+    setRecommentInputValue("");
     setOpenCommentId(null);
   };
 
@@ -335,8 +340,8 @@ function CommunityDetail(props) {
                                 <textarea
                                   name="comment"
                                   placeholder="댓글을 남겨주세요..."
-                                  onChange={handleCommentOnChange}
-                                  value={commentInputValue}
+                                  onChange={handleRecommentOnChange}
+                                  value={recommentInputValue}
                                 />
                                 <div>
                                   <button onClick={handleRecommentsOnClick}>
@@ -402,8 +407,8 @@ function CommunityDetail(props) {
                               <textarea
                                 name="comment"
                                 placeholder="댓글을 남겨주세요..."
-                                onChange={handleCommentOnChange}
-                                value={commentInputValue}
+                                onChange={handleRecommentOnChange}
+                                value={recommentInputValue}
                               />
                               <div>
                                 <button onClick={handleRecommentsOnClick}>

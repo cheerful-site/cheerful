@@ -10,11 +10,21 @@ export const postLayout = css`
   background-color: #ffffff;
 `;
 
-export const postImg = css`
+export const postImgWrap = css`
   margin-left: 2rem;
-  border-radius: 1rem;
   width: 11rem;
   height: 11rem;
+  border-radius: 1rem;
+  overflow: hidden;
+  flex: 0 0 11rem;
+`;
+
+export const postImg = css`
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center;
   cursor: pointer;
 `;
 
