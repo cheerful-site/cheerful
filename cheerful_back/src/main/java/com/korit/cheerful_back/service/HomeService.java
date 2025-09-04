@@ -6,6 +6,8 @@ import com.korit.cheerful_back.domain.communityImg.CommunityImg;
 import com.korit.cheerful_back.domain.food.Food;
 import com.korit.cheerful_back.domain.food.FoodMapper;
 import com.korit.cheerful_back.domain.foodImg.FoodImg;
+import com.korit.cheerful_back.domain.map.MapInfo;
+import com.korit.cheerful_back.domain.map.MapInfoMapper;
 import com.korit.cheerful_back.dto.community.CommunityHomeDto;
 import com.korit.cheerful_back.util.ImageUrlUtil;
 import java.util.Comparator;
@@ -23,6 +25,7 @@ public class HomeService {
 
   private static final int MISSING_ID = 6;    // 실종/목격
   private static final int FOSTER_ID = 7;     // 임보/입양
+  private final MapInfoMapper mapInfoMapper;
 
   public CommunityHomeDto getCommunityCards() {
     var mostLiked = one(communityMapper.findTopCommunity(1, "likes", 1, null));
@@ -65,6 +68,10 @@ public class HomeService {
     });
 
     return foods;
+  }
+
+  public List<MapInfo> mapInfoHomeList(Integer categoryId, double lat, double lng, int radius) {
+    return mapInfoMapper.findAllByOptions(categoryId, lat, lng, radius);
   }
 
 }

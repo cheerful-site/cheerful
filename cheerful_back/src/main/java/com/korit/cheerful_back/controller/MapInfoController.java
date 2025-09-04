@@ -28,7 +28,6 @@ public class MapInfoController {
     ) {
         var req = new MapSearchReqDto(lat, lng, radius, categoryId);
         var result = mapInfoService.search(req);
-        System.out.println(categoryId);
         return ResponseEntity.ok(ResponseDto.success(result));
     }
 
