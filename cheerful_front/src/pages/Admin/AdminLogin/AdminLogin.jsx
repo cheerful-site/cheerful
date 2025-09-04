@@ -60,6 +60,9 @@ function AdminLogin(props) {
           name="password"
           placeholder="비밀번호"
           onChange={handleOnChange}
+          onKeyDown={(e) => {
+            if (e.keyCode === 13) handleLoginOnClick();
+          }}
         />
         <button onClick={handleLoginOnClick}>로그인</button>
       </div>

@@ -5,6 +5,7 @@ import Footer from "../../../components/Footer/Footer";
 import useFoodListQuery from "../../../queries/FoodQuery/useFoodListQuery";
 import PageNation from "../../../components/PageNation/PageNation";
 import { useNavigate } from "react-router-dom";
+import Loading from "../../../components/Loading/Loading";
 
 function Food(props) {
   const [page, setPage] = useState(1);
@@ -58,6 +59,7 @@ function Food(props) {
 
   return (
     <div css={s.layout}>
+      {food.isLoading && <Loading />}
       <div css={s.foodTitle}>
         <h1>
           우리 아이가 제일 좋아하는 <span>그 맛</span>, 여기 다 있어요!

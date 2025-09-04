@@ -3,28 +3,29 @@ import { css } from "@emotion/react";
 export const layout = css`
   position: relative;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
   box-shadow: rgba(50, 50, 93, 0.1) 0px 6px 12px -2px,
     rgba(0, 0, 0, 0.2) 0px 3px 7px -3px;
   width: 100%;
+  min-width: 1100px;
   height: 8rem;
   z-index: 99;
 `;
 
 export const headerLogo = css`
-  margin-left: 15rem;
-  width: 17rem;
+  /* margin-left: 150px; */
+  width: 170px;
 `;
 
 export const category = css`
-  flex-grow: 1;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 0 30rem;
-  width: 54rem;
-  height: 12rem;
+  margin: 0 5rem;
+  width: 540px;
+
+  height: 8rem;
   font-size: 2rem;
   font-weight: 400;
 
@@ -32,7 +33,7 @@ export const category = css`
   a:nth-of-type(3),
   a:nth-of-type(4),
   a:nth-of-type(5) {
-    margin-left: 5rem;
+    margin-left: 6rem;
   }
 
   & > a {
@@ -55,7 +56,7 @@ export const loginButton = css`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-right: 15rem;
+  /* margin-right: 150px; */
   border: 0.1rem solid #ffc421;
   border-radius: 1rem;
   width: 10.4rem;
@@ -71,8 +72,8 @@ export const profile = css`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 12rem;
-  margin-right: 15rem;
+  height: 8rem;
+  /* margin-right: 150px; */
 `;
 
 export const searchIconBox = css`

@@ -15,6 +15,7 @@ function Header(props) {
   const principalQuery = usePrincipalQuery();
   const user = principalQuery?.data?.data?.body?.user || [];
   const userStatus = principalQuery?.data?.data?.body.myStatus || [];
+  
   // console.log(user);
   // console.log(userStatus);
 

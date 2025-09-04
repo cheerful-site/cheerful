@@ -52,3 +52,63 @@ export const googleMap = css`
   height: 51rem;
   background-color: #dbdbdb;
 `;
+
+export const infoCard = css`
+  padding: 1.2rem;
+  border-radius: 1rem 1rem 1rem 0;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+  width: 26rem;
+  background-color: #ffffff;
+`;
+
+export const address = css`
+  margin-bottom: 1rem;
+  font-size: 1.4rem;
+  color: #222222;
+`;
+
+export const phoneNumber = css`
+  font-size: 1.3rem;
+  color: #222222;
+`;
+
+export const operationTime = css`
+  margin-top: 0.5rem;
+  font-size: 1.3rem;
+`;
+
+export const breakTime = css`
+  margin-top: 0.1rem;
+  font-size: 1.3rem;
+  color: #222222;
+`;
+
+export const fullTime = css`
+  font-size: 1.4rem;
+  color: #0a7;
+`;
+
+export const content = css`
+  margin-top: 1rem;
+  font-size: 1.2rem;
+  color: #ba533c;
+`;
+
+export const infoCardTitle = css`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+
+  & > div {
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+
+  & > button {
+    border: none;
+    background-color: transparent;
+    font-size: 1.6rem;
+    cursor: pointer;
+  }
+`;

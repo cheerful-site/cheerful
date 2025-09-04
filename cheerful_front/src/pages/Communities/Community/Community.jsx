@@ -7,6 +7,7 @@ import Post from "../../../components/Post/Post";
 import CategoryComponent from "../../../components/CategoryComponent/CategoryComponent";
 import Footer from "../../../components/Footer/Footer";
 import PageNation from "../../../components/PageNation/PageNation";
+import Loading from "../../../components/Loading/Loading";
 
 function Community(props) {
   const { category } = useParams();
@@ -51,6 +52,7 @@ function Community(props) {
 
   return (
     <div css={s.layout}>
+      {communityList.isLoading && <Loading />}
       <div css={s.communityTitle}>
         <div>
           <span>똥꼬발랄</span>한 이야기들이 한가득!
@@ -103,7 +105,6 @@ function Community(props) {
           />
         )}
       </div>
-
       <Footer />
     </div>
   );
