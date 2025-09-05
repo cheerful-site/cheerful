@@ -46,5 +46,4 @@ public class MyPageController {
     return ResponseEntity.ok(ResponseDto.success("프로필 이미지가 변경되었습니다."));
   }
 
-
 }
