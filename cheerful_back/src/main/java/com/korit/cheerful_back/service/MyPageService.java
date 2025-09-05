@@ -157,4 +157,14 @@ public class MyPageService {
 
     imageUrlUtil.profile(newImg);
   }
+
+  public void like(Integer foodId) {
+    Integer userId = principalUtil.getPrincipalUser().getUser().getUserId();
+    myPageMapper.insert(foodId, userId);
+  }
+
+  public void disLike(Integer foodId) {
+    Integer userId = principalUtil.getPrincipalUser().getUser().getUserId();
+    myPageMapper.delete(foodId, userId);
+  }
 }
