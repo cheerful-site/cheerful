@@ -14,6 +14,28 @@
     <result property="parentCategoryName" column="parent_category_name" />
   </resultMap>
 
+  <resultMap id="MyPostMap" type="com.korit.cheerful_back.dto.myPage.MyPostDto">
+    <id property="communityId" column="community_id" />
+    <result property="categoryName" column="category_name" />
+    <result property="title" column="title" />
+    <result property="createdAt" column="created_at" />
+    <result property="views" column="views" />
+    <result property="likeCount" column="like_count" />
+    <result property="isLike" column="is_like" />
+  </resultMap>
+
+  <resultMap id="MyLikedFoodMap" type="com.korit.cheerful_back.dto.myPage.MyLikedFoodDto">
+    <id property="foodId" column="food_id" />
+    <result property="categoryName" column="category_name" />
+    <result property="title" column="title" />
+    <result property="price" column="price" />
+    <result property="address" column="address" />
+    <result property="createdAt" column="created_at" />
+    <result property="likeCount" column="like_count" />
+    <result property="isLike" column="is_like" />
+    <result property="imgPath" column="img_path" />
+  </resultMap>
+
   <sql id="UNION_BASE">
     select
       'COMMUNITY' as type,
@@ -62,6 +84,43 @@
       nmt.user_id = #{userId}
   </sql>
 
+  <select id="getMyPageCommunityList" resultMap="MyPostMap">
+    select *
+    from (
+      select
+        row_number() over (order by ct.created_at desc, ct.community_id desc) as rn,
+        ct.community_id as community_id,
+        cct.community_category_name as category_name,
+        ct.community_title as title,
+        ct.created_at as created_at,
+        ct.community_views as views,
+
+        ifnull(lc.like_count, 0) as like_count,
+        exists (
+          select 1
+          from community_like_tb l
+          where l.community_id = ct.community_id
+            and l.user_id = #{userId}
+        ) as is_like
+      from community_tb ct
+      join community_category_tb cct on(cct.community_category_id = ct.community_category_id)
+      left outer join (select community_id, count(*) as like_count from community_like_tb group by community_id) lc on (lc.community_id = ct.community_id)
+      where
+        ct.user_id = #{userId}
+    ) T
+    where
+      T.rn between #{startIndex} + 1 and #{endIndex}
+    order by
+      T.rn
+  </select>
+
+  <select id="getMyCommunitiesCount" resultType="java.lang.Integer">
+    select count(*)
+    from community_tb ct
+    where
+      ct.user_id = #{userId}
+  </select>
+
   <select id="getMyComments" resultMap="MyCommentMap">
     select
       *
@@ -83,5 +142,49 @@
     from (
       <include refid="UNION_BASE" />
     ) U
+  </select>
+
+  <select id="getMyPageFoodList" resultMap="MyLikedFoodMap">
+    select *
+    from (
+      select
+        row_number() over (order by coalesce(lc.like_count, 0) desc, ft.created_at desc, ft.food_id desc) as rn,
+        ft.food_id as food_id,
+        fct.food_category_name as category_name,
+        ft.food_title as title,
+        ft.food_price as price,
+        ft.food_address as address,
+        ft.created_at as created_at,
+
+        ifnull(lc.like_count, 0) as like_count,
+        exists (
+        select 1
+        from food_like_tb l
+        where l.food_id = ft.food_id
+          and l.user_id = #{userId}
+        ) as is_like,
+        (select fi.img_path
+        from food_img_tb fi
+        where fi.food_id = ft.food_id
+        order by fi.seq asc
+        limit 1) as img_path
+      from food_tb ft
+      join food_category_tb fct on(fct.food_category_id = ft.food_category_id)
+      left join (select food_id, count(*) as like_count from food_like_tb group by food_id) lc on lc.food_id = ft.food_id
+      where exists (
+        select 1
+        from food_like_tb me
+        where me.food_id = ft.food_id
+          and me.user_id = #{userId}
+      )
+    ) T
+    where T.rn between #{startIndex} + 1 and #{endIndex}
+    order by T.rn
+  </select>
+
+  <select id="getMyLikedFoodsCount" resultType="java.lang.Integer">
+    select count(distinct me.food_id)
+    from food_like_tb me
+    where me.user_id = #{userId}
   </select>
 </mapper>
