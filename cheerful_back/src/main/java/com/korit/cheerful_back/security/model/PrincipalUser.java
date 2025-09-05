@@ -21,8 +21,6 @@ public class PrincipalUser implements UserDetails, OAuth2User {
   private Map<String, Object> attributes;
 
   private String profileImgUrl;
-  private String provider;
-  private String providerId;
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {

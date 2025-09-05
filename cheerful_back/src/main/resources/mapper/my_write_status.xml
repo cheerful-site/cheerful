@@ -12,16 +12,18 @@
     <result property="communityComments" column="communityComments"/>
     <result property="foodComments" column="foodComments"/>
     <result property="noticeComments" column="noticeComments"/>
+    <result property="likedFoods" column="likedFoods" />
   </resultMap>
 
   <select id="countMyStatus" parameterType="int" resultMap="StatusMap">
-    SELECT
-    (SELECT COUNT(*) FROM community_tb          WHERE user_id = #{userId}) AS communityPosts,
-    (SELECT COUNT(*) FROM food_tb               WHERE user_id = #{userId}) AS foodPosts,
-    (SELECT COUNT(*) FROM notice_tb             WHERE user_id = #{userId}) AS noticePosts,
-    (SELECT COUNT(*) FROM community_comment_tb  WHERE user_id = #{userId}) AS communityComments,
-    (SELECT COUNT(*) FROM food_comment_tb       WHERE user_id = #{userId}) AS foodComments,
-    (SELECT COUNT(*) FROM notice_comment_tb     WHERE user_id = #{userId}) AS noticeComments
+    select
+    (select count(*) from community_tb          where user_id = #{userId}) as communityPosts,
+    (select count(*) from food_tb               where user_id = #{userId}) as foodPosts,
+    (select count(*) from notice_tb             where user_id = #{userId}) as noticePosts,
+    (select count(*) from community_comment_tb  where user_id = #{userId}) as communityComments,
+    (select count(*) from food_comment_tb       where user_id = #{userId}) as foodComments,
+    (select count(*) from notice_comment_tb     where user_id = #{userId}) as noticeComments,
+    (select count(distinct food_id) from food_like_tb where user_id = #{userId}) as likedFoods
   </select>
 
 </mapper>

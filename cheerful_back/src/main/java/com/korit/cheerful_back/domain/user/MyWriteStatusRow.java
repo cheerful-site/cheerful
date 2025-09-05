@@ -10,4 +10,5 @@ public class MyWriteStatusRow {
   private int communityComments;
   private int foodComments;
   private int noticeComments;
+  private int likedFoods;
 }

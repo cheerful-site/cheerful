@@ -20,16 +20,12 @@ public class UserService {
     MyWriteStatusRow r = myWriteStatusMapper.countMyStatus(userId);
     int posts = r.getCommunityPosts() + r.getFoodPosts() + r.getNoticePosts();
     int comments = r.getCommunityComments() + r.getFoodComments() + r.getNoticeComments();
+    int likedFoodCount = r.getLikedFoods();
 
     return MyWriteStatusDto.builder()
-        .communityPosts(r.getCommunityPosts())
-        .foodPosts(r.getFoodPosts())
-        .noticePosts(r.getNoticePosts())
-        .communityComments(r.getCommunityComments())
-        .foodComments(r.getFoodComments())
-        .noticeComments(r.getNoticeComments())
         .postCount(posts)
         .commentCount(comments)
+        .likedFoodCount(likedFoodCount)
         .build();
   }
 }
