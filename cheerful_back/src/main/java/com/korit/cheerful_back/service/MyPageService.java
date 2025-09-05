@@ -146,4 +146,5 @@ public class MyPageService {
     }
 
     imageUrlUtil.profile(newImg);
+  }
 }
