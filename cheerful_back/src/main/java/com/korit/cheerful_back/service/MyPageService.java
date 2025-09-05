@@ -102,4 +102,14 @@ public class MyPageService {
         .size(size)
         .build();
   }
+
+  public void like(Integer foodId) {
+    Integer userId = principalUtil.getPrincipalUser().getUser().getUserId();
+    myPageMapper.insert(foodId, userId);
+  }
+
+  public void disLike(Integer foodId) {
+    Integer userId = principalUtil.getPrincipalUser().getUser().getUserId();
+    myPageMapper.delete(foodId, userId);
+  }
 }
