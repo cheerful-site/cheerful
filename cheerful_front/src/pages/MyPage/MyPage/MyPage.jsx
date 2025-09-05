@@ -4,9 +4,10 @@ import Footer from "../../../components/Footer/Footer";
 import usePrincipalQuery from "../../../queries/PrincipalQuery/usePrincipalQuery";
 import * as s from "./styles";
 import { RiEdit2Fill } from "react-icons/ri";
-import useMyPageCommunity from "../../../queries/MyPageQuery/useMyPageCommunity";
 import useMyPageComment from "../../../queries/MyPageQuery/useMyPageComment";
-import useMyPageFood from "../../../queries/MyPageQuery/useMyPageFood";
+import useMyPageFoodLike from "../../../queries/MyPageQuery/useMyPageFoodLike";
+import MyPost from "../../../components/MyPageComponents/MyPost/MyPost";
+import MyComments from "../../../components/MyPageComponents/MyComments/Mycomments";
 
 function MyPage(props) {
   const principal = usePrincipalQuery();
@@ -14,14 +15,12 @@ function MyPage(props) {
   const status = principal?.data?.data?.body?.myStatus;
   // console.log(principal?.data?.data?.body);
 
-  const myCommunity = useMyPageCommunity(1, 5);
-
   const myComment = useMyPageComment(1, 3);
-  const myFoodLike = useMyPageFood(1, 4);
+  const myFoodLike = useMyPageFoodLike(1, 4);
 
   // console.log(myCommunity?.data?.data?.body);
   // console.log(myComment?.data?.data?.body);
-  console.log(myFoodLike?.data?.data?.body);
+  // console.log(myFoodLike?.data?.data?.body);
 
   const handleChangeProfileOnClick = () => {};
   const handleChangeUsernameOnClick = () => {};
@@ -68,8 +67,12 @@ function MyPage(props) {
         </div>
 
         <div css={s.contentContainer}>
-          <div css={s.postList}></div>
-          <div css={s.commentsList}></div>
+          <div css={s.postList}>
+            <MyPost />
+          </div>
+          <div css={s.commentsList}>
+            <MyComments />
+          </div>
           <div css={s.likeList}></div>
         </div>
       </div>
