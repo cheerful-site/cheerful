@@ -5,9 +5,10 @@ import lombok.Data;
 
 @Data
 @Builder
-public class MyCommentSearchOption {
+public class MyPageSearchOption {
   private Integer userId;
   private Integer startIndex;
   private Integer endIndex;
   private Integer size;
+  private Integer categoryId;
 }

@@ -1,7 +1,6 @@
 package com.korit.cheerful_back.controller;
 
 import com.korit.cheerful_back.dto.response.ResponseDto;
-import com.korit.cheerful_back.security.model.PrincipalUser;
 import com.korit.cheerful_back.service.MyPageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
