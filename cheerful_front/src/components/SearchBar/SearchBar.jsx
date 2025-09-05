@@ -18,14 +18,13 @@ function SearchBar(props) {
     // setSearchText(value);
     // navigate(`/search?q=${searchText}`);
 
+    //setter를 내려줘서 searchText 변경
+
     const keyword = value.trim();
     if (!keyword) return;
     setSearchText(keyword);
     navigate(`/search?q=${encodeURIComponent(keyword)}`);
   };
-
-  // useEffect(() => {
-  // }, [value]);
 
   return (
     <div css={s.searchBar}>

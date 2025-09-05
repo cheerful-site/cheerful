@@ -6,6 +6,7 @@ import usePrincipalQuery from "../../../queries/PrincipalQuery/usePrincipalQuery
 import Footer from "../../../components/Footer/Footer";
 import { FiPlus, FiX } from "react-icons/fi";
 import { reqCommunityRegister } from "../../../api/communityApi/communityApi";
+import { useQueryClient } from "@tanstack/react-query";
 
 function CommunityRegister(props) {
   const [inputValue, setInputValue] = useState({
@@ -14,6 +15,7 @@ function CommunityRegister(props) {
     content: "",
   });
   const [files, setFiles] = useState([]);
+  const queryClient = useQueryClient();
 
   const navigate = useNavigate();
   const principalQuery = usePrincipalQuery();
@@ -23,7 +25,7 @@ function CommunityRegister(props) {
   const handleOnChange = (e) => {
     setInputValue((prev) => ({
       ...prev,
-      [e.target.name]: [e.target.value],
+      [e.target.name]: e.target.value,
     }));
   };
 
@@ -63,28 +65,39 @@ function CommunityRegister(props) {
 
   const handleRegisterOnClick = async () => {
     const formData = new FormData();
-    formData.append(
-      "communityCategoryId",
-      parseInt(inputValue.communityCategoryId)
-    );
+    if (confirm("게시물을 등록하시겠습니까?")) {
+      formData.append(
+        "communityCategoryId",
+        parseInt(inputValue.communityCategoryId)
+      );
 
-    if (inputValue.title === "") {
-      alert("제목을 작성해주세요.");
-      return;
+      if (inputValue.title === "") {
+        alert("제목을 작성해주세요.");
+        return;
+      }
+      if (inputValue.content === "") {
+        alert("내용을 작성해주세요.");
+        return;
+      }
+
+      formData.append("title", inputValue.title);
+      formData.append("content", inputValue.content);
+      files.forEach((f) => formData.append("files", f.file));
+
+      await reqCommunityRegister(formData);
+      queryClient.invalidateQueries({
+        queryKey: ["adminCommunity"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["communityList"],
+      });
+
+      // console.log(formData);
+      navigate("/community/1");
     }
-    if (inputValue.content === "") {
-      alert("내용을 작성해주세요.");
-      return;
-    }
-
-    formData.append("title", inputValue.title);
-    formData.append("content", inputValue.content);
-    files.forEach((f) => formData.append("files", f.file));
-
-    await reqCommunityRegister(formData);
-    // console.log(formData);
-    navigate("/community/1");
   };
+
+  console.log(queryClient.getQueriesData());
 
   return (
     <>
