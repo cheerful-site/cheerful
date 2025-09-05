@@ -187,4 +187,16 @@
     from food_like_tb me
     where me.user_id = #{userId}
   </select>
+
+  <delete id="delete">
+    delete from food_like_tb
+    where
+      food_id = #{foodId}
+      and user_id = #{userId}
+  </delete>
+
+  <insert id="insert">
+    insert into food_like_tb
+    values(default, #[foodId}, #{userId})
+  </insert>
 </mapper>
