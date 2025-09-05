@@ -105,7 +105,7 @@ public class MyPageService {
 
   /*
       회원탈퇴
-    */
+   */
   public void deleteUser() {
     Integer userId = principalUtil.getPrincipalUser().getUser().getUserId();
     userMapper.deleteByUser(userId);
