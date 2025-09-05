@@ -1,6 +1,7 @@
 package com.korit.cheerful_back.controller;
 
 import com.korit.cheerful_back.dto.response.ResponseDto;
+import com.korit.cheerful_back.security.model.PrincipalUser;
 import com.korit.cheerful_back.service.MyPageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,10 +16,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class MyPageController {
 
   private final MyPageService myPageService;
-
   @GetMapping("/community")
-  public ResponseEntity<ResponseDto<?>> getMyPageList(@RequestParam Integer page, @RequestParam Integer size) {
+  public ResponseEntity<ResponseDto<?>> getMyPageCommunityList(@RequestParam Integer page, @RequestParam Integer size) {
     return ResponseEntity.ok(ResponseDto.success(myPageService.getMyPageCommunityList(page, size)));
+  }
+
+  @GetMapping("/comment")
+  public ResponseEntity<ResponseDto<?>> getMyPageCommentList(@RequestParam Integer page, @RequestParam Integer size) {
+    return ResponseEntity.ok(ResponseDto.success(myPageService.getMyPageCommentList(page, size)));
   }
 
   @GetMapping("/food")
