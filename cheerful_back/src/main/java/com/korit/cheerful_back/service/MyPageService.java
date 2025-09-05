@@ -104,7 +104,7 @@ public class MyPageService {
   }
 
   /*
-     회원탈퇴
+    회원탈퇴
   */
   public void deleteUser() {
     Integer userId = principalUtil.getPrincipalUser().getUser().getUserId();
@@ -135,9 +135,9 @@ public class MyPageService {
     // 기존 이미지 삭제 (구글 이미지 또는 디폴트 제외)
     if (oldImg != null && !oldImg.startsWith("http") && !oldImg.contains("default")) {
       String dirPath = imageUrlUtil.getAppProperties()
-          .getImageConfigs()
-          .get("profile")
-          .getDirPath();
+        .getImageConfigs()
+        .get("profile")
+        .getDirPath();
 
       File fileToDelete = new File(dirPath + "/" + oldImg);
       if (fileToDelete.exists()) {
