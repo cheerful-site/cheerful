@@ -1,7 +1,9 @@
 package com.korit.cheerful_back.service;
 
+import com.korit.cheerful_back.domain.community.CommunityMapper;
 import com.korit.cheerful_back.domain.user.MyWriteStatusMapper;
 import com.korit.cheerful_back.domain.user.MyWriteStatusRow;
+import com.korit.cheerful_back.domain.user.UserMapper;
 import com.korit.cheerful_back.dto.user.MyWriteStatusDto;
 import com.korit.cheerful_back.security.model.PrincipalUtil;
 import lombok.RequiredArgsConstructor;

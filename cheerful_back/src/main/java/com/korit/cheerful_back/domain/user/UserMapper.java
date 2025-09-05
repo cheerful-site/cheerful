@@ -17,5 +17,11 @@ public interface UserMapper {
 
   User findByUsername(String username);
 
-//  int getCount
+  // 회원삭제
+  int deleteByUser(Integer userId);
+
+  // 프로필 수정
+  int updateName(Integer userId, String name);
+  String getProfileImgPath(Integer userId);
+  int updateProfileImgPath(Integer userId, @Param("profileImg") String profileImgPath);
 }
