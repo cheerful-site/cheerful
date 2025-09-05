@@ -51,6 +51,8 @@ public class AccountController {
     userView.put("name", user.getName());
     userView.put("role", user.getRole());
     userView.put("profileImgUrl", imageUrlUtil.profile(user.getProfileImgPath()));
+    userView.put("provider", user.getProvider());
+    userView.put("providerId", user.getProviderId());
 
     body.put("authenticated", true);
     body.put("user", userView);

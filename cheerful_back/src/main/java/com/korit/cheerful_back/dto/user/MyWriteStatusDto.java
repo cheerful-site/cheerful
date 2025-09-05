@@ -8,6 +8,7 @@ import lombok.Data;
 public class MyWriteStatusDto {
   private int postCount;
   private int commentCount;
+  private int likedFoodCount;
 
   private int communityPosts;
   private int foodPosts;
