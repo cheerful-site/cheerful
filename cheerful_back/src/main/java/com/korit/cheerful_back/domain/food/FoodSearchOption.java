@@ -10,6 +10,7 @@ public class FoodSearchOption {
     private Integer endIndex;
     private Integer size;
     private String searchText;
+    private Integer userId;
 
     private String sort;
 }

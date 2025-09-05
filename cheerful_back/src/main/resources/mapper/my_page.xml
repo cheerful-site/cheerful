@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.korit.cheerful_back.domain.myPage.MyPageMapper">
+  <resultMap id="MyCommentMap" type="com.korit.cheerful_back.dto.myPage.MyCommentDto" >
+    <id property="commentId" column="comment_id" />
+    <result property="type" column="type" />
+    <result property="content" column="content" />
+    <result property="createdAt" column="created_at" />
+    <result property="parentId" column="parent_id"  />
+    <result property="parentTitle" column="parent_title" />
+    <result property="parentCategoryName" column="parent_category_name" />
+  </resultMap>
+
+  <sql id="UNION_BASE">
+    select
+      'COMMUNITY' as type,
+      cmt.community_comment_id as comment_id,
+      cmt.content,
+      cmt.created_at,
+      ct.community_id as parent_id,
+      ct.community_title as parent_title,
+      cct.community_category_name as parent_category_name
+    from community_comment_tb cmt
+    join community_tb ct on (ct.community_id = cmt.community_id)
+    join community_category_tb cct on (cct.community_category_id = ct.community_category_id)
+    where
+      cmt.user_id = #{userId}
+
+    UNION ALL
+
+    select
+      'FOOD',
+      fmt.food_comment_id,
+      fmt.content,
+      fmt.created_at,
+      ft.food_id,
+      ft.food_title,
+      fct.food_category_name
+    from food_comment_tb fmt
+    join food_tb ft on (ft.food_id = fmt.food_id)
+    join food_category_tb fct on (fct.food_category_id = ft.food_category_id)
+    where
+      fmt.user_id = #{userId}
+
+    UNION ALL
+
+    select
+      'NOTICE',
+      nmt.notice_comment_id,
+      nmt.content,
+      nmt.created_at,
+      nt.notice_id,
+      nt.notice_title,
+      nct.notice_category_name
+    from notice_comment_tb nmt
+    join notice_tb nt on (nt.notice_id = nmt.notice_id)
+    join notice_category_tb nct on (nct.notice_category_id = nt.notice_category_id)
+    where
+      nmt.user_id = #{userId}
+  </sql>
+
+  <select id="getMyComments" resultMap="MyCommentMap">
+    select
+      *
+    from (
+      select
+        row_number() over(order by created_at desc, type asc, comment_id desc) as rn,
+      comment_id, type, content, created_at, parent_id, parent_title, parent_category_name
+      from (
+        <include refid="UNION_BASE" />
+      ) U
+    ) T
+    where T.rn between #{startIndex} + 1 and #{endIndex}
+    order by T.rn
+  </select>
+
+  <select id="getMyCommentsCount" resultType="java.lang.Integer">
+    select
+      count(*)
+    from (
+      <include refid="UNION_BASE" />
+    ) U
+  </select>
+</mapper>
