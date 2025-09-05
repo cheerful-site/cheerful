@@ -103,13 +103,47 @@ public class MyPageService {
         .build();
   }
 
-  public void like(Integer foodId) {
+  /*
+     회원탈퇴
+  */
+  public void deleteUser() {
     Integer userId = principalUtil.getPrincipalUser().getUser().getUserId();
-    myPageMapper.insert(foodId, userId);
+    userMapper.deleteByUser(userId);
   }
 
-  public void disLike(Integer foodId) {
-    Integer userId = principalUtil.getPrincipalUser().getUser().getUserId();
-    myPageMapper.delete(foodId, userId);
+  /*
+    회원 프로필 이름 수정
+   */
+  public void modifyProfileName(String name) {
+    User user = principalUtil.getPrincipalUser().getUser();
+    userMapper.updateName(user.getUserId(), name);
   }
+
+  /*
+    회원 프로필 이미지 수정
+   */
+  public void modifyProfileImg(MultipartFile file) {
+    Integer userId = principalUtil.getPrincipalUser().getUser().getUserId();
+
+    // 기존 이미지 파일명 가져오기
+    String oldImg = userMapper.getProfileImgPath(userId);
+    // 새 이미지 업로드
+    String newImg = fileService.uploadFile(file, "profile");
+    // DB 업데이트
+    userMapper.updateProfileImgPath(userId, newImg);
+
+    // 기존 이미지 삭제 (구글 이미지 또는 디폴트 제외)
+    if (oldImg != null && !oldImg.startsWith("http") && !oldImg.contains("default")) {
+      String dirPath = imageUrlUtil.getAppProperties()
+          .getImageConfigs()
+          .get("profile")
+          .getDirPath();
+
+      File fileToDelete = new File(dirPath + "/" + oldImg);
+      if (fileToDelete.exists()) {
+        fileToDelete.delete();
+      }
+    }
+
+    imageUrlUtil.profile(newImg);
 }
