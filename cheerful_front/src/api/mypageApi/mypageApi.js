@@ -7,3 +7,19 @@ export const reqMypageCommunityList = async (page, size) =>
       size,
     },
   });
+
+export const reqMypageComment = async (page, size) =>
+  await api.get(`/mypage/comment`, {
+    params: {
+      page,
+      size,
+    },
+  });
+
+export const reqMypageFoodLike = async (page, size) =>
+  await api.get(`/mypage/food`, {
+    params: {
+      page,
+      size,
+    },
+  });

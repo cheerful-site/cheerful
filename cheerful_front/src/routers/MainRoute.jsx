@@ -28,7 +28,7 @@ function MainRoute(props) {
         <Route path="/notice/:category/*" element={<NoticeRoute />} />
         <Route path="/map/:category" element={<MapPage />} />
         <Route path="/admin/*" element={<AdminRoute />} />
-        <Route path="/mypage/*" element={<MyPage />} />
+        <Route path="/mypage" element={<MyPage />} />
         <Route path="/" element={<Home />} />
         <Route path="*" element={<NotFound />} />
       </Routes>

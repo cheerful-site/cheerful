@@ -80,7 +80,7 @@ export const profileInfo = css`
     margin-bottom: 3rem;
 
     & > span:nth-of-type(1) {
-      font-size: 1.2rem;
+      font-size: 1.4rem;
       font-weight: 400;
       color: #22222260;
     }
