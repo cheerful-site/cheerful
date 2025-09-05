@@ -5,6 +5,8 @@ import usePrincipalQuery from "../../../queries/PrincipalQuery/usePrincipalQuery
 import * as s from "./styles";
 import { RiEdit2Fill } from "react-icons/ri";
 import useMyPageCommunity from "../../../queries/MyPageQuery/useMyPageCommunity";
+import useMyPageComment from "../../../queries/MyPageQuery/useMyPageComment";
+import useMyPageFood from "../../../queries/MyPageQuery/useMyPageFood";
 
 function MyPage(props) {
   const principal = usePrincipalQuery();
@@ -14,7 +16,12 @@ function MyPage(props) {
 
   const myCommunity = useMyPageCommunity(1, 5);
 
-  console.log(myCommunity?.data?.data?.body);
+  const myComment = useMyPageComment(1, 3);
+  const myFoodLike = useMyPageFood(1, 4);
+
+  // console.log(myCommunity?.data?.data?.body);
+  // console.log(myComment?.data?.data?.body);
+  console.log(myFoodLike?.data?.data?.body);
 
   const handleChangeProfileOnClick = () => {};
   const handleChangeUsernameOnClick = () => {};
@@ -37,13 +44,13 @@ function MyPage(props) {
               <RiEdit2Fill onClick={handleChangeUsernameOnClick} />
             </div>
             <div>
-              <span>Google</span>
-              <span>jbojsun@gmail.com</span>
+              <span>{user?.provider}</span>
+              <span>{user?.email}</span>
             </div>
             <div css={s.postAndcomment}>
               <div css={s.postCount}>
                 <span>내가 쓴 글</span>
-                <span>{status?.communityPosts}개</span>
+                <span>{status?.postCount}개</span>
               </div>
               <div>
                 <span>내가 쓴 댓글</span>
@@ -51,7 +58,7 @@ function MyPage(props) {
               </div>
               <div>
                 <span>찜목록</span>
-                <span>n개</span>
+                <span>{status?.likedFoodCount}개</span>
               </div>
             </div>
             <div css={s.deleteUser}>
