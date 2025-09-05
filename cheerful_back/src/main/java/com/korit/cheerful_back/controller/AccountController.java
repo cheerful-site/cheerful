@@ -49,6 +49,7 @@ public class AccountController {
     userView.put("userId", user.getUserId());
     userView.put("username", user.getUsername());
     userView.put("name", user.getName());
+    userView.put("email", user.getEmail());
     userView.put("role", user.getRole());
     userView.put("profileImgUrl", imageUrlUtil.profile(user.getProfileImgPath()));
     userView.put("provider", user.getProvider());
