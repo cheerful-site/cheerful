@@ -46,12 +46,14 @@ public class MyPageController {
 
   @PutMapping("/user/name")
   public ResponseEntity<ResponseDto<?>> modifyProfileName(@RequestParam String name) {
+//    System.out.println(name);
     myPageService.modifyProfileName(name);
     return ResponseEntity.ok(ResponseDto.success("프로필 닉네임이 변경되었습니다."));
   }
 
   @PutMapping("/user/image")
   public ResponseEntity<ResponseDto<?>> modifyProfileImage(@ModelAttribute MultipartFile file) {
+//    System.out.println(file);
     myPageService.modifyProfileImg(file);
     return ResponseEntity.ok(ResponseDto.success("프로필 이미지가 변경되었습니다."));
   }

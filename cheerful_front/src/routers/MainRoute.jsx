@@ -18,7 +18,8 @@ function MainRoute(props) {
   const principal = usePrincipalQuery();
   const location = useLocation();
   const user = principal?.data?.data?.body?.user;
-  console.log(user);
+  // console.log(user);
+
   return (
     <>
       {location.pathname.startsWith("/admin") ? <></> : <Header />}

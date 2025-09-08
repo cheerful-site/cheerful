@@ -71,6 +71,19 @@ function Header(props) {
   };
   // console.log(user?.profileImgPath);
 
+  const handleRefetchOnClick = async () => {
+    await principalQuery.refetch();
+    queryClient.invalidateQueries({
+      queryKey: ["mypageComment"],
+    });
+    queryClient.invalidateQueries({
+      queryKey: ["mypageCommunity"],
+    });
+    queryClient.invalidateQueries({
+      queryKey: ["mypageFoodLike"],
+    });
+  };
+
   return (
     <div css={s.layout}>
       <div>
@@ -136,7 +149,9 @@ function Header(props) {
                     {user?.role === "ROLE_ADMIN" ? (
                       <Link to={"/admin/users"}>관리자 페이지</Link>
                     ) : (
-                      <Link to={"/mypage"}>마이페이지</Link>
+                      <Link to={"/mypage"} onClick={handleRefetchOnClick}>
+                        마이페이지
+                      </Link>
                     )}
                     <div onClick={handleLogoutOnClick}>로그아웃</div>
                   </div>

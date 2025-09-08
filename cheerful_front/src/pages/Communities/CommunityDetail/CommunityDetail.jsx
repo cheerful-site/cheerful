@@ -177,16 +177,16 @@ function CommunityDetail(props) {
     if (confirm("댓글을 삭제하시겠습니까?")) {
       if (user?.role === "ROLE_ADMIN") {
         try {
-          reqAdminDeleteCommentCommunity(commentId);
-          communityDetail.refetch();
+          await reqAdminDeleteCommentCommunity(commentId);
+          await communityDetail.refetch();
           alert("댓글이 삭제되었습니다.");
         } catch (error) {
           console.log(error);
         }
       } else {
         try {
-          reqUserDeleteCommunityComment(commentId, userId);
-          communityDetail.refetch();
+          await reqUserDeleteCommunityComment(commentId, userId);
+          await communityDetail.refetch();
           alert("댓글이 삭제되었습니다.");
         } catch (error) {
           console.log(error);

@@ -1,6 +1,9 @@
 import { css } from "@emotion/react";
 
 export const layout = css`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   margin: 3rem;
 
   & > div:first-of-type {
@@ -17,6 +20,8 @@ export const foodContainer = css`
   display: grid;
   grid-template-columns: repeat(2, 2fr);
   grid-template-rows: repeat(2, 2fr);
+  width: 100%;
+  height: 31rem;
   gap: 2rem;
   margin-top: 2rem;
   margin-bottom: 2rem;

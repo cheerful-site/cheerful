@@ -41,10 +41,15 @@ export const profileImg = css`
     width: 3rem;
     height: 3rem;
     background-color: #ffffff;
+    cursor: pointer;
 
     & > svg {
       font-size: 2rem;
       color: #ffc421;
+    }
+
+    & > input {
+      display: none;
     }
   }
 `;
@@ -89,6 +94,43 @@ export const profileInfo = css`
       font-weight: 500;
       color: #22222260;
     }
+  }
+`;
+
+export const modifyUsername = css`
+  display: flex;
+  flex-direction: column;
+  & > input {
+    border: 0.1rem solid #22222220;
+    border-radius: 0.4rem;
+    outline: none;
+    height: 2rem;
+  }
+
+  & > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0.5rem;
+    width: 100%;
+  }
+  & > div > button {
+    border: none;
+    border-radius: 0.4rem;
+    width: 10rem;
+    height: 2.5rem;
+    background-color: #ffffff;
+  }
+
+  & > div > button:first-of-type {
+    margin-right: 1rem;
+    background-color: #ffc421;
+    color: #ffffff;
+  }
+
+  & > div > button:last-of-type {
+    background-color: #22222230;
+    color: #22222250;
   }
 `;
 
