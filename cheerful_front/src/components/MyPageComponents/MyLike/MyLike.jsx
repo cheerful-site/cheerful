@@ -12,7 +12,7 @@ function MyLike(props) {
   const [page, setPage] = useState(1);
   const like = useMyPageFoodLike(page, 4);
   const likeList = like?.data?.data?.body;
-  console.log(like?.data?.data?.body);
+  // console.log(like?.data?.data?.body); 
 
   const handleOnClick = (foodId) => {
     navigate(`/food/${foodId}`);
@@ -27,7 +27,7 @@ function MyLike(props) {
           <div key={food?.foodId} css={s.foodList}>
             <div css={s.foodImgContainer}>
               <img
-                src={food?.imgUrl}
+                src={food?.foodImgs[0]?.imgUrl}
                 alt=""
                 onClick={() => handleOnClick(food?.foodId)}
               />

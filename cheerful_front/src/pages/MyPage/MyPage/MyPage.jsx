@@ -1,24 +1,33 @@
 /**@jsxImportSource @emotion/react */
+import * as s from "./styles";
 import { IoSettingsSharp } from "react-icons/io5";
 import Footer from "../../../components/Footer/Footer";
 import usePrincipalQuery from "../../../queries/PrincipalQuery/usePrincipalQuery";
-import * as s from "./styles";
 import { RiEdit2Fill } from "react-icons/ri";
-import useMyPageComment from "../../../queries/MyPageQuery/useMyPageComment";
-import useMyPageFoodLike from "../../../queries/MyPageQuery/useMyPageFoodLike";
 import MyPost from "../../../components/MyPageComponents/MyPost/MyPost";
 import MyComments from "../../../components/MyPageComponents/MyComments/Mycomments";
 import MyLike from "../../../components/MyPageComponents/MyLike/MyLike";
+import { reqMypageDeleteMemberShip } from "../../../api/mypageApi/mypageApi";
+import { useNavigate } from "react-router-dom";
 
 function MyPage(props) {
   const principal = usePrincipalQuery();
+  const navigate = useNavigate();
   const user = principal?.data?.data?.body?.user;
   const status = principal?.data?.data?.body?.myStatus;
   // console.log(principal?.data?.data?.body);
 
   const handleChangeProfileOnClick = () => {};
   const handleChangeUsernameOnClick = () => {};
-  const handleDeleteUserOnClick = (userId) => {};
+  
+  const handleDeleteUserOnClick = () => {
+    if (confirm("CHEERFUL 홈페이지에서 탈퇴하시겠습니까?")) {
+      try {
+        reqMypageDeleteMemberShip();
+        navigate("/");
+      } catch (e) {}
+    }
+  };
 
   return (
     <>
@@ -57,7 +66,7 @@ function MyPage(props) {
               </div>
             </div>
             <div css={s.deleteUser}>
-              <span onClick={() => handleDeleteUserOnClick()}>탈퇴하기</span>
+              <span onClick={handleDeleteUserOnClick}>탈퇴하기</span>
             </div>
           </div>
         </div>
