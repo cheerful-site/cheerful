@@ -1,7 +1,7 @@
 /**@jsxImportSource @emotion/react */
 import * as s from "./styles";
-import loadingDog from "../../../logo/cheerful_loading_dog.gif";
-import LoadingText from "../../../logo/cheerful_loading_text.png";
+import loadingDog from "../../logo/cheerful_loading_dog.gif";
+import LoadingText from "../../logo/cheerful_loading_text.png";
 
 function Loading(props) {
   return (

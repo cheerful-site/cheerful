@@ -9,6 +9,7 @@ import PageNation from "../../../components/PageNation/PageNation";
 import { reqNoticeViews } from "../../../api/noticeApi/noticeApi";
 import Post from "../../../components/Post/Post";
 import Loading from "../../../components/Loading/Loading";
+import { noticeCategory } from "../../../constants/noticePage/noticePage";
 
 function Notice(props) {
   const { category } = useParams();
@@ -20,12 +21,6 @@ function Notice(props) {
   console.log(category);
 
   // console.log(noticeList);
-
-  const noticeCategory = [
-    { id: 1, title: "공지사항", category: 1 },
-    { id: 2, title: "매거진", category: 2 },
-    { id: 3, title: "이벤트", category: 3 },
-  ];
 
   useEffect(() => {
     setPage(1);

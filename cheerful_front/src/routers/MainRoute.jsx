@@ -11,7 +11,7 @@ import NoticeRoute from "./NoticeRoute";
 import FoodRoute from "./FoodRoute";
 import SearchRoute from "./SearchRoute";
 import ScrollTop from "../components/ScrollTop/ScrollTop";
-import MyPage from "../pages/MyPage/MyPage/MyPage";
+import MyPage from "../pages/MyPage/MyPage";
 import usePrincipalQuery from "../queries/PrincipalQuery/usePrincipalQuery";
 
 function MainRoute(props) {
@@ -33,7 +33,6 @@ function MainRoute(props) {
         <Route path="/notice/:category/*" element={<NoticeRoute />} />
         <Route path="/map/:category" element={<MapPage />} />
         <Route path="/admin/*" element={<AdminRoute />} />
-        <Route path="/mypage" element={<MyPage />} />
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/" element={<Home />} />
         <Route path="*" element={<NotFound />} />

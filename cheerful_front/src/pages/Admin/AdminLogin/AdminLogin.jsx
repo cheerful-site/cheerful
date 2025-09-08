@@ -1,6 +1,6 @@
 /**@jsxImportSource @emotion/react */
 import * as s from "./styles";
-import logo from "../../../../logo/cheerful_login.png";
+import logo from "../../../logo/cheerful_login.png";
 import { useState } from "react";
 import { reqAdminLogin } from "../../../api/adminApi/adminApi";
 import { useNavigate } from "react-router-dom";

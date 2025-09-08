@@ -5,6 +5,7 @@ import { SiNaver } from "react-icons/si";
 import { Link } from "react-router-dom";
 import { RiKakaoTalkFill } from "react-icons/ri";
 import Footer from "../../../components/Footer/Footer";
+import loginLogo from "../../../logo/cheerful_login.png";
 
 function Login(props) {
   return (
@@ -12,7 +13,7 @@ function Login(props) {
       <div css={s.layout}>
         <div css={s.container}>
           <div css={s.logo}>
-            <img src="../../logo/cheerful_login.png" alt="" />
+            <img src={loginLogo} alt="" />
           </div>
 
           <div css={s.horizon}></div>

@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import usePrincipalQuery from "../../queries/PrincipalQuery/usePrincipalQuery";
 import ReactModal from "react-modal";
 import { useQueryClient } from "@tanstack/react-query";
+import headerLogo from "../../logo/cheerful_header.png";
+import { MENU } from "../../constants/headerComponent/headerComponent";
 
 function Header(props) {
   const [login, setLogin] = useState(false);
@@ -18,34 +20,6 @@ function Header(props) {
 
   // console.log(user);
   // console.log(userStatus);
-
-  const MENU = [
-    {
-      id: 1,
-      title: "HOME",
-      path: "/",
-    },
-    {
-      id: 2,
-      title: "Community",
-      path: "/community/1",
-    },
-    {
-      id: 3,
-      title: "Food",
-      path: "/food",
-    },
-    {
-      id: 4,
-      title: "Map",
-      path: "/map/1",
-    },
-    {
-      id: 5,
-      title: "Notice",
-      path: "/notice/1",
-    },
-  ];
 
   useEffect(() => {
     const token = localStorage.getItem("AccessToken");
@@ -88,7 +62,7 @@ function Header(props) {
     <div css={s.layout}>
       <div>
         <Link to={"/"}>
-          <img css={s.headerLogo} src="../../logo/cheerful_header.png" alt="" />
+          <img css={s.headerLogo} src={headerLogo} alt="" />
         </Link>
       </div>
 

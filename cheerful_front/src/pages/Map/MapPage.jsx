@@ -7,11 +7,11 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Wrapper } from "@googlemaps/react-wrapper";
 import { GoogleMap, InfoBox, MarkerF } from "@react-google-maps/api";
 import useMapQuery from "../../queries/MapQuery/useMapQuery";
-import mapCenter from "../../../logo/cheerful_map_center.png";
-import hospital24 from "../../../logo/cheerful_map_24hospital.png";
-import hospital from "../../../logo/cheerful_map_hospital.png";
-import cafe from "../../../logo/cheerful_map_cafe.png";
-import shelter from "../../../logo/cheerful_map_shelter.png";
+import mapCenter from "../../logo/cheerful_map_center.png";
+import hospital24 from "../../logo/cheerful_map_24hospital.png";
+import hospital from "../../logo/cheerful_map_hospital.png";
+import cafe from "../../logo/cheerful_map_cafe.png";
+import shelter from "../../logo/cheerful_map_shelter.png";
 import { CLEAN_STYLE, mapCategory } from "../../constants/mapPage/mapPage";
 import Loading from "../../components/Loading/Loading";
 
@@ -136,7 +136,7 @@ function MapPage(props) {
                   position={center}
                   icon={{
                     url: mapCenter,
-                    scaledSize: { width: 50, height: 50 },
+                    scaledSize: new google.maps.Size(50, 50),
                   }}
                 />
               )}

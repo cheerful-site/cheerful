@@ -4,7 +4,7 @@ import * as s from "./styles";
 import { TbDogBowl } from "react-icons/tb";
 import { ImNotification } from "react-icons/im";
 import { PiUserCircleFill } from "react-icons/pi";
-import logo from "../../../logo/cheerful_login.png";
+import logo from "../../logo/cheerful_login.png";
 import { Link } from "react-router-dom";
 
 function LeftSideBar(props) {
