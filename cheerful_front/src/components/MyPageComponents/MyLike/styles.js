@@ -51,6 +51,7 @@ export const foodImgContainer = css`
     right: 0.5rem;
     bottom: 1rem;
     width: 2.3rem;
+    cursor: pointer;
   }
 `;
 
