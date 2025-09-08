@@ -15,8 +15,6 @@ public class MyLikedFoodDto {
   private LocalDateTime createdAt;
   private Integer likeCount;
   private Boolean isLike;
-  private String imgPath;
-  private String imgUrl;
 
   private List<FoodImg> foodImgs;
 }

@@ -33,6 +33,13 @@
     <result property="createdAt" column="created_at" />
     <result property="likeCount" column="like_count" />
     <result property="isLike" column="is_like" />
+    <collection property="foodImgs" javaType="list" resultMap="FoodImgMap"/>
+  </resultMap>
+  
+  <resultMap id="FoodImgMap" type="com.korit.cheerful_back.domain.foodImg.FoodImg">
+    <id property="foodImgId" column="food_img_id" />
+    <result property="foodId" column="food_id" />
+    <result property="seq" column="seq" />
     <result property="imgPath" column="img_path" />
   </resultMap>
 
