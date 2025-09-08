@@ -130,6 +130,76 @@ export const deleteUser = css`
   }
 `;
 
+export const deleteUserModal = css`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 50rem;
+  height: 30rem;
+
+  & > div:first-of-type > span {
+    display: block;
+  }
+
+  & > div:first-of-type > span:nth-of-type(1) {
+    font-size: 2rem;
+  }
+  & > div:first-of-type > span:nth-of-type(2),
+  span:nth-of-type(3) {
+    margin: 0.5rem 0;
+    font-size: 1.4rem;
+    color: #ff0000;
+  }
+
+  & > div:nth-of-type(2) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 2rem;
+
+    & > span {
+      display: block;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #ff0000;
+    }
+
+    & > input {
+      border: 0.1rem solid #22222240;
+      border-radius: 0.5rem;
+      margin: 1rem 0;
+      width: 25rem;
+      height: 2.5rem;
+      outline: none;
+    }
+  }
+`;
+
+export const deleteButton = css`
+  display: flex;
+  justify-content: space-around;
+  margin-top: 2rem;
+  width: 100%;
+
+  & > button {
+    border: none;
+    border-radius: 0.5rem;
+    width: 15rem;
+    height: 3.5rem;
+    cursor: pointer;
+  }
+
+  & > button:first-of-type {
+    color: #ffffff;
+    background-color: #ffc421;
+  }
+  & > button:last-of-type {
+    color: #22222250;
+    background-color: #22222210;
+  }
+`;
+
 export const contentContainer = css`
   margin-top: 9rem;
   width: 82rem;
