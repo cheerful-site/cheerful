@@ -126,6 +126,7 @@ export const deleteUser = css`
     font-size: 1rem;
     font-weight: 500;
     color: #22222240;
+    cursor: pointer;
   }
 `;
 
@@ -152,6 +153,8 @@ export const commentsList = css`
 `;
 
 export const likeList = css`
+  display: flex;
+  flex-direction: column;
   width: 82rem;
   height: 46rem;
   background-color: #ffffff;

@@ -12,9 +12,13 @@ import FoodRoute from "./FoodRoute";
 import SearchRoute from "./SearchRoute";
 import ScrollTop from "../components/ScrollTop/ScrollTop";
 import MyPage from "../pages/MyPage/MyPage/MyPage";
+import usePrincipalQuery from "../queries/PrincipalQuery/usePrincipalQuery";
 
 function MainRoute(props) {
+  const principal = usePrincipalQuery();
   const location = useLocation();
+  const user = principal?.data?.data?.body?.user;
+  console.log(user);
   return (
     <>
       {location.pathname.startsWith("/admin") ? <></> : <Header />}
@@ -28,6 +32,7 @@ function MainRoute(props) {
         <Route path="/notice/:category/*" element={<NoticeRoute />} />
         <Route path="/map/:category" element={<MapPage />} />
         <Route path="/admin/*" element={<AdminRoute />} />
+        <Route path="/mypage" element={<MyPage />} />
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/" element={<Home />} />
         <Route path="*" element={<NotFound />} />

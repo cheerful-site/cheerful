@@ -63,15 +63,15 @@ export const sort = css`
   align-items: center;
   margin-bottom: 0.8rem;
   width: 100%;
+  background-color: transparent;
 
   & > button {
     border: none;
     cursor: pointer;
-    font-size:1.4rem;
+    font-size: 1.4rem;
+    background-color: transparent;
   }
 `;
-
-
 
 export const postContainer = css`
   display: flex;
