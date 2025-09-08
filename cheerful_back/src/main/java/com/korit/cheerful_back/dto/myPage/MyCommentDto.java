@@ -11,6 +11,6 @@ public class MyCommentDto {
   private LocalDateTime createdAt;
   private Integer parentId;
   private String parentTitle;
-  private String parentCategoryId;
+  private Integer parentCategoryId;
   private String parentCategoryName;
 }

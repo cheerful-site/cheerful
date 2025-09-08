@@ -102,7 +102,7 @@
       select
         row_number() over (order by ct.created_at desc, ct.community_id desc) as rn,
         ct.community_id as community_id,
-        ct.community_category_id,
+        ct.community_category_id as category_id,
         cct.community_category_name as category_name,
         ct.community_title as title,
         ct.created_at as created_at,
@@ -140,7 +140,7 @@
     from (
       select
         row_number() over(order by created_at desc, type asc, comment_id desc) as rn,
-      comment_id, type, content, created_at, parent_id, parent_title, parent_category_name
+      comment_id, type, content, created_at, parent_id, parent_title, parent_category_id, parent_category_name
       from (
         <include refid="UNION_BASE" />
       ) U
