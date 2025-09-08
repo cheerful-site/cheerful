@@ -4,7 +4,7 @@ export const layout = css`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 2rem 0;
+  margin: 1rem 0;
   height: 3rem;
 `;
 

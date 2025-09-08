@@ -3,13 +3,14 @@ import { css } from "@emotion/react";
 export const layout = css`
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   align-items: center;
   width: 100%;
   height: 100%;
 `;
 
 export const container = css`
-  margin: 3.5rem 0;
+  margin: 3rem 0;
 
   & > div {
     margin-bottom: 1rem;
@@ -81,6 +82,11 @@ export const bodyContainer = css`
   }
   & > td:nth-of-type(2) {
     width: 25rem;
+    & > a {
+      font-weight: 600;
+      color: #222222;
+      text-decoration: none;
+    }
   }
   & > td:nth-of-type(3) {
     text-align: center;

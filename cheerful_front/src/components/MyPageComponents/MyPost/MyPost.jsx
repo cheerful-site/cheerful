@@ -3,6 +3,7 @@ import * as s from "./styles";
 import useMyPageCommunity from "../../../queries/MyPageQuery/useMyPageCommunity";
 import PageNation from "../../PageNation/PageNation";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 function MyPost(props) {
   const [page, setPage] = useState(1);
@@ -14,7 +15,6 @@ function MyPost(props) {
     <div css={s.layout}>
       <div css={s.container}>
         <div>내가 쓴 글</div>
-
         <table css={s.tableContainer}>
           <thead>
             <tr css={s.headerContainer}>
@@ -29,7 +29,11 @@ function MyPost(props) {
             {myCommunityPost?.content?.map((post) => (
               <tr key={post.communityId} css={s.bodyContainer}>
                 <td>{post?.categoryName}</td>
-                <td>{post?.title}</td>
+                <td>
+                  <Link to={`/community/1/${post?.communityId}`}>
+                    {post?.title}
+                  </Link>
+                </td>
                 <td>{post?.createdAt.slice(0, 10)}</td>
                 <td>{post?.likeCount}</td>
                 <td>{post?.views}</td>
@@ -37,13 +41,13 @@ function MyPost(props) {
             ))}
           </tbody>
         </table>
-        <PageNation
-          page={page}
-          setPage={setPage}
-          size={myCommunity?.size}
-          totalElements={myCommunity?.totalElements}
-        />
       </div>
+      <PageNation
+        page={page}
+        setPage={setPage}
+        size={myCommunity?.size}
+        totalElements={myCommunity?.totalElements}
+      />
     </div>
   );
 }

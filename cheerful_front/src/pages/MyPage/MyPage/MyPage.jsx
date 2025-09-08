@@ -8,19 +8,13 @@ import useMyPageComment from "../../../queries/MyPageQuery/useMyPageComment";
 import useMyPageFoodLike from "../../../queries/MyPageQuery/useMyPageFoodLike";
 import MyPost from "../../../components/MyPageComponents/MyPost/MyPost";
 import MyComments from "../../../components/MyPageComponents/MyComments/Mycomments";
+import MyLike from "../../../components/MyPageComponents/MyLike/MyLike";
 
 function MyPage(props) {
   const principal = usePrincipalQuery();
   const user = principal?.data?.data?.body?.user;
   const status = principal?.data?.data?.body?.myStatus;
   // console.log(principal?.data?.data?.body);
-
-  const myComment = useMyPageComment(1, 3);
-  const myFoodLike = useMyPageFoodLike(1, 4);
-
-  // console.log(myCommunity?.data?.data?.body);
-  // console.log(myComment?.data?.data?.body);
-  // console.log(myFoodLike?.data?.data?.body);
 
   const handleChangeProfileOnClick = () => {};
   const handleChangeUsernameOnClick = () => {};
@@ -34,6 +28,7 @@ function MyPage(props) {
             <img src={user?.profileImgUrl} alt="" />
             <div onClick={handleChangeProfileOnClick}>
               <IoSettingsSharp />
+              {/* 이미지 수정 */}
             </div>
           </div>
 
@@ -41,6 +36,7 @@ function MyPage(props) {
             <div>
               <span>{user?.name}</span>
               <RiEdit2Fill onClick={handleChangeUsernameOnClick} />
+              {/* 유저네임 수정 */}
             </div>
             <div>
               <span>{user?.provider}</span>
@@ -73,7 +69,9 @@ function MyPage(props) {
           <div css={s.commentsList}>
             <MyComments />
           </div>
-          <div css={s.likeList}></div>
+          <div css={s.likeList}>
+            <MyLike />
+          </div>
         </div>
       </div>
       <Footer />
