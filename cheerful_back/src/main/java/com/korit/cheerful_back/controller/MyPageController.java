@@ -30,7 +30,7 @@ public class MyPageController {
 
   @GetMapping("/comment")
   public ResponseEntity<ResponseDto<?>> getMyPageCommentList(@RequestParam Integer page, @RequestParam Integer size) {
-    System.out.println(myPageService.getMyPageCommentList(page, size));
+//    System.out.println(myPageService.getMyPageCommentList(page, size));
     return ResponseEntity.ok(ResponseDto.success(myPageService.getMyPageCommentList(page, size)));
   }
 
