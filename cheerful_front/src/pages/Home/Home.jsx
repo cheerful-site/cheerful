@@ -1,7 +1,7 @@
 /**@jsxImportSource @emotion/react */
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import * as s from "./styles";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Wrapper } from "@googlemaps/react-wrapper";
 import { GoogleMap, MarkerF, InfoBox } from "@react-google-maps/api";
 import Footer from "../../components/Footer/Footer";
@@ -9,15 +9,16 @@ import SearchBar from "../../components/SearchBar/SearchBar";
 import useHomeBestFoodQuery from "../../queries/HomeQuery/useHomeBestFoodQuery";
 import useHomeBestCommunityQuery from "../../queries/HomeQuery/useHomeBestCommunityQuery";
 import { Link, useNavigate } from "react-router-dom";
-import noImage from "../../icons/Frame2.png";
-import mapImage from "../../../logo/cheerful_home_map.png";
-import communitImage from "../../../logo/cheerful_home_community.png";
-import foodImage from "../../../logo/cheerful_home_food.png";
-import mapCenter from "../../../logo/cheerful_map_center.png";
 import { CLEAN_STYLE } from "../../constants/mapPage/mapPage";
+import noImage from "../../icons/Frame2.png";
+import mainLogo from "../../logo/cheerful_mainlogo.png";
+import mapImage from "../../logo/cheerful_home_map.png";
+import communitImage from "../../logo/cheerful_home_community.png";
+import foodImage from "../../logo/cheerful_home_food.png";
+import mapCenter from "../../logo/cheerful_map_center.png";
 import useMapQuery from "../../queries/MapQuery/useMapQuery";
-import hospital24 from "../../../logo/cheerful_map_24hospital.png";
-import hospital from "../../../logo/cheerful_map_hospital.png";
+import hospital24 from "../../logo/cheerful_map_24hospital.png";
+import hospital from "../../logo/cheerful_map_hospital.png";
 
 function Home(props) {
   const navigate = useNavigate();
@@ -58,6 +59,7 @@ function Home(props) {
   const [selected, setSelected] = useState(null);
   const map = useMapQuery(searchMap);
   const mapList = map?.data?.data?.body || [];
+  const mapRef = useRef(null);
 
   console.log(mapList);
   // console.log(foodImg);
@@ -76,6 +78,7 @@ function Home(props) {
   };
 
   const [center, setCenter] = useState(null);
+
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
       // 현재 위치: 위도,경도
@@ -107,7 +110,7 @@ function Home(props) {
           <div css={s.logoContainer}>
             <div></div>
             <div></div>
-            <img css={s.logo} src="../../logo/cheerful_mainlogo.png" alt="" />
+            <img css={s.logo} src={mainLogo} alt="" />
           </div>
 
           <div css={s.serachBarContainer}>
@@ -229,7 +232,7 @@ function Home(props) {
                   options={{
                     styles: CLEAN_STYLE,
                     clickableIcons: false,
-                    streetView: false,
+                    streetViewControl: false,
                     mapTypeControl: true,
                     fullscreenControl: true,
                   }}

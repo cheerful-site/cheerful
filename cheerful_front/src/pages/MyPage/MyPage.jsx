@@ -1,21 +1,21 @@
 /**@jsxImportSource @emotion/react */
 import * as s from "./styles";
 import { IoSettingsSharp } from "react-icons/io5";
-import Footer from "../../../components/Footer/Footer";
-import usePrincipalQuery from "../../../queries/PrincipalQuery/usePrincipalQuery";
-import { RiEdit2Fill } from "react-icons/ri";
-import MyPost from "../../../components/MyPageComponents/MyPost/MyPost";
-import MyComments from "../../../components/MyPageComponents/MyComments/Mycomments";
-import MyLike from "../../../components/MyPageComponents/MyLike/MyLike";
-import {
-  reqMypageDeleteMemberShip,
-  reqMypageModifyProfileName,
-  reqMypageModifyProfileImage,
-} from "../../../api/mypageApi/mypageApi";
 import { useNavigate } from "react-router-dom";
 import ReactModal from "react-modal";
 import { useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import usePrincipalQuery from "../../queries/PrincipalQuery/usePrincipalQuery";
+import {
+  reqMypageDeleteMemberShip,
+  reqMypageModifyProfileImage,
+  reqMypageModifyProfileName,
+} from "../../api/mypageApi/mypageApi";
+import MyPost from "../../components/MyPageComponents/MyPost/MyPost";
+import MyComments from "../../components/MyPageComponents/MyComments/Mycomments";
+import MyLike from "../../components/MyPageComponents/MyLike/MyLike";
+import { RiEdit2Fill } from "react-icons/ri";
+import Footer from "../../components/Footer/Footer";
 
 function MyPage(props) {
   const [isModalOpen, setIsModalOpen] = useState(false);

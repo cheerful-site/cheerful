@@ -2,8 +2,8 @@
 import { Link, useParams } from "react-router-dom";
 import useFoodDetailQuery from "../../../queries/FoodQuery/useFoodDetailQuery";
 import * as s from "./styles";
-import like from "../../../../logo/cheerful_like.png";
-import unlike from "../../../../logo/cheerful_unlike.png";
+import like from "../../../logo/cheerful_like.png";
+import unlike from "../../../logo/cheerful_unlike.png";
 import Footer from "../../../components/Footer/Footer";
 import { useState } from "react";
 import { FiPlus, FiX } from "react-icons/fi";
@@ -31,7 +31,7 @@ function FoodDetail(props) {
   const food = useFoodDetailQuery(params.foodId);
   const foodDetail = food?.data?.data?.body;
   const user = principal?.data?.data.body.user || [];
-  console.log(foodDetail);
+  // console.log(foodDetail);
 
   const handlePlusOnClick = () => {
     const fileInput = document.createElement("input");
@@ -157,7 +157,7 @@ function FoodDetail(props) {
               body: {
                 ...prev.data.body,
                 foodComment: prev.data.body.foodComment.map((comment) => {
-                  console.log(comment?.foodCommentId === Number(foodCommentId));
+                  // console.log(comment?.foodCommentId === Number(foodCommentId));
                   if (comment.foodCommentId === Number(foodCommentId)) {
                     return {
                       ...comment,
@@ -188,7 +188,7 @@ function FoodDetail(props) {
               body: {
                 ...prev.data.body,
                 foodComment: prev.data.body.foodComment.map((comment) => {
-                  console.log(comment?.foodCommentId === Number(foodCommentId));
+                  // console.log(comment?.foodCommentId === Number(foodCommentId));
                   if (comment.foodCommentId === Number(foodCommentId)) {
                     return {
                       ...comment,
@@ -209,7 +209,7 @@ function FoodDetail(props) {
   };
 
   const handleCommentDeleteOnClick = async (commentId, userId) => {
-    console.log(commentId, userId);
+    // console.log(commentId, userId);
     if (confirm("댓글을 삭제하시겠습니까?")) {
       if (user?.role === "ROLE_ADMIN") {
         try {
@@ -365,7 +365,12 @@ function FoodDetail(props) {
                 ) : (
                   <div css={s.commentImgList}>
                     {comment?.foodCommentImgs?.map((img, index) => (
-                      <img key={index} src={img.imgUrl} alt="" />
+                      <img
+                        key={index}
+                        src={img.imgUrl}
+                        alt=""
+                        css={s.imageBlowup}
+                      />
                     ))}
                   </div>
                 )}

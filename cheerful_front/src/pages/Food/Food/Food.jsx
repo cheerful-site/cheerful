@@ -6,6 +6,7 @@ import useFoodListQuery from "../../../queries/FoodQuery/useFoodListQuery";
 import PageNation from "../../../components/PageNation/PageNation";
 import { useNavigate } from "react-router-dom";
 import Loading from "../../../components/Loading/Loading";
+import { sortList } from "../../../constants/foodPage/foodPage";
 
 function Food(props) {
   const [page, setPage] = useState(1);
@@ -13,25 +14,6 @@ function Food(props) {
   const [active, setActive] = useState(1);
   const [sortName, setSortName] = useState("rank");
   const food = useFoodListQuery(sortName, page, 16);
-
-  const sortList = [
-    {
-      id: 1,
-      label: "똥꼬발랄 랭킹순",
-    },
-    {
-      id: 2,
-      label: "낮은 가격순",
-    },
-    {
-      id: 3,
-      label: "높은 가격순",
-    },
-    {
-      id: 4,
-      label: "최신순",
-    },
-  ];
 
   useEffect(() => {
     if (active === 1) {

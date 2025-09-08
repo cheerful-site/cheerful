@@ -318,6 +318,18 @@ export const commentImgList = css`
   }
 `;
 
+export const imageBlowup = css`
+  width: 200px; /* 원하는 기본 크기 */
+  height: auto;
+  border-radius: 8px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+
+  &:hover {
+    transform: scale(2);
+  }
+`;
+
 export const likeSelected = css`
   display: flex;
   align-items: center;
