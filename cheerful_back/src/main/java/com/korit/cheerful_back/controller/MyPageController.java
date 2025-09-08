@@ -34,6 +34,7 @@ public class MyPageController {
 
   @GetMapping("/food")
   public ResponseEntity<ResponseDto<?>> getMyPageFoodList(@RequestParam Integer page, @RequestParam Integer size) {
+    System.out.println(myPageService.getMyPageFoodList(page, size));
     return ResponseEntity.ok(ResponseDto.success(myPageService.getMyPageFoodList(page, size)));
   }
 
