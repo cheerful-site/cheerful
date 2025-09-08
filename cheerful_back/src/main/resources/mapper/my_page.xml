@@ -11,11 +11,13 @@
     <result property="createdAt" column="created_at" />
     <result property="parentId" column="parent_id"  />
     <result property="parentTitle" column="parent_title" />
+    <result property="parentCategoryId" column="parent_category_id" />
     <result property="parentCategoryName" column="parent_category_name" />
   </resultMap>
 
   <resultMap id="MyPostMap" type="com.korit.cheerful_back.dto.myPage.MyPostDto">
     <id property="communityId" column="community_id" />
+    <result property="categoryId" column="category_id" />
     <result property="categoryName" column="category_name" />
     <result property="title" column="title" />
     <result property="createdAt" column="created_at" />
@@ -51,6 +53,7 @@
       cmt.created_at,
       ct.community_id as parent_id,
       ct.community_title as parent_title,
+      ct.community_category_id as parent_category_id,
       cct.community_category_name as parent_category_name
     from community_comment_tb cmt
     join community_tb ct on (ct.community_id = cmt.community_id)
@@ -67,6 +70,7 @@
       fmt.created_at,
       ft.food_id,
       ft.food_title,
+      ft.food_category_id,
       fct.food_category_name
     from food_comment_tb fmt
     join food_tb ft on (ft.food_id = fmt.food_id)
@@ -83,6 +87,7 @@
       nmt.created_at,
       nt.notice_id,
       nt.notice_title,
+      nt.notice_category_id,
       nct.notice_category_name
     from notice_comment_tb nmt
     join notice_tb nt on (nt.notice_id = nmt.notice_id)
@@ -97,6 +102,7 @@
       select
         row_number() over (order by ct.created_at desc, ct.community_id desc) as rn,
         ct.community_id as community_id,
+        ct.community_category_id,
         cct.community_category_name as category_name,
         ct.community_title as title,
         ct.created_at as created_at,
