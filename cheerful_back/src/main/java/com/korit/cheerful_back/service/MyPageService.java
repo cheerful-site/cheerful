@@ -1,5 +1,6 @@
 package com.korit.cheerful_back.service;
 
+import com.korit.cheerful_back.domain.foodImg.FoodImg;
 import com.korit.cheerful_back.domain.myPage.MyPageMapper;
 import com.korit.cheerful_back.domain.myPage.MyPageSearchOption;
 import com.korit.cheerful_back.domain.user.User;
@@ -11,6 +12,7 @@ import com.korit.cheerful_back.dto.response.PaginationRespDto;
 import com.korit.cheerful_back.security.model.PrincipalUtil;
 
 import java.io.File;
+import java.util.Comparator;
 import java.util.List;
 
 import com.korit.cheerful_back.util.ImageUrlUtil;
@@ -103,8 +105,20 @@ public class MyPageService {
     Integer totalPages = (int) Math.ceil(totalElements.longValue() / size.doubleValue());
     Boolean isLast = page.equals(totalPages);
 
+    List<MyLikedFoodDto> contentWithUrls = contents.stream()
+        .peek(c -> {
+          List<FoodImg> imgs = c.getFoodImgs();
+          if(imgs == null || imgs.isEmpty()) return;
+
+          imgs.sort(Comparator.comparingInt(FoodImg::getSeq));
+
+          imgs.forEach(img ->
+              img.setImgUrl(imageUrlUtil.food(img.getImgPath())));
+        })
+        .toList();
+
     return PaginationRespDto.<MyLikedFoodDto>builder()
-        .content(contents)
+        .content(contentWithUrls)
         .totalElements(totalElements)
         .totalPages(totalPages)
         .isLast(isLast)
