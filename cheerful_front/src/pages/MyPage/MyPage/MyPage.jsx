@@ -31,7 +31,7 @@ function MyPage(props) {
     if (inputValue === user?.email) {
       if (confirm("정말 탈퇴하시겠습니까?")) {
         try {
-          // reqMypageDeleteMemberShip();
+          reqMypageDeleteMemberShip();
           navigate("/");
         } catch (e) {
           console.log(e);
