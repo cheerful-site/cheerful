@@ -11,7 +11,7 @@ function MyComments(props) {
   const myComment = useMyPageComment(page, 3);
   const myComments = myComment?.data?.data?.body;
 
-  // console.log(myComments);
+  console.log(myComments);
 
   return (
     <div css={s.layout}>
