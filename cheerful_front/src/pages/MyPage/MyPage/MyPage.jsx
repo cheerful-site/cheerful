@@ -9,9 +9,13 @@ import MyComments from "../../../components/MyPageComponents/MyComments/Mycommen
 import MyLike from "../../../components/MyPageComponents/MyLike/MyLike";
 import { reqMypageDeleteMemberShip } from "../../../api/mypageApi/mypageApi";
 import { useNavigate } from "react-router-dom";
+import ReactModal from "react-modal";
+import { useState } from "react";
 
 function MyPage(props) {
+  const [isOpen, setIsOpen] = useState(false);
   const principal = usePrincipalQuery();
+  const [inputValue, setInputValue] = useState("");
   const navigate = useNavigate();
   const user = principal?.data?.data?.body?.user;
   const status = principal?.data?.data?.body?.myStatus;
@@ -19,13 +23,23 @@ function MyPage(props) {
 
   const handleChangeProfileOnClick = () => {};
   const handleChangeUsernameOnClick = () => {};
-  
+
+  const handleOnChange = (e) => {
+    setInputValue(e.target.value);
+  };
   const handleDeleteUserOnClick = () => {
-    if (confirm("CHEERFUL 홈페이지에서 탈퇴하시겠습니까?")) {
-      try {
-        reqMypageDeleteMemberShip();
-        navigate("/");
-      } catch (e) {}
+    if (inputValue === user?.email) {
+      if (confirm("정말 탈퇴하시겠습니까?")) {
+        try {
+          // reqMypageDeleteMemberShip();
+          navigate("/");
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    } else {
+      alert("작성하신 이메일이 동일하지 않습니다. 다시 시도해주세요.");
+      setIsOpen(false);
     }
   };
 
@@ -37,6 +51,7 @@ function MyPage(props) {
             <img src={user?.profileImgUrl} alt="" />
             <div onClick={handleChangeProfileOnClick}>
               <IoSettingsSharp />
+              {/* <input type="file" name="" id="" /> */}
               {/* 이미지 수정 */}
             </div>
           </div>
@@ -66,7 +81,52 @@ function MyPage(props) {
               </div>
             </div>
             <div css={s.deleteUser}>
-              <span onClick={handleDeleteUserOnClick}>탈퇴하기</span>
+              <span onClick={() => setIsOpen(true)}>탈퇴하기</span>
+              {isOpen ? (
+                <ReactModal
+                  style={{
+                    overlay: {
+                      backgroundColor: "#000000cc",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      zIndex: 100,
+                    },
+                    content: {
+                      position: "static",
+                      border: "none",
+                      padding: "0",
+                      overflow: "hidden",
+                    },
+                  }}
+                  isOpen={isOpen}
+                  appElement={document.getElementById("root")}>
+                  <div css={s.deleteUserModal}>
+                    <div>
+                      <span>회원탈퇴를 하시겠습니까?</span>
+                      <span>
+                        탈퇴하시면 작성하신 모든 게시글과 댓글이 삭제됩니다.
+                      </span>
+                      <span>
+                        탈퇴를 원하시면 아래 본인 이메일을 동일하게
+                        작성해주세요.
+                      </span>
+                    </div>
+                    <div>
+                      <span>{user?.email}</span>
+                      <input type="text" onChange={handleOnChange} />
+                    </div>
+                    <div css={s.deleteButton}>
+                      <button onClick={() => setIsOpen(false)}>취소</button>
+                      <button onClick={handleDeleteUserOnClick}>
+                        탈퇴하기
+                      </button>
+                    </div>
+                  </div>
+                </ReactModal>
+              ) : (
+                <></>
+              )}
             </div>
           </div>
         </div>

@@ -22,7 +22,6 @@ import hospital from "../../../logo/cheerful_map_hospital.png";
 function Home(props) {
   const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
-  const mapRef = useRef(null);
   const centerRef = useRef({ lat: 35.1595454, lng: 129.0616078 });
   const bestFood = useHomeBestFoodQuery();
   const bestCommunity = useHomeBestCommunityQuery();
