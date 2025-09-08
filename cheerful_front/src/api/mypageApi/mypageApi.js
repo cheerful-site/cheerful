@@ -28,7 +28,7 @@ export const reqMypageDeleteMemberShip = async () =>
   await api.delete(`/mypage/user`);
 
 export const reqMypageModifyProfileName = async (name) =>
-  await api.put(`/mypage/user/name`, { params: { name } });
+  await api.put(`/mypage/user/name`, null, { params: { name } });
 
 export const reqMypageModifyProfileImage = async (data) =>
   await api.put(`/mypage/user/image`, data, {
