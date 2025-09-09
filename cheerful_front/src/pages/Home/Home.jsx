@@ -61,7 +61,7 @@ function Home(props) {
   const mapList = map?.data?.data?.body || [];
   const mapRef = useRef(null);
 
-  console.log(mapList);
+  // console.log(mapList);
   // console.log(foodImg);
   // console.log(journal);
 
