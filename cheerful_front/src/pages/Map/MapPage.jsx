@@ -83,6 +83,10 @@ function MapPage(props) {
     (id) => id?.categoryId === activeCategoryId
   );
 
+  useEffect(() => {
+    setSelected(null);
+  }, [category]);
+
   // console.log(mapList);
 
   return (
