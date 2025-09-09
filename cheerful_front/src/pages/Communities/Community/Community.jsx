@@ -23,7 +23,7 @@ function Community(props) {
   const [active, setActive] = useState(1);
   const communityList = useCommunityListQuery(sortName, page, 10, category);
 
-  console.log(sortName, page, 10, category);
+  // console.log(sortName, page, 10, category);
 
   useEffect(() => {
     if (active === 1) {
