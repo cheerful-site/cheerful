@@ -1,0 +1,608 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.korit.cheerful_back.domain.community.CommunityMapper">
+    <resultMap id="CommunityMap" type="com.korit.cheerful_back.domain.community.Community">
+        <id property="communityId" column="community_id" />
+        <result property="communityCategoryId" column="community_category_id" />
+        <result property="userId" column="ct_user_id" />
+        <result property="title" column="community_title" />
+        <result property="content" column="community_content" />
+        <result property="createdAt" column="created_at" />
+        <result property="views" column="community_views" />
+        <result property="isLike" column="is_like" />
+        <result property="likeCount" column="like_count" />
+        <result property="commentCount" column="comments_count" />
+        <association property="user" resultMap="UserMap" />
+        <association property="communityCategory" resultMap="CommunityCategoryMap" />
+        <collection property="communityImgs" javaType="list" resultMap="CommunityImgMap" />
+        <collection property="communityComments" javaType="list" resultMap="CommunityCommentMap" />
+    </resultMap>
+
+    <resultMap id="UserMap" type="com.korit.cheerful_back.domain.user.User">
+        <id property="userId" column="user_id"/>
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+        <result property="name" column="name"/>
+        <result property="email" column="email"/>
+        <result property="profileImgPath" column="profile_img_path"/>
+        <result property="role" column="role"/>
+        <result property="provider" column="provider"/>
+        <result property="providerId" column="provider_id"/>
+        <result property="createdAt" column="created_at" />
+    </resultMap>
+
+    <resultMap id="CommunityCategoryMap" type="com.korit.cheerful_back.domain.communityCategory.CommunityCategory">
+        <id property="communityCategoryId" column="community_category_id" />
+        <result property="communityCategoryName" column="community_category_name" />
+    </resultMap>
+
+    <resultMap id="CommunityImgMap" type="com.korit.cheerful_back.domain.communityImg.CommunityImg">
+        <id property="communityImgId" column="community_img_id" />
+        <result property="communityId" column="cit_community_id" />
+        <result property="seq" column="seq" />
+        <result property="imgPath" column="img_path" />
+    </resultMap>
+
+    <resultMap id="CommunityCommentMap" type="com.korit.cheerful_back.domain.communityComment.CommunityComment">
+        <id property="communityCommentId" column="community_comment_id" />
+        <result property="communityId" column="community_id" />
+        <result property="parentCommentId" column="parent_comment_id" />
+        <result property="parentUserId" column="parent_user_id" />
+        <result property="userId" column="user_id" />
+        <result property="content" column="content" />
+        <result property="createdAt" column="created_at" />
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="communityId">
+        insert into community_tb(community_id, community_category_id, user_id, community_title, community_content, created_at)
+        values (default, #{communityCategoryId}, #{userId}, #{title}, #{content}, now())
+    </insert>
+
+    <select id="findAllByOptions" resultMap="CommunityMap">
+        select
+            *
+        from
+            (select
+                dense_rank() over(
+                    order by
+                    <choose>
+                        <when test="sort == 'popular'">
+                            COALESCE(clc.like_count, 0) desc, ct.created_at desc, ct.community_id desc
+                        </when>
+                        <when test="sort == 'new'">
+                            ct.created_at desc, ct.community_id desc
+                        </when>
+                        <otherwise>
+                            ct.created_at desc, ct.community_id desc
+                        </otherwise>
+                    </choose>
+                ) as community_number,
+
+                ct.community_id,
+                ct.community_category_id,
+                ct.user_id as ct_user_id,
+                ct.community_title,
+                ct.community_content,
+                ct.created_at as ct_created_at,
+                ct.community_views,
+
+                ut.user_id as ut_user_id,
+                ut.username,
+                ut.password,
+                ut.name,
+                ut.email,
+                ut.profile_img_path,
+                ut.role,
+                ut.provider,
+                ut.provider_id,
+                ut.created_at as ut_created_at,
+
+                cit.community_img_id,
+                cit.community_id as cit_community_id,
+                cit.seq,
+                cit.`img_path`,
+
+                cmt.community_comment_id,
+                cmt.community_id as cmt_community_id,
+                cmt.parent_comment_id,
+                cmt.parent_user_id,
+                cmt.user_id as cmt_user_id,
+                cmt.content,
+                cmt.created_at as cmt_created_at,
+
+                ifnull(clt.community_like_id, 0) as is_like,
+                ifnull(clc.like_count, 0) as like_count,
+                ifnull(cc.comments_count, 0) as comments_count
+            from
+                community_tb ct
+                left outer join user_tb ut on(ut.user_id = ct.user_id)
+                left outer join community_img_tb cit on(cit.community_id = ct.community_id)
+                left outer join community_like_tb clt on(clt.community_id = ct.community_id)
+                left outer join community_category_tb cct on(cct.community_category_id = ct.community_category_id)
+                left outer join (select community_id, count(*) as like_count from community_like_tb group by community_id) clc on(clc.community_id = ct.community_id)
+                left outer join (select community_id, count(*) as comments_count from community_comment_tb group by community_id) cc on(cc.community_id = ct.community_id)
+                left outer join community_comment_tb cmt on(cmt.community_id = ct.community_id)
+            <where>
+                <choose>
+                    <!-- categoryId == 1 이면 전체 -->
+                    <when test="categoryId == 1">
+                        1 = 1
+                    </when>
+                    <otherwise>
+                        ct.community_category_id = #{categoryId}
+                    </otherwise>
+                </choose>
+            </where>
+            ) communities
+        where
+            community_number between #{startIndex} + 1 and #{endIndex}
+<!--        limit #{startIndex}, #{size}-->
+        order by
+            <choose>
+                <when test="sort == 'popular'">
+                    like_count desc, ct_created_at desc, community_id desc
+                </when>
+                <when test="sort == 'new'">
+                    ct_created_at desc, community_id desc
+                </when>
+                <otherwise>
+                    ct_created_at desc, community_id desc
+                </otherwise>
+            </choose>
+            , seq
+    </select>
+
+<!--    <select id="findByCategoryId" resultMap="CommunityMap">-->
+<!--        select-->
+<!--            ct.community_id,-->
+<!--            ct.community_category_id,-->
+<!--            ct.user_id as ct_user_id,-->
+
+<!--            ut.user_id as ut_user_id,-->
+<!--            ut.username,-->
+<!--            ut.email,-->
+<!--            ut.profile_img_path,-->
+<!--            ut.role,-->
+<!--            ut.provider,-->
+<!--            ut.provider_id,-->
+
+<!--            ct.community_title,-->
+<!--            ct.community_content,-->
+<!--            ct.created_at,-->
+
+<!--            cit.community_img_id,-->
+<!--            cit.community_id as cit_community_id,-->
+<!--            cit.seq,-->
+<!--            cit.`img_path`,-->
+
+<!--            ifnull(clt.community_like_id, 0) as is_like,-->
+<!--            ifnull(clc.like_count, 0) as like_count,-->
+<!--            ifnull(cc.comments_count, 0) as comments_count-->
+<!--        from-->
+<!--            community_tb ct-->
+<!--            left outer join user_tb ut on(ut.user_id = ct.user_id)-->
+<!--            left outer join community_img_tb cit on(cit.community_id = ct.community_id)-->
+<!--            left outer join community_like_tb clt on(clt.community_id = ct.community_id)-->
+<!--            left outer join (select community_id, count(*) as like_count from community_like_tb group by community_id) clc on(clc.community_id = ct.community_id)-->
+<!--            left outer join (select community_id, count(*) as comments_count from community_comment_tb group by community_id) cc on(cc.community_id = ct.community_id)-->
+<!--        <where>-->
+<!--            <choose>-->
+<!--                &lt;!&ndash; categoryId == 1 이면 전체 &ndash;&gt;-->
+<!--                <when test="categoryId == 1">-->
+<!--                    1 = 1-->
+<!--                </when>-->
+<!--                <otherwise>-->
+<!--                    ct.community_category_id = #{categoryId}-->
+<!--                </otherwise>-->
+<!--            </choose>-->
+<!--        </where>-->
+<!--        order by ct.community_id desc;-->
+<!--    </select>-->
+
+<!--    게시글 클릭 시 -->
+    <select id="findByOption" resultMap="CommunityMap">
+        select
+            ct.community_id,
+            ct.community_category_id,
+            ct.user_id,
+            ct.community_title,
+            ct.community_content,
+            ct.created_at,
+            ct.community_views,
+
+            ut.user_id as ut_user_id,
+            ut.username,
+            ut.password,
+            ut.name,
+            ut.email,
+            ut.profile_img_path,
+            ut.role,
+            ut.provider,
+            ut.provider_id,
+            ut.created_at as ut_created_at,
+
+            cct.community_category_name,
+
+            cit.community_img_id,
+            cit.community_id as cit_community_id,
+            cit.seq,
+            cit.`img_path`,
+
+            cmt.community_comment_id,
+            cmt.community_id as cmt_community_id,
+            cmt.parent_comment_id,
+            cmt.parent_user_id,
+            cmt.user_id as cmt_user_id,
+            cmt.content,
+            cmt.created_at as cmt_created_at,
+
+            ifnull(cil.is_like, 0) as is_like,
+            ifnull(clc.like_count, 0) as like_count,
+            ifnull(cc.comments_count, 0) as comments_count
+        from
+            community_tb ct
+            left outer join user_tb ut on(ut.user_id = ct.user_id)
+            left outer join community_img_tb cit on(cit.community_id = ct.community_id)
+            left outer join community_category_tb cct on(cct.community_category_id = ct.community_category_id)
+            left outer join community_comment_tb cmt on(cmt.community_id = ct.community_id)
+            left outer join (select distinct community_id, 1 as is_like from community_like_tb where user_id = #{userId}) cil on(cil.community_id = ct.community_id)
+            left outer join (select community_id, count(*) as like_count from community_like_tb group by community_id) clc on(clc.community_id = ct.community_id)
+            left outer join (select community_id, count(*) as comments_count from community_comment_tb group by community_id) cc on(cc.community_id = ct.community_id)
+        <where>
+            <choose>
+                <!-- categoryId == 1 이면 전체 -->
+                <when test="categoryId == 1">
+                    1 = 1
+                </when>
+                <otherwise>
+                    ct.community_category_id = #{categoryId}
+                </otherwise>
+            </choose>
+            and ct.community_id = #{communityId}
+        </where>
+    </select>
+
+    <select id="getCountOfOptions" resultType="java.lang.Integer">
+        select
+            count(*)
+        from
+            community_tb ct
+            left outer join community_category_tb cct on (cct.community_category_id = ct.community_category_id)
+        <where>
+            <choose>
+                <!-- categoryId == 1 이면 전체 -->
+                <when test="categoryId == 1">
+                    1 = 1
+                </when>
+                <otherwise>
+                    ct.community_category_id = #{categoryId}
+                </otherwise>
+            </choose>
+        </where>
+<!--        where-->
+<!--            ct.user_id = #{userId}-->
+    </select>
+
+<!--    조회수-->
+    <update id="increaseViews">
+        update community_tb as ct
+        set ct.community_views = coalesce(ct.community_views, 0) + 1
+        <where>
+            <choose>
+                <!-- categoryId == 1 이면 전체 -->
+                <when test="categoryId == 1">
+                    1 = 1
+                </when>
+                <otherwise>
+                    ct.community_category_id = #{categoryId}
+                </otherwise>
+            </choose>
+            and ct.community_id = #{communityId}
+        </where>
+    </update>
+
+    <select id="selectViews" resultType="java.lang.Integer">
+        select
+            ifnull(max(ct.community_views), 0) as views
+        from
+            community_tb ct
+        <where>
+            <choose>
+                <!-- categoryId == 1 이면 전체 -->
+                <when test="categoryId == 1">
+                    1 = 1
+                </when>
+                <otherwise>
+                    ct.community_category_id = #{categoryId}
+                </otherwise>
+            </choose>
+            and ct.community_id = #{communityId}
+        </where>
+    </select>
+
+<!--    관리자 권한-->
+    <select id="findAllBySearchOption" resultMap="CommunityMap">
+        select
+            ct.community_id,
+            ct.user_id,
+            ct.community_title,
+            ct.community_content,
+            ct.created_at,
+
+            cct.community_category_name,
+
+            ut.user_id as ut_user_id,
+            ut.username,
+            ut.password,
+            ut.name,
+            ut.email,
+            ut.profile_img_path,
+            ut.role,
+            ut.provider,
+            ut.provider_id,
+            ut.created_at as ut_created_at
+        from
+            community_tb ct
+            left outer join user_tb ut on(ut.user_id = ct.user_id)
+            left outer join community_category_tb cct on(cct.community_category_id = ct.community_category_id)
+        <where>
+            <choose>
+                <!-- categoryId == 1 이면 전체 -->
+                <when test="categoryId == 1">
+                    1 = 1
+                </when>
+                <otherwise>
+                    ct.community_category_id = #{categoryId}
+                </otherwise>
+            </choose>
+
+            <if test="searchText != null and searchText != ''">
+                and (
+                    ct.community_title like concat('%', #{searchText}, '%')
+                    or ut.name like concat('%', #{searchText}, '%')
+                )
+            </if>
+        </where>
+        order by
+            ct.community_id
+<!--        limit #{size} offset #{startIndex}-->
+        limit #{startIndex}, #{size}
+    </select>
+
+    <select id="getCountOfSearchOption" resultType="java.lang.Integer">
+        select
+            count(*)
+        from
+            community_tb ct
+            left outer join user_tb ut on(ut.user_id = ct.user_id)
+            left outer join community_category_tb cct on(cct.community_category_id = ct.community_category_id)
+        <where>
+            <choose>
+                <!-- categoryId == 1 이면 전체 -->
+                <when test="categoryId == 1">
+                    1 = 1
+                </when>
+                <otherwise>
+                    ct.community_category_id = #{categoryId}
+                </otherwise>
+            </choose>
+
+            <if test="searchText != null and searchText != ''">
+                and (
+                    ct.community_title like concat('%', #{searchText}, '%')
+                    or ut.name like concat('%', #{searchText}, '%')
+                )
+            </if>
+        </where>
+    </select>
+
+
+    <delete id="deleteByCommunityIds" parameterType="list">
+        delete from community_tb
+        where
+            community_id in
+            <foreach item="communityId" collection="communityIds" separator="," open="(" close=")" >
+                #{communityId}
+            </foreach>
+    </delete>
+
+    <delete id="deleteByCommunityId">
+        delete from community_tb
+        where
+            community_id = #{communityId}
+    </delete>
+
+    <delete id="deleteUserCommunityId">
+        delete from community_tb
+        where
+            community_id = #{communityId}
+            and user_id = #{userId}
+    </delete>
+
+    <select id="getImagePathsByCommunityId" resultType="string">
+        select img_path
+        from community_img_tb
+        where community_id = #{communityId}
+    </select>
+
+    <select id="getImagePathByCommunityIds" resultType="string">
+        select img_path
+        from community_img_tb
+        where community_id in
+        <foreach item="communityId" collection="communityIds" separator="," open="(" close=")" >
+            #{communityId}
+        </foreach>
+    </select>
+
+
+    <select id="findBySearchOption" resultMap="CommunityMap">
+        select
+            *
+        from
+            (select
+                dense_rank() over(order by ct.created_at desc, ct.community_id desc) as community_number,
+                ct.community_id,
+                ct.community_category_id,
+                ct.user_id as ct_user_id,
+                ct.community_title,
+                ct.community_content,
+                ct.created_at as ct_created_at,
+                ct.community_views,
+
+                ut.user_id as ut_user_id,
+                ut.username,
+                ut.password,
+                ut.name,
+                ut.email,
+                ut.profile_img_path,
+                ut.role,
+                ut.provider,
+                ut.provider_id,
+                ut.created_at as ut_created_at,
+
+                cit.community_img_id,
+                cit.community_id as cit_community_id,
+                cit.seq,
+                cit.`img_path`,
+
+                cmt.community_comment_id,
+                cmt.community_id as cmt_community_id,
+                cmt.parent_comment_id,
+                cmt.parent_user_id,
+                cmt.user_id as cmt_user_id,
+                cmt.content,
+                cmt.created_at as cmt_created_at,
+
+                ifnull(clt.community_like_id, 0) as is_like,
+                ifnull(clc.like_count, 0) as like_count,
+                ifnull(cc.comments_count, 0) as comments_count
+            from
+                community_tb ct
+                left outer join user_tb ut on(ut.user_id = ct.user_id)
+                left outer join community_img_tb cit on(cit.community_id = ct.community_id)
+                left outer join community_like_tb clt on(clt.community_id = ct.community_id)
+                left outer join community_category_tb cct on(cct.community_category_id = ct.community_category_id)
+                left outer join (select community_id, count(*) as like_count from community_like_tb group by community_id) clc on(clc.community_id = ct.community_id)
+                left outer join (select community_id, count(*) as comments_count from community_comment_tb group by community_id) cc on(cc.community_id = ct.community_id)
+                left outer join community_comment_tb cmt on(cmt.community_id = ct.community_id)
+            <where>
+                <choose>
+                    <!-- categoryId == 1 이면 전체 -->
+                    <when test="categoryId == 1">
+                        1 = 1
+                    </when>
+                    <otherwise>
+                        ct.community_category_id = #{categoryId}
+                    </otherwise>
+                </choose>
+
+                <if test="searchText != null and searchText != ''">
+                    and (
+                    ct.community_title like concat('%', #{searchText}, '%')
+                    or ut.name like concat('%', #{searchText}, '%')
+                    )
+                </if>
+            </where>
+            order by
+            ct.created_at desc,
+            ct.community_id desc,
+            cit.seq) communities
+        where
+            community_number between #{startIndex} + 1 and #{endIndex}
+    </select>
+
+    <select id="getCountOfFindSearchOption" resultType="java.lang.Integer">
+        select
+            count(*)
+        from
+            community_tb ct
+            left outer join user_tb ut on(ut.user_id = ct.user_id)
+            left outer join community_category_tb cct on(cct.community_category_id = ct.community_category_id)
+        <where>
+            <choose>
+                <!-- categoryId == 1 이면 전체 -->
+                <when test="categoryId == 1">
+                    1 = 1
+                </when>
+                <otherwise>
+                    ct.community_category_id = #{categoryId}
+                </otherwise>
+            </choose>
+
+            <if test="searchText != null and searchText != ''">
+                and (
+                ct.community_title like concat('%', #{searchText}, '%')
+                or ut.name like concat('%', #{searchText}, '%')
+                )
+            </if>
+        </where>
+    </select>
+
+<!--    홈화면에서 띄우는 card-->
+    <select id="findTopCommunity" resultMap="CommunityMap">
+        select
+            ct.community_id,
+            ct.community_category_id,
+            ct.user_id,
+            ct.community_title,
+            ct.community_content,
+            ct.created_at,
+            ct.community_views,
+
+            ut.user_id as ut_user_id,
+            ut.username,
+            ut.password,
+            ut.name,
+            ut.email,
+            ut.profile_img_path,
+            ut.role,
+            ut.provider,
+            ut.provider_id,
+            ut.created_at as ut_created_at,
+
+            cct.community_category_name,
+
+            cit.community_img_id,
+            cit.community_id as cit_community_id,
+            cit.seq,
+            cit.`img_path`,
+
+            ifnull(clc.like_count, 0) as like_count
+        from
+            community_tb ct
+            left outer join user_tb ut on(ut.user_id = ct.user_id)
+            left outer join community_category_tb cct on(cct.community_category_id = ct.community_category_id)
+            left outer join community_img_tb cit on(cit.community_id = ct.community_id)
+            left outer join (select community_id, count(*) as like_count from community_like_tb group by community_id) clc on(clc.community_id = ct.community_id)
+        <where>
+            <choose>
+                <!-- categoryId == 1 이면 전체 -->
+                <when test="categoryId == 1">
+                    1 = 1
+                </when>
+                <otherwise>
+                    ct.community_category_id = #{categoryId}
+                </otherwise>
+            </choose>
+            <if test="excludeId != null">
+                and ct.community_id != #{excludeId}
+            </if>
+        </where>
+        order by
+            <choose>
+                <when test="orderBy == 'likes'">
+                    like_count desc, ct.community_views desc, ct.created_at desc
+                </when>
+                <when test="orderBy == 'views'">
+                    ct.community_views desc, like_count desc, ct.created_at desc
+                </when>
+                <otherwise>
+                    ct.community_views desc, like_count desc, ct.created_at desc
+                </otherwise>
+            </choose>
+        LIMIT #{limit}
+    </select>
+</mapper>

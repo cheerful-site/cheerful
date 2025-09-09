@@ -1,0 +1,157 @@
+/**@jsxImportSource @emotion/react */
+import { FaSearch } from "react-icons/fa";
+import * as s from "./styles";
+import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import usePrincipalQuery from "../../queries/PrincipalQuery/usePrincipalQuery";
+import ReactModal from "react-modal";
+import { useQueryClient } from "@tanstack/react-query";
+import headerLogo from "../../logo/cheerful_header.png";
+import { MENU } from "../../constants/headerComponent/headerComponent";
+
+function Header(props) {
+  const [login, setLogin] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const principalQuery = usePrincipalQuery();
+  const user = principalQuery?.data?.data?.body?.user || [];
+  const userStatus = principalQuery?.data?.data?.body.myStatus || [];
+
+  // console.log(user);
+  // console.log(userStatus);
+
+  useEffect(() => {
+    const token = localStorage.getItem("AccessToken");
+    if (!!token) {
+      setLogin(true);
+      return;
+    } else {
+      setLogin(false);
+      return;
+    }
+  }, [localStorage.getItem("AccessToken")]);
+
+  const handleProfileOnClick = () => {
+    setIsOpen((prev) => !prev);
+  };
+
+  const handleLogoutOnClick = async () => {
+    localStorage.removeItem("AccessToken");
+    await queryClient.invalidateQueries({
+      queryKey: ["principal"],
+    });
+    navigate("/auth/login");
+  };
+  // console.log(user?.profileImgPath);
+
+  const handleRefetchOnClick = async () => {
+    await principalQuery.refetch();
+    queryClient.invalidateQueries({
+      queryKey: ["mypageComment"],
+    });
+    queryClient.invalidateQueries({
+      queryKey: ["mypageCommunity"],
+    });
+    queryClient.invalidateQueries({
+      queryKey: ["mypageFoodLike"],
+    });
+  };
+
+  return (
+    <div css={s.layout}>
+      <div>
+        <Link to={"/"}>
+          <img css={s.headerLogo} src={headerLogo} alt="" />
+        </Link>
+      </div>
+
+      <div css={s.category}>
+        {MENU.map((menu) => (
+          <Link
+            key={menu.id}
+            css={s.checkedPath(location.pathname === menu.path)}
+            to={menu.path}>
+            {menu.title}
+          </Link>
+        ))}
+      </div>
+
+      {login === false ? (
+        <Link to={"/auth/login"} css={s.loginButton}>
+          로그인
+        </Link>
+      ) : (
+        <div css={s.profile}>
+          <div css={s.searchIconBox}>
+            <Link to={"/search"}>
+              <FaSearch css={s.searchIcon} />
+            </Link>
+          </div>
+          <div css={s.profileImgBox}>
+            <img src={user?.profileImgUrl} alt="" css={s.profileImg} />
+          </div>
+          <div css={s.profileEdit} onClick={handleProfileOnClick}>
+            <div>{user?.name}</div>
+            {isOpen ? (
+              <ReactModal
+                style={{
+                  overlay: {
+                    backgroundColor: "#000000cc",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    zIndex: 100,
+                  },
+                  content: {
+                    position: "static",
+                    border: "none",
+                    padding: "0",
+                    overflow: "hidden",
+                  },
+                }}
+                isOpen={isOpen}
+                appElement={document.getElementById("root")}>
+                <div css={s.modalContainer}>
+                  <div css={s.modalProfile}>
+                    <img src={user?.profileImgUrl} alt="" />
+                    <span>{user?.name}</span>
+                  </div>
+
+                  <div css={s.modalButton}>
+                    <Link to={"/community/register"}>글쓰기</Link>
+                    {user?.role === "ROLE_ADMIN" ? (
+                      <Link to={"/admin/users"}>관리자 페이지</Link>
+                    ) : (
+                      <Link to={"/mypage"} onClick={handleRefetchOnClick}>
+                        마이페이지
+                      </Link>
+                    )}
+                    <div onClick={handleLogoutOnClick}>로그아웃</div>
+                  </div>
+
+                  <div css={s.horizon}></div>
+
+                  <div css={s.modalContent}>
+                    <div>
+                      <span>내가 쓴 글</span>
+                      <span>{userStatus?.postCount}개</span>
+                    </div>
+                    <div>
+                      <span>내가 쓴 댓글</span>
+                      <span>{userStatus?.commentCount}개</span>
+                    </div>
+                  </div>
+                </div>
+              </ReactModal>
+            ) : (
+              <></>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default Header;

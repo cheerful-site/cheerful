@@ -1,0 +1,300 @@
+package com.korit.cheerful_back.service;
+
+import com.korit.cheerful_back.domain.community.Community;
+import com.korit.cheerful_back.domain.community.CommunityLikeMapper;
+import com.korit.cheerful_back.domain.community.CommunityMapper;
+import com.korit.cheerful_back.domain.community.CommunitySearchOption;
+import com.korit.cheerful_back.domain.communityComment.CommunityComment;
+import com.korit.cheerful_back.domain.communityComment.CommunityCommentMapper;
+import com.korit.cheerful_back.domain.communityImg.CommunityImg;
+import com.korit.cheerful_back.domain.communityImg.CommunityImgMapper;
+import com.korit.cheerful_back.dto.community.CommunityCommentRegisterReqDto;
+import com.korit.cheerful_back.dto.community.CommunityRegisterReqDto;
+import com.korit.cheerful_back.dto.response.PaginationRespDto;
+import com.korit.cheerful_back.security.model.PrincipalUtil;
+import com.korit.cheerful_back.util.ImageUrlUtil;
+import java.util.Collections;
+import java.util.Comparator;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.multipart.MultipartFile;
+
+@Service
+@RequiredArgsConstructor
+public class CommunityService {
+
+    private final CommunityMapper communityMapper;
+    private final FileService fileService;
+    private final PrincipalUtil principalUtil;
+    private final CommunityImgMapper communityImgMapper;
+    private final CommunityLikeMapper communityLikeMapper;
+    private final CommunityCommentMapper communityCommentMapper;
+    private final ImageUrlUtil imageUrlUtil;
+
+    /*
+        커뮤니티 글 등록 + 이미지 저장
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void register(CommunityRegisterReqDto dto) {
+//        // 1) 파일 업로드 -> 저장 경로 수집 > file이 하나라도 들어갔을 경우에만 실행되는 코드
+//        List<String> uploadFilepath = dto.getFiles()
+//                .stream()
+//                .map(file -> "/community/" + fileService.uploadFile(file, "/community"))
+//                .peek(newFileName -> System.out.println(newFileName))
+//                .collect(Collectors.toList());
+
+        // 1) 파일이 존재할 경우에만 업로드 실행 > if문 사용
+
+//        List<String> uploadFilepath = new ArrayList<>();
+
+//        if (dto.getFiles() != null && !dto.getFiles().isEmpty()) {
+//            uploadFilepath = dto.getFiles().stream()
+//                    .filter(file -> file != null && !file.isEmpty()) // 빈 파일 제외
+//                    .map(file -> "/community/" + fileService.uploadFile(file, "/community"))
+//                    .peek(newFileName -> System.out.println(newFileName))
+//                    .collect(Collectors.toList());
+//        }
+
+        // 2) 사용자 식별
+        Integer userId = principalUtil.getPrincipalUser().getUser().getUserId();
+
+        // title 유효성 검사
+        if (dto.getTitle() == null || dto.getTitle().trim().isEmpty()) {
+            throw new IllegalArgumentException("제목이 없습니다.");
+        }
+
+        // content 유효성 검사
+        if (dto.getContent() == null || dto.getContent().trim().isEmpty()) {
+            throw new IllegalArgumentException("내용이 없습니다.");
+        }
+
+        // 3) 게시글 저장
+        Community community = Community.builder()
+                .userId(userId)
+                .communityCategoryId(dto.getCommunityCategoryId())
+                .title(dto.getTitle())
+                .content(dto.getContent())
+                .build();
+        communityMapper.insert(community);
+
+        // 4) 이미지 저장
+//        AtomicInteger atomicInteger = new AtomicInteger(0);
+//        List<CommunityImg> communityImgs = uploadFilepath.stream()
+//                .map(path -> CommunityImg.builder()
+//                        .seq(atomicInteger.getAndIncrement() + 1)
+//                        .communityId(community.getCommunityId())
+//                        .imgPath(path)
+//                        .build())
+//                .collect(Collectors.toList());
+//        communityImgMapper.insertMany(communityImgs);
+
+//        if (!uploadFilepath.isEmpty()) {
+//            AtomicInteger atomicInteger = new AtomicInteger(0);
+//            List<CommunityImg> communityImgs = uploadFilepath.stream()
+//                    .map(path -> CommunityImg.builder()
+//                            .seq(atomicInteger.getAndIncrement() + 1)
+//                            .communityId(community.getCommunityId())
+//                            .imgPath(path)
+//                            .build())
+//                    .collect(Collectors.toList());
+//            communityImgMapper.insertMany(communityImgs);
+//        }
+//
+//        System.out.println(uploadFilepath);
+
+        List<MultipartFile> imageFiles = dto.getFiles();
+
+        if (imageFiles != null && !imageFiles.isEmpty()) {
+            List<CommunityImg> communityImgs = new ArrayList<>();
+            int seq = 1;
+
+            for(MultipartFile file : imageFiles) {
+                String imagePath = fileService.uploadFile(file, "community");
+
+                CommunityImg communityImg = CommunityImg.builder()
+                    .communityId(community.getCommunityId())
+                    .seq(seq++)
+                    .imgPath(imagePath)
+                    .build();
+
+                communityImgs.add(communityImg);
+            }
+
+            communityImgMapper.insertMany(communityImgs);
+        }
+
+
+    }
+
+    /*
+        카테고리별 커뮤니티 목록 조회
+        categoryId가 1이면 전체 조회
+     */
+//    public List<Community> getCommunity(Integer categoryId) {
+//        Integer userId = principalUtil.getPrincipalUser().getUser().getUserId();
+////        System.out.println(categoryId);
+////        System.out.println(userId);
+//        return communityMapper.findByCategoryId(categoryId, userId);
+//    }
+
+    /*
+        커뮤니티 페이징 목록 조회
+     */
+    public PaginationRespDto<Community> getCommunityList(String sort, Integer page, Integer size, Integer categoryId) {
+
+        String sorts = switch (sort == null ? "new" : sort) {
+            case "new", "popular" -> sort;
+            default -> "new";
+        };
+
+        CommunitySearchOption searchOption = CommunitySearchOption.builder()
+            .startIndex((page - 1) * size)
+            .endIndex(size * page)
+            .size(size)
+            .categoryId(categoryId)
+            .sort(sorts)
+            .build();
+
+        // 총 건수 / 총 페이지 / 마지막 여부 계산
+        List<Community> contents = communityMapper.findAllByOptions(searchOption);
+        if(contents == null) {
+            contents = Collections.emptyList();
+        }
+        Integer totalElements = communityMapper.getCountOfOptions(searchOption);
+        Integer totalPages = (int) Math.ceil(totalElements.longValue() / size.doubleValue());
+        Boolean isLast = page.equals(totalPages);
+
+        // 이미지
+        List<Community> contentWithUrls = contents.stream()
+            .peek(c -> {
+                List<CommunityImg> imgs = c.getCommunityImgs();
+                if(imgs == null || imgs.isEmpty()) return;
+
+                imgs.sort(Comparator.comparingInt(CommunityImg::getSeq));
+
+                imgs.forEach(img ->
+                    img.setImgUrl(imageUrlUtil.community(img.getImgPath())));
+            })
+            .toList();
+
+        return PaginationRespDto.<Community>builder()
+                .content(contentWithUrls)
+//                .categoryId(categoryId)
+                .totalElements(totalElements)
+                .totalPages(totalPages)
+                .isLast(isLast)
+                .page(page)
+                .size(size)
+                .build();
+    }
+
+    /*
+        좋아요 추가
+     */
+    public void like(Integer communityId) {
+        Integer userId = principalUtil.getPrincipalUser().getUser().getUserId();
+        communityLikeMapper.insert(communityId, userId);
+    }
+
+    /*
+        좋아요 취소
+     */
+    public void disLike(Integer communityId) {
+        Integer userId = principalUtil.getPrincipalUser().getUser().getUserId();
+        communityLikeMapper.delete(communityId, userId);
+    }
+
+    /*
+        특정 글 클릭해서 내용 보기
+     */
+//    public List<CommunityComment> getCommunityContent(Integer categoryId, Integer communityId) {
+//        return communityCommentMapper.findAllByCommunityId(categoryId, communityId);
+//    }
+
+    public Community getCommunityContent(Integer categoryId, Integer communityId) {
+        Integer userId = principalUtil.getPrincipalUser().getUser().getUserId();
+
+        // 게시글 단건 조회
+        Community community = communityMapper.findByOption(categoryId, communityId, userId);
+        if(community == null) {
+            throw new NotFoundException("Community not found with id = " + communityId);
+        }
+
+        // 이미지 URL 세팅
+        List<CommunityImg> imgs = community.getCommunityImgs();
+        if(imgs != null && !imgs.isEmpty()) {
+            imgs.sort(Comparator.comparingInt(CommunityImg::getSeq));
+            imgs.forEach(img -> img.setImgUrl(imageUrlUtil.community(img.getImgPath())));
+        }
+
+        // 댓글도 조회해서 세팅
+        List<CommunityComment> comments = communityCommentMapper.findAllByCommunityId(categoryId, communityId);
+
+        comments.forEach(c -> {
+            var u = c.getUser();
+            if(u != null) {
+                u.setProfileImgUrl(imageUrlUtil.profile(u.getProfileImgPath()));
+            }
+        });
+        community.setCommunityComments(comments);
+
+        return community;
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public class NotFoundException extends RuntimeException {
+        public NotFoundException(String message) {
+            super(message);
+        }
+    }
+
+
+    /*
+        특정 글 조회수
+     */
+    public int increaseViews(Integer categoryId, Integer communityId) {
+        int updated = communityMapper.increaseViews(categoryId, communityId);
+        if(updated == 0) {
+            return 0;
+        }
+        return communityMapper.selectViews(categoryId, communityId);
+    }
+
+    /*
+        댓글 작성
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public Integer registerComment(CommunityCommentRegisterReqDto dto) {
+        Integer userId = principalUtil.getPrincipalUser().getUser().getUserId();
+
+        // content 유효성 검사
+        if (dto.getContent() == null || dto.getContent().trim().isEmpty()) {
+            throw new IllegalArgumentException("내용이 없습니다.");
+        }
+
+        communityCommentMapper.insert(dto.toEntity(userId));
+        return communityCommentMapper.getCountByCommentId(dto.getCommunityId());
+    }
+
+    /*
+        등록한 user일 경우 게시물 삭제
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteUserCommunity(Integer communityId, Integer userId) {
+        communityMapper.deleteUserCommunityId(communityId, userId);
+    }
+
+    /*
+        등록한 user일 경우 댓글 삭제
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteUserComment(Integer commentId, Integer userId) {
+        communityCommentMapper.deleteUserCommunityCommentId(commentId, userId);
+    }
+}

@@ -1,0 +1,508 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.korit.cheerful_back.domain.food.FoodMapper">
+    <resultMap id="FoodMap" type="com.korit.cheerful_back.domain.food.Food">
+        <id property="foodId" column="food_id" />
+        <result property="foodCategoryId" column="food_category_id" />
+        <result property="userId" column="user_id" />
+        <result property="title" column="food_title" />
+        <result property="content" column="food_content" />
+        <result property="price" column="food_price" />
+        <result property="createdAt" column="created_at" />
+        <result property="foodAddress" column="food_address" />
+        <result property="isLike" column="is_like" />
+        <result property="likeCount" column="like_count" />
+        <result property="commentCount" column="comments_count" />
+        <association property="user" resultMap="UserMap" />
+        <association property="foodCategory" resultMap="FoodCategoryMap" />
+        <association property="foodComment" resultMap="FoodCommentMap" />
+        <collection property="foodImgs" javaType="list" resultMap="FoodImgMap" />
+    </resultMap>
+
+    <resultMap id="UserMap" type="com.korit.cheerful_back.domain.user.User">
+        <id property="userId" column="user_id"/>
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+        <result property="name" column="name"/>
+        <result property="email" column="email"/>
+        <result property="profileImgPath" column="profile_img_path"/>
+        <result property="role" column="role"/>
+        <result property="provider" column="provider"/>
+        <result property="providerId" column="provider_id"/>
+        <result property="createdAt" column="created_at" />
+    </resultMap>
+
+    <resultMap id="FoodCategoryMap" type="com.korit.cheerful_back.domain.foodCategory.FoodCategory" >
+        <id property="foodCategoryId" column="food_category_id" />
+        <result property="foodCategoryName" column="food_category_name" />
+    </resultMap>
+
+    <resultMap id="FoodImgMap" type="com.korit.cheerful_back.domain.foodImg.FoodImg">
+        <id property="foodImgId" column="food_img_id" />
+        <result property="foodId" column="food_id" />
+        <result property="seq" column="seq" />
+        <result property="imgPath" column="img_path" />
+    </resultMap>
+
+    <resultMap id="FoodAdminRowMap" type="com.korit.cheerful_back.domain.food.FoodAdminRow">
+        <id     property="foodId"           column="food_id"/>
+        <result property="foodCategoryId"   column="food_category_id"/>
+        <result property="userId"           column="ft_user_id"/>
+        <result property="title"        column="food_title"/>
+        <result property="content"      column="food_content"/>
+        <result property="price"        column="food_price"/>
+        <result property="createdAt"        column="created_at"/>
+        <result property="foodAddress"      column="food_address" />
+        <result property="foodCategoryName" column="food_category_name"/>
+        <result property="username"         column="username"/>
+        <result property="name"             column="name"/>
+        <!-- "/community/1_1.jpg,/community/1_2.jpg" 형태 -->
+        <result property="imgPaths"         column="img_paths"/>
+    </resultMap>
+
+    <resultMap id="FoodCommentMap" type="com.korit.cheerful_back.domain.foodComment.FoodComment">
+        <id property="foodCommentId" column="food_comment_id" />
+        <result property="foodId" column="food_id" />
+        <result property="userId" column="user_id" />
+        <result property="content" column="content" />
+        <result property="createdAt" column="created_at" />
+        <result property="isLike" column="is_like" />
+        <result property="likeCount" column="like_count" />
+    </resultMap>
+
+
+    <!--    user 전용-->
+    <select id="findAllByOptions" resultMap="FoodMap">
+        select
+            *
+        from
+            (select
+                dense_rank() over(
+                    order by
+                    <choose>
+                        <when test="sort == 'rank'">
+                            COALESCE(flc.like_count, 0) desc, ft.created_at desc, ft.food_id desc
+                        </when>
+                        <when test="sort == 'price_asc'">
+                            ft.food_price asc, ft.created_at desc, ft.food_id desc
+                        </when>
+                        <when test="sort == 'price_desc'">
+                            ft.food_price desc, ft.created_at desc, ft.food_id desc
+                        </when>
+                        <when test="sort == 'new'">
+                            ft.created_at desc, ft.food_id desc
+                        </when>
+                        <otherwise>
+                            COALESCE(flc.like_count, 0) desc, ft.created_at desc, ft.food_id desc
+                        </otherwise>
+                    </choose>
+                ) as food_number,
+
+                ft.food_id,
+                ft.food_category_id,
+                ft.user_id as ft_user_id,
+                ft.food_title,
+                ft.food_content,
+                ft.food_price,
+                ft.food_address,
+                ft.created_at,
+
+                fct.food_category_name,
+
+                ut.user_id as ut_user_id,
+                ut.username,
+                ut.password,
+                ut.name,
+                ut.email,
+                ut.profile_img_path,
+                ut.role,
+                ut.provider,
+                ut.provider_id,
+                ut.created_at as ut_created_at,
+
+                fit.food_img_id,
+                fit.food_id as fit_food_id,
+                fit.seq,
+                fit.`img_path`,
+
+                fmt.food_comment_id,
+                fmt.food_id as fmt_food_id,
+                fmt.user_id as fmt_user_id,
+                fmt.content,
+                fmt.created_at as fmt_created_at,
+
+                ifnull(flt.food_like_id, 0) as is_like,
+                ifnull(flc.like_count, 0) as like_count,
+                ifnull(fcc.comments_count, 0) as comments_count
+            from
+                food_tb ft
+                left outer join user_tb ut on(ut.user_id = ft.user_id)
+                left outer join food_img_tb fit on(fit.food_id = ft.food_id)
+                left outer join food_like_tb flt on(flt.food_id = ft.food_id)
+                left outer join food_category_tb fct on(fct.food_category_id = ft.food_category_id)
+                left outer join food_comment_tb fmt on(fmt.food_id = ft.food_id)
+                left outer join (select food_id, count(*) as like_count from food_like_tb group by food_id) flc on(flc.food_id = ft.food_id)
+                left outer join (select food_id, count(*) as comments_count from food_comment_tb group by food_id) fcc on(fcc.food_id = ft.food_id)
+<!--            order by-->
+<!--                like_count desc,-->
+<!--                ft.created_at desc,-->
+<!--                fit.seq-->
+            ) foods
+        where
+            food_number between #{startIndex} + 1 and #{endIndex}
+<!--        limit #{startIndex}, #{size}-->
+        order by
+            <choose>
+                <when test="sort == 'rank'">
+                    like_count desc, created_at desc, food_id desc
+                </when>
+                <when test="sort == 'price_asc'">
+                    food_price asc, created_at desc, food_id desc
+                </when>
+                <when test="sort == 'price_desc'">
+                    food_price desc, created_at desc, food_id desc
+                </when>
+                <when test="sort == 'new'">
+                    created_at desc, food_id desc
+                </when>
+                <otherwise>
+                    like_count desc, created_at desc, food_id desc
+                </otherwise>
+            </choose>
+            , seq
+    </select>
+
+    <select id="getCountOfOptions" resultType="java.lang.Integer">
+        select
+            count(*)
+        from
+            food_tb
+    </select>
+
+<!--    게시글 클릭 시-->
+    <select id="findByOption" resultMap="FoodMap">
+        select
+            ft.food_id,
+            ft.food_category_id,
+            ft.user_id as ft_user_id,
+            ft.food_title,
+            ft.food_content,
+            ft.food_price,
+            ft.food_address,
+            ft.created_at,
+
+            fct.food_category_name,
+
+            ut.user_id as ut_user_id,
+            ut.username,
+            ut.password,
+            ut.name,
+            ut.email,
+            ut.profile_img_path,
+            ut.role,
+            ut.provider,
+            ut.provider_id,
+            ut.created_at as ut_created_at,
+
+            fit.food_img_id,
+            fit.food_id as fit_food_id,
+            fit.seq,
+            fit.`img_path`,
+
+            fmt.food_comment_id,
+            fmt.food_id as fmt_food_id,
+            fmt.user_id as fmt_user_id,
+            fmt.content,
+            fmt.created_at as fmt_created_at,
+
+            ifnull(fil.is_like, 0) as is_like,
+            ifnull(flc.like_count, 0) as like_count,
+            ifnull(fcc.comments_count, 0) as comments_count
+        from
+            food_tb ft
+            left outer join user_tb ut on(ut.user_id = ft.user_id)
+            left outer join food_img_tb fit on(fit.food_id = ft.food_id)
+            left outer join food_category_tb fct on(fct.food_category_id = ft.food_category_id)
+            left outer join food_comment_tb fmt on(fmt.food_id = ft.food_id)
+            left outer join (select distinct food_id, 1 as is_like from food_like_tb where user_id = #{userId}) fil on(fil.food_id = ft.food_id)
+            left outer join (select food_id, count(*) as like_count from food_like_tb group by food_id) flc on(flc.food_id = ft.food_id)
+            left outer join (select food_id, count(*) as comments_count from food_comment_tb group by food_id) fcc on(fcc.food_id = ft.food_id)
+        where
+            ft.food_id = #{foodId}
+    </select>
+
+    <!--    admin 전용-->
+    <select id="findAllBySearchOption" parameterType="com.korit.cheerful_back.domain.food.FoodSearchOption" resultMap="FoodAdminRowMap">
+        select
+            ft.food_id,
+            ft.food_category_id,
+            ft.user_id as ft_user_id,
+            ft.food_title,
+            ft.food_content,
+            ft.food_price,
+            ft.food_address,
+            ft.created_at,
+            fct.food_category_name,
+
+            ut.user_id as ut_user_id,
+            ut.username,
+            ut.name,
+
+            imgs.img_paths
+        from (
+            select ft1.food_id
+            from food_tb ft1
+            left join user_tb ut1 on ut1.user_id = ft1.user_id
+            <where>
+                <if test="searchText != null and searchText != ''">
+                    ( ft1.food_title like concat('%', #{searchText}, '%')
+                    or ft1.food_content like concat('%', #{searchText}, '%')
+                    or ut1.name like concat('%', #{searchText}, '%') )
+                </if>
+            </where>
+            order by ft1.food_id
+            limit #{startIndex}, #{size}
+            ) page
+        join food_tb ft on ft.food_id = page.food_id
+        left join user_tb ut on ut.user_id = ft.user_id
+        left join food_category_tb fct on fct.food_category_id = ft.food_category_id
+        left join (
+            select
+                food_id,
+                group_concat(img_path order by seq separator ',') as img_paths
+            from food_img_tb
+            group by food_id
+        ) imgs on imgs.food_id = ft.food_id
+        order by ft.food_id
+    </select>
+
+    <select id="getCountOfSearchOption" parameterType="com.korit.cheerful_back.domain.food.FoodSearchOption" resultType="int">
+        select count(DISTINCT ft.food_id)
+        from food_tb ft
+        left join user_tb ut on ut.user_id = ft.user_id
+        <where>
+            <if test="searchText != null and searchText != ''">
+                ( ft.food_title like concat('%', #{searchText}, '%')
+                or ft.food_content like concat('%', #{searchText}, '%')
+                or ut.name like concat('%', #{searchText}, '%') )
+            </if>
+        </where>
+    </select>
+
+    <select id="findBySearchOption" resultMap="FoodMap">
+        select
+            *
+        from
+            (select
+                dense_rank() over(order by COALESCE(flc.like_count, 0) desc, ft.created_at desc, ft.food_id desc) as food_number,
+                ft.food_id,
+                ft.food_category_id,
+                ft.user_id as ft_user_id,
+                ft.food_title,
+                ft.food_content,
+                ft.food_price,
+                ft.created_at,
+
+                fct.food_category_name,
+
+                ut.user_id as ut_user_id,
+                ut.username,
+                ut.password,
+                ut.name,
+                ut.email,
+                ut.profile_img_path,
+                ut.role,
+                ut.provider,
+                ut.provider_id,
+                ut.created_at as ut_created_at,
+
+                fit.food_img_id,
+                fit.food_id as fit_food_id,
+                fit.seq,
+                fit.`img_path`,
+
+                fmt.food_comment_id,
+                fmt.food_id as fmt_food_id,
+                fmt.user_id as fmt_user_id,
+                fmt.content,
+                fmt.created_at as fmt_created_at,
+
+                ifnull(flt.food_like_id, 0) as is_like,
+                ifnull(flc.like_count, 0) as like_count,
+                ifnull(fcc.comments_count, 0) as comments_count
+            from
+                food_tb ft
+                left outer join user_tb ut on(ut.user_id = ft.user_id)
+                left outer join food_img_tb fit on(fit.food_id = ft.food_id)
+                left outer join food_like_tb flt on(flt.food_id = ft.food_id)
+                left outer join food_category_tb fct on(fct.food_category_id = ft.food_category_id)
+                left outer join food_comment_tb fmt on(fmt.food_id = ft.food_id)
+                left outer join (select food_id, count(*) as like_count from food_like_tb group by food_id) flc on(flc.food_id = ft.food_id)
+                left outer join (select food_id, count(*) as comments_count from food_comment_tb group by food_id) fcc on(fcc.food_id = ft.food_id)
+            <where>
+                <if test="searchText != null and searchText != ''">
+                    ( ft.food_title like concat('%', #{searchText}, '%')
+                    or ft.food_content like concat('%', #{searchText}, '%')
+                    or ut.name like concat('%', #{searchText}, '%') )
+                </if>
+            </where>
+            ) foods
+        where
+        food_number between #{startIndex} + 1 and #{endIndex}
+    </select>
+
+    <select id="getCountOfFindSearchOption" resultType="java.lang.Integer">
+        select count(DISTINCT ft.food_id)
+        from food_tb ft
+        left join user_tb ut on ut.user_id = ft.user_id
+        <where>
+            <if test="searchText != null and searchText != ''">
+                ( ft.food_title like concat('%', #{searchText}, '%')
+                or ft.food_content like concat('%', #{searchText}, '%')
+                or ut.name like concat('%', #{searchText}, '%') )
+            </if>
+        </where>
+    </select>
+
+<!--    home 화면-->
+    <select id="findTopFood" resultMap="FoodMap">
+        with top_food as(
+            select
+                ft.food_id,
+                ifnull(lc.cnt, 0) as like_count
+            from
+                food_tb ft
+                left outer join (select food_id, count(*) as cnt from food_like_tb group by food_id) lc on(lc.food_id = ft.food_id)
+            order by like_count desc, ft.created_at desc
+            limit #{limit}
+        )
+        select
+            ft.food_id,
+            ft.food_category_id,
+            ft.user_id as ft_user_id,
+            ft.food_title,
+            ft.food_content,
+            ft.food_price,
+            ft.food_address,
+            ft.created_at,
+
+            fct.food_category_name,
+
+            fit.food_img_id,
+            fit.food_id as fit_food_id,
+            fit.seq,
+            fit.`img_path`,
+
+            tf.like_count
+        from
+            top_food tf
+            join food_tb ft on(ft.food_id = tf.food_id)
+            left outer join food_img_tb fit on(fit.food_id = ft.food_id)
+            left outer join food_category_tb fct on(fct.food_category_id = ft.food_category_id)
+        order by
+            tf.like_count desc, ft.created_at desc, fit.seq asc
+    </select>
+
+    <!--    admin 전용-->
+<!--    <select id="findAllBySearchOption" resultMap="FoodMap">-->
+<!--        select-->
+<!--            ft.food_id,-->
+<!--            ft.food_category_id,-->
+<!--            ft.user_id as ft_user_id,-->
+<!--            ft.food_title,-->
+<!--            ft.food_content,-->
+<!--            ft.food_price,-->
+<!--            ft.created_at,-->
+
+<!--            fct.food_category_name,-->
+
+<!--            ut.user_id as ut_user_id,-->
+<!--            ut.username,-->
+<!--            ut.name,-->
+
+<!--            fit.food_img_id,-->
+<!--            fit.food_id as fit_food_id,-->
+<!--            fit.seq,-->
+<!--            fit.`img_path`-->
+<!--        from-->
+<!--            food_tb ft-->
+<!--            left outer join user_tb ut on(ut.user_id = ft.user_id)-->
+<!--            left outer join food_img_tb fit on(fit.food_id = ft.food_id)-->
+<!--            left outer join food_category_tb fct on(fct.food_category_id = ft.food_category_id)-->
+<!--        where-->
+<!--            ft.food_title like concat('%', #{searchText}, '%')-->
+<!--            or ft.food_content like concat('%', #{searchText}, '%')-->
+<!--            or ut.name like concat('%', #{searchText}, '%')-->
+<!--        order by-->
+<!--            ft.food_id-->
+<!--        limit #{startIndex}, #{size}-->
+<!--    </select>-->
+
+<!--    <select id="getCountOfSearchOption" resultType="java.lang.Integer">-->
+<!--        select-->
+<!--            count(DISTINCT ft.food_id)-->
+<!--        from-->
+<!--            food_tb ft-->
+<!--            left outer join user_tb ut on(ut.user_id = ft.user_id)-->
+<!--            left outer join food_category_tb fct on(fct.food_category_id = ft.food_category_id)-->
+<!--        where-->
+<!--            ft.food_title like concat('%', #{searchText}, '%')-->
+<!--            or ft.food_content like concat('%', #{searchText}, '%')-->
+<!--            or ut.name like concat('%', #{searchText}, '%')-->
+<!--    </select>-->
+
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="foodId">
+        insert into food_tb
+        values (default, #{foodCategoryId}, #{userId}, #{title}, #{content}, #{price}, #{foodAddress}, now())
+    </insert>
+
+    <insert id="insertFoodImages">
+        insert into
+            food_img_tb(food_img_id, food_id, seq, img_path)
+        values
+            <foreach item="foodImg" collection="foodImg" separator=",">
+                (default, #{foodImg.foodId}, #{foodImg.seq}, #{foodImg.imgPath})
+            </foreach>
+    </insert>
+
+    <update id="update">
+        update
+            food_tb
+        set
+            food_category_id = #{foodCategoryId},
+            food_title = #{title},
+            food_content = #{content},
+            food_price = #{price},
+            created_at = now()
+        where
+            food_id = #{foodId}
+    </update>
+
+    <delete id="deleteByFoodIds">
+        delete from food_tb
+        where
+            food_id in
+            <foreach item="foodId" collection="foodIds" separator="," open="(" close=")" >
+                #{foodId}
+            </foreach>
+    </delete>
+
+    <delete id="deleteFoodImages">
+        delete from food_img_tb
+        where
+            food_id = #{foodId}
+    </delete>
+
+    <select id="getImagePathsByCommentIds" resultType="string">
+        select img_path
+        from food_img_tb
+        where food_id in
+        <foreach item="foodId" collection="foodIds" separator="," open="(" close=")" >
+            #{foodId}
+        </foreach>
+    </select>
+</mapper>

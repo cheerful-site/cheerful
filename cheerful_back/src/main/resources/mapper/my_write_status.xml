@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.korit.cheerful_back.domain.user.MyWriteStatusMapper">
+
+  <resultMap id="StatusMap" type="com.korit.cheerful_back.domain.user.MyWriteStatusRow">
+    <result property="communityPosts" column="communityPosts"/>
+    <result property="foodPosts" column="foodPosts"/>
+    <result property="noticePosts" column="noticePosts"/>
+    <result property="communityComments" column="communityComments"/>
+    <result property="foodComments" column="foodComments"/>
+    <result property="noticeComments" column="noticeComments"/>
+    <result property="likedFoods" column="likedFoods" />
+  </resultMap>
+
+  <select id="countMyStatus" parameterType="int" resultMap="StatusMap">
+    select
+    (select count(*) from community_tb          where user_id = #{userId}) as communityPosts,
+    (select count(*) from food_tb               where user_id = #{userId}) as foodPosts,
+    (select count(*) from notice_tb             where user_id = #{userId}) as noticePosts,
+    (select count(*) from community_comment_tb  where user_id = #{userId}) as communityComments,
+    (select count(*) from food_comment_tb       where user_id = #{userId}) as foodComments,
+    (select count(*) from notice_comment_tb     where user_id = #{userId}) as noticeComments,
+    (select count(distinct food_id) from food_like_tb where user_id = #{userId}) as likedFoods
+  </select>
+
+</mapper>

@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.korit.cheerful_back.domain.notice.NoticeMapper">
+    <resultMap id="NoticeMap" type="com.korit.cheerful_back.domain.notice.Notice">
+        <id property="noticeId" column="notice_id" />
+        <result property="userId" column="user_id"/>
+        <result property="noticeCategoryId" column="notice_category_id"/>
+        <result property="title" column="notice_title"/>
+        <result property="content" column="notice_content"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="views" column="notice_views"/>
+        <result property="isLike" column="is_like" />
+        <result property="likeCount" column="like_count" />
+        <association property="user" resultMap="UserMap" />
+        <association property="noticeCategory" resultMap="NoticeCategoryMap" />
+        <collection property="noticeImgs" javaType="list" resultMap="NoticeImgMap" notNullColumn="notice_img_id" />
+    </resultMap>
+
+    <resultMap id="UserMap" type="com.korit.cheerful_back.domain.user.User">
+        <id property="userId" column="user_id"/>
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+        <result property="name" column="name"/>
+        <result property="email" column="email"/>
+        <result property="profileImgPath" column="profile_img_path"/>
+        <result property="role" column="role"/>
+        <result property="provider" column="provider"/>
+        <result property="providerId" column="provider_id"/>
+        <result property="createdAt" column="created_at" />
+    </resultMap>
+
+    <resultMap id="NoticeCategoryMap" type="com.korit.cheerful_back.domain.noticeCategory.NoticeCategory">
+        <id property="noticeCategoryId" column="notice_category_id" />
+        <result property="noticeCategoryName" column="notice_category_name" />
+    </resultMap>
+
+    <resultMap id="NoticeImgMap" type="com.korit.cheerful_back.domain.noticeImg.NoticeImg">
+        <id property="noticeImgId" column="notice_img_id" />
+        <result property="noticeId" column="notice_id" />
+        <result property="seq" column="seq" />
+        <result property="imgPath" column="img_path" />
+    </resultMap>
+
+    <resultMap id="NoticeAdminRowMap" type="com.korit.cheerful_back.domain.notice.NoticeAdminRow">
+        <id property="noticeId" column="notice_id" />
+        <result property="noticeCategoryId"   column="notice_category_id"/>
+        <result property="userId"           column="ft_user_id"/>
+        <result property="title"        column="notice_title"/>
+        <result property="content"      column="notice_content"/>
+        <result property="createdAt"        column="created_at"/>
+        <result property="noticeCategoryName" column="notice_category_name"/>
+        <result property="username"         column="username"/>
+        <result property="name"             column="name"/>
+        <result property="imgPaths"         column="img_paths"/>
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="noticeId">
+        insert into
+            notice_tb(notice_id, user_id, notice_category_id, notice_title, notice_content, created_at)
+        values (default, #{userId}, #{noticeCategoryId}, #{title}, #{content}, now())
+    </insert>
+
+    <insert id="insertNoticeImages">
+        insert into
+            notice_img_tb(notice_img_id, notice_id, seq, img_path)
+        values
+        <foreach item="noticeImg" collection="noticeImg" separator=",">
+            (default, #{noticeImg.noticeId}, #{noticeImg.seq}, #{noticeImg.imgPath})
+        </foreach>
+    </insert>
+
+    <delete id="deleteByNoticeIds">
+        delete from notice_tb
+        where
+            notice_id in
+            <foreach item="noticeId" collection="noticeIds" separator="," open="(" close=")">
+                #{noticeId}
+            </foreach>
+    </delete>
+
+    <select id="getImagePathsByCommentIds" resultType="string">
+        select img_path
+        from notice_img_tb
+        where notice_id in
+        <foreach item="noticeId" collection="noticeIds" separator="," open="(" close=")">
+            #{noticeId}
+        </foreach>
+    </select>
+
+    <delete id="deleteNoticeImages">
+        delete from notice_img_tb
+        where
+            notice_id = #{noticeId}
+    </delete>
+
+    <select id="findAllByOptions" resultMap="NoticeMap">
+        select
+            *
+        from
+            (select
+                dense_rank() over(order by nt.created_at desc, nt.notice_id desc) as notice_number,
+                nt.notice_id,
+                nt.user_id as nt_user_id,
+                nt.notice_category_id,
+                nt.notice_title,
+                nt.notice_content,
+                nt.created_at,
+                nt.notice_views,
+
+                nct.notice_category_name,
+
+                ut.user_id,
+                ut.username,
+                ut.password,
+                ut.name,
+                ut.email,
+                ut.profile_img_path,
+                ut.role,
+                ut.provider,
+                ut.provider_id,
+                ut.created_at as ut_created_at,
+
+                nit.notice_img_id,
+                nit.notice_id as nit_notice_id,
+                nit.seq,
+                nit.`img_path`,
+
+                ifnull(nlt.notice_like_id, 0) as is_like,
+                ifnull(nlc.like_count, 0) as like_count
+            from
+                notice_tb nt
+                left outer join user_tb ut on(ut.user_id = nt.user_id)
+                left outer join notice_img_tb nit on(nit.notice_id = nt.notice_id)
+                left outer join notice_like_tb nlt on(nlt.notice_id = nt.notice_id)
+                left outer join notice_category_tb nct on(nct.notice_category_id = nt.notice_category_id)
+                left outer join (select notice_id, count(*) as like_count from notice_like_tb group by notice_id) nlc on(nlc.notice_id = nt.notice_id)
+            where
+                nt.notice_category_id = #{categoryId}
+            order by
+                nt.created_at desc,
+                nt.notice_id desc,
+                nit.seq) communities
+        where
+            notice_number between #{startIndex} + 1 and #{endIndex}
+    </select>
+
+    <select id="getCountOfOptions" resultType="java.lang.Integer">
+        select
+            count(*)
+        from
+            notice_tb nt
+            left outer join notice_category_tb nct on(nct.notice_category_id = nt.notice_category_id)
+        where
+            nt.notice_category_id = #{categoryId}
+    </select>
+
+<!--    관리자 권한-->
+    <select id="findAllBySearchOption" parameterType="com.korit.cheerful_back.domain.notice.NoticeSearchOption" resultMap="NoticeAdminRowMap">
+        select
+            nt.notice_id,
+            nt.user_id as nt_user_id,
+            nt.notice_category_id,
+            nt.notice_title,
+            nt.notice_content,
+            nt.created_at,
+
+            nct.notice_category_name,
+
+            ut.user_id as ut_user_id,
+            ut.username,
+            ut.name,
+
+            imgs.img_paths
+        from (
+            select nt1.notice_id
+            from notice_tb nt1
+            left join user_tb ut1 on ut1.user_id = nt1.user_id
+            <where>
+                <if test="searchText != null and searchText != ''">
+                    nt1.notice_title like concat('%', #{searchText}, '%')
+                    or ut1.name like concat('%', #{searchText}, '%')
+                </if>
+                and nt1.notice_category_id = #{categoryId}
+            </where>
+            order by nt1.notice_id
+            limit #{startIndex}, #{size}
+            ) page
+        join notice_tb nt on nt.notice_id = page.notice_id
+        left join user_tb ut on(ut.user_id = nt.user_id)
+        left join notice_category_tb nct on(nct.notice_category_id = nt.notice_category_id)
+        left join (
+            select
+                notice_id,
+                group_concat(img_path order by seq separator ',') as img_paths
+            from notice_img_tb
+            group by notice_id
+        ) imgs on imgs.notice_id = nt.notice_id
+        order by nt.notice_id
+    </select>
+
+    <select id="getCountOfSearchOption" parameterType="com.korit.cheerful_back.domain.notice.NoticeSearchOption" resultType="java.lang.Integer">
+        select count(DISTINCT nt.notice_id)
+        from notice_tb nt
+        left join user_tb ut on ut.user_id = nt.user_id
+        <where>
+            <if test="searchText != null and searchText != ''">
+                nt.notice_title like concat('%', #{searchText}, '%')
+                or ut.name like concat('%', #{searchText}, '%')
+            </if>
+            and nt.notice_category_id = #{categoryId}
+        </where>
+    </select>
+
+    <!--    게시글 클릭 시 -->
+    <select id="findByOption" resultMap="NoticeMap">
+        select
+            nt.notice_id,
+            nt.user_id as nt_user_id,
+            nt.notice_category_id,
+            nt.notice_title,
+            nt.notice_content,
+            nt.created_at,
+            nt.notice_views,
+
+            nct.notice_category_name,
+
+            ut.user_id,
+            ut.username,
+            ut.password,
+            ut.name,
+            ut.email,
+            ut.profile_img_path,
+            ut.role,
+            ut.provider,
+            ut.provider_id,
+            ut.created_at as ut_created_at,
+
+            nit.notice_img_id,
+            nit.notice_id as nit_notice_id,
+            nit.seq,
+            nit.`img_path`,
+
+            ifnull(nil.is_like, 0) as is_like,
+            ifnull(nlc.like_count, 0) as like_count
+
+        from
+            notice_tb nt
+            left outer join user_tb ut on(ut.user_id = nt.user_id)
+            left outer join notice_img_tb nit on(nit.notice_id = nt.notice_id)
+            left outer join notice_category_tb nct on(nct.notice_category_id = nt.notice_category_id)
+            left outer join (select distinct notice_id, 1 as is_like from notice_like_tb where user_id = #{userId}) nil on(nil.notice_id = nt.notice_id)
+            left outer join (select notice_id, count(*) as like_count from notice_like_tb group by notice_id) nlc on(nlc.notice_id = nt.notice_id)
+        where
+            nt.notice_category_id = #{categoryId}
+            and nt.notice_id = #{noticeId}
+    </select>
+
+    <!--    조회수-->
+    <update id="increaseViews">
+        update notice_tb as nt
+        set nt.notice_views = coalesce(nt.notice_views, 0) + 1
+        where
+            nt.notice_category_id = #{categoryId}
+            and nt.notice_id = #{noticeId}
+    </update>
+
+<!--    admin page 글 수정-->
+    <update id="update">
+        update
+            notice_tb
+        set
+            notice_category_id = #{noticeCategoryId},
+            notice_title = #{title},
+            notice_content = #{content},
+            created_at = now()
+        where
+            notice_id = #{noticeId}
+    </update>
+
+    <select id="selectViews" resultType="java.lang.Integer">
+        select
+            ifnull(max(nt.notice_views), 0) as views
+        from
+            notice_tb nt
+        where
+            nt.notice_category_id = #{categoryId}
+            and nt.notice_id = #{noticeId}
+    </select>
+
+</mapper>

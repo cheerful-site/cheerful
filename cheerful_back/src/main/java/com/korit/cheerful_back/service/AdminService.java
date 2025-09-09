@@ -1,0 +1,610 @@
+package com.korit.cheerful_back.service;
+
+import com.korit.cheerful_back.domain.community.Community;
+import com.korit.cheerful_back.domain.community.CommunityMapper;
+import com.korit.cheerful_back.domain.community.CommunitySearchOption;
+import com.korit.cheerful_back.domain.communityComment.CommunityComment;
+import com.korit.cheerful_back.domain.communityComment.CommunityCommentMapper;
+import com.korit.cheerful_back.domain.communityImg.CommunityImg;
+import com.korit.cheerful_back.domain.food.Food;
+import com.korit.cheerful_back.domain.food.FoodAdminRow;
+import com.korit.cheerful_back.domain.food.FoodMapper;
+import com.korit.cheerful_back.domain.food.FoodSearchOption;
+import com.korit.cheerful_back.domain.foodComment.FoodCommentMapper;
+import com.korit.cheerful_back.domain.foodCommentImg.FoodCommentImg;
+import com.korit.cheerful_back.domain.foodCommentImg.FoodCommentImgMapper;
+import com.korit.cheerful_back.domain.foodImg.FoodImg;
+import com.korit.cheerful_back.domain.foodImg.FoodImgMapper;
+import com.korit.cheerful_back.domain.notice.Notice;
+import com.korit.cheerful_back.domain.notice.NoticeAdminRow;
+import com.korit.cheerful_back.domain.notice.NoticeMapper;
+import com.korit.cheerful_back.domain.notice.NoticeSearchOption;
+import com.korit.cheerful_back.domain.noticeComment.NoticeCommentMapper;
+import com.korit.cheerful_back.domain.noticeImg.NoticeImg;
+import com.korit.cheerful_back.domain.noticeImg.NoticeImgMapper;
+import com.korit.cheerful_back.domain.user.User;
+import com.korit.cheerful_back.domain.user.UserMapper;
+import com.korit.cheerful_back.domain.user.UserSearchOption;
+import com.korit.cheerful_back.dto.admin.AdminLoginReqDto;
+import com.korit.cheerful_back.dto.admin.TokenDto;
+import com.korit.cheerful_back.dto.food.FoodModifyReqDto;
+import com.korit.cheerful_back.dto.food.FoodRegisterReqDto;
+import com.korit.cheerful_back.dto.notice.NoticeModifyReqDto;
+import com.korit.cheerful_back.dto.notice.NoticeRegisterReqDto;
+import com.korit.cheerful_back.dto.response.PaginationRespDto;
+import com.korit.cheerful_back.exception.auth.LoginException;
+import com.korit.cheerful_back.security.jwt.JwtUtil;
+import com.korit.cheerful_back.security.model.PrincipalUtil;
+
+import com.korit.cheerful_back.util.AppProperties;
+import com.korit.cheerful_back.util.ImageUrlUtil;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
+
+@Service
+@RequiredArgsConstructor
+public class AdminService {
+
+    private final BCryptPasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
+    private final CommunityMapper communityMapper;
+    private final UserMapper userMapper;
+    private final FoodMapper foodMapper;
+    private final PrincipalUtil principalUtil;
+    private final FileService fileService;
+    private final NoticeMapper noticeMapper;
+    private final FoodImgMapper foodImgMapper;
+    private final NoticeImgMapper noticeImgMapper;
+    private final ImageUrlUtil imageUrlUtil;
+    private final CommunityCommentMapper communityCommentMapper;
+    private final FoodCommentMapper foodCommentMapper;
+    private final FoodCommentImgMapper foodCommentImgMapper;
+    private final NoticeCommentMapper noticeCommentMapper;
+    private final AppProperties appProperties;
+
+    public TokenDto login(AdminLoginReqDto dto) {
+
+        User foundUser = userMapper.findByUsername(dto.getUsername());
+        if (foundUser == null) {
+            throw new LoginException("로그인 오류", "관리자 정보를 다시 확인하세요.");
+        }
+        if (!passwordEncoder.matches(dto.getPassword(), foundUser.getPassword())) {
+            throw new LoginException("로그인 오류", "관리자 정보를 다시 확인하세요.");
+        }
+
+//        System.out.println(jwtUtil.generateAccessToken(foundUser));
+
+        return TokenDto.builder()
+                .accessToken(jwtUtil.generateAccessToken(foundUser))
+                .build();
+    }
+
+    public void join(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userMapper.insert(user);
+    }
+
+    /*
+        admin 전용 사용자 목록 조회
+   */
+    public PaginationRespDto<User> getUserSearchList(Integer page, Integer size, String searchText) {
+        UserSearchOption searchOption = UserSearchOption.builder()
+                .startIndex((page - 1) * size)
+                .endIndex(size * page)
+                .size(size)
+                .searchText(searchText)
+                .build();
+
+        List<User> contents = userMapper.findAllBySearchOption(searchOption);
+        Integer totalElements = userMapper.getCountOfOptions(searchOption);
+        Integer totalPages = (int) Math.ceil(totalElements.doubleValue() / size.doubleValue());
+        boolean isLast = page >= totalPages;
+
+        return PaginationRespDto.<User>builder()
+                .content(contents)
+                .totalElements(totalElements)
+                .totalPages(totalPages)
+                .isLast(isLast)
+                .page(page)
+                .size(size)
+                .build();
+    }
+
+    /*
+        전달된 사용자 id 목록을 삭제 (단일)
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteUser(Integer userId) {
+        userMapper.deleteByUserId(userId);
+    }
+
+    /*
+        전달된 사용자 id 목록을 삭제 (다중)
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteUsers(List<Integer> userIds) {
+        userMapper.deleteByUserIds(userIds);
+    }
+
+
+    /*
+        admin 전용 커뮤니티 페이징 목록 조회
+     */
+    public PaginationRespDto<Community> getCommunitySearchList(Integer page, Integer size, Integer categoryId, String searchText) {
+        CommunitySearchOption searchOption = CommunitySearchOption.builder()
+                .startIndex((page - 1) * size)
+                .endIndex(size * page)
+                .size(size)
+                .categoryId(categoryId)
+                .searchText(searchText)
+                .build();
+
+        // 총 건수 / 총 페이지 / 마지막 여부 계산
+        List<Community> contents = communityMapper.findAllBySearchOption(searchOption);
+        Integer totalElements = communityMapper.getCountOfSearchOption(searchOption);
+        Integer totalPages = (int) Math.ceil(totalElements.longValue() / size.doubleValue());
+        Boolean isLast = page >= totalPages;
+
+        return PaginationRespDto.<Community>builder()
+                .content(contents)
+//                .categoryId(categoryId)
+                .totalElements(totalElements)
+                .totalPages(totalPages)
+                .isLast(isLast)
+                .page(page)
+                .size(size)
+                .build();
+    }
+
+
+    /*
+        전달된 community id 목록 삭제 (단일)
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteCommunity(Integer communityId) {
+        List<String> imgFile = communityMapper.getImagePathsByCommunityId(communityId);
+        for (String file : imgFile) {
+            fileService.deletedFile(file, "community");
+        }
+
+        communityMapper.deleteByCommunityId(communityId);
+    }
+
+    /*
+        전달된 community id 목록 삭제 (다중)
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteCommunities(List<Integer> communityIds) {
+        List<String> imgFiles = communityMapper.getImagePathByCommunityIds(communityIds);
+        for (String files : imgFiles) {
+            fileService.deletedFile(files, "community");
+        }
+
+        communityMapper.deleteByCommunityIds(communityIds);
+    }
+
+    /*
+        community 댓글 삭제
+     */
+    public void deleteCommunityComment(Integer commentId) {
+        communityCommentMapper.adminDeleteByCommentId(commentId);
+    }
+
+    /*
+        admin 전용 food 목록 조회
+     */
+    public PaginationRespDto<FoodAdminRow> getFoodSearchList(Integer page, Integer size, String searchText) {
+        FoodSearchOption searchOption = FoodSearchOption.builder()
+                .startIndex((page - 1) * size)
+                .endIndex(size * page)
+                .size(size)
+                .searchText(searchText)
+                .build();
+
+        List<FoodAdminRow> contents = foodMapper.findAllBySearchOption(searchOption);
+//        List<Food> contents = foodMapper.findAllBySearchOption(searchOption);
+        Integer totalElements = foodMapper.getCountOfSearchOption(searchOption);
+        Integer totalPages = (int) Math.ceil(totalElements.longValue() / size.doubleValue());
+        Boolean isLast = page >= totalPages;
+
+//        List<Food> contentWithUrls = contents.stream()
+//            .peek(c -> {
+//                List<FoodImg> imgs = c.getFoodImgs();
+//                if(imgs == null || imgs.isEmpty()) return;
+//
+//                imgs.sort(Comparator.comparingInt(FoodImg::getSeq));
+//
+//                imgs.forEach(img ->
+//                    img.setImgUrl(imageUrlUtil.food(img.getImgPath())));
+//            })
+//            .toList();
+
+        contents.forEach(this::hydrateFoodImageUrls);
+
+        return PaginationRespDto.<FoodAdminRow>builder()
+                .content(contents)
+                .totalElements(totalElements)
+                .totalPages(totalPages)
+                .isLast(isLast)
+                .page(page)
+                .size(size)
+                .build();
+    }
+
+    private List<String> splitToFoodUrls(String imgPaths) {
+        if(imgPaths == null || imgPaths.isBlank()) return List.of();
+        return Arrays.stream(imgPaths.split(","))
+            .map(String::trim)
+            .filter(s -> !s.isEmpty())
+            .map(s -> s.replaceFirst("^/+", ""))
+            .map(imageUrlUtil::food)
+            .distinct()
+            .toList();
+    }
+
+    private void hydrateFoodImageUrls(FoodAdminRow r) {
+        r.setImgUrls(splitToFoodUrls(r.getImgPaths()));
+    }
+
+    /*
+        전달된 food id 목록을 모두 삭제
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteFood(List<Integer> foodIds) {
+        List<String> imgFiles = foodMapper.getImagePathsByCommentIds(foodIds);
+        for (String files : imgFiles) {
+            fileService.deletedFile(files, "food");
+        }
+
+        foodMapper.deleteByFoodIds(foodIds);
+    }
+
+    /*
+        food 글 등록
+   */
+    @Transactional(rollbackFor = Exception.class)
+    public void registerFood(FoodRegisterReqDto dto) {
+//        List<String> uploadFilePath = dto.getFiles()
+//            .stream()
+//            .map(file -> "/food/" + fileService.uploadFile(file, "/food"))
+//            .peek(newFileName -> System.out.println(newFileName))
+//            .collect(Collectors.toList());
+
+        Integer userId = principalUtil.getPrincipalUser().getUser().getUserId();
+
+        // title 유효성 검사
+        if (dto.getTitle() == null || dto.getTitle().trim().isEmpty()) {
+            throw new IllegalArgumentException("제목이 없습니다.");
+        }
+
+        // content 유효성 검사
+        if (dto.getContent() == null || dto.getContent().trim().isEmpty()) {
+            throw new IllegalArgumentException("내용이 없습니다.");
+        }
+
+        // price 유효성 검사
+        if (dto.getPrice() == null) {
+            throw new IllegalArgumentException("가격이 없습니다.");
+        }
+
+        // address 유효성 검사
+        if (dto.getFoodAddress() == null || dto.getFoodAddress().trim().isEmpty()) {
+            throw new IllegalArgumentException("주소가 없습니다.");
+        }
+
+        // file 유효성 검사
+        if (dto.getFiles().stream().anyMatch(MultipartFile::isEmpty)) {
+            throw new IllegalArgumentException("사진이 없습니다.");
+        }
+
+        Food food = Food.builder()
+            .userId(userId)
+            .foodCategoryId(dto.getFoodCategoryId())
+            .title(dto.getTitle())
+            .content(dto.getContent())
+            .price(dto.getPrice())
+            .foodAddress(dto.getFoodAddress())
+            .build();
+        foodMapper.insert(food);
+
+//        AtomicInteger atomicInteger = new AtomicInteger(0);
+//        List<FoodImg> foodImgs = uploadFilePath.stream()
+//            .map(path -> FoodImg.builder()
+//                .seq(atomicInteger.getAndIncrement() + 1)
+//                .foodId(food.getFoodId())
+//                .imgPath(path)
+//                .build())
+//            .collect(Collectors.toList());
+//        foodImgMapper.insertMany(foodImgs);
+
+
+        List<MultipartFile> imageFiles = dto.getFiles();
+
+        if (imageFiles != null && !imageFiles.isEmpty()) {
+            List<FoodImg> foodImgs = new ArrayList<>();
+            int seq = 1;
+
+            for(MultipartFile file : imageFiles) {
+                String imagePath = fileService.uploadFile(file, "food");
+
+                FoodImg foodImg = FoodImg.builder()
+                    .foodId(food.getFoodId())
+                    .seq(seq++)
+                    .imgPath(imagePath)
+                    .build();
+
+                foodImgs.add(foodImg);
+            }
+            System.out.println(food);
+
+            foodImgMapper.insertMany(foodImgs);
+        }
+    }
+
+    /*
+        food 글 수정
+     */
+    public void modifyFood(FoodModifyReqDto dto) {
+
+        // title 유효성 검사
+        if (dto.getTitle() == null || dto.getTitle().trim().isEmpty()) {
+            throw new IllegalArgumentException("제목이 없습니다.");
+        }
+
+        // content 유효성 검사
+        if (dto.getContent() == null || dto.getContent().trim().isEmpty()) {
+            throw new IllegalArgumentException("내용이 없습니다.");
+        }
+
+        // price 유효성 검사
+        if (dto.getPrice() == null) {
+            throw new IllegalArgumentException("가격이 없습니다.");
+        }
+
+        // address 유효성 검사
+        if (dto.getFoodAddress() == null || dto.getFoodAddress().trim().isEmpty()) {
+            throw new IllegalArgumentException("주소가 없습니다.");
+        }
+
+        // file 유효성 검사
+        if (dto.getFiles().stream().anyMatch(MultipartFile::isEmpty)) {
+            throw new IllegalArgumentException("사진이 없습니다.");
+        }
+
+        // 글 수정
+        Food food = dto.toEntity();
+        foodMapper.update(food);
+
+        // 이미지 삭제
+        foodMapper.deleteFoodImages(food.getFoodId());
+        // 이미지 등록
+        List<MultipartFile> imageFiles = dto.getFiles();
+
+        if (imageFiles != null && !imageFiles.isEmpty()) {
+            List<FoodImg> foodImgs = new ArrayList<>();
+            int seq = 1;
+
+            for (MultipartFile file : imageFiles) {
+                String imagePath = fileService.uploadFile(file, "food");
+
+                FoodImg foodImg = FoodImg.builder()
+                        .foodId(food.getFoodId())
+                        .seq(seq++)
+                        .imgPath(imagePath)
+                        .build();
+
+                foodImgs.add(foodImg);
+            }
+
+            foodMapper.insertFoodImages(foodImgs);
+        }
+    }
+
+    /*
+        food 댓글 삭제
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteFoodComment(Integer commentId) {
+
+        List<String> imgFile = foodCommentMapper.getImagePathsByCommentId(commentId);
+        for (String file : imgFile) {
+            fileService.deletedFile(file, "foodComment");
+        }
+
+        foodCommentMapper.adminDeleteByCommentId(commentId);
+
+    }
+
+
+    /*
+        admin 전용 notice 페이징 목록 조회
+     */
+    public PaginationRespDto<NoticeAdminRow> getNoticeSearchList(Integer page, Integer size, Integer categoryId, String searchText) {
+        NoticeSearchOption searchOption = NoticeSearchOption.builder()
+            .startIndex((page - 1) * size)
+            .endIndex(size * page)
+            .size(size)
+            .categoryId(categoryId)
+            .searchText(searchText)
+            .build();
+
+        // 총 건수 / 총 페이지 / 마지막 여부 계산
+        List<NoticeAdminRow> contents = noticeMapper.findAllBySearchOption(searchOption);
+        Integer totalElements = noticeMapper.getCountOfSearchOption(searchOption);
+        Integer totalPages = (int) Math.ceil(totalElements.longValue() / size.doubleValue());
+        Boolean isLast = page >= totalPages;
+
+        contents.forEach(this::hydrateNoticeImageUrls);
+
+        return PaginationRespDto.<NoticeAdminRow>builder()
+            .content(contents)
+//                .categoryId(categoryId)
+            .totalElements(totalElements)
+            .totalPages(totalPages)
+            .isLast(isLast)
+            .page(page)
+            .size(size)
+            .build();
+    }
+
+    private List<String> splitToNoticeUrls(String imgPaths) {
+        if(imgPaths == null || imgPaths.isBlank()) return List.of();
+        return Arrays.stream(imgPaths.split(","))
+            .map(String::trim)
+            .filter(s -> !s.isEmpty())
+            .map(s -> s.replaceFirst("^/+", ""))
+            .map(imageUrlUtil::notice)
+            .distinct()
+            .toList();
+    }
+
+    private void hydrateNoticeImageUrls(NoticeAdminRow r) {
+        r.setImgUrls(splitToNoticeUrls(r.getImgPaths()));
+    }
+
+    /*
+        전달된 notice id 목록을 모두 삭제
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteNotice(List<Integer> noticeIds) {
+        List<String> imgFiles = noticeMapper.getImagePathsByCommentIds(noticeIds);
+        for (String files : imgFiles) {
+            fileService.deletedFile(files, "notice");
+        }
+
+        noticeMapper.deleteByNoticeIds(noticeIds);
+    }
+
+    /*
+        notice 글 등록
+    */
+    @Transactional(rollbackFor = Exception.class)
+    public void registerNotice(NoticeRegisterReqDto dto) {
+        // 1) 파일이 존재할 경우에만 업로드 실행 > if문 사용
+//        List<String> uploadFilepath = new ArrayList<>();
+//
+//        if (dto.getFiles() != null && !dto.getFiles().isEmpty()) {
+//            uploadFilepath = dto.getFiles().stream()
+//                    .filter(file -> file != null && !file.isEmpty()) // 빈 파일 제외
+//                    .map(file -> "/notice/" + fileService.uploadFile(file, "/notice"))
+//                    .peek(newFileName -> System.out.println(newFileName))
+//                    .collect(Collectors.toList());
+//        }
+
+        // 2) 사용자 식별
+        Integer userId = principalUtil.getPrincipalUser().getUser().getUserId();
+
+        // title 유효성 검사
+        if (dto.getTitle() == null || dto.getTitle().trim().isEmpty()) {
+            throw new IllegalArgumentException("제목이 없습니다.");
+        }
+
+        // content 유효성 검사
+        if (dto.getContent() == null || dto.getContent().trim().isEmpty()) {
+            throw new IllegalArgumentException("내용이 없습니다.");
+        }
+
+        // 3) 게시글 저장
+        Notice notice = Notice.builder()
+                .userId(userId)
+                .noticeCategoryId(dto.getNoticeCategoryId())
+                .title(dto.getTitle())
+                .content(dto.getContent())
+                .build();
+        noticeMapper.insert(notice);
+
+//        if (!uploadFilepath.isEmpty()) {
+//            AtomicInteger atomicInteger = new AtomicInteger(0);
+//            List<NoticeImg> noticeImgs = uploadFilepath.stream()
+//                    .map(path -> NoticeImg.builder()
+//                            .seq(atomicInteger.getAndIncrement() + 1)
+//                            .noticeId(notice.getNoticeId())
+//                            .imgPath(path)
+//                            .build())
+//                    .collect(Collectors.toList());
+//            noticeImgMapper.insertMany(noticeImgs);
+//        }
+
+        List<MultipartFile> imageFiles = dto.getFiles();
+
+        if (imageFiles != null && !imageFiles.isEmpty()) {
+            List<NoticeImg> noticeImgs = new ArrayList<>();
+            int seq = 1;
+
+            for(MultipartFile file : imageFiles) {
+                String imagePath = fileService.uploadFile(file, "notice");
+
+                NoticeImg noticeImg = NoticeImg.builder()
+                    .noticeId(notice.getNoticeId())
+                    .seq(seq++)
+                    .imgPath(imagePath)
+                    .build();
+
+                noticeImgs.add(noticeImg);
+            }
+
+            noticeImgMapper.insertMany(noticeImgs);
+        }
+    }
+
+    /*
+        notice 수정
+    */
+    @Transactional(rollbackFor = Exception.class)
+    public void modifyNotice(NoticeModifyReqDto dto) {
+        // 글 수정
+        Notice notice = dto.toEntity();
+        noticeMapper.update(notice);
+
+        // 이미지 삭제
+        noticeMapper.deleteNoticeImages(notice.getNoticeId());
+
+        // 이미지 등록
+        List<MultipartFile> imageFiles = dto.getFiles();
+
+        if (imageFiles != null && !imageFiles.isEmpty()) {
+            List<NoticeImg> noticeImgs = new ArrayList<>();
+            int seq = 1;
+
+            for(MultipartFile file : imageFiles) {
+                String imagePath = fileService.uploadFile(file, "notice");
+
+                NoticeImg noticeImg = NoticeImg.builder()
+                        .noticeId(notice.getNoticeId())
+                        .seq(seq++)
+                        .imgPath(imagePath)
+                        .build();
+
+                noticeImgs.add(noticeImg);
+            }
+
+            noticeMapper.insertNoticeImages(noticeImgs);
+        }
+    }
+
+    /*
+        notice 댓글 삭제
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteNoticeComment(Integer commentId) {
+        List<String> imgFile = noticeCommentMapper.getImagePathsByCommentId(commentId);
+        for (String file : imgFile) {
+            fileService.deletedFile(file, "noticeComment");
+        }
+
+        noticeCommentMapper.adminDeleteByCommentId(commentId);
+    }
+
+}

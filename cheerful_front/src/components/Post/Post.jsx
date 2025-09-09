@@ -1,0 +1,80 @@
+/**@jsxImportSource @emotion/react */
+import * as s from "./styles";
+import noImage from "../../icons/Frame2.png";
+import { AiFillLike } from "react-icons/ai";
+import { useLocation, useNavigate } from "react-router-dom";
+import { reqCommunityViews } from "../../api/communityApi/communityApi";
+import { PiEyesFill } from "react-icons/pi";
+import { reqNoticeViews } from "../../api/noticeApi/noticeApi";
+
+function Post({ content }) {
+  const navigate = useNavigate();
+  const location = useLocation();
+  // console.log(content);
+  // console.log(category);
+  // console.log(location.pathname);
+
+  const handleOnClick = () => {
+    if (location.pathname.startsWith("/notice")) {
+      reqNoticeViews(content.noticeCategoryId, content.noticeId);
+      navigate(`/notice/${content.noticeCategoryId}/${content.noticeId}`);
+    } else {
+      reqCommunityViews(content.communityCategoryId, content.communityId);
+      navigate(
+        `/community/${content.communityCategoryId}/${content.communityId}`
+      );
+    }
+  };
+
+  return (
+    <div css={s.postLayout}>
+      {location.pathname.startsWith("/notice") ? (
+        <div css={s.postImgWrap}>
+          <img
+            css={s.postImg}
+            src={content?.noticeImgs[0]?.imgUrl || noImage}
+            alt=""
+            onClick={handleOnClick}
+          />
+        </div>
+      ) : (
+        <div css={s.postImgWrap}>
+          <img
+            css={s.postImg}
+            src={
+              content?.communityImgs.length === 0
+                ? noImage
+                : content?.communityImgs[0]?.imgUrl
+            }
+            alt=""
+            onClick={handleOnClick}
+          />
+        </div>
+      )}
+
+      <div css={s.postContainer}>
+        <div css={s.postTitle} onClick={handleOnClick}>
+          {content?.title}
+        </div>
+        <div css={s.postContent}>{content?.content}</div>
+        <div css={s.postLike}>
+          <div>
+            <span>{content?.user?.name}</span>
+          </div>
+          <div css={s.likeAndViews}>
+            <div>
+              <AiFillLike />
+              <span>{content?.likeCount}</span>
+            </div>
+            <div>
+              <PiEyesFill />
+              <span>{content?.views}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default Post;

@@ -1,0 +1,283 @@
+import { css } from "@emotion/react";
+
+export const layout = css`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  background-color: #f5f6f8;
+`;
+
+export const categoryContainer = css`
+  margin-top: 8rem;
+  margin-bottom: 1rem;
+  color: #22222290;
+
+  & > span:nth-of-type(2) {
+    margin: 0 0.5rem;
+  }
+`;
+
+export const postContainer = css`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 10rem;
+  border-radius: 1.5rem;
+  width: 110rem;
+  background-color: #ffffff;
+`;
+
+export const content = css`
+  display: flex;
+  flex-direction: column;
+  margin-top: 6rem;
+  width: 96rem;
+`;
+
+export const contentTitle = css`
+  display: flex;
+  flex-direction: column;
+  border-bottom: 0.15rem solid #22222230;
+  margin-bottom: 5rem;
+  padding-bottom: 3rem;
+  width: 100%;
+
+  & > div:first-of-type {
+    display: flex;
+    justify-content: space-between;
+
+    & > span:first-of-type {
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    & > button:last-of-type {
+      border: none;
+      font-size: 1.4rem;
+      font-weight: 500;
+      background-color: #ffffff;
+      color: #22222280;
+      cursor: pointer;
+    }
+  }
+
+  & > div:last-of-type {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+
+    & > span {
+      color: #22222260;
+      font-size: 1.4rem;
+      font-weight: 400;
+    }
+  }
+`;
+
+export const contentContainer = css`
+  margin: 2rem 0;
+`;
+
+export const postLike = css`
+  display: flex;
+  justify-content: center;
+  margin-top: 10rem;
+  margin-bottom: 4rem;
+  width: 100%;
+
+  & > span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 1rem;
+    width: 13rem;
+    height: 4rem;
+    font-weight: 500;
+    cursor: pointer;
+  }
+`;
+
+export const isLike = css`
+  border: none;
+  background-color: #ffc421;
+  color: #ffffff;
+`;
+
+export const isDislike = css`
+  border: 0.15rem solid #22222250;
+  background-color: #ffffff;
+  color: #000000;
+`;
+
+export const commentRegisterContainer = css`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 4rem;
+`;
+
+export const commentRegister = css`
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  padding: 2rem;
+  border: 0.1rem solid #22222230;
+  border-radius: 1rem;
+  width: 95rem;
+  height: 15rem;
+
+  & > span {
+    margin-bottom: 1rem;
+    font-size: 1.4rem;
+    font-weight: 700;
+  }
+
+  & > textarea {
+    border: none;
+    width: 100%;
+    height: 6rem;
+    text-decoration: none;
+    outline: none;
+    resize: none;
+  }
+
+  & > div {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+
+    & > button {
+      border: none;
+      font-size: 1.4rem;
+      color: #22222230;
+      background-color: #ffffff;
+      cursor: pointer;
+    }
+  }
+`;
+
+export const recommentRegister = css`
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  margin-left: 3rem;
+  padding: 2rem;
+  border: 0.1rem solid #22222230;
+  border-radius: 1rem;
+  width: 92rem;
+  height: 15rem;
+
+  & > span {
+    margin-bottom: 1rem;
+    font-size: 1.4rem;
+    font-weight: 700;
+  }
+
+  & > textarea {
+    border: none;
+    width: 100%;
+    height: 6rem;
+    text-decoration: none;
+    outline: none;
+    resize: none;
+  }
+
+  & > div {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+
+    & > button {
+      border: none;
+      font-size: 1.4rem;
+      color: #22222230;
+      background-color: #ffffff;
+      cursor: pointer;
+    }
+  }
+`;
+
+export const commentsLayout = css`
+  display: flex;
+  flex-direction: column;
+  width: 95rem;
+`;
+
+export const commentsContainer = css`
+  display: flex;
+  flex-direction: column;
+  margin: 3rem 0;
+  width: 100%;
+`;
+
+export const commentUser = css`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+
+  & > div:first-of-type {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    & > img {
+      margin-right: 1rem;
+      border-radius: 50%;
+      width: 2.5rem;
+      height: 2.5rem;
+    }
+
+    & > span {
+      font-size: 1.4rem;
+      font-weight: 600;
+      height: 100%;
+      color: #22222290;
+    }
+  }
+
+  & > div:last-of-type > button {
+    padding: 0;
+    border: none;
+    color: #22222280;
+    background-color: #ffffff;
+    cursor: pointer;
+  }
+`;
+
+export const recomments = css`
+  margin-right: 6rem;
+`;
+
+export const commentContent = css`
+  margin-bottom: 2rem;
+  padding-left: 3rem;
+  width: 100%;
+
+  & > span {
+    margin-left: 0.5rem;
+    font-size: 1.6rem;
+    color: #444444;
+  }
+
+  & > div {
+    margin-left: 0.5rem;
+    margin-top: 0.5rem;
+  }
+
+  & > div > span {
+    margin-right: 0.5rem;
+    font-size: 1.2rem;
+    color: #22222250;
+  }
+
+  & > div > span:nth-of-type(3) {
+    margin-left: 0.5rem;
+    cursor: pointer;
+  }
+`;
+
+export const subComments = css`
+  padding-left: 6rem;
+  width: 100%;
+`;
