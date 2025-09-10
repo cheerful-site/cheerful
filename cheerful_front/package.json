@@ -6,6 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:sojeong": "vite build --mode sojeong",
+    "build:mikyung": "vite build --mode mikyung",
+    "build:jongbo": "vite build --mode jongbo",
     "lint": "eslint .",
     "preview": "vite preview"
   },

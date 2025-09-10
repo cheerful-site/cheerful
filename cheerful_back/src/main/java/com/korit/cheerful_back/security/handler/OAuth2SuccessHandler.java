@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -20,6 +21,8 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
+  @Value("${app.web-host}")
+  private String webHost;
   private final JwtUtil jwtUtil;
 
   @Override
@@ -27,6 +30,6 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
       Authentication authentication) throws IOException, ServletException {
     PrincipalUser principalUser = (PrincipalUser) authentication.getPrincipal();
     String accessToken = jwtUtil.generateAccessToken(principalUser.getUser());
-    response.sendRedirect("http://localhost:5173/auth/oauth2/login?accessToken=" + accessToken);
+    response.sendRedirect(webHost + "/auth/oauth2/login?accessToken=" + accessToken);
   }
 }

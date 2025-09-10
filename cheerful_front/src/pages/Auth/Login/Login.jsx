@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { RiKakaoTalkFill } from "react-icons/ri";
 import Footer from "../../../components/Footer/Footer";
 import loginLogo from "../../../logo/cheerful_login.png";
+import { baseURL } from "../../../api/axios/axios";
 
 function Login(props) {
   return (
@@ -20,19 +21,19 @@ function Login(props) {
 
           <div css={s.snsLogin}>
             <Link
-              to={"http://localhost:8080/oauth2/authorization/google"}
+              to={`${baseURL}/oauth2/authorization/google`}
               css={s.googleLogin}>
               <FaGoogle />
               Google
             </Link>
             <Link
-              to={"http://localhost:8080/oauth2/authorization/naver"}
+              to={`${baseURL}/oauth2/authorization/naver`}
               css={s.naverLogin}>
               <SiNaver />
               Naver
             </Link>
             <Link
-              to={"http://localhost:8080/oauth2/authorization/kakao"}
+              to={`${baseURL}/oauth2/authorization/kakao`}
               css={s.kakaoLogin}>
               <RiKakaoTalkFill />
               Kakao
