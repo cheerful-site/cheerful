@@ -29,7 +29,7 @@ jobs:
         github.ref_name == 'deploy_jongbo' && secrets.REACT_ENV_JONGBO
         }}
       BUILD_MODE: ${{
-        github.ref_name == 'deploy_sojoeng' && 'sojeong' ||
+        github.ref_name == 'deploy_sojeong' && 'sojeong' ||
         github.ref_name == 'deploy_mikyung' && 'mikyung' ||
         github.ref_name == 'deploy_jongbo' && 'jongbo'
         }}
