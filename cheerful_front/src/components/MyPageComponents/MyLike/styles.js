@@ -23,7 +23,7 @@ export const foodContainer = css`
   width: 100%;
   height: 31rem;
   gap: 2rem;
-  height: 32rem;
+  height: 30rem;
   margin-top: 2rem;
   margin-bottom: 2rem;
 `;
