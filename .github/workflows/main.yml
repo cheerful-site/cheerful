@@ -18,6 +18,16 @@ jobs:
             github_ref_name == 'deploy_mikyung' && secrets.DOCKER_PASSWORD_MIKYUNG ||
             github_ref_name == 'deploy_jongbo' && secrets.DOCKER_PASSWORD_JONGBO
             }}
+          APPLICATION_SECRET: ${{ 
+            github_ref_name == 'deploy_sojeong' && secrets.APPLICATION_SECRET_SOJEONG ||
+            github_ref_name == 'deploy_mikyung' && secrets.APPLICATION_SECRET_MIKYUNG ||
+            github_ref_name == 'deploy_jongbo' && secrets.APPLICATION_SECRET_JONGBO
+            }}
+          REACT_ENV: ${{ 
+            github_ref_name == 'deploy_sojeong' && secrets.REACT_ENV_SOJEONG ||
+            github_ref_name == 'deploy_mikyung' && secrets.REACT_ENV_MIKYUNG ||
+            github_ref_name == 'deploy_jongbo' && secrets.REACT_ENV_JONGBO
+            }}
     steps: 
       - name: checkout
         uses: actions/checkout@v5.0.0
