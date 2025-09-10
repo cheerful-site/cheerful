@@ -19,25 +19,25 @@ import org.springframework.web.client.RestTemplate;
 @Configuration
 public class ChatGPTConfig {
 
-    @Value("${chatgpt.api-key}")
-    private String secretKey;
+//    @Value("${chatgpt.api-key}")
+//    private String secretKey;
+//
+//    @Bean
+//    public HttpHeaders httpHeaders() {
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setBearerAuth(secretKey);
+//        headers.setContentType(MediaType.APPLICATION_JSON);
+//        return headers;
+//    }
+//
+//    @Bean
+//    public RestTemplate restTemplate() {
+//        RestTemplate restTemplate = new RestTemplate();
+//        return restTemplate;
+//    }
 
-    @Bean
-    public HttpHeaders httpHeaders() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(secretKey);
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        return headers;
-    }
-
-    @Bean
-    public RestTemplate restTemplate() {
-        RestTemplate restTemplate = new RestTemplate();
-        return restTemplate;
-    }
-
-    @PostConstruct
-    public void debugApiKey() {
-        System.out.println("🔍 chatgpt.api-key = " + secretKey);
-    }
+//    @PostConstruct
+//    public void debugApiKey() {
+//        System.out.println("🔍 chatgpt.api-key = " + secretKey);
+//    }
 }
