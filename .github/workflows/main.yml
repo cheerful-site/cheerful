@@ -56,8 +56,8 @@ jobs:
         run: |
           cd cheerful_front
           echo ${{ env.REACT_ENV }} | base64 --decode > ./.env
-          npm install
-          npm run build
+          ls -a
+          cat .env
           docker build -t ${{ env.DOCKER_USERNAME }}/react-app:latest .
           docker push ${{ env.DOCKER_USERNAME }}/react-app:latest
 
