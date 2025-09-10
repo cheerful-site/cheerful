@@ -9,24 +9,24 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DOCKER_USERNAME: ${{ 
-        github_ref_name == 'deploy_sojeong' && secrets.DOCKER_USERNAME_SOJEONG ||
-        github_ref_name == 'deploy_mikyung' && secrets.DOCKER_USERNAME_MIKYUNG ||
-        github_ref_name == 'deploy_jongbo' && secrets.DOCKER_USERNAME_JONGBO
+        github.ref_name == 'deploy_sojeong' && secrets.DOCKER_USERNAME_SOJEONG ||
+        github.ref_name == 'deploy_mikyung' && secrets.DOCKER_USERNAME_MIKYUNG ||
+        github.ref_name == 'deploy_jongbo' && secrets.DOCKER_USERNAME_JONGBO
         }}
       DOCKER_PASSWORD: ${{ 
-        github_ref_name == 'deploy_sojeong' && secrets.DOCKER_PASSWORD_SOJEONG ||
-        github_ref_name == 'deploy_mikyung' && secrets.DOCKER_PASSWORD_MIKYUNG ||
-        github_ref_name == 'deploy_jongbo' && secrets.DOCKER_PASSWORD_JONGBO
+        github.ref_name == 'deploy_sojeong' && secrets.DOCKER_PASSWORD_SOJEONG ||
+        github.ref_name == 'deploy_mikyung' && secrets.DOCKER_PASSWORD_MIKYUNG ||
+        github.ref_name == 'deploy_jongbo' && secrets.DOCKER_PASSWORD_JONGBO
         }}
       APPLICATION_SECRET: ${{ 
-        github_ref_name == 'deploy_sojeong' && secrets.APPLICATION_SECRET_SOJEONG ||
-        github_ref_name == 'deploy_mikyung' && secrets.APPLICATION_SECRET_MIKYUNG ||
-        github_ref_name == 'deploy_jongbo' && secrets.APPLICATION_SECRET_JONGBO
+        github.ref_name == 'deploy_sojeong' && secrets.APPLICATION_SECRET_SOJEONG ||
+        github.ref_name == 'deploy_mikyung' && secrets.APPLICATION_SECRET_MIKYUNG ||
+        github.ref_name == 'deploy_jongbo' && secrets.APPLICATION_SECRET_JONGBO
         }}
       REACT_ENV: ${{ 
-        github_ref_name == 'deploy_sojeong' && secrets.REACT_ENV_SOJEONG ||
-        github_ref_name == 'deploy_mikyung' && secrets.REACT_ENV_MIKYUNG ||
-        github_ref_name == 'deploy_jongbo' && secrets.REACT_ENV_JONGBO
+        github.ref_name == 'deploy_sojeong' && secrets.REACT_ENV_SOJEONG ||
+        github.ref_name == 'deploy_mikyung' && secrets.REACT_ENV_MIKYUNG ||
+        github.ref_name == 'deploy_jongbo' && secrets.REACT_ENV_JONGBO
         }}
     steps: 
       - name: checkout
