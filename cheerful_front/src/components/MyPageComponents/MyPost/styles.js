@@ -61,7 +61,6 @@ export const headerContainer = css`
 
 export const tbodyContainer = css`
   width: 100%;
-  height: 16.5rem;
 `;
 
 export const bodyContainer = css`
@@ -69,7 +68,7 @@ export const bodyContainer = css`
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  height: 3.5rem;
+  height: 3rem;
 
   & > td {
     font-size: 1.2rem;

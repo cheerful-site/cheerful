@@ -10,7 +10,6 @@ function MyComments(props) {
   const [page, setPage] = useState(1);
   const myComment = useMyPageComment(page, 3);
   const myComments = myComment?.data?.data?.body;
-
   // console.log(myComments);
 
   return (

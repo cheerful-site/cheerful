@@ -43,7 +43,7 @@ function DataTable({
         newRows = [...newRows, { checked: false, datas: newRow }];
       }
       setNewRows(newRows);
-      // setSelectedIds([]);
+      setSelectedIds([]);
     }
   }, [rows]);
 

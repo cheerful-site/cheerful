@@ -45,8 +45,8 @@ function MyPost(props) {
       <PageNation
         page={page}
         setPage={setPage}
-        size={myCommunity?.size}
-        totalElements={myCommunity?.totalElements}
+        size={myCommunityPost?.size}
+        totalElements={myCommunityPost?.totalElements}
       />
     </div>
   );

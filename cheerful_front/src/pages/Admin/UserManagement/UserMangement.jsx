@@ -10,6 +10,7 @@ import PageNation from "../../../components/PageNation/PageNation";
 
 function UserMangement(props) {
   const [inputValue, setInputValue] = useState("");
+  const [selectedIds, setSelectedIds] = useState([]);
 
   const [searchOption, setSearchOption] = useState({
     page: 1,
@@ -18,9 +19,7 @@ function UserMangement(props) {
   });
 
   const adminUser = useAdminUsersQuery(searchOption);
-
   const adminUserResponseBody = adminUser?.data?.data?.body;
-
   const adminUserList = adminUserResponseBody?.content;
 
   const setPage = (page) => {
@@ -38,10 +37,15 @@ function UserMangement(props) {
     }));
   };
 
-  const handelAllDeleteClick = async (ids) => {
-    await reqAdminAllDeleteUsers(ids);
-    adminUser.refetch();
-    return;
+  const handelAllDeleteClick = async (selectedIds) => {
+    if (confirm("삭제하시겠습니까?")) {
+      try {
+        await reqAdminAllDeleteUsers(selectedIds);
+        adminUser.refetch();
+      } catch (error) {
+        console.log(error);
+      }
+    }
   };
 
   return (
@@ -64,11 +68,7 @@ function UserMangement(props) {
           <div css={s.registerAndDel}>
             <button
               onClick={() => {
-                handelAllDeleteClick(
-                  newRows
-                    .filter((row) => row.checked)
-                    .map((row) => row.datas[0].value)
-                );
+                handelAllDeleteClick(selectedIds);
               }}>
               삭제
             </button>
@@ -79,6 +79,7 @@ function UserMangement(props) {
           cols={usersCols}
           rows={adminUserList}
           enabledDelete={true}
+          setSelectedIds={setSelectedIds}
         />
 
         <PageNation

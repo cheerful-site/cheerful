@@ -245,6 +245,8 @@ export const commentsContainer = css`
 `;
 
 export const commentContainer = css`
+  box-sizing: border-box;
+  border-bottom: 0.1rem solid #22222210;
   padding: 2rem 0;
   box-sizing: border-box;
   border-bottom: 0.1rem solid #f2f4f8;

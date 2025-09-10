@@ -41,10 +41,15 @@ export const profileImg = css`
     width: 3rem;
     height: 3rem;
     background-color: #ffffff;
+    cursor: pointer;
 
     & > svg {
       font-size: 2rem;
       color: #ffc421;
+    }
+
+    & > input {
+      display: none;
     }
   }
 `;
@@ -92,6 +97,43 @@ export const profileInfo = css`
   }
 `;
 
+export const modifyUsername = css`
+  display: flex;
+  flex-direction: column;
+  & > input {
+    border: 0.1rem solid #22222220;
+    border-radius: 0.4rem;
+    outline: none;
+    height: 2rem;
+  }
+
+  & > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0.5rem;
+    width: 100%;
+  }
+  & > div > button {
+    border: none;
+    border-radius: 0.4rem;
+    width: 10rem;
+    height: 2.5rem;
+    background-color: #ffffff;
+  }
+
+  & > div > button:first-of-type {
+    margin-right: 1rem;
+    background-color: #ffc421;
+    color: #ffffff;
+  }
+
+  & > div > button:last-of-type {
+    background-color: #22222230;
+    color: #22222250;
+  }
+`;
+
 export const postAndcomment = css`
   display: flex;
   flex-direction: column;
@@ -127,6 +169,76 @@ export const deleteUser = css`
     font-weight: 500;
     color: #22222240;
     cursor: pointer;
+  }
+`;
+
+export const deleteUserModal = css`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 50rem;
+  height: 30rem;
+
+  & > div:first-of-type > span {
+    display: block;
+  }
+
+  & > div:first-of-type > span:nth-of-type(1) {
+    font-size: 2rem;
+  }
+  & > div:first-of-type > span:nth-of-type(2),
+  span:nth-of-type(3) {
+    margin: 0.5rem 0;
+    font-size: 1.4rem;
+    color: #ff0000;
+  }
+
+  & > div:nth-of-type(2) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 2rem;
+
+    & > span {
+      display: block;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #ff0000;
+    }
+
+    & > input {
+      border: 0.1rem solid #22222240;
+      border-radius: 0.5rem;
+      margin: 1rem 0;
+      width: 25rem;
+      height: 2.5rem;
+      outline: none;
+    }
+  }
+`;
+
+export const deleteButton = css`
+  display: flex;
+  justify-content: space-around;
+  margin-top: 2rem;
+  width: 100%;
+
+  & > button {
+    border: none;
+    border-radius: 0.5rem;
+    width: 15rem;
+    height: 3.5rem;
+    cursor: pointer;
+  }
+
+  & > button:first-of-type {
+    color: #ffffff;
+    background-color: #ffc421;
+  }
+  & > button:last-of-type {
+    color: #22222250;
+    background-color: #22222210;
   }
 `;
 

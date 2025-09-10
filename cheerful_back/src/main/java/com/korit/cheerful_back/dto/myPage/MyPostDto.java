@@ -7,6 +7,7 @@ import lombok.Data;
 public class MyPostDto {
 
   private Integer communityId;
+  private Integer categoryId;
   private String categoryName;
   private String title;
   private LocalDateTime createdAt;
