@@ -28,6 +28,11 @@ jobs:
         github.ref_name == 'deploy_mikyung' && secrets.REACT_ENV_MIKYUNG ||
         github.ref_name == 'deploy_jongbo' && secrets.REACT_ENV_JONGBO
         }}
+      BUILD_MODE: ${{
+        github.ref_name == 'deploy_sojoeng' && 'sojeong' ||
+        github.ref_name == 'deploy_mikyung' && 'mikyung' ||
+        github.ref_name == 'deploy_jongbo' && 'jongbo'
+        }}
     steps: 
       - name: checkout
         uses: actions/checkout@v5.0.0
@@ -58,7 +63,7 @@ jobs:
           echo ${{ env.REACT_ENV }} | base64 --decode > ./.env
           ls -a
           cat .env
-          docker build -t ${{ env.DOCKER_USERNAME }}/react-app:latest .
+          docker build --build-arg SERVERNAME=${{ env.BUILD_MODE }} -t ${{ env.DOCKER_USERNAME }}/react-app:latest .
           docker push ${{ env.DOCKER_USERNAME }}/react-app:latest
 
          
