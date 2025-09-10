@@ -14,7 +14,7 @@ export const container = css`
   width: 75rem;
 
   & > div:first-of-type {
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
     font-size: 1.8rem;
     font-weight: 700;
     color: #222222;
@@ -44,13 +44,24 @@ export const commentContainer = css`
   }
   & > div:nth-of-type(3) {
     margin: 0.5rem 0;
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     font-weight: 500;
-    color: #222222;
+    color: #22222260;
   }
   & > div:nth-of-type(4) {
     font-size: 1.2rem;
     font-weight: 400;
     color: #22222260;
   }
+`;
+
+export const commentContent = css`
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+  white-space: normal;
+  word-break: keep-all;
+  line-height: 1.6;
+  max-height: calc(1.6em * 2);
 `;

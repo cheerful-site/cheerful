@@ -246,6 +246,8 @@ export const commentsContainer = css`
 
 export const commentContainer = css`
   padding: 2rem 0;
+  box-sizing: border-box;
+  border-bottom: 0.1rem solid #f2f4f8;
   width: 96rem;
 `;
 
@@ -309,10 +311,4 @@ export const commentImgList = css`
     width: 10rem;
     height: 10rem;
   }
-`;
-
-export const horizen = css`
-  box-sizing: border-box;
-  border-bottom: 0.1rem solid #22222220;
-  width: 100%;
 `;

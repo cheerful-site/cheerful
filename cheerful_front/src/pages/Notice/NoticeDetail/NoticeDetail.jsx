@@ -316,7 +316,6 @@ function NoticeDetail(props) {
                   <p>{comment?.content}</p>
                 </div>
               </div>
-              <div css={s.horizen}></div>
             </div>
           ))}
         </div>

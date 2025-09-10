@@ -18,6 +18,7 @@ export const foodContainer = css`
   grid-template-columns: repeat(2, 2fr);
   grid-template-rows: repeat(2, 2fr);
   gap: 2rem;
+  height: 32rem;
   margin-bottom: 2rem;
 `;
 

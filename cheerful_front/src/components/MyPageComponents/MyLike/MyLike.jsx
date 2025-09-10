@@ -8,11 +8,12 @@ import unlikeLogo from "../../../../logo/cheerful_unlike.png";
 import { Link, useNavigate } from "react-router-dom";
 
 function MyLike(props) {
+  
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const like = useMyPageFoodLike(page, 4);
   const likeList = like?.data?.data?.body;
-  console.log(like?.data?.data?.body);
+  // console.log(like?.data?.data?.body);
 
   const handleOnClick = (foodId) => {
     navigate(`/food/${foodId}`);

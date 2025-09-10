@@ -33,7 +33,7 @@ function MyComments(props) {
               </Link>
             )}
 
-            <div>{comment?.content}</div>
+            <div css={s.commentContent}>{comment?.content}</div>
             <div>{comment?.createdAt.slice(0, 10)}</div>
           </div>
         ))}
