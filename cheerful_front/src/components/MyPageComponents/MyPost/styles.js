@@ -22,6 +22,7 @@ export const container = css`
 
 export const tableContainer = css`
   width: 75rem;
+  height: 100%;
 `;
 
 export const headerContainer = css`
@@ -57,6 +58,15 @@ export const headerContainer = css`
     width: 10rem;
     text-align: center;
   }
+`;
+
+export const notpost = css`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  color: #22222270;
 `;
 
 export const tbodyContainer = css`

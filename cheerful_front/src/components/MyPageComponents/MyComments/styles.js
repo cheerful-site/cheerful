@@ -14,12 +14,24 @@ export const container = css`
   width: 75rem;
 
   & > div:first-of-type {
+    border-bottom: 0.1rem solid #22222230;
     margin-bottom: 1rem;
+    padding-bottom: 1rem;
     font-size: 1.8rem;
     font-weight: 700;
     color: #222222;
   }
 `;
+
+export const notComment = css`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  color: #22222270;
+`;
+
 
 export const commentContainer = css`
   border-top: 0.1rem solid #22222230;
