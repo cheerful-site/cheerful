@@ -14,7 +14,7 @@ export const container = css`
   width: 75rem;
 
   & > div:first-of-type {
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
     font-size: 1.8rem;
     font-weight: 700;
     color: #222222;
@@ -38,15 +38,21 @@ export const commentContainer = css`
     color: #22222280;
   }
   & > div:nth-of-type(2) {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+    white-space: normal;
+    word-break: keep-all;
     font-size: 1.2rem;
     font-weight: 500;
     color: #22222280;
   }
   & > div:nth-of-type(3) {
     margin: 0.5rem 0;
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     font-weight: 500;
-    color: #222222;
+    color: #22222250;
   }
   & > div:nth-of-type(4) {
     font-size: 1.2rem;
