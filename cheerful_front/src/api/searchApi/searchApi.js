@@ -1,7 +1,7 @@
 import api from "../axios/axios";
 
 export const reqSearchCommunity = async (page, size, searchText, categoryId) =>
-  await api.get(`/search/communities/${categoryId}`, {
+  await api.get(`/api/search/communities/${categoryId}`, {
     params: {
       page,
       size,
@@ -10,7 +10,7 @@ export const reqSearchCommunity = async (page, size, searchText, categoryId) =>
   });
 
 export const reqSearchFood = async (page, size, searchText) =>
-  await api.get(`/search/foods`, {
+  await api.get(`/api/search/foods`, {
     params: {
       page,
       size,

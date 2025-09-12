@@ -1,7 +1,7 @@
 import api from "../axios/axios";
 
 export const reqMapList = (lat, lng, radius, categoryId) =>
-  api.get(`/map/${categoryId}`, {
+  api.get(`/api/map/${categoryId}`, {
     params: {
       lat,
       lng,

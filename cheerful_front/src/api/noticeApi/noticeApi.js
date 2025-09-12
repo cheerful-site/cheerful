@@ -1,7 +1,7 @@
 import api from "../axios/axios";
 
 export const reqNoticeList = (page, size, categoryId) =>
-  api.get(`/notice/${categoryId}`, {
+  api.get(`/api/notice/${categoryId}`, {
     params: {
       page,
       size,
@@ -10,13 +10,13 @@ export const reqNoticeList = (page, size, categoryId) =>
   });
 
 export const reqNoticeDetail = (categoryId, noticeId) =>
-  api.get(`/notice/${categoryId}/${noticeId}`);
+  api.get(`/api/notice/${categoryId}/${noticeId}`);
 
 export const reqNoticeViews = (categoryId, noticeId) =>
-  api.post(`/notice/${categoryId}/${noticeId}`);
+  api.post(`/api/notice/${categoryId}/${noticeId}`);
 
 export const reqNoticeRegisterComment = (data, noticeId) =>
-  api.post(`/notice/${noticeId}/comments`, data, {
+  api.post(`/api/notice/${noticeId}/comments`, data, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
@@ -25,7 +25,7 @@ export const reqNoticeRegisterComment = (data, noticeId) =>
 export const reqNoticeLike = (noticeId) => api.post(`/notice/${noticeId}/like`);
 
 export const reqNoticeDislike = (noticeId) =>
-  api.delete(`/notice/${noticeId}/dislike`);
+  api.delete(`/api/notice/${noticeId}/dislike`);
 
 export const reqUserDeleteNoticeComment = (commentId, userId) =>
-  api.delete(`/notice/comments/${commentId}/${userId}`);
+  api.delete(`/api/notice/comments/${commentId}/${userId}`);
