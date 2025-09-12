@@ -20,24 +20,24 @@ function Login(props) {
           <div css={s.horizon}></div>
 
           <div css={s.snsLogin}>
-            <Link
-              to={`${baseURL}/oauth2/authorization/google`}
+            <a
+              href={`${baseURL}/oauth2/authorization/google`}
               css={s.googleLogin}>
               <FaGoogle />
               Google
-            </Link>
-            <Link
-              to={`${baseURL}/oauth2/authorization/naver`}
+            </a>
+            <a
+              href={`${baseURL}/oauth2/authorization/naver`}
               css={s.naverLogin}>
               <SiNaver />
               Naver
-            </Link>
-            <Link
-              to={`${baseURL}/oauth2/authorization/kakao`}
+            </a>
+            <a
+              href={`${baseURL}/oauth2/authorization/kakao`}
               css={s.kakaoLogin}>
               <RiKakaoTalkFill />
               Kakao
-            </Link>
+            </a>
           </div>
         </div>
       </div>
