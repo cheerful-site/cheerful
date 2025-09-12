@@ -56,7 +56,7 @@ public class SecurityConfig {
 
     // 접근 제어 규칙
     http.authorizeHttpRequests(auth -> {
-      auth.requestMatchers("/", "/api/login/oauth2/**", "/api/oauth2/**", "/api/image/**", "/api/upload/**", "/api/communities/**",
+      auth.requestMatchers("/", "/api/login/oauth2/**", "/api/oauth2/**", "/image/**", "/upload/**", "/api/communities/**",
           "/api/communities/*/*", "/api/foods/**", "/api/foods/*/*", "/api/map-info/**", "/api/notice/**", "/api/bestcommunity", "/api/bestfood", "/api/search/**", "/api/notice/*/*", "/api/auth/**", "/api/map/**", "/api/account/principal").permitAll();
 
       // 관리자 전용
