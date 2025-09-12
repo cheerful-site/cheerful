@@ -23,7 +23,7 @@ public class WebConfig implements WebMvcConfigurer {
     String root = System.getProperty("user.dir").replace("\\", "/");
     String uploadDir = root + "/upload/";
 
-    registry.addResourceHandler("/image/**")
+    registry.addResourceHandler("/api/image/**")
         .addResourceLocations("file:" + uploadDir); // 끝에 / 포함
 
 //    final String uploadPath = rootPath + "/upload";
