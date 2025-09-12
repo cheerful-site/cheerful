@@ -56,41 +56,45 @@ function MyLike(props) {
     <div css={s.layout}>
       <div>찜목록</div>
 
-      <div css={s.foodContainer}>
-        {likeList?.content.map((food) => (
-          <div key={food?.foodId} css={s.foodList}>
-            <div css={s.foodImgContainer}>
-              <img
-                src={food?.foodImgs[0]?.imgUrl}
-                alt=""
-                onClick={() => handleOnClick(food?.foodId)}
-              />
-              <img
-                src={likeLogo}
-                alt=""
-                onClick={() => handleDislikeOnClick(food?.foodId.toString())}
-              />
-            </div>
-
-            <div css={s.foodInfoLayout}>
-              <div css={s.foodInfoContainer}>
-                <span>{food?.categoryName}</span>
-                <span onClick={() => handleOnClick(food?.foodId)}>
-                  {food?.title}
-                </span>
-                <span>{food?.price.toLocaleString()}원</span>
+      {likeList?.content.length === 0 ? (
+        <div css={s.notLike}>아직 찜한 먹거리가 없습니다.</div>
+      ) : (
+        <div css={s.foodContainer}>
+          {likeList?.content.map((food) => (
+            <div key={food?.foodId} css={s.foodList}>
+              <div css={s.foodImgContainer}>
+                <img
+                  src={food?.foodImgs[0]?.imgUrl}
+                  alt=""
+                  onClick={() => handleOnClick(food?.foodId)}
+                />
+                <img
+                  src={likeLogo}
+                  alt=""
+                  onClick={() => handleDislikeOnClick(food?.foodId.toString())}
+                />
               </div>
-              <Link
-                to={food?.address}
-                target="_blank"
-                rel="noopener noreferrer"
-                css={s.foodButton}>
-                바로구매
-              </Link>
+
+              <div css={s.foodInfoLayout}>
+                <div css={s.foodInfoContainer}>
+                  <span>{food?.categoryName}</span>
+                  <span onClick={() => handleOnClick(food?.foodId)}>
+                    {food?.title}
+                  </span>
+                  <span>{food?.price.toLocaleString()}원</span>
+                </div>
+                <Link
+                  to={food?.address}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  css={s.foodButton}>
+                  바로구매
+                </Link>
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
       <PageNation
         page={page}

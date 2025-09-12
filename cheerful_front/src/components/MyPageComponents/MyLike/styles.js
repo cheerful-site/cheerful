@@ -5,6 +5,7 @@ export const layout = css`
   flex-direction: column;
   justify-content: center;
   margin: 3rem;
+  height: 100%;
 
   & > div:first-of-type {
     padding-bottom: 1rem;
@@ -14,6 +15,16 @@ export const layout = css`
     font-weight: 700;
     color: #222222;
   }
+`;
+
+export const notLike = css`
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  margin-top: 4rem;
+  width: 100%;
+  height: 100%;
+  color: #22222270;
 `;
 
 export const foodContainer = css`

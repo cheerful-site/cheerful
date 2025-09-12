@@ -33,6 +33,16 @@ jobs:
         github.ref_name == 'deploy_mikyung' && 'mikyung' ||
         github.ref_name == 'deploy_jongbo' && 'jongbo'
         }}
+      SSH_HOST: ${{
+        github.ref_name == 'deploy_sojeong' && secret.SSH_HOST_SOJEONG ||
+        github.ref_name == 'deploy_mikyung' && secrets.SSH_HOST_MIKYUNG ||
+        github.ref_name == 'deploy_jongbo' && secrets.SSH_HOST_JONGBO
+        }}
+      SSH_KEY: ${{
+        github.ref_name == 'deploy_sojeong' && secret.SSH_KEY_SOJEONG ||
+        github.ref_name == 'deploy_mikyung' && secrets.SSH_KEY_MIKYUNG ||
+        github.ref_name == 'deploy_jongbo' && secrets.SSH_KEY_JONGBO
+        }}
     steps: 
       - name: checkout
         uses: actions/checkout@v5.0.0
@@ -66,4 +76,15 @@ jobs:
           docker build --build-arg SERVERNAME=${{ env.BUILD_MODE }} -t ${{ env.DOCKER_USERNAME }}/react-app:latest .
           docker push ${{ env.DOCKER_USERNAME }}/react-app:latest
 
-         
+      - name: ssh 배포
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ env.SSH_HOST }}
+          username: ubuntu
+          key: ${{ env.SSH_KEY }}
+          script: |
+            cd /home/ubuntu/project
+
+            sudo docker-compose pull
+            sudo docker-compose down
+            sudo docker-compose up -d
