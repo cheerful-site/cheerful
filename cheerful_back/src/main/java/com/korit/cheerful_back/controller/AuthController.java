@@ -18,7 +18,7 @@ public class AuthController {
     /*
         관리자 전용 사용자 관리 API
     */
-    @PostMapping("/auth/login")
+    @PostMapping("/api/auth/login")
     public ResponseEntity<?> login(@RequestBody AdminLoginReqDto dto) {
         return ResponseEntity.ok(ResponseDto.success(adminService.login(dto)));
     }
