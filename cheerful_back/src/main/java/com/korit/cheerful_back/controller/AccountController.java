@@ -24,7 +24,7 @@ public class AccountController {
   /*
     현재 로그인한 사용자의 PrincipalUser 반환
    */
-  @GetMapping("/api//account/principal")
+  @GetMapping("/api/account/principal")
   public ResponseEntity<ResponseDto<?>> principal(@AuthenticationPrincipal(errorOnInvalidType = false) PrincipalUser principalUser) {
 //    System.out.println(principalUser.getUser());
 

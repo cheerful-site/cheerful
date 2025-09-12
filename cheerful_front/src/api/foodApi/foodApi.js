@@ -1,7 +1,7 @@
 import api from "../axios/axios";
 
 export const reqFoodList = async (sort, page, size) =>
-  api.get(`/foods`, {
+  api.get(`/api/foods`, {
     params: {
       sort,
       page,
@@ -10,26 +10,26 @@ export const reqFoodList = async (sort, page, size) =>
   });
 
 export const reqFoodDetail = async (foodId) =>
-  await api.get(`/foods/${foodId}`);
+  await api.get(`/api/foods/${foodId}`);
 
 export const reqFoodRegisterComment = async (data, foodId) =>
-  await api.post(`/foods/${foodId}/comments`, data, {
+  await api.post(`/api/foods/${foodId}/comments`, data, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
   });
 
 export const reqFoodLike = async (foodId) =>
-  await api.post(`/foods/${foodId}/like`);
+  await api.post(`/api/foods/${foodId}/like`);
 
 export const reqFoodDislike = async (foodId) =>
-  await api.delete(`/foods/${foodId}/dislike`);
+  await api.delete(`/api/foods/${foodId}/dislike`);
 
 export const reqFoodCommentLike = (foodId, foodCommentId) =>
-  api.post(`/foods/${foodId}/${foodCommentId}/like`);
+  api.post(`/api/foods/${foodId}/${foodCommentId}/like`);
 
 export const reqFoodCommentDislike = (foodId, foodCommentId) =>
-  api.delete(`/foods/${foodId}/${foodCommentId}/dislike`);
+  api.delete(`/api/foods/${foodId}/${foodCommentId}/dislike`);
 
 export const reqUserDeleteFoodComment = (commentId, userId) =>
-  api.delete(`/foods/comments/${commentId}/${userId}`);
+  api.delete(`/api/foods/comments/${commentId}/${userId}`);
