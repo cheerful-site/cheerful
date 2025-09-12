@@ -64,7 +64,7 @@
     from
       user_tb
     where
-      username like concat('%', #{searchText}, '%')
+      name like concat('%', #{searchText}, '%')
       or email like concat('%', #{searchText}, '%')
     order by
       user_id
@@ -77,7 +77,7 @@
     from
       user_tb
     where
-      username like concat('%', #{searchText}, '%')
+      name like concat('%', #{searchText}, '%')
       or email like concat('%', #{searchText}, '%')
   </select>
 

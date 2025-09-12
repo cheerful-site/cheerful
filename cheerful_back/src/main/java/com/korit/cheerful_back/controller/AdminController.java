@@ -110,7 +110,7 @@ public class AdminController {
      */
     @PostMapping("/foods")
     public ResponseEntity<ResponseDto<?>> register(@Valid @ModelAttribute FoodRegisterReqDto dto) {
-        System.out.println(dto);
+//        System.out.println(dto);
         adminService.registerFood(dto);
         return ResponseEntity.ok(ResponseDto.success("food 글을 등록했습니다."));
     }
@@ -129,7 +129,7 @@ public class AdminController {
      */
     @PutMapping("/foods")
     public ResponseEntity<ResponseDto<?>> modifyFood(@ModelAttribute FoodModifyReqDto dto) {
-        System.out.println(dto);
+//        System.out.println(dto);
         adminService.modifyFood(dto);
         return ResponseEntity.ok(ResponseDto.success("food 정보를 수정하였습니다."));
     }
@@ -168,7 +168,7 @@ public class AdminController {
      */
     @DeleteMapping("/notice")
     public ResponseEntity<ResponseDto<?>> deleteNoticeIds(@RequestBody List<Integer> noticeIds) {
-        System.out.println(noticeIds);
+//        System.out.println(noticeIds);
         adminService.deleteNotice(noticeIds);
         return ResponseEntity.ok(ResponseDto.success("notice 정보를 삭제하였습니다."));
     }

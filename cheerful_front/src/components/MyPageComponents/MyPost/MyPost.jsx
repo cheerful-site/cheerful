@@ -25,21 +25,25 @@ function MyPost(props) {
               <td>조회</td>
             </tr>
           </thead>
-          <tbody css={s.tbodyContainer}>
-            {myCommunityPost?.content?.map((post) => (
-              <tr key={post.communityId} css={s.bodyContainer}>
-                <td>{post?.categoryName}</td>
-                <td>
-                  <Link to={`/community/1/${post?.communityId}`}>
-                    {post?.title}
-                  </Link>
-                </td>
-                <td>{post?.createdAt.slice(0, 10)}</td>
-                <td>{post?.likeCount}</td>
-                <td>{post?.views}</td>
-              </tr>
-            ))}
-          </tbody>
+          {myCommunityPost?.content.length === 0 ? (
+            <div css={s.notpost}>작성한 게시글이 없습니다.</div>
+          ) : (
+            <tbody css={s.tbodyContainer}>
+              {myCommunityPost?.content?.map((post) => (
+                <tr key={post.communityId} css={s.bodyContainer}>
+                  <td>{post?.categoryName}</td>
+                  <td>
+                    <Link to={`/community/1/${post?.communityId}`}>
+                      {post?.title}
+                    </Link>
+                  </td>
+                  <td>{post?.createdAt.slice(0, 10)}</td>
+                  <td>{post?.likeCount}</td>
+                  <td>{post?.views}</td>
+                </tr>
+              ))}
+            </tbody>
+          )}
         </table>
       </div>
       <PageNation
