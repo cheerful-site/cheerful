@@ -29,7 +29,7 @@
 
 ## <span id="1">🚩 1. 프로젝트 소개</span>
 
-Notion: [CHEERFUL ]([https://www.notion.so/list-a/Cheerful-241638f9b91b8024aa31d52fc9c1c53a](https://list-a.notion.site/241638f9b91b8024aa31d52fc9c1c53a))
+Notion: [CHEERFUL ](https://list-a.notion.site/241638f9b91b8024aa31d52fc9c1c53a)
 
 - 내 위치 근처의 모든 응급병원, 반려동물 동반 카페, 유기동물 보호소를 보여주기 때문에 검색할 필요 없이 편리함
 - ui 간소화 및 해당 아이콘 구별을 하여 직관적이게 표현
