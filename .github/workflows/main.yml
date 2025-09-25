@@ -64,6 +64,8 @@ jobs:
           distribution: 'temurin'
 
       - name: build spring boot app
+        env:
+          SPRING_PROFILES_ACTIVE: ${{ env.BUILD_MODE }}
         run: |
           cd cheerful_back
           echo ${{ env.APPLICATION_SECRET }} | base64 --decode > ./src/main/resources/application-secret.yml
